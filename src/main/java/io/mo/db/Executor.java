@@ -127,6 +127,9 @@ public class Executor {
             }
         }
 
+        //drop the test db
+        dropTestDB(connection,def_db);
+
         long end = System.currentTimeMillis();
         script.setDuration((float)(end - start)/1000);
     }
@@ -273,104 +276,8 @@ public class Executor {
             }
         }
 
-       /* LOG.info("Now start to run the file["+script.getFileName()+"]....................................................");
-
-
-        //check whether the result file exists
-        File rsf = new File(script.getFileName().replaceFirst(COMMON.CASES_PATH,COMMON.RESULT_PATH).replaceAll(".sql",".result"));
-        if(!rsf.exists()) {
-            LOG.warn("The result of the test script file["+script.getFileName()+"] does not exists,please check....");
-
-            //set the execution status of test script to  false
-            script.setExecStatus(false);
-            return;
-        }
-
-        ResultParser.reset();
-        ResultParser.parse(rsf.getPath());
-        ArrayList<SqlCommand> commands = script.getCommands();
-
-        long start = System.currentTimeMillis();
-
-        for (int j = 0; j < commands.size(); j++) {
-
-            SqlCommand command = null;
-            String exp_res = null;
-            String act_res = null;
-
-            try{
-                command = commands.get(j);
-                connection = getConnection(command);
-                statement = connection.createStatement();
-                if (command.isUpdate()) {
-                    //if no-query-type statement is executed successfully,do not need check
-                    int num = statement.executeUpdate(command.getCommand());
-                    //but need to get the expected result,to skip the read pos
-                    ResultParser.skip(command.getCommand());
-                    LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed successfully");
-                } else {
-                    //if query-type statment is executed successfully,need compare the expected result and the actual result
-                    hasResults = statement.execute(command.getCommand());
-                    act_res = getRS(statement.getResultSet());
-                    if( j < commands.size() -1)
-                        exp_res = ResultParser.getRS(command.getCommand(),commands.get(j + 1).getCommand());
-                    else
-                        exp_res = ResultParser.getRS(command.getCommand(),null);
-
-                    //if compare failed
-                    if(!act_res.equalsIgnoreCase(exp_res)){
-                        script.addErrorCmd(command);
-                        command.getResult().setErrorCode(RESULT.ERROR_CHECK_FAILED_CODE);
-                        command.getResult().setErrorDesc(RESULT.ERROR_CHECK_FAILED_DESC);
-                        command.getResult().setResult(RESULT.RESULT_TYPE_FAILED);
-                        command.getResult().setExpResult(exp_res);
-                        command.getResult().setActResult(act_res);
-                        command.getResult().setRemark(command.getCommand()+"\n"+
-                                "[EXPECT RESULT]:\n"+exp_res+"\n"+
-                                "[ACTUAL RESULT]:\n"+act_res+"\n");
-                        LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed failed");
-                        LOG.error("[EXPECT RESULT]:\n"+exp_res);
-                        LOG.error("[ACTUAL RESULT]:\n"+act_res);
-                    }else {
-                        //compare successfully
-                        LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed successfully");
-                    }
-                }
-                statement.close();
-            }catch (SQLException e) {
-                if(null == command){
-                    break;
-                }
-
-                act_res = e.getMessage();
-                if( j < commands.size() -1)
-                    exp_res = ResultParser.getRS(command.getCommand(),commands.get(j + 1).getCommand());
-                else
-                    exp_res = ResultParser.getRS(command.getCommand(),null);
-
-                //if compare failed
-                if(!act_res.equalsIgnoreCase(exp_res)){
-                    script.addErrorCmd(command);
-                    command.getResult().setErrorCode(RESULT.ERROR_CHECK_FAILED_CODE);
-                    command.getResult().setErrorDesc(RESULT.ERROR_CHECK_FAILED_DESC);
-                    command.getResult().setResult(RESULT.RESULT_TYPE_FAILED);
-                    command.getResult().setExpResult(exp_res);
-                    command.getResult().setActResult(act_res);
-                    command.getResult().setRemark(command.getCommand()+"\n"+
-                            "[EXPECT RESULT]:\n"+exp_res+"\n"+
-                            "[ACTUAL RESULT]:\n"+act_res+"\n");
-                    LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed failed");
-                    LOG.error("[EXPECT RESULT]:\n"+exp_res);
-                    LOG.error("[ACTUAL RESULT]:\n"+act_res);
-                }else {
-                    //compare successfully
-                    LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed successfully");
-                }
-            }
-        }
-
-        long end = System.currentTimeMillis();
-        script.setDuration((float)(end - start)/1000);*/
+        //drop the test db
+        dropTestDB(connection,def_db);
     }
 
     public static void genRS(TestScript script){
@@ -544,6 +451,18 @@ public class Executor {
             statement = connection.createStatement();
             statement.executeUpdate("create database IF NOT EXISTS "+name+";");
             statement.executeUpdate("use "+name+";");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static  void dropTestDB(Connection connection,String name){
+
+        Statement statement = null;
+        try {
+            statement = connection.createStatement();
+            statement.executeUpdate("drop database IF EXISTS "+name+";");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
