@@ -449,8 +449,8 @@ public class Executor {
         Statement statement = null;
         try {
             statement = connection.createStatement();
-            statement.executeUpdate("create database IF NOT EXISTS "+name+";");
-            statement.executeUpdate("use "+name+";");
+            statement.executeUpdate("create database IF NOT EXISTS `"+name+"`;");
+            statement.executeUpdate("use `"+name+"`;");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -462,7 +462,7 @@ public class Executor {
         Statement statement = null;
         try {
             statement = connection.createStatement();
-            statement.executeUpdate("drop database IF EXISTS "+name+";");
+            statement.executeUpdate("drop database IF EXISTS `"+name+"`;");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -325,7 +325,10 @@ public class TestReport {
         buffer.append(", ");
         buffer.append("ERROR :"+script.getErrorCount());
         buffer.append(", ");
-        buffer.append("SUCCESS RATE : "+((script.getSize() - script.getErrorCount())*100/script.getSize())+"%\n");
+        if(script.getSize() != 0)
+            buffer.append("SUCCESS RATE : "+((script.getSize() - script.getErrorCount())*100/script.getSize())+"%\n");
+        else
+            buffer.append("SUCCESS RATE : 0%\n");
         return buffer.toString();
     }
 
