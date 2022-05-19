@@ -38,6 +38,11 @@ public class Executor {
             return;
         }
 
+        //create a database named filename for test;
+        String def_db = rsf.getName().substring(0,rsf.getName().indexOf(COMMON.R_FILE_SUFFIX));
+        createTestDB(connection,def_db);
+
+
         ResultParser.reset();
         ResultParser.parse(rsf.getPath());
         ArrayList<SqlCommand> commands = script.getCommands();
@@ -148,6 +153,10 @@ public class Executor {
             }
             return;
         }
+
+        //create a database named filename for test;
+        String def_db = rsf.getName().substring(0,rsf.getName().indexOf(COMMON.R_FILE_SUFFIX));
+        createTestDB(connection,def_db);
 
         ResultParser.reset();
         ResultParser.parse(rsf.getPath());
@@ -526,5 +535,18 @@ public class Executor {
             return true;
 
         return false;
+    }
+
+    public static  void createTestDB(Connection connection,String name){
+
+        Statement statement = null;
+        try {
+            statement = connection.createStatement();
+            statement.executeUpdate("create database IF NOT EXISTS "+name+";");
+            statement.executeUpdate("use "+name+";");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
