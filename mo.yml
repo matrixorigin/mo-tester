@@ -1,0 +1,23 @@
+#jdbc
+jdbc:
+  driver: "com.mysql.cj.jdbc.Driver"
+  server:
+  - addr: "127.0.0.1:6001"
+  #- addr: "127.0.0.1:3306"
+  #- addr: "127.0.0.1:3306"
+  database:
+    default: "test"
+  paremeter:
+    characterSetResults: "utf8"
+    continueBatchOnError: "false"
+    useServerPrepStmts: "true"
+    alwaysSendSetIsolation: "false"
+    useLocalSessionState: "true"
+    zeroDateTimeBehavior: "CONVERT_TO_NULL"
+    failoverReadOnly: "false"
+    serverTimezone: "Asia/Shanghai"
+
+#users
+user:
+  name: "dump"
+  passwrod: "111"
