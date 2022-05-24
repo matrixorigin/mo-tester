@@ -1,5 +1,0 @@
-drop database if exists test01;
-drop database if exists drop_database;
-create database test01;
-drop database test01;
-show databases;

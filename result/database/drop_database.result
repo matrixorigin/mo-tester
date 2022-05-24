@@ -1,0 +1,17 @@
+drop database if exists test01;
+drop database if exists drop_database;
+create database test01;
+drop database test01;
+show databases;
+Database
+datedb
+information_schema
+mathdb
+mysql
+performance_schema
+sub
+sys
+test
+test1
+tpch
+tpch_8

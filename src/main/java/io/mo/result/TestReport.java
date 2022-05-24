@@ -25,6 +25,7 @@ public class TestReport {
     private ArrayList<TestCase> _cases = new ArrayList<TestCase>();
     private ArrayList<TestScript> scripts = new ArrayList<TestScript>();
 
+
     private int total_cmd = 0;
     private int error_cmd = 0;
     private int noexec_cmd = 0;
@@ -201,6 +202,7 @@ public class TestReport {
         type = type = RunConfUtil.getType();
         if(type.equalsIgnoreCase("script")){
             rate  = (total_cmd - error_cmd - noexec_cmd)*100/total_cmd;
+            ArrayList<SqlCommand> e_commands = new ArrayList<SqlCommand>();
             try {
                 BufferedWriter r_writer = new BufferedWriter(new FileWriter(COMMON.REPORT_PATH+"/report.txt"));
                 BufferedWriter e_writer = new BufferedWriter(new FileWriter(COMMON.REPORT_PATH+"/error.txt"));
@@ -219,6 +221,15 @@ public class TestReport {
                     for(int j = 0 ; j < errors.size();j++){
                         e_writer.write(getErrorInfo(errors.get(j)));
                         e_writer.newLine();
+                        e_commands.add(errors.get(j));
+                    }
+                }
+
+                if(e_commands.size() > 0){
+                    LOG.info("[ERROR SQL LIST]");
+                    for(int i = 0; i < e_commands.size(); i++){
+
+                        LOG.info("["+e_commands.get(i).getScriptFile()+"] SQL: "+e_commands.get(i).getCommand().trim());
                     }
                 }
                 r_writer.flush();
@@ -243,10 +254,17 @@ public class TestReport {
                     LOG.info(getScriptSummaryTXT(key.toString()).trim());
                 }
 
+                if(error_case > 0)
+                    LOG.info("[ERROR SQL LIST]");
                 for(int i = 0; i < _cases.size(); i++){
                     if(_cases.get(i).getResult().getResult().equalsIgnoreCase(RESULT.RESULT_TYPE_FAILED)){
                         e_writer.write(getErrorInfo(_cases.get(i)));
                         e_writer.newLine();
+                        for(int j = 0; j < _cases.get(i).getCommands().size();j++){
+                            SqlCommand command = _cases.get(i).getCommands().get(j);
+                            if(command.getResult().getResult().equalsIgnoreCase(RESULT.RESULT_TYPE_FAILED))
+                                LOG.info("["+command.getScriptFile()+"] SQL: "+command.getCommand().trim());
+                        }
                     }
                 }
 

@@ -25,7 +25,7 @@ public class ResultParser {
         try {
             while((line = lineReader.readLine()) != null) {
                 line = new String(line.getBytes(), "utf-8");
-                if (line.equals("")) continue;
+                //if (line.equals("")) continue;
                 buffer.append(line);
                 buffer.append("\n");
                 if(buffer.indexOf(cmd) != -1){

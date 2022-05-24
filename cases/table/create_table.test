@@ -1,0 +1,56 @@
+-- @suite
+
+-- @case
+-- @desc:test for create table with all type
+-- @label:bvt
+create table table01(a TINYINT primary key, b SMALLINT SIGNED, c INT UNSIGNED,d BIGINT not null , e FLOAT unique,f DOUBLE, g CHAR(10), h VARCHAR(20));
+
+-- @case
+-- @desc:test for create table with default value
+-- @label:bvt
+create table table15 (a varchar(5) default 'abcde');
+
+-- @case
+-- @desc:test for temporary create table
+-- @label:bvt
+create temporary table table05 ( a int, b char(10));
+
+-- @case
+-- @desc:test for create table with COMMENT
+-- @label:bvt
+create table table06 (a int primary key, b varchar(10));
+create table table10 (a int primary key, b varchar(10)) checksum=0 COMMENT="asdf";
+
+-- @case
+-- @desc:test for create table with chinese name
+-- @label:bvt
+create table `测试表` (`测试1` int);
+
+-- @case
+-- @desc:test for create table, the name ends with space
+-- @label:bvt
+create table `table11 ` (a int);
+
+-- @case
+-- @desc:test for create table, the field ends with space
+-- @label:bvt
+create table table12 (`a ` int);
+
+-- @case
+-- @desc:test for create table with too long name
+-- @label:bvt
+create table `aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa` (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa int);
+-- @case
+-- @desc:test for create table with too long field name
+-- @label:bvt
+create table table14 (`aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa` int);
+
+-- @case
+-- @desc:test for create table,the name contain special char
+-- @label:bvt
+create table `a/a` (a int);
+create table table16 (1a20 int,1e int);
+create table $table18 (a$1 int, $b int, c$ int);
+create table table19$ (a int);
+create table table17 (`index` int);
+show tables;

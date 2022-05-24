@@ -15,4 +15,4 @@ method: "run"
 type: "script"
 
 #rate: means the execution success rate,if the actual rate is less than this,the programe will exit with status 1
-rate: 90
+rate: 100

@@ -30,6 +30,7 @@ public class Executor {
         Statement statement = null;
         //check whether the result file exists
         File rsf = new File(script.getFileName().replaceFirst(COMMON.CASES_PATH,COMMON.RESULT_PATH).replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX));
+        System.out.println(rsf.getPath());
         if(!rsf.exists()) {
             LOG.warn("The result of the test script file["+script.getFileName()+"] does not exists,please check....");
 
@@ -142,7 +143,7 @@ public class Executor {
         Statement statement = null;
 
         //check whether the result file exists
-        File rsf = new File(path.replaceFirst(COMMON.CASES_PATH,COMMON.RESULT_PATH).replaceAll(".sql",".result"));
+        File rsf = new File(path.replaceFirst(COMMON.CASES_PATH,COMMON.RESULT_PATH).replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX));
         if(!rsf.exists()) {
             LOG.warn("The result of the test script file["+path+"] does not exists,please check....");
 
@@ -173,7 +174,6 @@ public class Executor {
             LOG.info("["+path+"][suite]["+i+"] is now being executed.......................................................");
             for(int j = 0; j < setups.size();j++){
                 SqlCommand command = null;
-
                 try {
                     command = setups.get(j);
                     connection = getConnection(command);
@@ -225,9 +225,10 @@ public class Executor {
                                 command.getResult().setResult(RESULT.RESULT_TYPE_FAILED);
                                 command.getResult().setExpResult(exp_res);
                                 command.getResult().setActResult(act_res);
-                                command.getResult().setRemark(command.getCommand()+"\n"+
-                                        "[EXPECT RESULT]:\n"+exp_res+"\n"+
-                                        "[ACTUAL RESULT]:\n"+act_res+"\n");
+                                command.getResult().setRemark(
+                                        "#sql#:\n"+command.getCommand()+
+                                        "#excpect#:\n"+exp_res+"\n"+
+                                        "#actual #:\n"+act_res+"\n");
 
                                 testCase.setResult(command.getResult());
                                 testCase.addRemark(command.getResult().getRemark());
@@ -260,9 +261,10 @@ public class Executor {
                             command.getResult().setResult(RESULT.RESULT_TYPE_FAILED);
                             command.getResult().setExpResult(exp_res);
                             command.getResult().setActResult(act_res);
-                            command.getResult().setRemark(command.getCommand()+"\n"+
-                                    "[EXPECT RESULT]:\n"+exp_res+"\n"+
-                                    "[ACTUAL RESULT]:\n"+act_res+"\n");
+                            command.getResult().setRemark(
+                                    "#sql#:\n"+command.getCommand()+
+                                            "#excpect#:\n"+exp_res+"\n"+
+                                            "#actual #:\n"+act_res+"\n");
                             testCase.setResult(command.getResult());
                             LOG.error("["+path+"]["+command.getCommand().trim()+"] is executed failed");
                             LOG.error("[EXPECT RESULT]:\n"+exp_res);
@@ -288,10 +290,14 @@ public class Executor {
         Statement statement = null;
         BufferedWriter rs_writer;
         //check whether the result dir exists
-        File rsf = new File(script.getFileName().replaceFirst(COMMON.CASES_PATH,COMMON.RESULT_PATH).replaceAll(".sql",".result"));
+        File rsf = new File(script.getFileName().replaceFirst(COMMON.CASES_PATH,COMMON.RESULT_PATH).replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX));
         if(!rsf.getParentFile().exists()){
             rsf.getParentFile().mkdirs();
         }
+
+        //create a database named filename for test;
+        String def_db = rsf.getName().substring(0,rsf.getName().indexOf(COMMON.R_FILE_SUFFIX));
+        createTestDB(connection,def_db);
 
         try {
             rs_writer = new BufferedWriter(new FileWriter(rsf.getPath()));
@@ -327,6 +333,8 @@ public class Executor {
             }
             rs_writer.flush();
             rs_writer.close();
+            //drop the test db
+            dropTestDB(connection,def_db);
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
@@ -454,7 +462,6 @@ public class Executor {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public static  void dropTestDB(Connection connection,String name){
@@ -464,7 +471,7 @@ public class Executor {
             statement = connection.createStatement();
             statement.executeUpdate("drop database IF EXISTS `"+name+"`;");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
     }
