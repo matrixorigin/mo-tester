@@ -5,11 +5,15 @@ insert into t1 values(2,2,1.0213,1.001);
 insert into t1 values(3,null,null,null);
 insert into t1 values(4,0,0,0);
 select sinh(d),sinh(fl)from t1;
-FUNCTION func_math.sinh does not exist
+sinh(d)	sinh(fl)
+1.1752	1.3379574503777456E53
+3.6269	1.2083
+null	null
+0.0	0.0
 select atan(d),atan(fl)from t1;
 atan(d)	atan(fl)
-0.7853981633974483	1.5626678322541754
-1.1071487177940904	0.7959355256441749
+0.7854	1.5627
+1.1071	0.7959
 null	null
 0.0	0.0
 select acos(d),acos(fl)from t1;
@@ -17,19 +21,23 @@ acos(d)	acos(fl)
 0.0	null
 null	null
 null	null
-1.5707963267948966	1.5707963267948966
+1.5708	1.5708
 select cot(d),cot(fl) from t1;
-Data truncation: DOUBLE value is out of range in 'cot(`func_math`.`t1`.`d`)'
+cot(d)	cot(fl)
+-0.5574	0.4548
+3.185	-0.6329
+null	null
+1.0	1.0
 select tan(d),tan(fl) from t1;
 tan(d)	tan(fl)
-1.5574077246549023	0.5452483326059671
--2.185039863261519	1.632886379637126
+1.5574	0.5452
+-2.185	1.6329
 null	null
 0.0	0.0
 select sin(d),sin(fl) from t1;
 sin(d)	sin(fl)
-0.8414709848078965	-0.47871259002208294
-0.9092974268256817	0.8527876556479776
+0.8415	-0.4787
+0.9093	0.8528
 null	null
 0.0	0.0
 drop table if exists abs;
@@ -42,28 +50,28 @@ insert into abs values(1,-6,-432432.43,-8756.4321,-356.421);
 insert into abs values(1,null,null,null,null);
 select abs(d),abs(dl),abs(fl) from abs;
 abs(d)	abs(dl)	abs(fl)
-10	10.0	10.032099723815918
-2	2.0	2.032099962234497
-10	1.8446744073709552E19	10.032099723815918
-31232	9.223372036854776E18	1312.0321044921875
-6	432432.43	8756.431640625
+10	10.0	10.0321
+2	2.0	2.0321
+10	1.8446744073709552E19	10.0321
+31232	9.223372036854776E18	1312.0321
+6	432432.43	8756.4316
 null	null	null
 select abs(d)-2 from t1;
-abs(d)-2
+abs(d) - 2
 -1
 0
 null
 -2
 select abs(d)*2 from t1;
-abs(d)*2
+abs(d) * 2
 2
 4
 null
 0
 select abs(tan(d))*2 from t1;
-abs(tan(d))*2
-3.1148154493098046
-4.370079726523038
+abs(tan(d)) * 2
+3.1148
+4.3701
 null
 0.0
 drop table if exists ceil;

@@ -9,9 +9,9 @@ select id,fl,dl from numtable order by id;
 id	fl	dl
 1	123456.0	123456.0
 2	123.456	123.456
-3	1.23457	1.234567
-4	1.23457	1.234567891
-5	1.23457	1.234567891234568
+3	1.2346	1.2346
+4	1.2346	1.2346
+5	1.2346	1.2346
 drop table if exists numtable;
 create table numtable(id int,fl float(5,3));
 insert into numtable values(2,99);
@@ -21,19 +21,19 @@ select id,fl from numtable;
 id	fl
 2	99.0
 3	99.123
-4	99.124
+4	99.1236
 drop table if exists numtable;
 create table numtable(id int,fl float(23));
 insert into numtable values(1,1.2345678901234567890123456789);
 select id,fl from numtable;
 id	fl
-1	1.23457
+1	1.2346
 drop table if exists numtable;
 create table numtable(id int,dl double);
 insert into numtable values(1,1.2345678901234567890123456789);
 select id,dl from numtable;
 id	dl
-1	1.2345678901234567
+1	1.2346
 drop table if exists numtable;
 create table numtable(a tinyint unsigned, b smallint unsigned, c int unsigned, d bigint unsigned);
 insert into numtable values(255,65535,4294967295,18446744073709551615);

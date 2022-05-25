@@ -98,10 +98,10 @@ min(month(d))	min(month(d))
 1	1
 select avg(month(d)),avg(month(d)) from t1;
 avg(month(d))	avg(month(d))
-5.5333	5.5333
+5.6	5.6
 select sum(month(d)),sum(month(d)) from t1;
 sum(month(d))	sum(month(d))
-83	83
+84	84
 select max(weekday(d)),max(weekday(dt)) from t1;
 max(weekday(d))	max(weekday(dt))
 6	6
@@ -128,7 +128,6 @@ select distinct(month(d)) from t1;
 10
 11
 12
-null
 select id,c,vc from t1 where month(d) > 2;
 id	c	vc
 4	2021-03-17	2021-03-17

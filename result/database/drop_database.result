@@ -3,15 +3,5 @@ drop database if exists drop_database;
 create database test01;
 drop database test01;
 show databases;
-Database
+Databases
 datedb
-information_schema
-mathdb
-mysql
-performance_schema
-sub
-sys
-test
-test1
-tpch
-tpch_8

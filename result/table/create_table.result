@@ -5,27 +5,28 @@ create table table06 (a int primary key, b varchar(10));
 create table table10 (a int primary key, b varchar(10)) checksum=0 COMMENT="asdf";
 create table `测试表` (`测试1` int);
 create table `table11 ` (a int);
-Incorrect table name 'table11 '
 create table table12 (`a ` int);
-Incorrect column name 'a '
 create table `aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa` (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa int);
-Identifier name 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' is too long
 create table table14 (`aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa` int);
-Identifier name 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' is too long
 create table `a/a` (a int);
 create table table16 (1a20 int,1e int);
 create table $table18 (a$1 int, $b int, c$ int);
 create table table19$ (a int);
 create table table17 (`index` int);
 show tables;
-Tables_in_create_table
-$table18
-a/a
+Tables
 table01
+table15
+table05
 table06
 table10
-table15
-table16
-table17
-table19$
 测试表
+table11 
+table12
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+table14
+a/a
+table16
+$table18
+table19$
+table17
