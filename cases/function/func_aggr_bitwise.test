@@ -1,0 +1,93 @@
+#NULL
+SELECT bit_and(null), bit_or(null), bit_xor(null);
+
+
+#EXTREME VALUE
+CREATE TABLE t1 (a int, b int);
+INSERT INTO t1 VALUES (1,null);
+INSERT INTO t1 VALUES (1,null);
+INSERT INTO t1 VALUES (2,null);
+select a, BIT_AND(b), BIT_OR(b), BIT_XOR(b) from t1 group by a;
+SELECT a, HEX(BIT_AND(b)), HEX(BIT_OR(b)), HEX(BIT_XOR(b)) FROM t1 GROUP BY a;
+SELECT HEX(BIT_AND(b)), HEX(BIT_OR(b)), HEX(BIT_XOR(b)) FROM t1;
+INSERT INTO t1 VALUES (3,123);
+SELECT a, HEX(BIT_AND(b)), HEX(BIT_OR(b)), HEX(BIT_XOR(b)) FROM t1 GROUP BY a;
+INSERT INTO t1 VALUES (2,124124), (3, 4951312);
+SELECT a, HEX(BIT_AND(b)), HEX(BIT_OR(b)), HEX(BIT_XOR(b)) FROM t1 GROUP BY a;
+INSERT INTO t1 VALUES (4,-4124124);
+SELECT a, HEX(BIT_AND(b)), HEX(BIT_OR(b)), HEX(BIT_XOR(b)) FROM t1 GROUP BY a;
+DROP TABLE t1;
+
+#DATA TYPES
+create table t1(a tinyint, b SMALLINT, c MEDIUMINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, j time, k datetime, l TIMESTAMP, m char(255), n varchar(255));
+insert into t1 values(1, 1, 2, 43, 5, 35.5, 31.133, 14.314, "2012-03-10", "10:03:12", "2012-03-12 10:03:12", "2022-03-12 13:03:12", "ab23c", "d5cf");
+insert into t1 values(71, 1, 2, 34, 5, 5.5, 341.13, 15.314, "2012-03-22", "10:03:12", "2013-03-12 10:03:12", "2032-03-12 13:04:12", "abr23c", "3dcf");
+insert into t1 values(1, 1, 21, 4, 54, 53.5, 431.13, 14.394, "2011-03-12", "10:03:12", "2015-03-12 10:03:12", "2002-03-12 13:03:12", "afbc", "dct5f");
+insert into t1 values(1, 71, 2, 34, 5, 5.5, 31.313, 124.314, "2012-01-12", "10:03:12", "2019-03-12 10:03:12", "2013-03-12 13:03:12", "3abd1c", "dcvf");
+select bit_and(a),bit_and(b),bit_and(c),bit_and(d),bit_and(e),bit_and(f) from t1;
+select bit_and(g),bit_and(h),bit_and(i),bit_and(j),bit_and(k),bit_and(l),bit_and(m),bit_and(n) from t1;
+drop table t1;
+
+create table t1(a tinyint, b SMALLINT, c MEDIUMINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, j time, k datetime, l TIMESTAMP, m char(255), n varchar(255));
+insert into t1 values(1, 1, 2, 43, 5, 35.5, 31.133, 14.314, "2012-03-10", "10:03:12", "2012-03-12 10:03:12", "2022-03-12 13:03:12", "ab23c", "d5cf");
+insert into t1 values(71, 1, 2, 34, 5, 5.5, 341.13, 15.314, "2012-03-22", "10:03:12", "2013-03-12 10:03:12", "2032-03-12 13:04:12", "abr23c", "3dcf");
+insert into t1 values(1, 1, 21, 4, 54, 53.5, 431.13, 14.394, "2011-03-12", "10:03:12", "2015-03-12 10:03:12", "2002-03-12 13:03:12", "afbc", "dct5f");
+insert into t1 values(1, 71, 2, 34, 5, 5.5, 31.313, 124.314, "2012-01-12", "10:03:12", "2019-03-12 10:03:12", "2013-03-12 13:03:12", "3abd1c", "dcvf");
+select BIT_OR(a),BIT_OR(b),BIT_OR(c),BIT_OR(d),BIT_OR(e),BIT_OR(f) from t1;
+select BIT_OR(g),BIT_OR(h),BIT_OR(i),BIT_OR(j),BIT_OR(k),BIT_OR(l),BIT_OR(m),BIT_OR(n) from t1;
+drop table t1;
+
+create table t1(a tinyint, b SMALLINT, c MEDIUMINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, j time, k datetime, l TIMESTAMP, m char(255), n varchar(255));
+insert into t1 values(1, 1, 2, 43, 5, 35.5, 31.133, 14.314, "2012-03-10", "10:03:12", "2012-03-12 10:03:12", "2022-03-12 13:03:12", "ab23c", "d5cf");
+insert into t1 values(71, 1, 2, 34, 5, 5.5, 341.13, 15.314, "2012-03-22", "10:03:12", "2013-03-12 10:03:12", "2032-03-12 13:04:12", "abr23c", "3dcf");
+insert into t1 values(1, 1, 21, 4, 54, 53.5, 431.13, 14.394, "2011-03-12", "10:03:12", "2015-03-12 10:03:12", "2002-03-12 13:03:12", "afbc", "dct5f");
+insert into t1 values(1, 71, 2, 34, 5, 5.5, 31.313, 124.314, "2012-01-12", "10:03:12", "2019-03-12 10:03:12", "2013-03-12 13:03:12", "3abd1c", "dcvf");
+select BIT_XOR(a),BIT_XOR(b),BIT_XOR(c),BIT_XOR(d),BIT_XOR(e),BIT_XOR(f) from t1;
+select BIT_XOR(g),BIT_XOR(h),BIT_XOR(i),BIT_XOR(j),BIT_XOR(k),BIT_XOR(l),BIT_XOR(m),BIT_XOR(n) from t1;
+drop table t1;
+
+
+
+#EXTREME VALUE, DISTINCT
+select BIT_AND(99999999999999999.99999), BIT_OR(99999999999999999.99999), BIT_XOR(99999999999999999.99999);
+select BIT_AND(999999999999999933193939.99999),BIT_OR(999999999999999933193939.99999),BIT_XOR(999999999999999933193939.99999);
+select BIT_AND(9999999999999999999999999999999999.9999999999999),BIT_OR(9999999999999999999999999999999999.9999999999999),BIT_XOR(9999999999999999999999999999999999.9999999999999);
+select BIT_AND(-99999999999999999.99999),BIT_OR(-99999999999999999.99999),BIT_XOR(-99999999999999999.99999);
+select BIT_AND(-999999999999999933193939.99999),BIT_OR(-999999999999999933193939.99999),BIT_XOR(-999999999999999933193939.99999);
+select BIT_AND(-9999999999999999999999999999999999.9999999999999),BIT_OR(-9999999999999999999999999999999999.9999999999999),BIT_XOR(-9999999999999999999999999999999999.9999999999999);
+create table t1(a bigint);
+select BIT_AND(a),BIT_OR(a), BIT_XOR(a) from t1;
+insert into t1 values(null),(null),(null),(null);
+select BIT_AND(a),BIT_OR(a), BIT_XOR(a)  from t1;
+insert into t1 values(12417249128419),(124124125124151),(5124125151415),(124125152651515);
+select BIT_AND(a),BIT_OR(a), BIT_XOR(a) from t1;
+drop table t1;
+create table t1 ( a int not null default 1, big bigint );
+insert into t1 (big) values (-1),(1234567890167),(92233720368547),(18446744073709515);
+select * from t1;
+select distinct BIT_AND(big),BIT_OR(big), BIT_XOR(big),BIT_AND(big)-1, BIT_OR(big)-1, BIT_XOR(big)-1  from t1;
+select BIT_AND(big),BIT_OR(big), BIT_XOR(big),BIT_AND(big)-1, BIT_OR(big)-1, BIT_XOR(big)-1 from t1 group by a;
+insert into t1 (big) values (184467440737615);
+select * from t1;
+select distinct BIT_AND(big),BIT_OR(big), BIT_XOR(big),BIT_AND(big)-1, BIT_OR(big)-1, BIT_XOR(big)-1  from t1;
+select BIT_AND(big),BIT_OR(big), BIT_XOR(big),BIT_AND(big)-1, BIT_OR(big)-1, BIT_XOR(big)-1 from t1 group by a;
+alter table t1 add key (big);
+select distinct BIT_AND(big),BIT_OR(big), BIT_XOR(big),BIT_AND(big)-1, BIT_OR(big)-1, BIT_XOR(big)-1  from t1;
+select BIT_AND(big),BIT_OR(big), BIT_XOR(big),BIT_AND(big)-1, BIT_OR(big)-1, BIT_XOR(big)-1 from t1 group by a;
+drop table t1;
+
+
+#HAVING,DISTINCT
+CREATE TABLE t1 (Fld1 int(11) default NULL,Fld2 int(11) default NULL);
+INSERT INTO t1 VALUES (1,10),(1,20),(2,NULL),(2,NULL),(3,50);
+select Fld1, BIT_AND(Fld2),BIT_OR(Fld2), BIT_XOR(Fld2) as q from t1 group by Fld1 having q is not null;
+select Fld1, BIT_AND(Fld2),BIT_OR(Fld2), BIT_XOR(Fld2) from t1 group by Fld1 having BIT_AND(Fld2) is not null;
+select Fld1, BIT_AND(Fld2),BIT_OR(Fld2), BIT_XOR(Fld2) from t1 group by Fld1 having BIT_OR(Fld2) is not null;
+select Fld1, BIT_AND(Fld2),BIT_OR(Fld2), BIT_XOR(Fld2) from t1 group by Fld1 having BIT_XOR(Fld2) is not null;
+drop table t1;
+
+
+#比较操作
+SELECT BIT_AND(1)<BIT_AND(2), BIT_AND(1)>BIT_OR(3), BIT_AND(3)>BIT_XOR(5);
+
+
