@@ -27,7 +27,7 @@ public class ConnectionManager {
         }
     }
 
-        public static Connection getConnection(){
+    public static Connection getConnection(){
 
         try {
             Class.forName(driver);

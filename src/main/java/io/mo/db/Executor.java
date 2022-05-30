@@ -25,7 +25,10 @@ public class Executor {
         LOG.info("Now start to run the file["+script.getFileName()+"]....................................................");
         ConnectionManager.reset();
         Connection connection = ConnectionManager.getConnection();
-
+        if(connection == null){
+            LOG.error("No valid connnection,please check the config..");
+            //System.exit(1);
+        }
         boolean hasResults = false;
         Statement statement = null;
         //check whether the result file exists
@@ -38,6 +41,9 @@ public class Executor {
             script.setExecStatus(false);
             return;
         }
+
+
+
 
         //create a database named filename for test;
         String def_db = rsf.getName().substring(0,rsf.getName().indexOf(COMMON.R_FILE_SUFFIX));
@@ -59,6 +65,10 @@ public class Executor {
             try{
                 command = commands.get(j);
                 connection = getConnection(command);
+                if(connection == null){
+                    LOG.error("No valid connnection,please check the config..");
+                    //System.exit(1);
+                }
                 statement = connection.createStatement();
                 if (command.isUpdate()) {
                     //if no-query-type statement is executed successfully,do not need check
@@ -69,12 +79,33 @@ public class Executor {
                 } else {
                     //if query-type statment is executed successfully,need compare the expected result and the actual result
                     hasResults = statement.execute(command.getCommand());
-                    statement.executeQuery(command.getCommand());
+                    //statement.executeQuery(command.getCommand());
                     act_res = getRS(statement.getResultSet());
                     if( j < commands.size() -1)
                         exp_res = ResultParser.getRS(command.getCommand(),commands.get(j + 1).getCommand());
                     else
                         exp_res = ResultParser.getRS(command.getCommand(),null);
+
+                    if(act_res == null){
+                        if(exp_res == null || exp_res.equalsIgnoreCase("")){
+                            LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed successfully");
+                            continue;
+                        }else {
+                            script.addErrorCmd(command);
+                            command.getResult().setErrorCode(RESULT.ERROR_CHECK_FAILED_CODE);
+                            command.getResult().setErrorDesc(RESULT.ERROR_CHECK_FAILED_DESC);
+                            command.getResult().setResult(RESULT.RESULT_TYPE_FAILED);
+                            command.getResult().setExpResult(exp_res);
+                            command.getResult().setActResult(act_res);
+                            command.getResult().setRemark(command.getCommand()+"\n"+
+                                    "[EXPECT RESULT]:\n"+exp_res+"\n"+
+                                    "[ACTUAL RESULT]:\n"+act_res+"\n");
+                            LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed failed");
+                            LOG.error("[EXPECT RESULT]:\n"+exp_res);
+                            LOG.error("[ACTUAL RESULT]:\n"+act_res);
+                            continue;
+                        }
+                    }
 
                     //if compare failed
                     if(!act_res.equalsIgnoreCase(exp_res)){
@@ -101,13 +132,57 @@ public class Executor {
                     break;
                 }
 
+
+
                 act_res = e.getMessage();
                 if( j < commands.size() -1)
                     exp_res = ResultParser.getRS(command.getCommand(),commands.get(j + 1).getCommand());
                 else
                     exp_res = ResultParser.getRS(command.getCommand(),null);
 
+                try {
+                    if(connection == null || connection.isClosed()){
+                        LOG.error("The connection has been lost,please check the logs .");
+                        script.addNoExecCmd(command);
+                        command.getResult().setErrorCode(RESULT.ERROR_CONNECTION_LOST_CODE);
+                        command.getResult().setErrorDesc(RESULT.ERROR_CONNECTION_LOST_DESC);
+                        command.getResult().setResult(RESULT.RESULT_TYPE_NOEXEC);
+                        command.getResult().setExpResult(exp_res);
+                        command.getResult().setActResult(RESULT.ERROR_CONNECTION_LOST_DESC);
+                        command.getResult().setRemark(command.getCommand()+"\n"+
+                                "[EXPECT RESULT]:\n"+exp_res+"\n"+
+                                "[ACTUAL RESULT]:\n"+RESULT.ERROR_CONNECTION_LOST_DESC+"\n");
+                        LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed failed");
+                        LOG.error("[EXPECT RESULT]:\n"+exp_res);
+                        LOG.error("[ACTUAL RESULT]:\n"+RESULT.ERROR_CONNECTION_LOST_DESC);
+                        continue;
+                    }
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                if(act_res == null){
+                    if(exp_res == null || exp_res.equalsIgnoreCase("")){
+                        LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed successfully");
+                        continue;
+                    }else {
+                        script.addErrorCmd(command);
+                        command.getResult().setErrorCode(RESULT.ERROR_CHECK_FAILED_CODE);
+                        command.getResult().setErrorDesc(RESULT.ERROR_CHECK_FAILED_DESC);
+                        command.getResult().setResult(RESULT.RESULT_TYPE_FAILED);
+                        command.getResult().setExpResult(exp_res);
+                        command.getResult().setActResult(act_res);
+                        command.getResult().setRemark(command.getCommand()+"\n"+
+                                "[EXPECT RESULT]:\n"+exp_res+"\n"+
+                                "[ACTUAL RESULT]:\n"+act_res+"\n");
+                        LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed failed");
+                        LOG.error("[EXPECT RESULT]:\n"+exp_res);
+                        LOG.error("[ACTUAL RESULT]:\n"+act_res);
+                        continue;
+                    }
+                }
                 //if compare failed
+
                 if(!act_res.equalsIgnoreCase(exp_res)){
                     script.addErrorCmd(command);
                     command.getResult().setErrorCode(RESULT.ERROR_CHECK_FAILED_CODE);
@@ -138,6 +213,10 @@ public class Executor {
     public static void run(ArrayList<TestSuite> suites,String path) {
         ConnectionManager.reset();
         Connection connection = ConnectionManager.getConnection();
+        if(connection == null){
+            LOG.error("No valid connnection,please check the config..");
+            //System.exit(1);
+        }
 
         boolean hasResults = false;
         Statement statement = null;
@@ -177,6 +256,10 @@ public class Executor {
                 try {
                     command = setups.get(j);
                     connection = getConnection(command);
+                    if(connection == null){
+                        LOG.error("No valid connnection,please check the config..");
+                        //System.exit(1);
+                    }
                     statement = connection.createStatement();
                     if (command.isUpdate()) {
                         //if no-query-type statement is executed successfully,do not need check
@@ -218,6 +301,28 @@ public class Executor {
                                 exp_res = ResultParser.getRS(command.getCommand(),null);*/
                             exp_res =  ResultParser.getRS(command.getCommand(),command.getNext().getCommand());
 
+                            if(act_res == null){
+                                if(exp_res == null || exp_res.equalsIgnoreCase("")){
+                                    LOG.info("["+path+"]["+command.getCommand().trim()+"] is executed successfully");
+                                    continue;
+                                }else {
+                                    command.getResult().setErrorCode(RESULT.ERROR_CHECK_FAILED_CODE);
+                                    command.getResult().setErrorDesc(RESULT.ERROR_CHECK_FAILED_DESC);
+                                    command.getResult().setResult(RESULT.RESULT_TYPE_FAILED);
+                                    command.getResult().setExpResult(exp_res);
+                                    command.getResult().setActResult(act_res);
+                                    command.getResult().setRemark(
+                                            "#sql#:\n"+command.getCommand()+
+                                                    "#excpect#:\n"+exp_res+"\n"+
+                                                    "#actual #:\n"+act_res+"\n");
+                                    testCase.setResult(command.getResult());
+                                    LOG.error("["+path+"]["+command.getCommand().trim()+"] is executed failed");
+                                    LOG.error("[EXPECT RESULT]:\n"+exp_res);
+                                    LOG.error("[ACTUAL RESULT]:\n"+act_res);
+                                }
+                            }
+
+
                             //if compare failed
                             if(!act_res.equalsIgnoreCase(exp_res)){
                                 command.getResult().setErrorCode(RESULT.ERROR_CHECK_FAILED_CODE);
@@ -247,12 +352,56 @@ public class Executor {
                             break;
                         }
 
+
+
                         act_res = e.getMessage();
                         /*if( k < sqlCommands.size() -1)
                             exp_res = ResultParser.getRS(command.getCommand(),sqlCommands.get(k + 1).getCommand());
                         else
                             exp_res = ResultParser.getRS(command.getCommand(),null);*/
                         exp_res =  ResultParser.getRS(command.getCommand(),command.getNext().getCommand());
+
+                        try {
+                            if(connection == null || connection.isClosed()){
+                                LOG.error("The connection has been lost,please check the logs .");
+                                testCase.setResult(command.getResult());
+                                command.getResult().setErrorCode(RESULT.ERROR_CONNECTION_LOST_CODE);
+                                command.getResult().setErrorDesc(RESULT.ERROR_CONNECTION_LOST_DESC);
+                                command.getResult().setResult(RESULT.RESULT_TYPE_NOEXEC);
+                                command.getResult().setExpResult(exp_res);
+                                command.getResult().setActResult(RESULT.ERROR_CONNECTION_LOST_DESC);
+                                command.getResult().setRemark(command.getCommand()+"\n"+
+                                        "[EXPECT RESULT]:\n"+exp_res+"\n"+
+                                        "[ACTUAL RESULT]:\n"+RESULT.ERROR_CONNECTION_LOST_DESC+"\n");
+                                LOG.error("["+path+"]["+command.getCommand().trim()+"] is executed failed");
+                                LOG.error("[EXPECT RESULT]:\n"+exp_res);
+                                LOG.error("[ACTUAL RESULT]:\n"+RESULT.ERROR_CONNECTION_LOST_DESC);
+                                continue;
+                            }
+                        } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        }
+
+                        if(act_res == null){
+                            if(exp_res == null || exp_res.equalsIgnoreCase("")){
+                                LOG.info("["+path+"]["+command.getCommand().trim()+"] is executed successfully");
+                                continue;
+                            }else {
+                                command.getResult().setErrorCode(RESULT.ERROR_CHECK_FAILED_CODE);
+                                command.getResult().setErrorDesc(RESULT.ERROR_CHECK_FAILED_DESC);
+                                command.getResult().setResult(RESULT.RESULT_TYPE_FAILED);
+                                command.getResult().setExpResult(exp_res);
+                                command.getResult().setActResult(act_res);
+                                command.getResult().setRemark(
+                                        "#sql#:\n"+command.getCommand()+
+                                                "#excpect#:\n"+exp_res+"\n"+
+                                                "#actual #:\n"+act_res+"\n");
+                                testCase.setResult(command.getResult());
+                                LOG.error("["+path+"]["+command.getCommand().trim()+"] is executed failed");
+                                LOG.error("[EXPECT RESULT]:\n"+exp_res);
+                                LOG.error("[ACTUAL RESULT]:\n"+act_res);
+                            }
+                        }
 
                         //if compare failed
                         if(!act_res.equalsIgnoreCase(exp_res)){
@@ -381,6 +530,12 @@ public class Executor {
     public static String getRS(ResultSet rs){
         ResultSetMetaData md = null;
         StringBuffer result = new StringBuffer();
+
+        if(rs == null){
+            LOG.warn("The MO return a wired resultset,it should not be null ,but it is.");
+            return null;
+        }
+
         try {
             md = rs.getMetaData();
             int cols = md.getColumnCount();
@@ -460,7 +615,7 @@ public class Executor {
             statement.executeUpdate("create database IF NOT EXISTS `"+name+"`;");
             statement.executeUpdate("use `"+name+"`;");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            LOG.error("create database "+name+"is failed.cause: "+e.getMessage());
         }
     }
 
@@ -471,7 +626,8 @@ public class Executor {
             statement = connection.createStatement();
             statement.executeUpdate("drop database IF EXISTS `"+name+"`;");
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            LOG.error("drop database "+name+"is failed.cause: "+e.getMessage());
         }
 
     }

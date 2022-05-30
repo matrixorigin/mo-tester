@@ -10,6 +10,7 @@ public class TestScript {
 
     private ArrayList<SqlCommand> commands = new ArrayList<SqlCommand>();
     private ArrayList<SqlCommand> errorcmds = new ArrayList<SqlCommand>();
+    private ArrayList<SqlCommand> noexeccmds = new ArrayList<SqlCommand>();
 
     private String fileName;
     private String id;
@@ -35,6 +36,9 @@ public class TestScript {
 
     public void addErrorCmd(SqlCommand command){
         errorcmds.add(command);
+    }
+    public void addNoExecCmd(SqlCommand command){
+        noexeccmds.add(command);
     }
 
     public int getSize(){
@@ -103,6 +107,10 @@ public class TestScript {
 
     public List<SqlCommand> getErrorList(){
         return errorcmds;
+    }
+
+    public List<SqlCommand> getNoExecList(){
+        return noexeccmds;
     }
 
 

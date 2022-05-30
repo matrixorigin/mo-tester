@@ -284,7 +284,8 @@ public class TestReport {
         _cases.add(_case);
         total_case++;
         if(!_case.getResult().getResult().equalsIgnoreCase(RESULT.RESULT_TYPE_PASS)){
-            if(_case.getResult().getResult().equalsIgnoreCase(RESULT.RESULT_TYPE_NOEXEC))
+            if(_case.getResult().getResult().equalsIgnoreCase(RESULT.RESULT_TYPE_NOEXEC)
+                || _case.getResult().getResult().equalsIgnoreCase(RESULT.RESULT_TYPE_NOEXEC))
                 noexec_case++;
 
             if(_case.getResult().getResult().equalsIgnoreCase(RESULT.RESULT_TYPE_FAILED))
@@ -317,8 +318,10 @@ public class TestReport {
         scripts.add(script);
         total_cmd += script.getSize();
         error_cmd += script.getErrorCount();
+        noexec_cmd += script.getNoExecList().size();
         if(!script.getExecStatus())
             noexec_cmd += script.getSize();
+
     }
 
     public String getReportSummaryTXT(int total,int error,int noexec){
@@ -339,12 +342,14 @@ public class TestReport {
         StringBuffer buffer = new StringBuffer();
         buffer.append("["+script.getFileName()+"] TOTAL : " + script.getSize());
         buffer.append(", ");
-        buffer.append("SUCCESS : "+(script.getSize() - script.getErrorCount()));
+        buffer.append("SUCCESS : "+(script.getSize() - script.getErrorCount() - script.getNoExecList().size()));
         buffer.append(", ");
         buffer.append("ERROR :"+script.getErrorCount());
         buffer.append(", ");
+        buffer.append("NOEXE :"+script.getNoExecList().size());
+        buffer.append(", ");
         if(script.getSize() != 0)
-            buffer.append("SUCCESS RATE : "+((script.getSize() - script.getErrorCount())*100/script.getSize())+"%\n");
+            buffer.append("SUCCESS RATE : "+((script.getSize() - script.getErrorCount() -script.getNoExecList().size())*100/script.getSize())+"%\n");
         else
             buffer.append("SUCCESS RATE : 0%\n");
         return buffer.toString();
