@@ -1,0 +1,256 @@
+select 0.00,1.11,1234567890.1234567890123456789;
+0.00	1.11	1234567890.1234567890123456789
+0.00	1.11	1234567890.1234567890123456789
+select 1123.2333+1233.3331;
+1123.2333+1233.3331
+2356.5664
+select cast(9223372.036854775808 as decimal)+1;
+cast(9223372.036854775808 as decimal)+1
+9223373
+select round(cast(2320310.66666612312 as decimal));
+round(cast(2320310.66666612312 as decimal))
+2320311
+select floor(cast(2231231.501231 as decimal));
+floor(cast(2231231.501231 as decimal))
+2231232
+drop table if exists t1;
+create table t1 (a decimal(29,0) not null, primary key(a));
+insert into t1 values (18446744073709551615), (0xFFFFFFFFFFFFFE), (18446744073709551613.0000000), (18446744073709551612.0000000001);
+select * from t1;
+a
+72057594037927934
+18446744073709551612
+18446744073709551613
+18446744073709551615
+select * from t1 where a=18446744073709551615;
+a
+18446744073709551615
+delete from t1 where a=18446744073709551615.000000000;
+select * from t1;
+a
+72057594037927934
+18446744073709551612
+18446744073709551613
+drop table t1;
+create table t1 ( a int not null default 1, big decimal(29,11) );
+insert into t1 (big) values (-1),(12.34567891234567),(92.23372036854775807);
+select * from t1;
+a	big
+1	-1.00000000000
+1	12.34567891235
+1	92.23372036855
+select min(big),max(big),max(big)-1 from t1;
+min(big)	max(big)	max(big)-1
+-1.00000000000	92.23372036855	91.23372036855
+select min(big),avg(big),max(big)-1 from t1 group by a;
+min(big)	avg(big)	max(big)-1
+-1.00000000000	34.526466426966667	91.23372036855
+drop table t1;
+create table t1 ( a int not null default 1, big decimal(20,4));
+insert into t1 (big) values (0),(18446744073), (0xFFFFFE), (184467.13), (184462);
+select * from t1;
+a	big
+1	0.0000
+1	18446744073.0000
+1	16777214.0000
+1	184467.1300
+1	184462.0000
+select min(big),max(big),max(big)-1 from t1;
+min(big)	max(big)	max(big)-1
+0.0000	18446744073.0000	18446744072.0000
+select min(big),count(big),max(big)-1 from t1 group by a;
+min(big)	count(big)	max(big)-1
+0.0000	5	18446744072.0000
+drop table if exists t1,t2;
+create table t1 (
+decimald  decimal(6,5) not null,
+value32  integer          not null,
+primary key(decimald, value32)
+);
+create table t2 (
+decimald  decimal(5,4)  not null,
+value32  integer          not null,
+primary key(decimald, value32)
+);
+insert into t1 values(0.1715600000, 1);
+insert into t1 values(9.2234, 2);
+insert into t2 values(1.7156e-1, 3);
+insert into t2 values(9.2233720368547758070000000000, 4);
+select * from t1;
+decimald	value32
+0.17156	1
+9.22340	2
+select * from t2;
+decimald	value32
+0.1716	3
+9.2234	4
+select * from t1 join t2 on t1.decimald=t2.decimald;
+decimald	value32	decimald	value32
+9.22340	2	9.2234	4
+select * from t1 join t2 on t1.decimald=t2.decimald where t1.decimald!=0;
+decimald	value32	decimald	value32
+9.22340	2	9.2234	4
+drop table t1, t2;
+create table t1 (decimal20 decimal(20,18) not null);
+insert into t1 values (1.4e-19),(1.4e-18);
+select * from t1;
+decimal20
+0.000000000000000000
+0.000000000000000001
+DROP TABLE t1;
+create table t1 (decimal_col decimal(29,0));
+insert into t1 values (-17666000000000000000);
+select * from t1 where decimal_col=-17666000000000000000 order by 1 asc;
+decimal_col
+-17666000000000000000
+select * from t1 where decimal_col='-17666000000000000000' order by decimal_col desc;
+decimal_col
+-17666000000000000000
+drop table t1;
+select cast(10000002383263201056 as decimal) mod 50 as result;
+result
+49
+select cast(cast(19999999999999999999 as decimal) as unsigned);
+cast(cast(19999999999999999999 as decimal) as unsigned)
+9999999999
+CREATE TABLE t1 (id INT AUTO_INCREMENT PRIMARY KEY,
+a decimal(20,0) UNSIGNED,
+b VARCHAR(20));
+INSERT INTO t1 (a) VALUES
+(0.5000000000),(0.0000000001),
+(CAST(0x7FFFFFFF AS decimal)),
+(CAST(0x80000000 AS UNSIGNED)),
+(CAST(0x7FFFFFFF AS UNSIGNED));
+UPDATE t1 SET b = a;
+select distinct * from t1 where ((a = '2147483647') and (b = '2147483647'));
+id	a	b
+3	2147483647	2147483647
+5	2147483647	2147483647
+select a,count(a) from t1 group by a having count(a)>=2;
+a	count(a)
+2147483647	2
+CREATE TABLE t_decimal(id decimal(10,5));
+INSERT INTO t_decimal VALUES (1), (2),(1.099999999),(2.20000000001);
+select * from t_decimal;
+id
+1.00000
+2.00000
+1.10000
+2.20000
+SELECT id, id >= 1.1 FROM t_decimal;
+id	id >= 1.1
+1.00000	0
+2.00000	1
+1.10000	1
+2.20000	1
+SELECT id, 1.1 <= id FROM t_decimal;
+id	1.1 <= id
+1.00000	0
+2.00000	1
+1.10000	1
+2.20000	1
+SELECT id, id = 1.1 FROM t_decimal;
+id	id = 1.1
+1.00000	0
+2.00000	0
+1.10000	1
+2.20000	0
+SELECT id, 1.1 = id FROM t_decimal;
+id	1.1 = id
+1.00000	0
+2.00000	0
+1.10000	1
+2.20000	0
+SELECT * from t_decimal WHERE id = 1.1;
+id
+1.10000
+SELECT * from t_decimal WHERE id = 1.1e0;
+id
+1.10000
+SELECT * from t_decimal WHERE id = '1.1';
+id
+1.10000
+SELECT * from t_decimal WHERE id = '1.1e0';
+id
+1.10000
+SELECT * from t_decimal WHERE id IN (1.1, 2.2);
+id
+1.10000
+2.20000
+SELECT * from t_decimal WHERE id IN (1.1e0, 2.2e0);
+id
+1.10000
+2.20000
+SELECT * from t_decimal WHERE id IN ('1.1', '2.2');
+id
+1.10000
+2.20000
+SELECT * from t_decimal WHERE id IN ('1.1e0', '2.2e0');
+id
+1.10000
+2.20000
+SELECT * from t_decimal WHERE id BETWEEN 1.1 AND 1.9;
+id
+1.10000
+SELECT * from t_decimal WHERE id BETWEEN 1.1e0 AND 1.9e0;
+id
+1.10000
+SELECT * from t_decimal WHERE id BETWEEN '1.1' AND '1.9';
+id
+1.10000
+SELECT * from t_decimal WHERE id BETWEEN '1.1e0' AND '1.9e0';
+id
+1.10000
+DROP TABLE t1;
+CREATE TABLE t1 (a decimal(2,1));
+INSERT INTO t1 VALUES (1),(0.8999),(0.9);
+SELECT * FROM t1 WHERE coalesce(a) BETWEEN 0 and 0.9;
+a
+0.9
+0.9
+SELECT * FROM t1 WHERE coalesce(a)=0.9;
+a
+0.9
+0.9
+SELECT * FROM t1 WHERE coalesce(a) in (0.8,0.9);
+a
+0.9
+0.9
+SELECT * FROM t1 WHERE a BETWEEN 0 AND 0.9;
+a
+0.9
+0.9
+SELECT * FROM t1 WHERE a=0.9;
+a
+0.9
+0.9
+SELECT * FROM t1 WHERE a IN (0.8,0.9);
+a
+0.9
+0.9
+DROP TABLE t1;
+create table t (id decimal(23,3) unsigned, b int);
+insert into t values(889475494977969.3574,1);
+insert into t values(889475494977969.3579,2);
+insert into t values(889475494977969.357,3);
+select count(*) from t
+where id>=88947549497796.3574 and id <=889475494977969.358;
+count(*)
+3
+select count(*) from t
+where id between 88947549497796.3574 and 889475494977969.358;
+count(*)
+3
+drop table t;
+SELECT CAST(1.00 AS decimal) BETWEEN 1 AND -1;
+CAST(1.00 AS decimal) BETWEEN 1 AND -1
+0
+SELECT CAST(1.00 AS decimal) NOT BETWEEN 1 AND -1;
+CAST(1.00 AS decimal) NOT BETWEEN 1 AND -1
+1
+SELECT CAST(-0 AS decimal) BETWEEN 0 AND -1;
+CAST(-0 AS decimal) BETWEEN 0 AND -1
+0
+SELECT CAST(0 AS decimal) NOT BETWEEN 0 AND -1;
+CAST(0 AS decimal) NOT BETWEEN 0 AND -1
+1

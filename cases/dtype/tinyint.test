@@ -1,0 +1,117 @@
+create table t1 (a tinyint unsigned not null, primary key(a));
+insert into t1 values (255), (0xFC), (254), (253);
+select * from t1;
+select * from t1 where a=255;
+delete from t1 where a=255;
+select * from t1;
+drop table t1;
+create table t1 ( a tinyint not null default 1, tinyint16 tinyint );
+insert into t1 (tinyint16) values (-1),(127),(-128);
+select * from t1;
+select min(tinyint16),max(tinyint16),max(tinyint16)-1 from t1;
+select min(tinyint16),max(tinyint16),max(tinyint16)-1 from t1 group by a;
+drop table t1;
+create table t1 ( a tinyint not null default 1, tinyint16 tinyint unsigned);
+insert into t1 (tinyint16) values (0),(255), (0xFE), (254), (253);
+select * from t1;
+select min(tinyint16),max(tinyint16),max(tinyint16)-1 from t1;
+select min(tinyint16),max(tinyint16),max(tinyint16)-1 from t1 group by a;
+drop table t1;
+create table t1 (id tinyint auto_increment primary key, a tinyint) auto_increment=99;
+insert into t1 values (null,1);
+select * from t1;
+select * from t1 limit 99;
+drop table if exists t1,t2;
+create table t1 (
+valueu16  tinyint unsigned  not null,
+value16  tinyint          not null,
+primary key(valueu16, value16)
+);
+create table t2 (
+valueu16  tinyint unsigned  not null,
+value16  tinyint          not null,
+primary key(valueu16, value16)
+);
+insert into t1 values(255, 1);
+insert into t1 values( 127, 2);
+insert into t2 values(255, 3);
+insert into t2 values( 127, 4);
+insert into t1 values(5,-128);
+insert into t2 values(5,-128);
+select * from t1;
+select * from t2;
+select * from t1 join t2 on t1.valueu16=t2.valueu16;
+select * from t1 join t2 on t1.valueu16=t2.valueu16 where t1.valueu16=255;
+select * from t1 join t2 on t1.value16=t2.value16;
+drop table t1, t2;
+create table t1 (tinyint16 tinyint not null);
+insert into t1 values (-128);
+select * from t1;
+DROP TABLE t1;
+create table t1 (tinyint_col tinyint unsigned);
+insert into t1 values (250);
+select * from t1 where tinyint_col=250;
+select * from t1 where tinyint_col='250';
+drop table t1;
+select cast(250 as unsigned) mod 50 as result;
+select cast(127 as signed);
+select cast(-128 as signed);
+CREATE TABLE t1 (id TINYINT AUTO_INCREMENT PRIMARY KEY,
+a TINYINT(4) UNSIGNED,
+b VARCHAR(4));
+INSERT INTO t1 (a) VALUES
+(0),
+(CAST(0x7F AS UNSIGNED)),
+(CAST(0x80 AS UNSIGNED)),
+(CAST(0xFF AS UNSIGNED));
+UPDATE t1 SET b = a;
+select * from t1 where ((a = 255) and (b = '255'));
+CREATE TABLE t_tinyint(id TINYINT);
+INSERT INTO t_tinyint VALUES (1), (2);
+SELECT id, id >= 1.1 FROM t_tinyint;
+SELECT id, 1.1 <= id FROM t_tinyint;
+SELECT id, id = 1.1 FROM t_tinyint;
+SELECT id, 1.1 = id FROM t_tinyint;
+SELECT * from t_tinyint WHERE id = 1.1;
+SELECT * from t_tinyint WHERE id = 1.1e0;
+SELECT * from t_tinyint WHERE id = '1.1';
+SELECT * from t_tinyint WHERE id = '1.1e0';
+SELECT * from t_tinyint WHERE id IN (1.1, 2.2);
+SELECT * from t_tinyint WHERE id IN (1.1e0, 2.2e0);
+SELECT * from t_tinyint WHERE id IN ('1.1', '2.2');
+SELECT * from t_tinyint WHERE id IN ('1.1e0', '2.2e0');
+SELECT * from t_tinyint WHERE id BETWEEN 1.1 AND 1.9;
+SELECT * from t_tinyint WHERE id BETWEEN 1.1e0 AND 1.9e0;
+SELECT * from t_tinyint WHERE id BETWEEN '1.1' AND '1.9';
+SELECT * from t_tinyint WHERE id BETWEEN '1.1e0' AND '1.9e0';
+DROP TABLE t1;
+CREATE TABLE t1 (a TINYINT);
+INSERT INTO t1 VALUES (1);
+SELECT * FROM t1 WHERE coalesce(a) BETWEEN 0 and 0.9;
+SELECT * FROM t1 WHERE coalesce(a)=0.9;
+SELECT * FROM t1 WHERE coalesce(a) in (0.8,0.9);
+SELECT * FROM t1 WHERE a BETWEEN 0 AND 0.9;
+SELECT * FROM t1 WHERE a=0.9;
+SELECT * FROM t1 WHERE a IN (0.8,0.9);
+DROP TABLE t1;
+create table t (id tinyint unsigned, b tinyint);
+insert into t values(127,1);
+insert into t values(255,2);
+insert into t values(128,3);
+select count(*) from t 
+where id>=127 and id <=255;
+select count(*) from t 
+where id between 127 and 255;
+drop table t;
+SELECT (254 BETWEEN 0 AND 255);
+SELECT  -32000 <= 0;
+SELECT 0 <= 127;
+SELECT CAST(100 AS UNSIGNED) BETWEEN 1 AND -1;
+SELECT CAST(100 AS UNSIGNED) NOT BETWEEN 1 AND -1;
+SELECT CAST(0 AS UNSIGNED) BETWEEN 0 AND -1;
+SELECT CAST(0 AS UNSIGNED) NOT BETWEEN 0 AND -1;
+SELECT ( 255 BETWEEN 255 AND 255 );
+SELECT ( 127 BETWEEN 255 AND 1 );
+SELECT ( -1 BETWEEN 255 AND 1 );
+SELECT ( 0 BETWEEN 255 AND 1 );
+SELECT ( 1 BETWEEN 255 AND 1 );

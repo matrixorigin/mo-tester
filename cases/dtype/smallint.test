@@ -1,0 +1,117 @@
+create table t1 (a smallint unsigned not null, primary key(a));
+insert into t1 values (65535), (0xFFFC), (65534), (65533);
+select * from t1;
+select * from t1 where a=65535;
+delete from t1 where a=65535;
+select * from t1;
+drop table t1;
+create table t1 ( a smallint not null default 1, smallint16 smallint );
+insert into t1 (smallint16) values (-1),(32767),(-32768);
+select * from t1;
+select min(smallint16),max(smallint16),max(smallint16)-1 from t1;
+select min(smallint16),max(smallint16),max(smallint16)-1 from t1 group by a;
+drop table t1;
+create table t1 ( a smallint not null default 1, smallint16 smallint unsigned);
+insert into t1 (smallint16) values (0),(65535), (0xFFFE), (65534), (65533);
+select * from t1;
+select min(smallint16),max(smallint16),max(smallint16)-1 from t1;
+select min(smallint16),max(smallint16),max(smallint16)-1 from t1 group by a;
+drop table t1;
+create table t1 (id smallint auto_increment primary key, a smallint) auto_increment=9999;
+insert into t1 values (null,1);
+select * from t1;
+select * from t1 limit 9999;
+drop table if exists t1,t2;
+create table t1 (
+valueu16  smallint unsigned  not null,
+value16  smallint          not null,
+primary key(valueu16, value16)
+);
+create table t2 (
+valueu16  smallint unsigned  not null,
+value16  smallint          not null,
+primary key(valueu16, value16)
+);
+insert into t1 values(65535, 1);
+insert into t1 values( 32767, 2);
+insert into t2 values(65535, 3);
+insert into t2 values( 32767, 4);
+insert into t1 values(5,-32768);
+insert into t2 values(5,-32768);
+select * from t1;
+select * from t2;
+select * from t1 join t2 on t1.valueu16=t2.valueu16;
+select * from t1 join t2 on t1.valueu16=t2.valueu16 where t1.valueu16=65535;
+select * from t1 join t2 on t1.value16=t2.value16;
+drop table t1, t2;
+create table t1 (smallint16 smallint not null);
+insert into t1 values (-32768);
+select * from t1;
+DROP TABLE t1;
+create table t1 (smallint_col smallint unsigned);
+insert into t1 values (65500);
+select * from t1 where smallint_col=65500;
+select * from t1 where smallint_col='65500';
+drop table t1;
+select cast(65500 as unsigned) mod 50 as result;
+select cast(32767 as signed);
+select cast(-32768 as signed);
+CREATE TABLE t1 (id SMALLINT AUTO_INCREMENT PRIMARY KEY,
+a SMALLINT(6) UNSIGNED,
+b VARCHAR(6));
+INSERT INTO t1 (a) VALUES
+(0),
+(CAST(0x7FFF AS UNSIGNED)),
+(CAST(0x8000 AS UNSIGNED)),
+(CAST(0xFFFF AS UNSIGNED));
+UPDATE t1 SET b = a;
+select * from t1 where ((a = 65535) and (b = '65535'));
+CREATE TABLE t_smallint(id SMALLINT);
+INSERT INTO t_smallint VALUES (1), (2);
+SELECT id, id >= 1.1 FROM t_smallint;
+SELECT id, 1.1 <= id FROM t_smallint;
+SELECT id, id = 1.1 FROM t_smallint;
+SELECT id, 1.1 = id FROM t_smallint;
+SELECT * from t_smallint WHERE id = 1.1;
+SELECT * from t_smallint WHERE id = 1.1e0;
+SELECT * from t_smallint WHERE id = '1.1';
+SELECT * from t_smallint WHERE id = '1.1e0';
+SELECT * from t_smallint WHERE id IN (1.1, 2.2);
+SELECT * from t_smallint WHERE id IN (1.1e0, 2.2e0);
+SELECT * from t_smallint WHERE id IN ('1.1', '2.2');
+SELECT * from t_smallint WHERE id IN ('1.1e0', '2.2e0');
+SELECT * from t_smallint WHERE id BETWEEN 1.1 AND 1.9;
+SELECT * from t_smallint WHERE id BETWEEN 1.1e0 AND 1.9e0;
+SELECT * from t_smallint WHERE id BETWEEN '1.1' AND '1.9';
+SELECT * from t_smallint WHERE id BETWEEN '1.1e0' AND '1.9e0';
+DROP TABLE t1;
+CREATE TABLE t1 (a SMALLINT);
+INSERT INTO t1 VALUES (1);
+SELECT * FROM t1 WHERE coalesce(a) BETWEEN 0 and 0.9;
+SELECT * FROM t1 WHERE coalesce(a)=0.9;
+SELECT * FROM t1 WHERE coalesce(a) in (0.8,0.9);
+SELECT * FROM t1 WHERE a BETWEEN 0 AND 0.9;
+SELECT * FROM t1 WHERE a=0.9;
+SELECT * FROM t1 WHERE a IN (0.8,0.9);
+DROP TABLE t1;
+create table t (id smallint unsigned, b smallint);
+insert into t values(32767,1);
+insert into t values(65535,2);
+insert into t values(32768,3);
+select count(*) from t 
+where id>=32767 and id <=65535;
+select count(*) from t 
+where id between 32767 and 65535;
+drop table t;
+SELECT (65534 BETWEEN 0 AND 65535);
+SELECT  -32000 <= 0;
+SELECT 0 <= 32767;
+SELECT CAST(100 AS UNSIGNED) BETWEEN 1 AND -1;
+SELECT CAST(100 AS UNSIGNED) NOT BETWEEN 1 AND -1;
+SELECT CAST(0 AS UNSIGNED) BETWEEN 0 AND -1;
+SELECT CAST(0 AS UNSIGNED) NOT BETWEEN 0 AND -1;
+SELECT ( 65535 BETWEEN 65535 AND 65535 );
+SELECT ( 32767 BETWEEN 65535 AND 1 );
+SELECT ( -1 BETWEEN 65535 AND 1 );
+SELECT ( 0 BETWEEN 65535 AND 1 );
+SELECT ( 1 BETWEEN 65535 AND 1 );

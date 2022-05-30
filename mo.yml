@@ -2,8 +2,8 @@
 jdbc:
   driver: "com.mysql.cj.jdbc.Driver"
   server:
-  - addr: "127.0.0.1:6001"
-  #- addr: "127.0.0.1:3306"
+  #- addr: "127.0.0.1:6001"
+  - addr: "127.0.0.1:3306"
   #- addr: "127.0.0.1:3306"
   database:
     default: "test"
@@ -19,5 +19,5 @@ jdbc:
 
 #users
 user:
-  name: "dump"
-  passwrod: "111"
+  name: "root"
+  passwrod: "Welcome1!"
