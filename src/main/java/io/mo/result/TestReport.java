@@ -206,6 +206,7 @@ public class TestReport {
             try {
                 BufferedWriter r_writer = new BufferedWriter(new FileWriter(COMMON.REPORT_PATH+"/report.txt"));
                 BufferedWriter e_writer = new BufferedWriter(new FileWriter(COMMON.REPORT_PATH+"/error.txt"));
+                BufferedWriter s_writer = new BufferedWriter(new FileWriter(COMMON.REPORT_PATH+"/success.txt"));
                 r_writer.write(getReportSummaryTXT(total_cmd,error_cmd,noexec_cmd));
                 LOG.info(getReportSummaryTXT(total_cmd,error_cmd,noexec_cmd).trim());
                 for(int i = 0; i < scripts.size();i++){
@@ -223,6 +224,13 @@ public class TestReport {
                         e_writer.newLine();
                         e_commands.add(errors.get(j));
                     }
+                    List<SqlCommand> commands = script.getCommands();
+                    for(SqlCommand command : commands){
+                        if(command.getResult().getResult().equalsIgnoreCase(RESULT.RESULT_TYPE_PASS)){
+                            s_writer.write("["+script.getFileName()+"]:"+command.getCommand().replaceAll("\r"," ").replaceAll("\n"," "));
+                            s_writer.newLine();
+                        }
+                    }
                 }
 
                 if(e_commands.size() > 0){
@@ -234,8 +242,10 @@ public class TestReport {
                 }
                 r_writer.flush();
                 e_writer.flush();
+                s_writer.flush();
                 r_writer.close();
                 e_writer.close();
+                s_writer.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
