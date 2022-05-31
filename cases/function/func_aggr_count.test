@@ -1,0 +1,47 @@
+#NULL
+SELECT COUNT(NULL);
+
+#DATATYPE
+create table t1(a tinyint, b SMALLINT, c MEDIUMINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, j time, k datetime, l TIMESTAMP, m char(255), n varchar(255));
+insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "10:03:12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
+insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "10:03:12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
+insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "10:03:12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
+insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "10:03:12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
+select count(a),count(b),count(c),count(d),count(e),count(f),count(g),count(h),count(i),count(j),count(k),count(l),count(m),count(n) from t1;
+drop table t1;
+
+#EXTREME VALUE
+create table t1(a int);
+select count(*) from t1;
+insert into t1 values(null),(null),(null),(null);
+select count(*) from t1;
+drop table t1;
+
+
+#HAVING, 比较运算
+CREATE TABLE t1 (
+bug_id mediumint(9) NOT NULL,
+groupset bigint(20) DEFAULT '0' NOT NULL,
+assigned_to mediumint(9) DEFAULT '0' NOT NULL,
+bug_file_loc text
+);
+CREATE TABLE t2 (
+value tinytext,
+program varchar(64),
+initialowner tinytext NOT NULL,
+initialqacontact tinytext NOT NULL,
+description mediumtext NOT NULL
+);
+INSERT INTO t1 VALUES (1,0,0,'TestComponent');
+INSERT INTO t1 VALUES (2,0,0,'BBBBBBBBBBBBB');
+INSERT INTO t1 VALUES (3,0,0,'TestComponent2');
+INSERT INTO t1 VALUES (4,0,0,'TestComponent2');
+INSERT INTO t2 VALUES ('TestComponent','TestProduct','id0001','','');
+INSERT INTO t2 VALUES ('BBBBBBBBBBBBB - conversion','AAAAA','id0001','','');
+INSERT INTO t2 VALUES ('BBBBBBBBBBBBB - generic','AAAAA','id0001','','');
+INSERT INTO t2 VALUES ('TestComponent2','TestProduct','id0001','','');
+select any_value(value),any_value(description),COUNT(bug_id) from t2 left join t1 on t2.value=t1.bug_file_loc group by value having COUNT(bug_id) IN (0,2);
+SELECT COUNT(t1.bug_id) >= COUNT(t2.value) from t1 join t2 on t1.bug_file_loc = t2.value;
+drop table t1, t2;
+
+

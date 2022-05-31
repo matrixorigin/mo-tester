@@ -1,0 +1,146 @@
+#SELECT,  算术运算，嵌套
+select now()-now(),weekday(curdate())-weekday(now()),unix_timestamp()-unix_timestamp(now());
+select now()-curdate()*1000000-curtime();
+DROP TABLE if exists t1;
+
+#INSERT
+CREATE TABLE t1 (a TIMESTAMP);
+INSERT INTO t1 VALUES (now()), (now());
+SELECT 1 FROM t1 ORDER BY MAKETIME(1, 1, a);
+DROP TABLE t1;
+
+#INSERT
+DROP TABLE if exists t1;
+create table t1 (a int primary key auto_increment, b int, c int, d timestamp default current_timestamp, unique(b),unique(c));
+insert into t1 values(null,1,1,now());
+insert into t1 values(null,0,0,null);
+select * from t1;
+DROP TABLE t1;
+
+#比较运算,数据类型
+CREATE TABLE t1 (a TIMESTAMP);
+INSERT INTO t1 VALUES (NOW()),(NOW()),(NOW());
+SELECT * FROM t1 WHERE a > '2008-01-01';
+DROP TABLE t1;
+
+#算术运算，CREATE SELECT
+create table t1 select now() - now(), curtime() - curtime(), sec_to_time(1) + 0, from_unixtime(1) + 0;
+show create table t1;
+drop table t1;
+
+#ALTER TABLE
+DROP TABLE IF EXISTS t1;
+DROP TABLE IF EXISTS t2;
+SET TIMESTAMP=1558818549;
+CREATE TABLE t1 (i INT PRIMARY KEY, no_default DATETIME);
+ALTER TABLE t1 ADD alter_default DATETIME DEFAULT (now());
+CREATE TABLE t2(i INT, alter_date DATETIME);
+INSERT INTO t2 VALUES (0, now()), (1, now()), (2, now());
+SET TIMESTAMP=1558818554;
+INSERT INTO t1 (i, no_default) VALUES (0, now()), (1, now()), (2, now());
+SELECT (t1.no_default > t2.alter_date) AS no_default_newer_than_alter,(t1.alter_default > t2.alter_date) AS alter_default_newer_than_alter FROM t1 NATURAL JOIN t2;
+DROP TABLE t2;
+DROP TABLE t1;
+
+
+DROP TABLE if exists t1;
+create table t1 (a int primary key auto_increment, b int, c int, d timestamp default current_timestamp, unique(b),unique(c));
+insert into t1 values(null,1,1,now());
+insert into t1 values(null,0,0,null);
+replace into t1 values(null,1,0,null);
+select last_insert_id();
+drop table t1;
+create table t1 (a int primary key auto_increment, b int, c int, e int, d timestamp default current_timestamp, unique(b),unique(c),unique(e));
+insert into t1 values(null,1,1,1,now());
+insert into t1 values(null,0,0,0,null);
+replace into t1 values(null,1,0,2,null);
+select last_insert_id();
+drop table t1;
+DROP TABLE t1;
+CREATE TABLE t1 (a datetime DEFAULT (curdate()));
+INSERT INTO t1 VALUES ();
+SELECT * FROM t1;
+DROP TABLE t1;
+CREATE TABLE t1 (a datetime DEFAULT (current_date()));
+INSERT INTO t1 VALUES ();
+SELECT * FROM t1;
+DROP TABLE t1;
+CREATE TABLE t1 (a datetime DEFAULT (current_date));
+INSERT INTO t1 VALUES ();
+SELECT * FROM t1;
+DROP TABLE t1;
+CREATE TABLE t1 (a datetime DEFAULT (current_time()));
+INSERT INTO t1 VALUES ();
+SELECT * FROM t1;
+DROP TABLE t1;
+CREATE TABLE t1 (a datetime DEFAULT (current_time));
+INSERT INTO t1 VALUES ();
+SELECT * FROM t1;
+DROP TABLE t1;
+CREATE TABLE t1 (a datetime DEFAULT (current_timestamp()));
+INSERT INTO t1 VALUES ();
+SELECT * FROM t1;
+DROP TABLE t1;
+CREATE TABLE t1 (a datetime DEFAULT (current_timestamp));
+INSERT INTO t1 VALUES ();
+SELECT * FROM t1;
+DROP TABLE t1;
+CREATE TABLE t1 (a datetime DEFAULT (localtime()));
+INSERT INTO t1 VALUES ();
+SELECT * FROM t1;
+DROP TABLE t1;
+CREATE TABLE t1 (a datetime DEFAULT (localtime));
+INSERT INTO t1 VALUES ();
+SELECT * FROM t1;
+DROP TABLE t1;
+CREATE TABLE t1 (a datetime DEFAULT (curtime()));
+INSERT INTO t1 VALUES ();
+SELECT * FROM t1;
+DROP TABLE t1;
+CREATE TABLE t1 (a datetime, b varchar(20) DEFAULT (localtimestamp()));
+INSERT INTO t1(a) VALUES (now());
+SELECT * FROM t1;
+DROP TABLE t1;
+CREATE TABLE t1 (a datetime, b varchar(20) DEFAULT (localtimestamp));
+INSERT INTO t1(a) VALUES (now());
+SELECT * FROM t1;
+DROP TABLE t1;
+CREATE TABLE t1 (a datetime, b varchar(20) DEFAULT (now()));
+INSERT INTO t1(a) VALUES (now());
+SELECT * FROM t1;
+DROP TABLE t1;
+CREATE TABLE t1 (b varchar(100) DEFAULT (sysdate()));
+INSERT INTO t1() VALUES ();
+SELECT * FROM t1;
+DROP TABLE t1;
+CREATE TABLE t1 (a datetime, b INT DEFAULT (unix_timestamp()));
+INSERT INTO t1() VALUES ();
+SELECT * FROM t1;
+DROP TABLE t1;
+CREATE TABLE t1 (a datetime, b datetime DEFAULT (utc_date()));
+INSERT INTO t1(a) VALUES (now());
+SELECT * FROM t1;
+DROP TABLE t1;
+CREATE TABLE t1 (a datetime, b datetime DEFAULT (utc_time()));
+INSERT INTO t1(a) VALUES (now());
+SELECT * FROM t1;
+DROP TABLE t1;
+CREATE TABLE t1 (a datetime, b datetime DEFAULT (utc_timestamp()));
+INSERT INTO t1(a) VALUES (now());
+SELECT * FROM t1;
+DROP TABLE t1;
+drop table t1;
+create table t1(a int, b datetime);
+insert into t1 values (1, NOW()), (2, NOW());
+create table t2 select MAX(b) from t1 group by a;
+show create table t2;
+drop table t1, t2;
+SET sql_mode = 'NO_ENGINE_SUBSTITUTION';
+create table t1(f1 datetime);
+insert into t1 values (now());
+create table t2 select f2 from (select max(now()) f2 from t1) a;
+show columns from t2;
+drop table t2;
+create table t2 select f2 from (select now() f2 from t1) a;
+show columns from t2;
+drop table t2, t1;
