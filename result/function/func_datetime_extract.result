@@ -86,7 +86,7 @@ create table t1 (d date, dt datetime, t timestamp, c char(10));
 insert ignore into t1 values ("0000-00-00", "0000-00-00", "0000-00-00", "0000-00-00");
 select extract(MONTH FROM "0000-00-00"),extract(MONTH FROM d),extract(MONTH FROM dt),extract(MONTH FROM t),extract(MONTH FROM c) from t1;
 extract(MONTH FROM "0000-00-00")	extract(MONTH FROM d)	extract(MONTH FROM dt)	extract(MONTH FROM t)	extract(MONTH FROM c)
-NULL	0	0	0	NULL
+null	0	0	0	null
 drop table t1;
 SELECT EXTRACT(HOUR FROM '100000:02:03');
 EXTRACT(HOUR FROM '100000:02:03')
@@ -95,7 +95,7 @@ CREATE TABLE t1 (i1 INT,d1 DATETIME);
 INSERT INTO t1 SELECT MAX(1), NOW() FROM t1;
 SELECT i1, EXTRACT(HOUR FROM TIMEDIFF(NOW(), d1)) FROM t1;
 i1	EXTRACT(HOUR FROM TIMEDIFF(NOW(), d1))
-NULL	0
+null	0
 DROP TABLE t1;
 select reverse(concat_ws(",",extract(year from 20090702)));
 reverse(concat_ws(",",extract(year from 20090702)))
@@ -168,7 +168,7 @@ date
 drop table t1;
 select extract(month from NULL);
 extract(month from NULL)
-NULL
+null
 drop table if exists t1, t2;
 create table t1(a INT,  b date);
 create table t2(a INT,  b date);

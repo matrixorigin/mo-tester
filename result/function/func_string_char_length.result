@@ -12,7 +12,7 @@ CHAR_LENGTH("Español")
 7
 SELECT CHAR_LENGTH(NULL);
 CHAR_LENGTH(NULL)
-NULL
+null
 create table t1 (a char(20) character set utf8);
 insert into t1 values ('123456'),('андрей');
 select char_length(a), length(a), a from t1 order by a;

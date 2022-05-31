@@ -212,10 +212,10 @@ drop table if exists `Ｔ８`;
 drop table if exists `Ｔ９`;
 SELECT RTRIM(NULL);
 RTRIM(NULL)
-NULL
+null
 SELECT LTRIM(NULL);
 LTRIM(NULL)
-NULL
+null
 SELECT RTRIM("你好  ");
 RTRIM("你好  ")
 你好
@@ -248,10 +248,10 @@ a	a
 drop table t1, t2;
 SELECT RTRIM(repeat(" ", 100000000)+"123");
 RTRIM(repeat(" ", 100000000)+"123")
-NULL
+null
 SELECT LTRIM("123"+repeat(" ", 100000000));
 LTRIM("123"+repeat(" ", 100000000))
-NULL
+null
 SELECT LTRIM("    1241241^&@%#^*^!@#&*(!&");
 LTRIM("    1241241^&@%#^*^!@#&*(!&")
 1241241^&@%#^*^!@#&*(!&
@@ -276,4 +276,3 @@ LTRIM(123124)
 SELECT LTRIM(123.41231);
 LTRIM(123.41231)
 123.41231
-

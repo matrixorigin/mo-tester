@@ -36,16 +36,12 @@ SUBSTR('abcdefg',-1,5)
 g
 select SUBSTR('abcdefg',0,0);
 SUBSTR('abcdefg',0,0)
-
 select SUBSTR('abcdefg',-1,-1);
 SUBSTR('abcdefg',-1,-1)
-
 select SUBSTR('abcdefg',1,-1);
 SUBSTR('abcdefg',1,-1)
-
 select substring('hello', 2, -1);
 substring('hello', 2, -1)
-
 select substring('hello', -1, 1);
 substring('hello', -1, 1)
 o
@@ -54,118 +50,86 @@ substring('hello', -2, 1)
 l
 select substring('hello', -4294967295, 1);
 substring('hello', -4294967295, 1)
-
 select substring('hello', 4294967295, 1);
 substring('hello', 4294967295, 1)
-
 select substring('hello', -4294967296, 1);
 substring('hello', -4294967296, 1)
-
 select substring('hello', 4294967296, 1);
 substring('hello', 4294967296, 1)
-
 select substring('hello', -4294967297, 1);
 substring('hello', -4294967297, 1)
-
 select substring('hello', 4294967297, 1);
 substring('hello', 4294967297, 1)
-
 select substring('hello', -18446744073709551615, 1);
 substring('hello', -18446744073709551615, 1)
-
 select substring('hello', 18446744073709551615, 1);
 substring('hello', 18446744073709551615, 1)
-
 select substring('hello', -18446744073709551616, 1);
 substring('hello', -18446744073709551616, 1)
-
 select substring('hello', 18446744073709551616, 1);
 substring('hello', 18446744073709551616, 1)
-
 select substring('hello', -18446744073709551617, 1);
 substring('hello', -18446744073709551617, 1)
-
 select substring('hello', 18446744073709551617, 1);
 substring('hello', 18446744073709551617, 1)
-
 select substring('hello', 1, -1);
 substring('hello', 1, -1)
-
 select substring('hello', 1, -4294967295);
 substring('hello', 1, -4294967295)
-
 select substring('hello', 1, 4294967295);
 substring('hello', 1, 4294967295)
 hello
 select substring('hello', 1, -4294967296);
 substring('hello', 1, -4294967296)
-
 select substring('hello', 1, 4294967296);
 substring('hello', 1, 4294967296)
 hello
 select substring('hello', 1, -4294967297);
 substring('hello', 1, -4294967297)
-
 select substring('hello', 1, 4294967297);
 substring('hello', 1, 4294967297)
 hello
 select substring('hello', 1, -18446744073709551615);
 substring('hello', 1, -18446744073709551615)
-
 select substring('hello', 1, 18446744073709551615);
 substring('hello', 1, 18446744073709551615)
 hello
 select substring('hello', 1, -18446744073709551616);
 substring('hello', 1, -18446744073709551616)
-
 select substring('hello', 1, 18446744073709551616);
 substring('hello', 1, 18446744073709551616)
 hello
 select substring('hello', 1, -18446744073709551617);
 substring('hello', 1, -18446744073709551617)
-
 select substring('hello', 1, 18446744073709551617);
 substring('hello', 1, 18446744073709551617)
 hello
 select substring('hello', -1, -1);
 substring('hello', -1, -1)
-
 select substring('hello', -4294967295, -4294967295);
 substring('hello', -4294967295, -4294967295)
-
 select substring('hello', 4294967295, 4294967295);
 substring('hello', 4294967295, 4294967295)
-
 select substring('hello', -4294967296, -4294967296);
 substring('hello', -4294967296, -4294967296)
-
 select substring('hello', 4294967296, 4294967296);
 substring('hello', 4294967296, 4294967296)
-
 select substring('hello', -4294967297, -4294967297);
 substring('hello', -4294967297, -4294967297)
-
 select substring('hello', 4294967297, 4294967297);
 substring('hello', 4294967297, 4294967297)
-
 select substring('hello', -18446744073709551615, -18446744073709551615);
 substring('hello', -18446744073709551615, -18446744073709551615)
-
 select substring('hello', 18446744073709551615, 18446744073709551615);
 substring('hello', 18446744073709551615, 18446744073709551615)
-
 select substring('hello', -18446744073709551616, -18446744073709551616);
 substring('hello', -18446744073709551616, -18446744073709551616)
-
 select substring('hello', 18446744073709551616, 18446744073709551616);
 substring('hello', 18446744073709551616, 18446744073709551616)
-
 select substring('hello', -18446744073709551617, -18446744073709551617);
 substring('hello', -18446744073709551617, -18446744073709551617)
-
 select substring('hello', 18446744073709551617, 18446744073709551617);
 substring('hello', 18446744073709551617, 18446744073709551617)
-
 SELECT SUBSTRING('Sakila' FROM -4 FOR 2);
 SUBSTRING('Sakila' FROM -4 FOR 2)
 ki
@@ -190,7 +154,7 @@ SELECT '1' IN ('1', SUBSTRING(-9223372036854775809, 1));
 1
 SELECT SUBSTRING('1', year(FROM_UNIXTIME(-1)));
 SUBSTRING('1', year(FROM_UNIXTIME(-1)))
-NULL
+null
 select reverse(substring(1,1,1));
 reverse(substring(1,1,1))
 1
@@ -210,10 +174,8 @@ substr(c1, -1, 2147483648)
 2
 SELECT DISTINCT substr(c1, -2147483647, 2147483648) FROM t1;
 substr(c1, -2147483647, 2147483648)
-
 SELECT DISTINCT substr(c1, 9223372036854775807, 23) FROM t1;
 substr(c1, 9223372036854775807, 23)
-
 DROP TABLE t1;
 CREATE TABLE t1 (f1 LONGTEXT , f2  INTEGER);
 INSERT INTO t1 VALUES (REPEAT('a', 500000), 0), (REPEAT('b', 500000), 1), (REPEAT('c', 500000), 2);
@@ -281,7 +243,7 @@ substring(a, 1, 1)
 drop table t1;
 select substring(null, 1, 1);
 substring(null, 1, 1)
-NULL
+null
 create table t1 (b varchar(5));
 insert t1 values ('ab'), ('abc'), ('abcd'), ('abcde');
 select * from t1 where substring(b,1,1) = 'a';

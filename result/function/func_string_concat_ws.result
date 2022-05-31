@@ -55,7 +55,7 @@ INSERT INTO t3 VALUES (1,1);
 SELECT CONCAT_WS(' ', trackname, artistname) trackname, artistname FROM t1 LEFT JOIN t3 ON t1.trackid=t3.trackid LEFT JOIN t2 ON t2.artistid=t3.artistid WHERE CONCAT_WS(' ', trackname, artistname) LIKE '%In%';
 trackname	artistname
 April In Paris Vernon Duke	Vernon Duke
-Autumn In New York	NULL
+Autumn In New York	null
 DROP TABLE t1,t2,t3;
 CREATE TABLE t1 (f2 VARCHAR(20));
 CREATE TABLE t2 (f2 VARCHAR(20));
@@ -139,6 +139,3 @@ a	b	a	b
 1	2012-10-12	1	2012-10-12
 1	2012-10-12	4	2012-10-12
 drop table t1, t2;
-
-
-

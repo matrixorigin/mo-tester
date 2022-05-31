@@ -1,6 +1,6 @@
 SELECT std(null);
 std(null)
-NULL
+null
 create table t1(a tinyint, b SMALLINT, c MEDIUMINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, j time, k datetime, l TIMESTAMP, m char(255), n varchar(255));
 insert into t1 values(1, 1, 2, 43, 5, 35.5, 31.133, 14.314, "2012-03-10", "10:03:12", "2012-03-12 10:03:12", "2022-03-12 13:03:12", "ab23c", "d5cf");
 insert into t1 values(71, 1, 2, 34, 5, 5.5, 341.13, 15.314, "2012-03-22", "10:03:12", "2013-03-12 10:03:12", "2032-03-12 13:04:12", "abr23c", "3dcf");
@@ -8,38 +8,38 @@ insert into t1 values(1, 1, 21, 4, 54, 53.5, 431.13, 14.394, "2011-03-12", "10:0
 insert into t1 values(1, 71, 2, 34, 5, 5.5, 31.313, 124.314, "2012-01-12", "10:03:12", "2019-03-12 10:03:12", "2013-03-12 13:03:12", "3abd1c", "dcvf");
 select std(a),std(b),std(c),std(d),std(e),std(f),std(g),std(h),std(i),std(j),std(k),std(l),std(m),std(n) from t1;
 std(a)	std(b)	std(c)	std(d)	std(e)	std(f)	std(g)	std(h)	std(i)	std(j)	std(k)	std(l)	std(m)	std(n)
-30.310889132455355	30.31088913245535	8.227241335952167	14.7542366796795	21.21762239271875	20.512191496766015	180.28380047095192	47.47713870906711	4303.2222810351805	0	26809513236.90943	110764389617.67	1.299038105676658	1.299038105676658
+30.310889132455355	30.31088913245535	8.227241335952167	14.7542366796795	21.21762239271875	20.512191496766015	180.28380047095192	47.47713870906711	4303.2222810351805	0.0	2.680951323690943E10	1.1076438961767E11	1.299038105676658	1.299038105676658
 drop table t1;
 select std(99999999999999999.99999);
 std(99999999999999999.99999)
-0
+0.0
 select std(999999999999999933193939.99999);
 std(999999999999999933193939.99999)
-0
+0.0
 select std(9999999999999999999999999999999999.9999999999999);
 std(9999999999999999999999999999999999.9999999999999)
-0
+0.0
 select std(-99999999999999999.99999);
 std(-99999999999999999.99999)
-0
+0.0
 select std(-999999999999999933193939.99999);
 std(-999999999999999933193939.99999)
-0
+0.0
 select std(-9999999999999999999999999999999999.9999999999999);
 std(-9999999999999999999999999999999999.9999999999999)
-0
+0.0
 create table t1(a bigint);
 select std(a) from t1;
 std(a)
-NULL
+null
 insert into t1 values(null),(null),(null),(null);
 select std(a) from t1;
 std(a)
-NULL
+null
 insert into t1 values(12417249128419),(124124125124151),(5124125151415),(124125152651515);
 select std(a) from t1;
 std(a)
-57734584550900.72
+5.773458455090072E13
 drop table t1;
 create table t1 ( a int not null default 1, big bigint );
 insert into t1 (big) values (-1),(1234567890167),(92233720368547),(18446744073709515);
@@ -51,10 +51,10 @@ a	big
 1	18446744073709515
 select distinct std(big),max(big),std(big)-1 from t1;
 std(big)	max(big)	std(big)-1
-7.974271234688913e15	18446744073709515	7.974271234688912e15
+7.974271234688913E15	18446744073709515	7.974271234688912E15
 select std(big),max(big),std(big)-1 from t1 group by a;
 std(big)	max(big)	std(big)-1
-7.974271234688913e15	18446744073709515	7.974271234688912e15
+7.974271234688913E15	18446744073709515	7.974271234688912E15
 insert into t1 (big) values (184467440737615);
 select * from t1;
 a	big
@@ -65,36 +65,36 @@ a	big
 1	184467440737615
 select std(big),max(big),std(big)-1 from t1;
 std(big)	max(big)	std(big)-1
-7.351219993962748e15	18446744073709515	7.351219993962747e15
+7.351219993962748E15	18446744073709515	7.351219993962747E15
 select std(big),max(big),std(big)-1 from t1 group by a;
 std(big)	max(big)	std(big)-1
-7.351219993962748e15	18446744073709515	7.351219993962747e15
+7.351219993962748E15	18446744073709515	7.351219993962747E15
 alter table t1 add key (big);
 select std(big),max(big),std(big)-1 from t1;
 std(big)	max(big)	std(big)-1
-7.351219993962747e15	18446744073709515	7.351219993962746e15
+7.351219993962747E15	18446744073709515	7.351219993962746E15
 select std(big),max(big),std(big)-1 from t1 group by a;
 std(big)	max(big)	std(big)-1
-7.351219993962748e15	18446744073709515	7.351219993962747e15
+7.351219993962748E15	18446744073709515	7.351219993962747E15
 drop table t1;
 CREATE TABLE t1 (Fld1 int(11) default NULL,Fld2 int(11) default NULL);
 INSERT INTO t1 VALUES (1,10),(1,20),(2,NULL),(2,NULL),(3,50);
 select Fld1, std(Fld2) as q from t1 group by Fld1 having q is not null;
 Fld1	q
-1	5
-3	0
+1	5.0
+3	0.0
 select Fld1, std(Fld2) from t1 group by Fld1 having std(Fld2) is not null;
 Fld1	std(Fld2)
-1	5
-3	0
+1	5.0
+3	0.0
 select Fld1, std(Fld2) from t1 group by Fld1 having avg(Fld2) is not null;
 Fld1	std(Fld2)
-1	5
-3	0
+1	5.0
+3	0.0
 select Fld1, std(Fld2) from t1 group by Fld1 having variance(Fld2) is not null;
 Fld1	std(Fld2)
-1	5
-3	0
+1	5.0
+3	0.0
 drop table t1;
 SELECT std(1)<std(2);
 std(1)<std(2)
@@ -103,8 +103,6 @@ CREATE TABLE t1(i INT);
 INSERT INTO t1 VALUES (NULL),(1);
 SELECT DISTINCT STD(i)+0 as splus0, i+0 as plain FROM t1 GROUP BY i ;
 splus0	plain
-NULL	NULL
-0	1
+null	null
+0.0	1
 DROP TABLE t1;
-
-

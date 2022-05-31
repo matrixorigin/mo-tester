@@ -22,14 +22,17 @@ public class ResultParser {
     public static String getRS(String cmd,String nextcmd){
         String line = null;
         StringBuffer buffer = new StringBuffer();
+        boolean cmd_deleted = false;
+
         try {
             while((line = lineReader.readLine()) != null) {
                 line = new String(line.getBytes(), "utf-8");
                 //if (line.equals("")) continue;
                 buffer.append(line);
                 buffer.append("\n");
-                if(buffer.indexOf(cmd) != -1){
+                if(buffer.indexOf(cmd) != -1 && !cmd_deleted && !skip){
                     buffer.delete(0,buffer.length());
+                    cmd_deleted = true;
                 }
 
                 if(nextcmd != null){
@@ -51,7 +54,10 @@ public class ResultParser {
     public static void skip(String cmd){
 
         //skip = true,means has read the next command,if call the skip() func,will do nothing;
-        if (skip) return;
+        if (skip) {
+            skip = false;
+            return;
+        }
 
         String line = null;
         StringBuffer buffer = new StringBuffer();

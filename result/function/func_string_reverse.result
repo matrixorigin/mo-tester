@@ -6,7 +6,7 @@ reverse('abc')	reverse('abcd')
 cba	dcba
 select reverse(NULL);
 reverse(NULL)
-NULL
+null
 CREATE TABLE t1(id INT);
 INSERT INTO t1 VALUES (1),(2),(3),(4);
 SELECT REVERSE(EXISTS(SELECT * FROM t1));

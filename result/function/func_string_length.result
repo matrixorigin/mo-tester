@@ -62,7 +62,7 @@ length('1039214-#**$&#@*#(*($*')
 22
 select length(NULL);
 length(NULL)
-NULL
+null
 select length("中文");
 length("中文")
 6
@@ -85,7 +85,7 @@ a
 1048576
 select length(repeat("1",1024*1024*1024)) as a;
 a
-NULL
+null
 drop table if exists t1;
 create table t1(a INT,  b date);
 insert into t1 values(1, "2012-10-12"),(2, "2004-04-24"),(3, "2008-12-04"),(4, "2012-03-23");
@@ -96,5 +96,3 @@ a	b
 3	2008-12-04
 4	2012-03-23
 drop table t1;
-
-
