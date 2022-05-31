@@ -1,0 +1,133 @@
+drop table if exists t1;
+create table t1 (a timestamp  not null, primary key(a));
+insert into t1 values (20200101000000), ('2022-01-02'), ('2022-01-02 00:00:01'), ('2022-01-02 00:00:01.512345');
+select * from t1;
+a
+2020-01-01 00:00:00
+2022-01-02 00:00:00
+2022-01-02 00:00:01
+2022-01-02 00:00:02
+select * from t1 where a='2022-01-02';
+a
+2022-01-02 00:00:00
+select * from t1 where a>20220102;
+a
+2022-01-02 00:00:01
+2022-01-02 00:00:02
+select * from t1 where a!='2022-01-02';
+a
+2020-01-01 00:00:00
+2022-01-02 00:00:01
+2022-01-02 00:00:02
+update t1 set a=DATE_ADD(a ,INTERVAL 1 WEEK) where a>'20220102';
+select * from t1;
+a
+2020-01-01 00:00:00
+2022-01-02 00:00:00
+2022-01-09 00:00:01
+2022-01-09 00:00:02
+drop table t1;
+create table t1 ( a int not null default 1, big timestamp(4) );
+insert into t1 (big) values (20220101),('2022-01-01'),('2022-01-01 00:00:01'),('2022-01-01 00:00.00.000050');
+select * from t1;
+a	big
+1	2022-01-01 00:00:00.0000
+1	2022-01-01 00:00:00.0000
+1	2022-01-01 00:00:01.0000
+1	2022-01-01 00:00:00.0001
+select min(big),max(big),max(big)-1 from t1 group by a;
+min(big)	max(big)	max(big)-1
+2022-01-01 00:00:00.0000	2022-01-01 00:00:01.0000	20220101000000.0000
+select big,count(big) from t1 group by big having count(big)>1;
+big	count(big)
+2022-01-01 00:00:00.0000	2
+drop table t1;
+create table t1 (id timestamp(6) not null default "2022-01-31 00:00:00.0000006", a int, primary key (a));
+insert into t1(a) values(1);
+select * from t1;
+id	a
+2022-01-31 00:00:00.000001	1
+drop table if exists t1,t2;
+create table t1 (
+dt  timestamp(6) not null,
+value32  integer not null,
+primary key(dt)
+);
+create table t2 (
+dt  timestamp(3) not null,
+value32  integer not null,
+primary key(dt)
+);
+insert into t1 values('2022-01-01 00:00:00.000050', 1);
+insert into t1 values('2022-01-01 00:00:00.000500', 2);
+insert into t1 values('2022-01-01 00:00:00.005000', 3);
+insert into t2 values('2022-01-01 00:00:00.005', 4);
+insert into t2 values('2022-01-01 00:00:00.001', 5);
+select * from t1;
+dt	value32
+2022-01-01 00:00:00.000050	1
+2022-01-01 00:00:00.000500	2
+2022-01-01 00:00:00.005000	3
+select * from t2;
+dt	value32
+2022-01-01 00:00:00.001	5
+2022-01-01 00:00:00.005	4
+select * from t1 join t2 on t1.dt=t2.dt;
+dt	value32	dt	value32
+2022-01-01 00:00:00.005000	3	2022-01-01 00:00:00.005	4
+select * from t1 join t2 on t1.dt=t2.dt where t1.value32<>t2.value32;
+dt	value32	dt	value32
+2022-01-01 00:00:00.005000	3	2022-01-01 00:00:00.005	4
+drop table if exists t1, t2;
+CREATE TABLE t_timestamp(id timestamp(6));
+INSERT INTO t_timestamp VALUES ('2020-01-01 23:59:59.999999'), ('2022-01-02 00:00:00');
+SELECT id, id >= 20200102 FROM t_timestamp;
+id	id >= 20200102
+2020-01-01 23:59:59.999999	0
+2022-01-02 00:00:00.000000	1
+SELECT id, id = 202020101 FROM t_timestamp;
+id	id = 202020101
+2020-01-01 23:59:59.999999	0
+2022-01-02 00:00:00.000000	0
+SELECT id, 20200101 = id FROM t_timestamp;
+id	20200101 = id
+2020-01-01 23:59:59.999999	0
+2022-01-02 00:00:00.000000	0
+SELECT * from t_timestamp WHERE id = 20200102;
+id
+SELECT * from t_timestamp WHERE id = 2.0200102e7;
+id
+SELECT * from t_timestamp WHERE id = '20200102';
+id
+SELECT * from t_timestamp WHERE id IN ('2020-01-01','2022-01-02');
+id
+2022-01-02 00:00:00.000000
+SELECT * from t_timestamp WHERE id IN (2.0200101e7,2.0200102e7 );
+id
+SELECT * from t_timestamp WHERE id IN (20220101, 20220102);
+id
+2022-01-02 00:00:00.000000
+SELECT * from t_timestamp WHERE id IN ('2.0200101e7','2.0200102e7');
+id
+SELECT * from t_timestamp WHERE id BETWEEN 20191231 AND 20200101;
+id
+SELECT * from t_timestamp WHERE id BETWEEN 2.0200101e7 and 2.0200102e7;
+id
+2020-01-01 23:59:59.999999
+SELECT * from t_timestamp WHERE id BETWEEN '2020-01-01' AND '2020-01-02';
+id
+2020-01-01 23:59:59.999999
+SELECT * from t_timestamp WHERE id BETWEEN '2022-01-01 00:00:00' AND '2022-01-02 00:00:00.000000';
+id
+2022-01-02 00:00:00.000000
+DROP TABLE if exists t1;
+CREATE TABLE t1 (a timestamp(6));
+INSERT INTO t1 VALUES ('2022-03-01 00:00:01.0001');
+SELECT * FROM t1 WHERE coalesce(a) not BETWEEN '2022-02-28' and '2022-03-01';
+a
+2022-03-01 00:00:01.000100
+SELECT * FROM t1 WHERE coalesce(a)!=20220301;
+a
+2022-03-01 00:00:01.000100
+SELECT * FROM t1 WHERE coalesce(a) in ('2022-03-01','2022-03-01 00:00:00.0001');
+a
