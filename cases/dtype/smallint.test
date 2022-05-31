@@ -1,3 +1,7 @@
+-- @suite                                                                                                                                                                                
+-- @case
+-- @desc:test for smallint the datatype                                                                                                                                    
+-- @label:bvt  
 create table t1 (a smallint unsigned not null, primary key(a));
 insert into t1 values (65535), (0xFFFC), (65534), (65533);
 select * from t1;

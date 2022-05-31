@@ -1,3 +1,7 @@
+-- @suite                                                                                                                                                                                
+-- @case
+-- @desc:test for decimal the datatype                                                                                                                                                   
+-- @label:bvt  
 select 0.00,1.11,1234567890.1234567890123456789;
 select 1123.2333+1233.3331;
 select cast(9223372.036854775808 as decimal)+1;

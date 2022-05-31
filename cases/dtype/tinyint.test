@@ -1,3 +1,7 @@
+-- @suite                                                                                                                                                                                
+-- @case
+-- @desc:test for tinyint the datatype                                                                                                                                                   
+-- @label:bvt  
 create table t1 (a tinyint unsigned not null, primary key(a));
 insert into t1 values (255), (0xFC), (254), (253);
 select * from t1;

@@ -1,3 +1,7 @@
+-- @suite                                                                                                                                                                                
+-- @case
+-- @desc:test for varchar the datatype                                                                                                                                                   
+-- @label:bvt  
 drop table if exists t1;
 create table t1 (a varchar(10));
 insert into t1 values('abcdef');
