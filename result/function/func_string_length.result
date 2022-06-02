@@ -1,13 +1,3 @@
-CREATE TABLE t1 (s CHAR(8) BINARY);
-INSERT INTO t1 VALUES ('test');
-SELECT LENGTH(s) FROM t1;
-LENGTH(s)
-4
-ALTER TABLE t1 MODIFY s CHAR(10) BINARY;
-SELECT LENGTH(s) FROM t1;
-LENGTH(s)
-4
-DROP TABLE t1;
 CREATE TABLE t1 (s CHAR(8));
 INSERT INTO t1 VALUES ('test');
 SELECT LENGTH(s) FROM t1;
@@ -19,11 +9,11 @@ SELECT LENGTH(s) FROM t2;
 LENGTH(s)
 10
 DROP TABLE t1,t2;
-CREATE TABLE t1 (s BINARY(8), b CHAR(100), c VARCHAR(255), d int, e float, f datetime);
+CREATE TABLE t1 (s char(8), b CHAR(100), c VARCHAR(255), d int, e float, f datetime);
 INSERT INTO t1 VALUES ('test', "hhhhhhh", "12jknfjniosdjcoijcpowef", 1234, 0.14123123, "2012-02-08 12:03:23");
 SELECT LENGTH(s), length(b), length(c), length(d), length(e), length(f) FROM t1;
 LENGTH(s)	length(b)	length(c)	length(d)	length(e)	length(f)
-8	7	23	4	8	19
+4	7	23	4	8	19
 DROP TABLE t1;
 CREATE TABLE t1 (t1_fld1 int, b varchar(255));
 CREATE TABLE t2 (t2_fld1 int, b varchar(255));
@@ -62,7 +52,7 @@ length('1039214-#**$&#@*#(*($*')
 22
 select length(NULL);
 length(NULL)
-null
+NULL
 select length("中文");
 length("中文")
 6
@@ -85,7 +75,7 @@ a
 1048576
 select length(repeat("1",1024*1024*1024)) as a;
 a
-null
+NULL
 drop table if exists t1;
 create table t1(a INT,  b date);
 insert into t1 values(1, "2012-10-12"),(2, "2004-04-24"),(3, "2008-12-04"),(4, "2012-03-23");
@@ -96,3 +86,5 @@ a	b
 3	2008-12-04
 4	2012-03-23
 drop table t1;
+
+

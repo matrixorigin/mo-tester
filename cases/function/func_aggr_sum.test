@@ -1,5 +1,4 @@
 #ORDER BY
-#0.5暂不支持ifnull
 CREATE TABLE t (i1 INT,
 d1 DOUBLE,
 e2 DECIMAL(5,2));
@@ -7,7 +6,7 @@ INSERT INTO t VALUES ( 6,    6.0,  10.0/3),
 ( null, 9.0,  10.0/3),
 ( 1,    null, 10.0/3),
 ( 2,    2.0,  null  );
-SELECT IFNULL(e2,i1) nullif_c,
+SELECT coalesce(e2,i1) nullif_c,
 IF(e2 IS NULL,i1,e2) if_c,
 SUM(d1) FROM t
 GROUP BY e2,i1 ORDER BY nullif_c, SUM(d1);
@@ -25,7 +24,7 @@ FROM t2;
 DROP TABLE t1, t2;
 
 #HAVING
-CREATE TABLE t1 (name char(1) default NULL, val int(5) default NULL);
+CREATE TABLE t1 (name char(1) default NULL, val int default NULL);
 INSERT INTO t1 VALUES ('a',1),  ('a',2),  ('a',2),  ('a',2),  ('a',3),  ('a',6), ('a',7), ('a',11), ('a',11), ('a',12), ('a',13), ('a',13), ('a',20), ('b',2), ('b',3), ('b',4), ('b',5);
 SELECT s.name, AVG(s.val) AS median FROM (SELECT x.name, x.val FROM t1 x, t1 y WHERE x.name=y.name GROUP BY x.name, x.val HAVING SUM(y.val <= x.val) >= COUNT(*)/2 AND SUM(y.val >= x.val) >= COUNT(*)/2) AS s GROUP BY s.name;
 drop table t1;

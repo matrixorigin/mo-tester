@@ -1,23 +1,23 @@
 SELECT avg(null);
 avg(null)
-null
-create table t1(a tinyint, b SMALLINT, c MEDIUMINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, j time, k datetime, l TIMESTAMP, m char(255), n varchar(255));
-insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "10:03:12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
-insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "10:03:12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
-insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "10:03:12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
-insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "10:03:12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
-select avg(a),avg(b),avg(c),avg(d),avg(e),avg(f),avg(g),avg(h),avg(i),avg(j),avg(k),avg(l),avg(m),avg(n) from t1;
-avg(a)	avg(b)	avg(c)	avg(d)	avg(e)	avg(f)	avg(g)	avg(h)	avg(i)	avg(j)	avg(k)	avg(l)	avg(m)	avg(n)
-1.0000	1.0000	2.0000	4.0000	5.0000	5.5	31.13	14.31400000000000000000000	20120312.0000	100312.0000	20120312100312.0000	20120312130312.0000	0.0	0.0
+NULL
+create table t1(a tinyint, b SMALLINT, c MEDIUMINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, k datetime, l TIMESTAMP, m char(255), n varchar(255));
+insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
+insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
+insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
+insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
+select avg(a),avg(b),avg(c),avg(d),avg(e),avg(f),avg(g),avg(h),avg(i),avg(k),avg(l),avg(m),avg(n) from t1;
+avg(a)	avg(b)	avg(c)	avg(d)	avg(e)	avg(f)	avg(g)	avg(h)	avg(i)	avg(k)	avg(l)	avg(m)	avg(n)
+1.0000	1.0000	2.0000	4.0000	5.0000	5.5	31.13	14.31400000000000000000000	20120312.0000	20120312100312.0000	20120312130312.0000	0	0
 drop table t1;
 create table t1(a bigint);
 select avg(a) from t1;
 avg(a)
-null
+NULL
 insert into t1 values(null),(null),(null),(null);
 select avg(a) from t1;
 avg(a)
-null
+NULL
 insert into t1 values(12417249128419),(124124125124151),(5124125151415),(124125152651515);
 select avg(a) from t1;
 avg(a)
@@ -27,14 +27,14 @@ CREATE TABLE t1 (
 bug_id mediumint(9) NOT NULL,
 groupset bigint(20) DEFAULT '0' NOT NULL,
 assigned_to mediumint(9) DEFAULT '0' NOT NULL,
-bug_file_loc text
+bug_file_loc varchar(255)
 );
 CREATE TABLE t2 (
-value tinytext,
+value varchar(255),
 program varchar(64),
-initialowner tinytext NOT NULL,
-initialqacontact tinytext NOT NULL,
-description mediumtext NOT NULL,
+initialowner varchar(255) NOT NULL,
+initialqacontact varchar(255) NOT NULL,
+description varchar(255) NOT NULL,
 id int not null
 );
 INSERT INTO t1 VALUES (1,0,0,'TestComponent');
@@ -69,7 +69,7 @@ CASE any_value(c1) * any_value(c2) WHEN SUM(c0) THEN 1 WHEN AVG(c0) THEN 2 END
 2
 SELECT CASE any_value(c1) WHEN any_value(c1) + 1 THEN 1 END, ABS(AVG(c0)) FROM t1;
 CASE any_value(c1) WHEN any_value(c1) + 1 THEN 1 END	ABS(AVG(c0))
-null	1.0000
+NULL	1.0000
 DROP TABLE t1;
 CREATE TABLE t1(a TEXT, b INT, c INT UNSIGNED, d DECIMAL(12,2), e REAL);
 INSERT INTO t1 VALUES('iynfj', 1, 1, 1, 1);
@@ -87,13 +87,12 @@ SUM( DISTINCT d )
 1.00
 SELECT SUM( DISTINCT e ) FROM t1 GROUP BY e HAVING e IN ( AVG( 1 ), 1 + e);
 SUM( DISTINCT e )
-1.0
+1
 DROP TABLE t1;
 CREATE TABLE t1 (
 a INT,
 b INT,
-c INT,
-KEY (a, b)
+c INT
 );
 INSERT INTO t1 VALUES
 ( 1, 1,  1 ),

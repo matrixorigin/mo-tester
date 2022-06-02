@@ -5,15 +5,15 @@ INSERT INTO t VALUES ( 6,    6.0,  10.0/3),
 ( null, 9.0,  10.0/3),
 ( 1,    null, 10.0/3),
 ( 2,    2.0,  null  );
-SELECT IFNULL(e2,i1) nullif_c,
+SELECT coalesce(e2,i1) nullif_c,
 IF(e2 IS NULL,i1,e2) if_c,
 SUM(d1) FROM t
 GROUP BY e2,i1 ORDER BY nullif_c, SUM(d1);
 nullif_c	if_c	SUM(d1)
-2.00	2.00	2.0
-3.33	3.33	null
-3.33	3.33	6.0
-3.33	3.33	9.0
+2.00	2.00	2
+3.33	3.33	NULL
+3.33	3.33	6
+3.33	3.33	9
 DROP TABLE t;
 CREATE TABLE t1(a INT);
 CREATE TABLE t2(a INT);
@@ -30,7 +30,7 @@ cnt
 15
 16
 DROP TABLE t1, t2;
-CREATE TABLE t1 (name char(1) default NULL, val int(5) default NULL);
+CREATE TABLE t1 (name char(1) default NULL, val int default NULL);
 INSERT INTO t1 VALUES ('a',1),  ('a',2),  ('a',2),  ('a',2),  ('a',3),  ('a',6), ('a',7), ('a',11), ('a',11), ('a',12), ('a',13), ('a',13), ('a',20), ('b',2), ('b',3), ('b',4), ('b',5);
 SELECT s.name, AVG(s.val) AS median FROM (SELECT x.name, x.val FROM t1 x, t1 y WHERE x.name=y.name GROUP BY x.name, x.val HAVING SUM(y.val <= x.val) >= COUNT(*)/2 AND SUM(y.val >= x.val) >= COUNT(*)/2) AS s GROUP BY s.name;
 name	median
@@ -68,6 +68,12 @@ GROUP BY a)
 SELECT t2.a, (SELECT MIN(c) FROM cte AS cte2 WHERE t2.d = cte2.b)
 FROM t2 LEFT JOIN cte AS cte1 ON t2.a = cte1.a
 LEFT JOIN t2 AS tx ON tx.e = cte1.c;
+a	(SELECT MIN(c) FROM cte AS cte2 WHERE t2.d = cte2.b)
+1	60
+1	60
+1	60
+2	60
+3	60
 DROP TABLE t1, t2;
 create table t1 (num  double(12,2));
 insert into t1 values (144.54);
@@ -85,7 +91,7 @@ CASE any_value(c1) * any_value(c2) WHEN SUM(c0) THEN 1 WHEN AVG(c0) THEN 2 END
 2
 SELECT CASE any_value(c1) WHEN any_value(c1) + 1 THEN 1 END, ABS(AVG(c0)) FROM t1;
 CASE any_value(c1) WHEN any_value(c1) + 1 THEN 1 END	ABS(AVG(c0))
-null	1.0000
+NULL	1.0000
 DROP TABLE t1;
 CREATE TABLE t1(a TEXT, b INT, c INT UNSIGNED, d DECIMAL(12,2), e REAL);
 INSERT INTO t1 VALUES('iynfj', 1, 1, 1, 1);
@@ -103,11 +109,11 @@ SUM( DISTINCT d )
 1.00
 SELECT SUM( DISTINCT e ) FROM t1 GROUP BY e HAVING e IN ( AVG( 1 ), 1 + e);
 SUM( DISTINCT e )
-1.0
+1
 DROP TABLE t1;
 SELECT SUM(NULL);
 SUM(NULL)
-null
+NULL
 select sum(1)>sum(0);
 sum(1)>sum(0)
 1
@@ -116,5 +122,6 @@ insert into t1 values(21474836471, 12412490231412.124124124124, 1241412312491241
 insert into t1 values(21474836471, 12412490231412.124124124124, 124141231249124124.1241241243124123, 12421512141241241241241241849912840129402.1241124124241241, repeat("a",1000));
 select sum(a), sum(b),sum(c),sum(d),sum(e) from t1;
 sum(a)	sum(b)	sum(c)	sum(d)	sum(e)
-42949672942	2.4824980176896E13	2.48282462498248256E17	2.484302428248248E40	0.0
+42949672942	24824980176896	2.4828246249824826e17	2.484302428248248e40	0
 drop table t1;
+
