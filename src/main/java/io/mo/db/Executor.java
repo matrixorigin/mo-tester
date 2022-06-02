@@ -68,6 +68,20 @@ public class Executor {
                 if(connection == null){
                     LOG.error("No valid connnection,please check the config..");
                     //System.exit(1);
+                    LOG.error("The connection has been lost,please check the logs .");
+                    script.addNoExecCmd(command);
+                    command.getResult().setErrorCode(RESULT.ERROR_CONNECTION_LOST_CODE);
+                    command.getResult().setErrorDesc(RESULT.ERROR_CONNECTION_LOST_DESC);
+                    command.getResult().setResult(RESULT.RESULT_TYPE_NOEXEC);
+                    command.getResult().setExpResult(exp_res);
+                    command.getResult().setActResult(RESULT.ERROR_CONNECTION_LOST_DESC);
+                    command.getResult().setRemark(command.getCommand()+"\n"+
+                            "[EXPECT RESULT]:\n"+exp_res+"\n"+
+                            "[ACTUAL RESULT]:\n"+RESULT.ERROR_CONNECTION_LOST_DESC+"\n");
+                    LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed failed");
+                    LOG.error("[EXPECT RESULT]:\n"+exp_res);
+                    LOG.error("[ACTUAL RESULT]:\n"+RESULT.ERROR_CONNECTION_LOST_DESC);
+                    continue;
                 }
                 statement = connection.createStatement();
                 if (command.isUpdate()) {
@@ -608,7 +622,7 @@ public class Executor {
     }
 
     public static  void createTestDB(Connection connection,String name){
-
+        if(connection == null) return;
         Statement statement = null;
         try {
             statement = connection.createStatement();
@@ -620,7 +634,7 @@ public class Executor {
     }
 
     public static  void dropTestDB(Connection connection,String name){
-
+        if(connection == null) return;
         Statement statement = null;
         try {
             statement = connection.createStatement();
