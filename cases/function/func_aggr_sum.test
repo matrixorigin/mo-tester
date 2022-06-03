@@ -98,3 +98,32 @@ insert into t1 values(21474836471, 12412490231412.124124124124, 1241412312491241
 insert into t1 values(21474836471, 12412490231412.124124124124, 124141231249124124.1241241243124123, 12421512141241241241241241849912840129402.1241124124241241, repeat("a",1000));
 select sum(a), sum(b),sum(c),sum(d),sum(e) from t1;
 drop table t1;
+
+
+
+create table t1 (num float(5,2),user char(20));
+insert into t1 values (10.3,'nem'),(20.53,'monty'),(30.23,'sinisa');
+insert into t1 values (30.13,'nem'),(20.98,'monty'),(10.45,'sinisa');
+insert into t1 values (5.2,'nem'),(8.64,'monty'),(11.12,'sinisa');
+select sum(num) from t1;
+select sum(num) from t1 group by user;
+drop table t1;
+
+
+create table t2 (ff double);
+insert into t2 values (2.2);
+select cast(sum(distinct ff) as decimal(5,2)) from t2;
+select cast(sum(distinct ff) as signed) from t2;
+select cast(variance(ff) as decimal(10,3)) from t2;
+select cast(min(ff) as decimal(5,2)) from t2;
+create table t1 (df decimal(5,1));
+insert into t1 values(1.1);
+insert into t1 values(2.2);
+select cast(sum(distinct df) as signed) from t1;
+select cast(min(df) as signed) from t1;
+select 1e8 * sum(distinct df) from t1;
+select 1e8 * min(df) from t1;
+create table t3 (ifl int);
+insert into t3 values(1), (2);
+select cast(min(ifl) as decimal(5,2)) from t3;
+drop table t1, t2, t3;
