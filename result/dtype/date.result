@@ -187,3 +187,322 @@ NULL
 SELECT CAST(10000101 as date) BETWEEN '1000-01-01' and '1000-01-02';
 CAST(10000101 as date) BETWEEN '1000-01-01' and '1000-01-02'
 1
+drop table if exists t1,t2,t3,t21,t12;
+CREATE TABLE t1 (a date, b int primary key);
+INSERT INTO t1 VALUES ('2022-01-01',1),('2022-01-01',2);
+update t1 set a='2022-01-02' where a='2022-01-01' limit 1;
+select * from t1;
+a	b
+2022-01-02	1
+2022-01-01	2
+INSERT INTO t1 VALUES ('2022-01-01',3);
+update t1 set a='2022-01-02' where a='2022-01-01';
+select * from t1;
+a	b
+2022-01-02	1
+2022-01-02	2
+2022-01-02	3
+drop table t1;
+create table t1 (
+a date not null,
+b date not null default '2000-01-01'
+);
+insert into t1 (a) values ('2022-01-02'),('2022-01-04'),('2022-01-06'),('2022-01-08'),('2022-01-10'),('2022-01-12');
+update t1 set a=a+101;
+select a,b from t1;
+a	b
+2022-02-03	2000-01-01
+2022-02-05	2000-01-01
+2022-02-07	2000-01-01
+2022-02-09	2000-01-01
+2022-02-11	2000-01-01
+2022-02-13	2000-01-01
+update t1 set a='2022-01-27' where a='2022-02-05';
+select a,b from t1;
+a	b
+2022-02-03	2000-01-01
+2022-01-27	2000-01-01
+2022-02-07	2000-01-01
+2022-02-09	2000-01-01
+2022-02-11	2000-01-01
+2022-02-13	2000-01-01
+update t1 set a=a-1 where 1 > 2;
+select a,b from t1;
+a	b
+2022-02-03	2000-01-01
+2022-01-27	2000-01-01
+2022-02-07	2000-01-01
+2022-02-09	2000-01-01
+2022-02-11	2000-01-01
+2022-02-13	2000-01-01
+update t1 set a=a-1 where 3 > 2;
+select a,b from t1;
+a	b
+2022-02-02	2000-01-01
+2022-01-26	2000-01-01
+2022-02-06	2000-01-01
+2022-02-08	2000-01-01
+2022-02-10	2000-01-01
+2022-02-12	2000-01-01
+drop table t1;
+create table t1 (a date primary key, b char(32));
+insert into t1 values (20220101,'apple'),('2022-01-02','apple');
+select * from t1;
+a	b
+2022-01-01	apple
+2022-01-02	apple
+update t1, t1 as t2 set t1.a=t1.a+1*5 where t1.b = t2.b and t1.a > t2.a;
+select * from t1;
+a	b
+2022-01-01	apple
+2022-01-07	apple
+drop table if exists t11,t12,t2;
+create table t11 (a date NOT NULL, b int, primary key (a));
+create table t12 (a date NOT NULL, b int, primary key (a));
+create table t2 (a date NOT NULL, b int, primary key (a));
+insert into t11 values (20220103, 10),('2022-01-01', 11),('2022-01-02', 12);
+insert into t12 values (20220303, 10),('2020-01-03', 11),(20220102, 12);
+insert into t2 values ('2021-12-31', 21),('2022-01-01', 12),('2022-03-03', 23);
+select * from t11;
+a	b
+2022-01-01	11
+2022-01-02	12
+2022-01-03	10
+select * from t12;
+a	b
+2020-01-03	11
+2022-01-02	12
+2022-03-03	10
+update t11,t12 set t11.a=t11.a+t12.b where t12.a <> (select a from t2 where t11.a = t2.a);
+select * from t11;
+a	b
+2022-01-02	12
+2022-01-03	10
+2022-01-12	11
+drop table if exists t1, t2;
+CREATE TABLE t1(a date PRIMARY KEY);
+INSERT INTO t1 VALUES('2022-10-01'),(20220220);
+CREATE TABLE t2(b date);
+INSERT INTO t2 VALUES('2022-10-01'),(20220220);
+update t1 JOIN t2 on t1.a=t2.b set t1.a='2022-05-05' WHERE t1.a=20221001;
+select * from t1;
+a
+2022-02-20
+2022-05-05
+select * from t2;
+b
+2022-10-01
+2022-02-20
+drop table t1;
+CREATE TABLE t1 ( a date PRIMARY KEY );
+INSERT INTO t1 VALUES ('2021-12-31'),('2022-01-03'),(20220102);
+update t1 set a=a*1/1+1 WHERE t1.a>20220102 ORDER BY t1.a LIMIT 1;
+SELECT * FROM t1;
+a
+2021-12-31
+2022-01-02
+2022-01-04
+drop table if exists t1,t2,t3;
+CREATE TABLE t1 (a date not null,b date not null, primary key (a));
+CREATE TABLE t2 (a date not null,b date not null, primary key (a));
+CREATE TABLE t3 (a date not null,b date not null, primary key (a));
+insert into t1 values ('2022-01-01','2022-01-01'),(20220102,'2022-01-01'),(20220104,'2022-01-03');
+insert into t2 values ('2022-01-01','2022-01-01'),(20220102,'2022-01-02'),(20220103,'2022-01-03');
+insert into t3 values ('2022-01-01','2022-01-01'),(20220102,'2022-01-01'),(20220104,'2022-01-03');
+update t1 join t2 on t1.a=t2.a join t3 on t1.b=t3.b set t1.a=((t3.a*5) DIV 5) where t1.a=t2.a AND t2.b=t3.a and t1.b=t3.b;
+select * from t1;
+a	b
+2022-01-01	2022-01-01
+2022-01-02	2022-01-01
+2022-01-04	2022-01-03
+drop table t1;
+create table t1(a date not null);
+insert into t1 values ('2021-12-31');
+update t1 set a=a+(a MOD 2) where a is null;
+select * from t1;
+a
+2021-12-31
+DROP TABLE if exists t1,t2;
+CREATE TABLE t1 (
+a date
+);
+CREATE TABLE t2 (
+a date
+);
+insert into t1 values('2022-01-01'),(20220102),('2022-01-03'),('2022-01-04'),(20220105);
+insert into t2 values('2022-01-01'),('2022-01-03'),(20220105),('2022-01-07'),('2022-01-09');
+update t1 join t2 alias on t1.a=alias.a set alias.a=t1.a*3 WHERE t1.a = alias.a;
+drop table if exists t1,t2;
+create table t1 (id int,dd date,dt datetime);
+insert into t1 values(1,'2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(2,'2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(3,'2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(4,'2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(5,'2022-04-28','2022-04-28 22:40:11');
+update t1 sub set sub.dd=sub.dd-99 where id > 4;
+select * from t1 where id>4;
+id	dd	dt
+5	2022-03-29	2022-04-28 22:40:11
+drop table if exists t1;
+create table t1 (id int,dd date,dt datetime);
+insert into t1 values(1,'2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(2,'2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(3,'2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(4,'2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(5,'2022-04-28','2022-04-28 22:40:11');
+update t1 sub set sub.id=sub.dd+sub.id where id < 2 || id > 4;
+select * from t1;
+id	dd	dt
+20220429	2022-04-28	2022-04-28 22:40:11
+2	2022-04-28	2022-04-28 22:40:11
+3	2022-04-28	2022-04-28 22:40:11
+4	2022-04-28	2022-04-28 22:40:11
+20220433	2022-04-28	2022-04-28 22:40:11
+DROP TABLE IF EXISTS t1,t2,t3,t4;
+create table t1 (a date);
+create table t2 (a date, b int);
+create table t3 (a date);
+create table t4 (a date not null, b int not null);
+insert into t1 values (20220102);
+insert into t2 values ('2022-01-01',7);
+insert into t4 values (20220104,8),('2022-01-03',8),('2022-01-05',9);
+insert into t3 values ('2022-01-03'),(20220105);
+update t3,t2,t1 set t2.a=t3.a where t3.a in (select a from t4 where b > 8);
+select * from t1;
+a
+2022-01-02
+select * from t2;
+a	b
+2022-01-05	7
+drop table if exists t1,t2,t3,t11,t12;
+CREATE TABLE t1 (a date, b int primary key);
+INSERT INTO t1 VALUES ('2022-01-01',1),('2022-01-01',2);
+delete from t1 where a='2022-01-01' limit 1;
+select * from t1;
+a	b
+2022-01-01	2
+INSERT INTO t1 VALUES ('2022-01-01',3);
+delete from t1 where a='2022-01-01';
+select * from t1;
+a	b
+drop table t1;
+create table t1 (
+a date not null,
+b date not null default '2000-01-01');
+insert into t1 (a) values ('2022-01-02'),('2022-01-04'),('2022-01-06'),('2022-01-08'),('2022-01-10'),('2022-01-12');
+delete from t1 where a=20220101+3;
+select a,b from t1;
+a	b
+2022-01-02	2000-01-01
+2022-01-06	2000-01-01
+2022-01-08	2000-01-01
+2022-01-10	2000-01-01
+2022-01-12	2000-01-01
+delete from t1 where  3 < 2;
+select a,b from t1;
+a	b
+2022-01-02	2000-01-01
+2022-01-06	2000-01-01
+2022-01-08	2000-01-01
+2022-01-10	2000-01-01
+2022-01-12	2000-01-01
+delete from t1 where  1 < 2;
+select a,b from t1;
+a	b
+drop table t1;
+create table t1 (a date primary key, b char(32));
+insert into t1 values (20220101,'apple'),('2022-01-02','apple');
+select * from t1;
+a	b
+2022-01-01	apple
+2022-01-02	apple
+delete t1 from t1,t1 as t2 where t1.b = t2.b and t1.a > t2.a;
+select * from t1;
+a	b
+2022-01-01	apple
+drop table t1;
+create table t11 (a date NOT NULL, b int, primary key (a));
+create table t12 (a date NOT NULL, b int, primary key (a));
+create table t2 (a date NOT NULL, b int, primary key (a));
+insert into t11 values (20211231, 10),('2022-01-01', 11),('2022-01-02', 12);
+insert into t12 values (20220303, 10),('2021-12-31', 11),(20220102, 12);
+insert into t2 values ('2021-12-31', 21),('2022-01-01', 12),('2022-03-03', 23);
+delete from t11 where t11.b <> (select b from t2 where t11.a = t2.a);
+select * from t11;
+a	b
+2022-01-02	12
+delete t11,t12 from t11,t12 where t11.b <> (select b from t2 where t11.a = t2.a) or t12.a>20220101;
+select * from t11;
+a	b
+select * from t12;
+a	b
+2021-12-31	11
+drop table if exists t1, t2;
+CREATE TABLE t1(a date PRIMARY KEY);
+INSERT INTO t1 VALUES('2022-10-01'),(20220220);
+CREATE TABLE t2(b date);
+INSERT INTO t2 VALUES('2022-10-01'),(20220220);
+delete t1,t2 from t1 JOIN t2 on t1.a=t2.b WHERE t1.a=20221001;
+select * from t1;
+a
+2022-02-20
+select * from t2;
+b
+2022-02-20
+drop table if exists t1,t2,t3;
+CREATE TABLE t1 (a date not null,b date not null, primary key (a));
+CREATE TABLE t2 (a date not null,b date not null, primary key (a));
+CREATE TABLE t3 (a date not null,b date not null, primary key (a));
+insert into t1 values ('2022-01-01','2022-01-01'),(20220102,'2022-01-01'),(20220104,'2022-01-03');
+insert into t2 values ('2022-01-01','2022-01-01'),(20220102,'2022-01-02'),(20220103,'2022-01-03');
+insert into t3 values ('2022-01-01','2022-01-01'),(20220102,'2022-01-01'),(20220104,'2022-01-03');
+delete t1,t2,t3 from t1 join t2 on t1.a=t2.a join t3 on t1.b=t3.b where t1.a=t2.a AND t2.b=t3.a and t1.b=t3.b;
+select * from t1;
+a	b
+2022-01-04	2022-01-03
+drop table t1;
+create table t1(a date not null);
+insert into t1 values ('2021-12-31');
+delete t1 from t1 where a is null;
+select * from t1;
+a
+2021-12-31
+DROP TABLE if exists t1,t2;
+CREATE TABLE t1 (
+a date
+);
+CREATE TABLE t2 (
+a date
+);
+insert into t1 values('2022-01-01'),(20220102),('2022-01-03'),('2022-01-04'),(20220105);
+insert into t2 values('2022-01-01'),('2022-01-03'),(20220105),('2022-01-07'),('2022-01-09');
+delete alias from t1 join t2 alias on t1.a=alias.a WHERE t1.a = alias.a;
+select * from t2;
+a
+2022-01-07
+2022-01-09
+drop table t1;
+create table t1 (id int,dd date,dt datetime);
+insert into t1 values(1,'2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(2,'2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(3,'2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(4,'2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(5,'2022-04-28','2022-04-28 22:40:11');
+delete from t1 where id < 4 || id > 5;
+select * from t1;
+id	dd	dt
+4	2022-04-28	2022-04-28 22:40:11
+5	2022-04-28	2022-04-28 22:40:11
+DROP TABLE IF EXISTS t1,t2,t3,t4;
+create table t1 (a date);
+create table t2 (a date, b int);
+create table t3 (a date);
+create table t4 (a date not null, b int not null);
+insert into t1 values (20220102);
+insert into t2 values ('2022-01-01',7);
+insert into t4 values (20220104,8),('2022-01-03',8),('2022-01-05',9);
+insert into t3 values ('2022-01-03'),(20220105);
+delete t3 from t3,t4  where t3.a in (select a from t4 where b > 8);
+select * from t3;
+a
+2022-01-03
