@@ -12,7 +12,7 @@ CHAR_LENGTH("Español")
 7
 SELECT CHAR_LENGTH(NULL);
 CHAR_LENGTH(NULL)
-null
+NULL
 create table t1 (a char(20) character set utf8);
 insert into t1 values ('123456'),('андрей');
 select char_length(a), length(a), a from t1 order by a;
@@ -64,17 +64,17 @@ select sum(char_length(c)) from t;
 sum(char_length(c))
 9
 drop table t;
-create table t1(a tinyint, b SMALLINT, c MEDIUMINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, j time, k datetime, l TIMESTAMP, m char(255), n varchar(255));
-insert into t1 values(1, 1, 2, 43, 5, 35.5, 31.133, 14.314, "2012-03-10", "10:03:12", "2012-03-12 10:03:12", "2022-03-12 13:03:12", "ab23c", "d5cf");
-insert into t1 values(71, 1, 2, 34, 5, 5.5, 341.13, 15.314, "2012-03-22", "10:03:12", "2013-03-12 10:03:12", "2032-03-12 13:04:12", "abr23c", "3dcf");
-insert into t1 values(1, 1, 21, 4, 54, 53.5, 431.13, 14.394, "2011-03-12", "10:03:12", "2015-03-12 10:03:12", "2002-03-12 13:03:12", "afbc", "dct5f");
-insert into t1 values(1, 71, 2, 34, 5, 5.5, 31.313, 124.314, "2012-01-12", "10:03:12", "2019-03-12 10:03:12", "2013-03-12 13:03:12", "3abd1c", "dcvf");
-select char_length(a),char_length(b),char_length(c),char_length(d),char_length(e),char_length(f),char_length(g),char_length(h),char_length(i),char_length(j),char_length(k),char_length(l),char_length(m),char_length(n) from t1;
-char_length(a)	char_length(b)	char_length(c)	char_length(d)	char_length(e)	char_length(f)	char_length(g)	char_length(h)	char_length(i)	char_length(j)	char_length(k)	char_length(l)	char_length(m)	char_length(n)
-1	1	1	2	1	4	6	22	10	8	19	19	5	4
-2	1	1	2	1	3	6	22	10	8	19	19	6	4
-1	1	2	1	2	4	6	22	10	8	19	19	4	5
-1	2	1	2	1	3	6	23	10	8	19	19	6	4
+create table t1(a tinyint, b SMALLINT, c MEDIUMINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, k datetime, l TIMESTAMP, m char(255), n varchar(255));
+insert into t1 values(1, 1, 2, 43, 5, 35.5, 31.133, 14.314, "2012-03-10",  "2012-03-12 10:03:12", "2022-03-12 13:03:12", "ab23c", "d5cf");
+insert into t1 values(71, 1, 2, 34, 5, 5.5, 341.13, 15.314, "2012-03-22",  "2013-03-12 10:03:12", "2032-03-12 13:04:12", "abr23c", "3dcf");
+insert into t1 values(1, 1, 21, 4, 54, 53.5, 431.13, 14.394, "2011-03-12",  "2015-03-12 10:03:12", "2002-03-12 13:03:12", "afbc", "dct5f");
+insert into t1 values(1, 71, 2, 34, 5, 5.5, 31.313, 124.314, "2012-01-12",  "2019-03-12 10:03:12", "2013-03-12 13:03:12", "3abd1c", "dcvf");
+select char_length(a),char_length(b),char_length(c),char_length(d),char_length(e),char_length(f),char_length(g),char_length(h),char_length(i),char_length(k),char_length(l),char_length(m),char_length(n) from t1;
+char_length(a)	char_length(b)	char_length(c)	char_length(d)	char_length(e)	char_length(f)	char_length(g)	char_length(h)	char_length(i)	char_length(k)	char_length(l)	char_length(m)	char_length(n)
+1	1	1	2	1	4	6	22	10	19	19	5	4
+2	1	1	2	1	3	6	22	10	19	19	6	4
+1	1	2	1	2	4	6	22	10	19	19	4	5
+1	2	1	2	1	3	6	23	10	19	19	6	4
 drop table t1;
 create table t1(a int, b varchar(255));
 insert into t1 values(char_length("你好"), "你好"), (char_length("再见"), "再见");

@@ -16,6 +16,7 @@ SELECT ADDDATE(TIMESTAMP'2021-01-01 00:00:00', INTERVAL 1 DAY);
 SELECT ADDDATE(TIMESTAMP'2021-01-01 00:00:00', INTERVAL 1 HOUR);
 SELECT DATE(ts) = CURRENT_DATE + INTERVAL '1' DAY AS is_tomorrow, TIME(ts)
 FROM (SELECT ADDDATE(TIME'00:00:00', INTERVAL 1 DAY) AS ts) AS dt;
+
 SELECT ADDDATE(TIME'00:00:00', INTERVAL 1 HOUR);
 SELECT ADDDATE('2021-01-01', INTERVAL 1 DAY);
 SELECT ADDDATE('2021-01-01', INTERVAL 1 HOUR);
@@ -63,12 +64,13 @@ select date_add("1997-12-31",INTERVAL "1 1" YEAR_MONTH);
 
 #函数嵌套
 #0.5暂不支持str_to_date
-SELECT DATE_ADD(str_to_date('9999-12-30 23:59:00','%Y-%m-%d %H:%i:%s'), INTERVAL 1 MINUTE);
+#SELECT DATE_ADD(str_to_date('9999-12-30 23:59:00','%Y-%m-%d %H:%i:%s'), INTERVAL 1 MINUTE);
+
 SELECT extract(week from DATE_ADD('2020-12-30 23:59:00', INTERVAL 1 year));
 
 #不同数据类型
-CREATE TABLE t1 (datetime datetime, timestamp timestamp, date date, time time);
-INSERT INTO t1 values ("2001-01-02 03:04:05", "2002-01-02 03:04:05", "2003-01-02", "06:07:08");
+CREATE TABLE t1 (datetime datetime, timestamp timestamp, date date);
+INSERT INTO t1 values ("2001-01-02 03:04:05", "2002-01-02 03:04:05", "2003-01-02");
 select date_add(datetime, INTERVAL 1 SECOND) from t1;
 select date_add(datetime, INTERVAL 1 YEAR) from t1;
 select date_add(date,INTERVAL 1 SECOND) from t1;
@@ -86,8 +88,15 @@ select date_add(date,INTERVAL "1 1:1" DAY_MINUTE) from t1;
 select date_add(date,INTERVAL "1 1:1:1" DAY_SECOND) from t1;
 select date_add(date,INTERVAL "1" WEEK) from t1;
 select date_add(date,INTERVAL "1" QUARTER) from t1;
-select date_add(time,INTERVAL 1 SECOND) from t1;
 drop table t1;
+
+
+#0.5 doesn't support time
+#CREATE TABLE t1(time time);
+#INSERT INTO t1 values ("06:07:08");
+#select date_add(time,INTERVAL 1 SECOND) from t1;
+#drop table t1;
+
 
 #EXTREME VALUE
 select DATE_ADD('20071108181000', INTERVAL 1 DAY);

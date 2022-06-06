@@ -7,11 +7,6 @@ round(5.5)	round(-5.5)
 select round(5.64,1),round(5.64,2),round(5.64,-1),round(5.64,-2);
 round(5.64,1)	round(5.64,2)	round(5.64,-1)	round(5.64,-2)
 5.6	5.64	10	0
-create table t1 select round(1, 6);
-select * from t1;
-round(1, 6)
-1
-drop table t1;
 select round(111,-10);
 round(111,-10)
 0
@@ -44,22 +39,22 @@ INSERT INTO t1 VALUES (-1.1), (1.1),
 (-1e16 - 1.5), (1e16 + 1.5);
 SELECT a, ROUND(a) FROM t1;
 a	ROUND(a)
--1.1	-1.0
-1.1	1.0
--1.5	-2.0
-1.5	2.0
--1.9	-2.0
-1.9	2.0
--2.1	-2.0
-2.1	2.0
--2.5	-2.0
-2.5	2.0
--2.9	-3.0
-2.9	3.0
--1.0E16	-1.0E16
-1.0E16	1.0E16
--1.0000000000000002E16	-1.0000000000000002E16
-1.0000000000000002E16	1.0000000000000002E16
+-1.1	-1
+1.1	1
+-1.5	-2
+1.5	2
+-1.9	-2
+1.9	2
+-2.1	-2
+2.1	2
+-2.5	-2
+2.5	2
+-2.9	-3
+2.9	3
+-1e16	-1e16
+1e16	1e16
+-1.0000000000000002e16	-1.0000000000000002e16
+1.0000000000000002e16	1.0000000000000002e16
 DROP TABLE t1;
 CREATE TABLE t1(f1 DECIMAL(22,1));
 INSERT INTO t1 VALUES (0),(1);
@@ -72,9 +67,6 @@ ROUND(f1, f1)
 0.0
 1.0
 DROP TABLE t1;
-SELECT ROUND(LEAST(15, -4939092, 0.2704), STDDEV('a'));
-ROUND(LEAST(15, -4939092, 0.2704), STDDEV('a'))
--4939092.0000
 SELECT ROUND(sin(0.45), cos(0.8));
 ROUND(sin(0.45), cos(0.8))
 0.4
@@ -93,9 +85,8 @@ round(999999999999999999.0, -18)
 CREATE TABLE t1 (
 id           VARCHAR(80) NOT NULL PRIMARY KEY,
 sujet        VARCHAR(80),
-motsclefs    TEXT,
-texte        MEDIUMTEXT,
-FULLTEXT(sujet, motsclefs, texte)
+motsclefs    varchar(255),
+texte        varchar(255)
 );
 INSERT INTO t1 VALUES('123','toto','essai','test');
 INSERT INTO t1 VALUES('456','droit','penal','lawyer');
@@ -107,20 +98,13 @@ author     VARCHAR(255) NOT NULL
 INSERT INTO t2 VALUES('123', 'moi');
 INSERT INTO t2 VALUES('123', 'lui');
 INSERT INTO t2 VALUES('456', 'lui');
-select round(match(t1.texte,t1.sujet,t1.motsclefs) against('droit'),5)
+select round((length(t1.texte)+length(t1.sujet))/length(t2.author))
 from t1 left join t2 on t2.id=t1.id;
-round(match(t1.texte,t1.sujet,t1.motsclefs) against('droit'),5)
-0.0
-0.0
-0.22764
-0.0
-select match(t1.texte,t1.sujet,t1.motsclefs) against('droit' IN BOOLEAN MODE)
-from t1 left join t2 on t2.id=t1.id;
-match(t1.texte,t1.sujet,t1.motsclefs) against('droit' IN BOOLEAN MODE)
-0.0
-0.0
-0.22764469683170319
-0.0
+round((length(t1.texte)+length(t1.sujet))/length(t2.author))
+3
+3
+4
+NULL
 drop table t1, t2;
 select round(cast(-2 as unsigned), 1), round(18446744073709551614, 1), round(-2, 1);
 round(cast(-2 as unsigned), 1)	round(18446744073709551614, 1)	round(-2, 1)
@@ -133,16 +117,16 @@ round(10000000000000000000, -19)
 10000000000000000000
 select round(1e0, -309);
 round(1e0, -309)
-0.0
+0
 select round(1e1,308);
 round(1e1,308)
-10.0
+10
 select round(1e1, 2147483648);
 round(1e1, 2147483648)
-10.0
+10
 select round(1.1e1, 4294967295);
 round(1.1e1, 4294967295)
-11.0
+11
 select round(1.12e1, 4294967296);
 round(1.12e1, 4294967296)
 11.2
@@ -174,26 +158,26 @@ a	r2	r1
 1	1.0	2
 SELECT a, ROUND(sin(100)*10) r2, SUM(1) r1 FROM t1 GROUP BY a;
 a	r2	r1
-1	-5.0	2
-2	-5.0	1
+1	-5	2
+2	-5	1
 SELECT a, ROUND(sin(100)*10) r2, SUM(1) r1 FROM t1 GROUP BY a
 HAVING r1>0 AND r2<0 AND r2 > -10;
 a	r2	r1
-1	-5.0	2
-2	-5.0	1
+1	-5	2
+2	-5	1
 SELECT a, ROUND(sin(100)*10) r2, SUM(1) r1 FROM t1 GROUP BY a
 HAVING r1>=1 AND (SELECT r2>-100 AND r2 < 0 FROM t1 AS t2 LIMIT 1);
 a	r2	r1
-1	-5.0	2
-2	-5.0	1
+1	-5	2
+2	-5	1
 SELECT a, ROUND(sin(100)*10) r2, SUM(1) r1 FROM t1 WHERE a = 1
 GROUP BY a HAVING r1>1 AND r2<=2;
 a	r2	r1
-1	-5.0	2
+1	-5	2
 SELECT a, ROUND(sin(100)*10) r2, SUM(1) r1 FROM t1 WHERE a = 1
 GROUP BY a HAVING r1>1 AND r2<=2 ORDER BY a+r2+r1;
 a	r2	r1
-1	-5.0	2
+1	-5	2
 SELECT a,SUM(b) FROM t1 WHERE a=1 GROUP BY c;
 a	SUM(b)
 1	5
@@ -214,12 +198,12 @@ d
 10
 SELECT a, ROUND(sin(100)*10) r2 FROM t1;
 a	r2
-1	-5.0
-1	-5.0
-2	-5.0
+1	-5
+1	-5
+2	-5
 SELECT ROUND(sin(100)*10) r2 FROM t1 GROUP BY r2;
 r2
--5.0
+-5
 DROP TABLE t1;
 CREATE TABLE t1 (i INT, d1 DECIMAL(9,2), d2 DECIMAL(9,2));
 INSERT INTO t1 VALUES (1, 101.40, 21.40), (1, -80.00, 0.00),
@@ -244,10 +228,6 @@ ROUND(qty,3)	dps	ROUND(qty,dps)
 DROP TABLE t1;
 CREATE TABLE t1( a NUMERIC, b INT );
 INSERT INTO t1 VALUES (123456, 40), (123456, 40);
-SELECT TRUNCATE( a, b ) AS c FROM t1 ORDER BY c;
-c
-123456
-123456
 SELECT ROUND( a, b ) AS c FROM t1 ORDER BY c;
 c
 123456
@@ -258,18 +238,11 @@ c
 123456
 CREATE TABLE t2( a NUMERIC, b INT );
 INSERT INTO t2 VALUES (123456, 100);
-SELECT TRUNCATE( a, b ) AS c FROM t2 ORDER BY c;
-c
-123456
 SELECT ROUND( a, b ) AS c FROM t2 ORDER BY c;
 c
 123456
 CREATE TABLE t3( a DECIMAL, b INT );
 INSERT INTO t3 VALUES (123456, 40), (123456, 40);
-SELECT TRUNCATE( a, b ) AS c FROM t3 ORDER BY c;
-c
-123456
-123456
 SELECT ROUND( a, b ) AS c FROM t3 ORDER BY c;
 c
 123456
@@ -280,10 +253,6 @@ c
 123456
 CREATE TABLE t4( a DECIMAL, b INT );
 INSERT INTO t4 VALUES (123456, 40), (123456, 40);
-SELECT TRUNCATE( a, b ) AS c FROM t4 ORDER BY c;
-c
-123456
-123456
 SELECT ROUND( a, b ) AS c FROM t4 ORDER BY c;
 c
 123456
@@ -345,7 +314,7 @@ INSERT INTO t5 VALUES( 9, 1.5e-9 );
 SELECT ROUND( b, a ) FROM t5;
 ROUND( b, a )
 2.000000000000
-2.000E-9
+0.000000002000
 CREATE TABLE t6( a INT );
 INSERT INTO t6 VALUES( 6 / 8 );
 SELECT * FROM t6;
@@ -357,13 +326,13 @@ ROUND(20061108085411.000002)
 DROP TABLE t1, t2, t3, t4, t5, t6;
 CREATE TABLE t5(c1 DECIMAL(16,6), c2 tinyint);
 INSERT INTO t5 VALUES(1.1325,3);
-SELECT ROUND(c1,c2),TRUNCATE(c1,c2) FROM t5;
-ROUND(c1,c2)	TRUNCATE(c1,c2)
-1.133000	1.132000
+SELECT ROUND(c1,c2) from t5;
+ROUND(c1,c2)
+1.133000
 DROP TABLE t5;
 SELECT ROUND(NULL);
 ROUND(NULL)
-null
+NULL
 select round(123.54)-round(123.03);
 round(123.54)-round(123.03)
 1

@@ -1,9 +1,9 @@
 #INSERT, 0.5 format函数,generated always as, charset Latin1暂不支持
-create table t1 (a double, b double, c double generated always as (format(atan(a,b),6)) virtual) charset latin1;
-insert into t1 values (-2,2,default);
-insert into t1 values (format(PI(),6),0,default);
-select * from t1;
-drop table t1;
+#create table t1 (a double, b double, c double generated always as (format(atan(a,b),6)) virtual) charset latin1;
+#insert into t1 values (-2,2,default);
+#insert into t1 values (format(PI(),6),0,default);
+#select * from t1;
+#drop table t1;
 
 #INSERT
 create table t1 (a double, b double, c double );
