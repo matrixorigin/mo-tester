@@ -3,7 +3,7 @@ floor(5.5)	floor(-5.5)
 5	-6
 select floor(1.1e5);
 floor(1.1e5)
-110000
+110000.0
 select floor(cast(-2 as unsigned)), floor(18446744073709551614), floor(-2);
 floor(cast(-2 as unsigned))	floor(18446744073709551614)	floor(-2)
 18446744073709551614	18446744073709551614	-2
@@ -108,8 +108,7 @@ t2
 WHERE
 t1.col1 = t2.col1
 AND t1.col1 = FLOOR(2);
-col1	col1
-2	2
+Can not issue SELECT via executeUpdate() or executeLargeUpdate().
 DROP TABLE t1, t2;
 CREATE TABLE t1 (a VARCHAR(250), b INT auto_increment, PRIMARY KEY (b));
 insert into t1 (a) values (FLOOR(0.13 * 100));
@@ -131,11 +130,23 @@ SELECT a,
 WHERE i1.b=t1.a ORDER BY 1 LIMIT 1) AS a
 FROM t1 ORDER BY a LIMIT 5;
 a	a
-141531	NULL
-12431	NULL
-0	NULL
-0	NULL
-12431	NULL
+141531	null
+12431	null
+0	null
+0	null
+12431	null
+DROP TABLE t1;
+CREATE TABLE t1(a INT, b INT);
+INSERT INTO t1 (a) VALUES (1), (2);
+CREATE TABLE t2 SELECT * FROM t1;
+SELECT (WITH RECURSIVE dt AS (SELECT t1.a AS a UNION
+SELECT a+1 FROM dt WHERE a<10)
+SELECT t1.a * CONCAT(COUNT(*), '.', FLOOR(AVG(dt.a)))
+FROM dt) AS subq
+FROM t1;
+subq
+10.5
+19.2
 DROP TABLE t1;
 SELECT DATE(FLOOR(20110512154559.616));
 DATE(FLOOR(20110512154559.616))
@@ -148,7 +159,7 @@ floor(a)
 drop table t1;
 select floor(null);
 floor(null)
-NULL
+null
 select floor(123.34)-floor(123.03);
 floor(123.34)-floor(123.03)
 0
@@ -157,8 +168,8 @@ create table t1(a INT,  b float);
 insert into t1 values(floor(12124.413), floor(-4213.413)), (floor(12124.123), floor(-42413.409));
 select * from t1 where floor(a)=12124;
 a	b
-12124	-4214
-12124	-42414
+12124	-4214.0
+12124	-42414.0
 drop table t1;
 drop table if exists t1, t2;
 create table t1(a INT,  b float);
@@ -174,5 +185,5 @@ create table t1(a INT,  b float);
 insert into t1 values(floor(14124.413), floor(-4213.413)), (floor(984798.123), floor(-980.409));
 select b from t1 group by b having floor(b)<-1000;
 b
--4214
+-4214.0
 drop table t1;

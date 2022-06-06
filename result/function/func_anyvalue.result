@@ -41,16 +41,16 @@ any_value(a)	sum(b)
 1	100
 select a,any_value(b),sum(c) from t1 group by a;
 a	any_value(b)	sum(c)
-1	10	NULL
-2	30	NULL
+1	10	null
+2	30	null
 select a,any_value(b),sum(c) from (select * from t1 order by a desc, b desc) as d group by a;
 a	any_value(b)	sum(c)
-1	10	NULL
-2	30	NULL
+1	10	null
+2	30	null
 drop table t1,t2;
 select any_value(null);
 any_value(null)
-NULL
+null
 SELECT any_value(floor(0.5413));
 any_value(floor(0.5413))
 0
@@ -109,4 +109,3 @@ a
 -4213.41
 -980.409
 drop table t1;
-
