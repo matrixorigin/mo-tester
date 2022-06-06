@@ -3,24 +3,24 @@ weekday(date('2007-02-03 03:42:24'))
 5
 SELECT weekday(NULL);
 weekday(NULL)
-NULL
-create table t1(a tinyint, b SMALLINT, c MEDIUMINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, k datetime, l TIMESTAMP, m char(255), n varchar(255));
-insert into t1 values(1, 1, 2, 43, 5, 35.5, 31.133, 14.314, "2012-03-10", "2012-03-12 10:03:12", "2022-03-12 13:03:12", "ab23c", "d5cf");
-insert into t1 values(71, 1, 2, 34, 5, 5.5, 341.13, 15.314, "2012-03-22", "2013-03-12 10:03:12", "2032-03-12 13:04:12", "abr23c", "3dcf");
-insert into t1 values(1, 1, 21, 4, 54, 53.5, 431.13, 14.394, "2011-03-12", "2015-03-12 10:03:12", "2002-03-12 13:03:12", "afbc", "dct5f");
-insert into t1 values(1, 71, 2, 34, 5, 5.5, 31.313, 124.314, "2012-01-12", "2019-03-12 10:03:12", "2013-03-12 13:03:12", "3abd1c", "dcvf");
+null
+create table t1(a tinyint, b SMALLINT, c MEDIUMINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, j time, k datetime, l TIMESTAMP, m char(255), n varchar(255));
+insert into t1 values(1, 1, 2, 43, 5, 35.5, 31.133, 14.314, "2012-03-10", "10:03:12", "2012-03-12 10:03:12", "2022-03-12 13:03:12", "ab23c", "d5cf");
+insert into t1 values(71, 1, 2, 34, 5, 5.5, 341.13, 15.314, "2012-03-22", "10:03:12", "2013-03-12 10:03:12", "2032-03-12 13:04:12", "abr23c", "3dcf");
+insert into t1 values(1, 1, 21, 4, 54, 53.5, 431.13, 14.394, "2011-03-12", "10:03:12", "2015-03-12 10:03:12", "2002-03-12 13:03:12", "afbc", "dct5f");
+insert into t1 values(1, 71, 2, 34, 5, 5.5, 31.313, 124.314, "2012-01-12", "10:03:12", "2019-03-12 10:03:12", "2013-03-12 13:03:12", "3abd1c", "dcvf");
 select weekday(a),weekday(b),weekday(c),weekday(d),weekday(e),weekday(f) from t1;
 weekday(a)	weekday(b)	weekday(c)	weekday(d)	weekday(e)	weekday(f)
-NULL	NULL	NULL	NULL	NULL	NULL
-NULL	NULL	NULL	NULL	NULL	NULL
-NULL	NULL	NULL	NULL	NULL	NULL
-NULL	NULL	NULL	NULL	NULL	NULL
-select weekday(g),weekday(h),weekday(i),weekday(k),weekday(l),weekday(m),weekday(n) from t1;
-weekday(g)	weekday(h)	weekday(i)	weekday(k)	weekday(l)	weekday(m)	weekday(n)
-NULL	NULL	5	0	5	NULL	NULL
-NULL	NULL	3	1	4	NULL	NULL
-NULL	NULL	5	3	1	NULL	NULL
-NULL	0	3	1	1	NULL	NULL
+null	null	null	null	null	null
+null	null	null	null	null	null
+null	null	null	null	null	null
+null	null	null	null	null	null
+select weekday(g),weekday(h),weekday(i),weekday(j),weekday(k),weekday(l),weekday(m),weekday(n) from t1;
+weekday(g)	weekday(h)	weekday(i)	weekday(j)	weekday(k)	weekday(l)	weekday(m)	weekday(n)
+null	null	5	1	0	5	null	null
+null	null	3	1	1	4	null	null
+null	null	5	1	3	1	null	null
+null	0	3	1	1	1	null	null
 drop table t1;
 SELECT weekday("2015-09-03") as weekday;
 weekday
@@ -30,22 +30,22 @@ weekday
 4
 SELECT weekday(1340124) as weekday;
 weekday
-NULL
+null
 SELECT weekday(0.45133) as weekday;
 weekday
-NULL
+null
 SELECT weekday(10) as weekday;
 weekday
-NULL
+null
 SELECT weekday(1=1) as weekday;
 weekday
-NULL
+null
 SELECT weekday('2015-09.30') as weekday;
 weekday
 2
 SELECT weekday('2015-0') as weekday;
 weekday
-NULL
+null
 SELECT weekday('2015-09.30 12') as weekday;
 weekday
 2
@@ -54,22 +54,22 @@ weekday
 5
 select weekday("2020-08");
 weekday("2020-08")
-NULL
+null
 select weekday("0000-00-00");
 weekday("0000-00-00")
-NULL
+null
 select weekday("-0001-03-03");
 weekday("-0001-03-03")
-NULL
+null
 select weekday("10000-03-02");
 weekday("10000-03-02")
-NULL
+null
 select weekday("2021-13-09");
 weekday("2021-13-09")
-NULL
+null
 select weekday("2020-10-32");
 weekday("2020-10-32")
-NULL
+null
 SELECT weekday("2015-09-10")- weekday("2016-04-24");
 weekday("2015-09-10")- weekday("2016-04-24")
 -3
@@ -175,47 +175,3 @@ select * from t1;
 if(1,'1','0')	weekday("2002-08-02")
 1	4
 drop table t1;
-CREATE TABLE t3(c1 DATE NOT NULL);
-INSERT INTO t3 VALUES('2000-01-01');
-INSERT INTO t3 VALUES('1999-12-31');
-INSERT INTO t3 VALUES('2000-01-01');
-INSERT INTO t3 VALUES('2006-12-25');
-INSERT INTO t3 VALUES('2008-02-29');
-SELECT WEEKDAY(c1) FROM t3;
-WEEKDAY(c1)
-5
-4
-5
-0
-4
-DROP TABLE t3;
-CREATE TABLE t3(c1 DATETIME NOT NULL);
-INSERT INTO t3 VALUES('2000-01-01');
-INSERT INTO t3 VALUES('1999-12-31');
-INSERT INTO t3 VALUES('2000-01-01');
-INSERT INTO t3 VALUES('2006-12-25');
-INSERT INTO t3 VALUES('2008-02-29');
-SELECT WEEKDAY(c1) FROM t3;
-WEEKDAY(c1)
-5
-4
-5
-0
-4
-DROP TABLE t3;
-CREATE TABLE t3(c1 TIMESTAMP NOT NULL);
-INSERT INTO t3 VALUES('2000-01-01');
-INSERT INTO t3 VALUES('1999-12-31');
-INSERT INTO t3 VALUES('2000-01-01');
-INSERT INTO t3 VALUES('2006-12-25');
-INSERT INTO t3 VALUES('2008-02-29');
-SELECT WEEKDAY(c1) FROM t3;
-WEEKDAY(c1)
-5
-4
-5
-0
-4
-DROP TABLE t3;
-
-

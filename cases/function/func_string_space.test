@@ -1,11 +1,12 @@
 #SELECT, 嵌套
+#0.5 MO暂不支持concat
 drop table if exists t1;
 create table t1 (
 name varchar(10),
 level smallint unsigned);
 insert into t1 values ('string',1);
 select reverse("123"+space(level)+"456") from t1;
-select concat_ws("abc", name,space(level)), concat_ws("abc",name, repeat('xx',level)) from t1;
+select concat(name,space(level)), concat(name, repeat(' ',level)) from t1;
 drop table t1;
 
 #DATETYPE, INSERT
