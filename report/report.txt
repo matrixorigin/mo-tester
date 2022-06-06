@@ -1,0 +1,4 @@
+[SUMMARY] TOTAL : 50, SUCCESS : 0, ERROR :0, NOEXE :50, SUCCESS RATE : 0%
+[cases/database/create_database.test] TOTAL : 19, SUCCESS : 0, ERROR :0, NOEXE :19, SUCCESS RATE : 0%
+[cases/database/drop_database.test] TOTAL : 5, SUCCESS : 0, ERROR :0, NOEXE :5, SUCCESS RATE : 0%
+[cases/database/new_database.test] TOTAL : 26, SUCCESS : 0, ERROR :0, NOEXE :26, SUCCESS RATE : 0%
