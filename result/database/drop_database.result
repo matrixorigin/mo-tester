@@ -4,4 +4,4 @@ create database test01;
 drop database test01;
 show databases;
 Databases
-datedb
+system_metrics
