@@ -1,95 +1,91 @@
--- @suite                                                                                                                                                                                
--- @case
--- @desc:test for int the datatype                                                                                                                                                   
--- @label:bvt  
-create table t1 (a smallint unsigned not null, primary key(a));
-insert into t1 values (65535), (0xFFFC), (65534), (65533);
+create table t1 (a int unsigned not null, primary key(a));
+insert into t1 values (4294967295), (0xFFFFFFFE), (4294967293), (4294967291);
 select * from t1;
-select * from t1 where a=65535;
-delete from t1 where a=65535;
+select * from t1 where a=4294967295;
+delete from t1 where a=4294967295;
 select * from t1;
 drop table t1;
-create table t1 ( a smallint not null default 1, smallint16 smallint );
-insert into t1 (smallint16) values (-1),(32767),(-32768);
+create table t1 ( a int not null default 1, int32 int );
+insert into t1 (int32) values (-1),(1234567890),(2147483647);
 select * from t1;
-select min(smallint16),max(smallint16),max(smallint16)-1 from t1;
-select min(smallint16),max(smallint16),max(smallint16)-1 from t1 group by a;
+select min(int32),max(int32),max(int32)-1 from t1;
+select min(int32),max(int32),max(int32)-1 from t1 group by a;
 drop table t1;
-create table t1 ( a smallint not null default 1, smallint16 smallint unsigned);
-insert into t1 (smallint16) values (0),(65535), (0xFFFE), (65534), (65533);
+create table t1 ( a int not null default 1, int32 int unsigned);
+insert into t1 (int32) values (0),(4294967295), (0xFFFFFFFE), (4294967293), (4294967291);
 select * from t1;
-select min(smallint16),max(smallint16),max(smallint16)-1 from t1;
-select min(smallint16),max(smallint16),max(smallint16)-1 from t1 group by a;
+select min(int32),max(int32),max(int32)-1 from t1;
+select min(int32),max(int32),max(int32)-1 from t1 group by a;
 drop table t1;
-create table t1 (id smallint auto_increment primary key, a smallint) auto_increment=9999;
+create table t1 (id int auto_increment primary key, a int) auto_increment=999999999;
 insert into t1 values (null,1);
 select * from t1;
-select * from t1 limit 9999;
+select * from t1 limit 9999999999;
 drop table if exists t1,t2;
 create table t1 (
-valueu16  smallint unsigned  not null,
-value16  smallint          not null,
-primary key(valueu16, value16)
+valueu32  int unsigned  not null,
+value32  integer          not null,
+primary key(valueu32, value32)
 );
 create table t2 (
-valueu16  smallint unsigned  not null,
-value16  smallint          not null,
-primary key(valueu16, value16)
+valueu32  int unsigned  not null,
+value32  integer          not null,
+primary key(valueu32, value32)
 );
-insert into t1 values(65535, 1);
-insert into t1 values( 32767, 2);
-insert into t2 values(65535, 3);
-insert into t2 values( 32767, 4);
-insert into t1 values(5,-32768);
-insert into t2 values(5,-32768);
+insert into t1 values(4294967295, 1);
+insert into t1 values( 2147483647, 2);
+insert into t2 values(4294967295, 3);
+insert into t2 values( 2147483647, 4);
+insert into t1 values(5,-2147483648);
+insert into t2 values(5,-2147483648);
 select * from t1;
 select * from t2;
-select * from t1 join t2 on t1.valueu16=t2.valueu16;
-select * from t1 join t2 on t1.valueu16=t2.valueu16 where t1.valueu16=65535;
-select * from t1 join t2 on t1.value16=t2.value16;
+select * from t1 join t2 on t1.valueu32=t2.valueu32;
+select * from t1 join t2 on t1.valueu32=t2.valueu32 where t1.valueu32=4294967295;
+select * from t1 join t2 on t1.value32=t2.value32;
 drop table t1, t2;
-create table t1 (smallint16 smallint not null);
-insert into t1 values (-32768);
+create table t1 (sint32 int not null);
+insert into t1 values (-2147483648);
 select * from t1;
 DROP TABLE t1;
-create table t1 (smallint_col smallint unsigned);
-insert into t1 values (65500);
-select * from t1 where smallint_col=65500;
-select * from t1 where smallint_col='65500';
+create table t1 (int_col int unsigned);
+insert into t1 values (4294960000);
+select * from t1 where int_col=4294960000;
+select * from t1 where int_col='4294960000';
 drop table t1;
-select cast(65500 as unsigned) mod 50 as result;
-select cast(32767 as signed);
-select cast(-32768 as signed);
-CREATE TABLE t1 (id SMALLINT AUTO_INCREMENT PRIMARY KEY,
-a SMALLINT(6) UNSIGNED,
-b VARCHAR(6));
+select cast(4294960000 as unsigned) mod 50 as result;
+select cast(2147399999 as signed);
+select cast(-2147399999 as signed);
+CREATE TABLE t1 (id INT AUTO_INCREMENT PRIMARY KEY,
+a INT(10) UNSIGNED,
+b VARCHAR(10));
 INSERT INTO t1 (a) VALUES
 (0),
-(CAST(0x7FFF AS UNSIGNED)),
-(CAST(0x8000 AS UNSIGNED)),
-(CAST(0xFFFF AS UNSIGNED));
+(CAST(0x7FFFFFFF AS UNSIGNED)),
+(CAST(0x80000000 AS UNSIGNED)),
+(CAST(0xFFFFFFFF AS UNSIGNED));
 UPDATE t1 SET b = a;
-select * from t1 where ((a = 65535) and (b = '65535'));
-CREATE TABLE t_smallint(id SMALLINT);
-INSERT INTO t_smallint VALUES (1), (2);
-SELECT id, id >= 1.1 FROM t_smallint;
-SELECT id, 1.1 <= id FROM t_smallint;
-SELECT id, id = 1.1 FROM t_smallint;
-SELECT id, 1.1 = id FROM t_smallint;
-SELECT * from t_smallint WHERE id = 1.1;
-SELECT * from t_smallint WHERE id = 1.1e0;
-SELECT * from t_smallint WHERE id = '1.1';
-SELECT * from t_smallint WHERE id = '1.1e0';
-SELECT * from t_smallint WHERE id IN (1.1, 2.2);
-SELECT * from t_smallint WHERE id IN (1.1e0, 2.2e0);
-SELECT * from t_smallint WHERE id IN ('1.1', '2.2');
-SELECT * from t_smallint WHERE id IN ('1.1e0', '2.2e0');
-SELECT * from t_smallint WHERE id BETWEEN 1.1 AND 1.9;
-SELECT * from t_smallint WHERE id BETWEEN 1.1e0 AND 1.9e0;
-SELECT * from t_smallint WHERE id BETWEEN '1.1' AND '1.9';
-SELECT * from t_smallint WHERE id BETWEEN '1.1e0' AND '1.9e0';
+select * from t1 where ((a = 4294967295) and (b = '4294967295'));
+CREATE TABLE t_int(id INT);
+INSERT INTO t_int VALUES (1), (2);
+SELECT id, id >= 1.1 FROM t_int;
+SELECT id, 1.1 <= id FROM t_int;
+SELECT id, id = 1.1 FROM t_int;
+SELECT id, 1.1 = id FROM t_int;
+SELECT * from t_int WHERE id = 1.1;
+SELECT * from t_int WHERE id = 1.1e0;
+SELECT * from t_int WHERE id = '1.1';
+SELECT * from t_int WHERE id = '1.1e0';
+SELECT * from t_int WHERE id IN (1.1, 2.2);
+SELECT * from t_int WHERE id IN (1.1e0, 2.2e0);
+SELECT * from t_int WHERE id IN ('1.1', '2.2');
+SELECT * from t_int WHERE id IN ('1.1e0', '2.2e0');
+SELECT * from t_int WHERE id BETWEEN 1.1 AND 1.9;
+SELECT * from t_int WHERE id BETWEEN 1.1e0 AND 1.9e0;
+SELECT * from t_int WHERE id BETWEEN '1.1' AND '1.9';
+SELECT * from t_int WHERE id BETWEEN '1.1e0' AND '1.9e0';
 DROP TABLE t1;
-CREATE TABLE t1 (a SMALLINT);
+CREATE TABLE t1 (a INT);
 INSERT INTO t1 VALUES (1);
 SELECT * FROM t1 WHERE coalesce(a) BETWEEN 0 and 0.9;
 SELECT * FROM t1 WHERE coalesce(a)=0.9;
@@ -98,24 +94,269 @@ SELECT * FROM t1 WHERE a BETWEEN 0 AND 0.9;
 SELECT * FROM t1 WHERE a=0.9;
 SELECT * FROM t1 WHERE a IN (0.8,0.9);
 DROP TABLE t1;
-create table t (id smallint unsigned, b smallint);
-insert into t values(32767,1);
-insert into t values(65535,2);
-insert into t values(32768,3);
-select count(*) from t 
-where id>=32767 and id <=65535;
-select count(*) from t 
-where id between 32767 and 65535;
+create table t (id int unsigned, b int);
+insert into t values(2147483647,1);
+insert into t values(4294967295,2);
+insert into t values(2147483643,3);
+select count(*) from t
+where id>=2147483647 and id <=4294967295;
+select count(*) from t
+where id between 2147483647 and 4294967295;
 drop table t;
-SELECT (65534 BETWEEN 0 AND 65535);
-SELECT  -32000 <= 0;
-SELECT 0 <= 32767;
+SELECT (4294967294 BETWEEN 0 AND 4294967295);
+SELECT  -2147483600 <= 0;
+SELECT 0 <= 2147483647;
 SELECT CAST(100 AS UNSIGNED) BETWEEN 1 AND -1;
 SELECT CAST(100 AS UNSIGNED) NOT BETWEEN 1 AND -1;
 SELECT CAST(0 AS UNSIGNED) BETWEEN 0 AND -1;
 SELECT CAST(0 AS UNSIGNED) NOT BETWEEN 0 AND -1;
-SELECT ( 65535 BETWEEN 65535 AND 65535 );
-SELECT ( 32767 BETWEEN 65535 AND 1 );
-SELECT ( -1 BETWEEN 65535 AND 1 );
-SELECT ( 0 BETWEEN 65535 AND 1 );
-SELECT ( 1 BETWEEN 65535 AND 1 );
+SELECT ( 4294967296 BETWEEN 4294967296 AND 4294967296 );
+SELECT ( 2147483647 BETWEEN 4294967296 AND 1 );
+SELECT ( -1 BETWEEN 4294967296 AND 1 );
+SELECT ( 0 BETWEEN 4294967296 AND 1 );
+SELECT ( 1 BETWEEN 4294967296 AND 1 );
+drop table if exists t1,t2,t3,t11,t12;
+CREATE TABLE t1 (a int(3), b int(5) primary key);
+INSERT INTO t1 VALUES (1,1),(1,2);
+update t1 set a=2 where a=1 limit 1;
+select * from t1;
+INSERT INTO t1 VALUES (1,3);
+update t1 set a=2 where a=1;
+select * from t1;
+drop table t1;
+create table t1 (
+a int not null,
+b int not null default 0,
+c int not null default 0,
+d int not null default 0,
+e int not null default 0,
+f int not null default 0,
+g int not null default 0,
+h int not null default 0,
+i int not null default 0,
+j int not null default 0,
+primary key (a));
+insert into t1 (a) values (2),(4),(6),(8),(10),(12),(14),(16),(18),(20),(22),(24),(26),(23);
+update t1 set a=a+101;
+select a,b from t1;
+update t1 set a=127 where a=25;
+select a,b from t1;
+update t1 set a=a-1 where 1 > 2;
+select a,b from t1;
+update t1 set a=a-1 where 3 > 2;
+select a,b from t1;
+drop table t1;
+create table t1 (a int not null auto_increment primary key, b char(32));
+insert into t1 (b) values ('apple'), ('apple');
+select * from t1;
+update t1, t1 as t2 set t1.a=t1.a*2 where t1.b = t2.b and t1.a > t2.a;
+select * from t1;
+drop table t1;
+create table t11 (a int NOT NULL, b int, primary key (a));
+create table t12 (a int NOT NULL, b int, primary key (a));
+create table t2 (a int NOT NULL, b int, primary key (a));
+insert into t11 values (0, 10),(1, 11),(2, 12);
+insert into t12 values (33, 10),(0, 11),(2, 12);
+insert into t2 values (0, 21),(1, 12),(3, 23);
+update t12 join t11 on t11.a = t12.a set t11.a=t12.a where t11.b <> (select b from t2 where t11.a = t2.a);
+select * from t11;
+select * from t12;
+update t11,t12 set t11.a=t11.a+t11.b where t11.b <> (select b from t2 where t11.a = t2.a);
+select * from t11;
+drop table if exists t1, t2;
+CREATE TABLE t1(a int PRIMARY KEY);
+INSERT INTO t1 VALUES(10),(20);
+CREATE TABLE t2(b int);
+INSERT INTO t2 VALUES(10),(20);
+update t1 JOIN t2 on t1.a=t2.b set t1.a=5 WHERE t1.a = 10;
+select * from t1;
+select * from t2;
+drop table t1;
+CREATE TABLE t1 ( a int PRIMARY KEY );
+INSERT INTO t1 VALUES (0),(1),(2);
+update t1 set a=a*10%3 WHERE t1.a > 0 ORDER BY t1.a LIMIT 1;
+SELECT * FROM t1;
+drop table if exists t1,t2,t3;
+CREATE TABLE t1 (a int not null,b int not null, primary key (a));
+CREATE TABLE t2 (a int not null,b int not null, primary key (a));
+CREATE TABLE t3 (a int not null,b int not null, primary key (a));
+insert into t1 values (1,1),(2,1),(4,3);
+insert into t2 values (1,1),(2,2),(3,3);
+insert into t3 values (1,1),(2,1),(4,3);
+update t1 join t2 on t1.a=t2.a join t3 on t1.b=t3.b set t1.a=((t3.a*5) DIV 5) where t1.a=t2.a AND t2.b=t3.a and t1.b=t3.b;
+select * from t1;
+drop table t1;
+create table t1(a int not null);
+insert into t1 values (0);
+update t1 set a=a+(a MOD 2) where a is null;
+select * from t1;
+DROP TABLE if exists t1,t2;
+CREATE TABLE t1 (
+a int
+);
+CREATE TABLE t2 (
+a int
+);
+insert into t1 values(1),(2),(3),(4),(5);
+insert into t2 values(1),(3),(5),(7),(9);
+update t1 join t2 alias on t1.a=alias.a set alias.a=t1.a*3 WHERE t1.a = alias.a;
+select * from t1;
+drop table if exists t1,t2;
+create table t1 (id int,ti int unsigned,si int,bi int unsigned,fl float,dl double,de decimal,ch char(20),vch varchar(20),dd date,dt datetime);
+insert into t1 values(1,1,4,3,1113.32,111332,1113.32,'hello','subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(2,2,5,2,2252.05,225205,2252.05,'bye','sub query','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(3,6,6,3,3663.21,366321,3663.21,'hi','subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(4,7,1,5,4715.22,471522,4715.22,'good morning','my subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(5,1,2,6,51.26,5126,51.26,'byebye',' is subquery?','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(6,3,2,1,632.1,6321,632.11,'good night','maybe subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(7,4,4,3,7443.11,744311,7443.11,'yes','subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(8,7,5,8,8758.00,875800,8758.11,'nice to meet','just subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(9,8,4,9,9849.312,9849312,9849.312,'see you','subquery','2022-04-28','2022-04-28 22:40:11');
+update t1 sub set sub.id=id-99 where id > 4;
+select count(*) from t1 where id>4;
+drop table if exists t1;
+create table t1 (id int,ti int unsigned,si int,bi int unsigned,fl float,dl double,de decimal,ch char(20),vch varchar(20),dd date,dt datetime);
+insert into t1 values(1,1,4,3,1113.32,111332,1113.32,'hello','subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(2,2,5,2,2252.05,225205,2252.05,'bye','sub query','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(3,6,6,3,3663.21,366321,3663.21,'hi','subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(4,7,1,5,4715.22,471522,4715.22,'good morning','my subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(5,1,2,6,51.26,5126,51.26,'byebye',' is subquery?','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(6,3,2,1,632.1,6321,632.11,'good night','maybe subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(7,4,4,3,7443.11,744311,7443.11,'yes','subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(8,7,5,8,8758.00,875800,8758.11,'nice to meet','just subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(9,8,4,9,9849.312,9849312,9849.312,'see you','subquery','2022-04-28','2022-04-28 22:40:11');
+update t1 sub set sub.id=sub.id%4+sub.id where id < 4 || id > 5;
+select * from t1;
+drop table if exists t1;
+create table t1 (id int,ti int unsigned,si int,bi int unsigned,fl float,dl double,de decimal,ch char(20),vch varchar(20),dd date,dt datetime);
+insert into t1 values(1,1,4,3,1113.32,111332,1113.32,'hello','subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(2,2,5,2,2252.05,225205,2252.05,'bye','sub query','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(3,6,6,3,3663.21,366321,3663.21,'hi','subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(4,7,1,5,4715.22,471522,4715.22,'good morning','my subquery','2022-04-28','2022-04-28 22:40:11');
+update t1,(select * from (select * from (select id,ti,si,de from (select * from t1 ) sub3 where fl <> 4.5 ) sub2 where ti > 1) sub1 where id >2 ) sub set t1.id=sub.id*10+t1.id where t1.id = 4;
+select max(id) from t1;
+DROP TABLE IF EXISTS t1,t2,t3,t4;
+create table t1 (a int);
+create table t2 (a int, b int);
+create table t3 (a int);
+create table t4 (a int not null, b int not null);
+insert into t1 values (2);
+insert into t2 values (1,7),(2,7);
+insert into t4 values (4,8),(3,8),(5,9);
+insert into t3 values (100),(8);
+update t3,t2,t1 set t1.a=0 and t2.a=t2.a+t3.a where t3.a in (select b from t4 where b > 7);
+select * from t1;
+select * from t2;
+drop table if exists t1,t2,t3,t11,t12;
+CREATE TABLE t1 (a int(3), b int(5) primary key);
+INSERT INTO t1 VALUES (1,1),(1,2);
+delete from t1 where a=1 limit 1;
+select * from t1;
+INSERT INTO t1 VALUES (1,3);
+delete from t1 where a=1;
+select * from t1;
+drop table t1;
+create table t1 (
+a int not null,
+b int not null default 0,
+c int not null default 0,
+d int not null default 0,
+e int not null default 0,
+f int not null default 0,
+g int not null default 0,
+h int not null default 0,
+i int not null default 0,
+j int not null default 0,
+primary key (a));
+insert into t1 (a) values (2),(4),(6),(8),(10),(12),(14),(16),(18),(20),(22),(24),(26),(23);
+delete from t1 where a=2+2;
+select a,b from t1;
+delete from t1 where  a=24;
+select a,b from t1;
+delete from t1 where  3 < 2;
+select a,b from t1;
+delete from t1 where  1 < 2;
+select a,b from t1;
+drop table t1;
+create table t1 (a int not null auto_increment primary key, b char(32));
+insert into t1 (b) values ('apple'), ('apple');
+select * from t1;
+delete t1 from t1,t1 as t2 where t1.b = t2.b and t1.a > t2.a;
+select * from t1;
+drop table t1;
+create table t11 (a int NOT NULL, b int, primary key (a));
+create table t12 (a int NOT NULL, b int, primary key (a));
+create table t2 (a int NOT NULL, b int, primary key (a));
+insert into t11 values (0, 10),(1, 11),(2, 12);
+insert into t12 values (33, 10),(0, 11),(2, 12);
+insert into t2 values (0, 21),(1, 12),(3, 23);
+delete from t11 where t11.b <> (select b from t2 where t11.a = t2.a);
+select * from t11;
+delete t11,t12 from t11,t12 where t11.b <> (select b from t2 where t11.a = t2.a) or t12.a>1;
+select * from t11;
+select * from t12;
+drop table if exists t1, t2;
+CREATE TABLE t1(a int PRIMARY KEY);
+INSERT INTO t1 VALUES(10),(20);
+CREATE TABLE t2(b int);
+INSERT INTO t2 VALUES(10),(20);
+delete t1,t2 from t1 JOIN t2 on t1.a=t2.b WHERE t1.a = 10;
+select * from t1;
+select * from t2;
+drop table if exists t1,t2,t3;
+CREATE TABLE t1 (a int not null,b int not null, primary key (a));
+CREATE TABLE t2 (a int not null,b int not null, primary key (a));
+CREATE TABLE t3 (a int not null,b int not null, primary key (a));
+insert into t1 values (1,1),(2,1),(4,3);
+insert into t2 values (1,1),(2,2),(3,3);
+insert into t3 values (1,1),(2,1),(4,3);
+delete t1,t2,t3 from t1 join t2 on t1.a=t2.a join t3 on t1.b=t3.b where t1.a=t2.a AND t2.b=t3.a and t1.b=t3.b;
+select * from t1;
+drop table t1;
+create table t1(a int not null);
+insert into t1 values (0);
+delete t1 from t1 where a is null;
+select * from t1;
+DROP TABLE if exists t1,t2;
+CREATE TABLE t1 (
+a int
+);
+CREATE TABLE t2 (
+a int
+);
+insert into t1 values(1),(2),(3),(4),(5);
+insert into t2 values(1),(3),(5),(7),(9);
+delete alias from t1 join t2 alias on t1.a=alias.a+1 WHERE t1.a = alias.a;
+select * from t2;
+drop table if exists t1;
+create table t1 (id int,ti int unsigned,si int,bi int unsigned,fl float,dl double,de decimal,ch char(20),vch varchar(20),dd date,dt datetime);
+insert into t1 values(1,1,4,3,1113.32,111332,1113.32,'hello','subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(2,2,5,2,2252.05,225205,2252.05,'bye','sub query','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(3,6,6,3,3663.21,366321,3663.21,'hi','subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(4,7,1,5,4715.22,471522,4715.22,'good morning','my subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(5,1,2,6,51.26,5126,51.26,'byebye',' is subquery?','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(6,3,2,1,632.1,6321,632.11,'good night','maybe subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(7,4,4,3,7443.11,744311,7443.11,'yes','subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(8,7,5,8,8758.00,875800,8758.11,'nice to meet','just subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(9,8,4,9,9849.312,9849312,9849.312,'see you','subquery','2022-04-28','2022-04-28 22:40:11');
+delete from t1 where id < 4 || id > 5;
+select * from t1;
+drop table if exists t1;
+create table t1 (id int,ti int unsigned,si int,bi int unsigned,fl float,dl double,de decimal,ch char(20),vch varchar(20),dd date,dt datetime);
+insert into t1 values(1,1,4,3,1113.32,111332,1113.32,'hello','subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(2,2,5,2,2252.05,225205,2252.05,'bye','sub query','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(3,6,6,3,3663.21,366321,3663.21,'hi','subquery','2022-04-28','2022-04-28 22:40:11');
+insert into t1 values(4,7,1,5,4715.22,471522,4715.22,'good morning','my subquery','2022-04-28','2022-04-28 22:40:11');
+delete t1 from t1,((select * from (select * from (select id,ti,si,de from (select * from t1 ) sub3 where fl <> 4.5 ) sub2 where ti > 1) sub1 where id >2 )) sub2 where t1.id=sub2.id;
+select id from t1;
+DROP TABLE IF EXISTS t1,t2,t3,t4;
+create table t1 (a int);
+create table t2 (a int, b int);
+create table t3 (a int);
+create table t4 (a int not null, b int not null);
+insert into t1 values (2);
+insert into t2 values (1,7),(2,7);
+insert into t4 values (4,8),(3,8),(5,9);
+insert into t3 values (100),(8);
+delete t3 from t3,t4 where t3.a in (select b from t4 where b > 7);
+select * from t3;
