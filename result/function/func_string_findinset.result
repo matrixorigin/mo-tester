@@ -24,13 +24,13 @@ find_in_set('你好', "你好,我好,大家好")
 1
 select find_in_set(Null, null);
 find_in_set(Null, null)
-NULL
+null
 select find_in_set('1', null);
 find_in_set('1', null)
-NULL
+null
 select find_in_set(null,"a,b,c,d");
 find_in_set(null,"a,b,c,d")
-NULL
+null
 select find_in_set('a,', 'a,b,c,d');
 find_in_set('a,', 'a,b,c,d')
 0
@@ -63,7 +63,8 @@ INSERT INTO t2 VALUES (261,265,1),(490,494,1);
 SELECT t2.faq_id FROM t1 INNER JOIN t2 ON (t1.access_id = t2.access_id) LEFT JOIN t2 t ON (t.faq_group_id = t2.faq_group_id AND find_in_set(t.access_id, '1,4') < find_in_set(t2.access_id, '1,4')) WHERE t2.access_id IN (1,4) AND t.access_id IS NULL AND t2.faq_id in (265);
 faq_id
 265
-DROP TABLE t1,t2;
+drop table t1;
+drop table t2;
 CREATE TABLE t1(a char(255), b int);
 INSERT INTO t1 values ('a,b,c,d', FIND_IN_SET('b','a,b,c,d'));
 INSERT INTO t1 VALUES ("a,bbb,dd", find_in_set("dd","a,bbb,dd"));
@@ -83,4 +84,3 @@ DROP TABLE t1;
 select find_in_set("","a,b,c")*find_in_set("","a,b,c,")-find_in_set("bb","a,bbb,dd");
 find_in_set("","a,b,c")*find_in_set("","a,b,c,")-find_in_set("bb","a,bbb,dd")
 0
-

@@ -1,6 +1,6 @@
 select unix_timestamp(utc_timestamp())-unix_timestamp(current_timestamp());
 unix_timestamp(utc_timestamp())-unix_timestamp(current_timestamp())
--28800
+25200
 create table t1 (ts timestamp);
 set time_zone='+00:00';
 select unix_timestamp(utc_timestamp())-unix_timestamp(current_timestamp());
@@ -40,7 +40,7 @@ insert into t1 values(null,0,0,null);
 select a,b,c,year(d) from t1;
 a	b	c	year(d)
 1	1	1	2022
-2	0	0	NULL
+2	0	0	null
 DROP TABLE t1;
 CREATE TABLE t1 (a TIMESTAMP);
 INSERT INTO t1 VALUES (utc_timestamp()),(utc_timestamp()),(utc_timestamp());
@@ -50,5 +50,3 @@ year(a)
 2022
 2022
 DROP TABLE t1;
-
-

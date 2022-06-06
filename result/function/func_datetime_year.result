@@ -6,25 +6,25 @@ year
 2022
 SELECT YEAR("10000-12-21") as year;
 year
-NULL
+null
 SELECT YEAR("-1234-12-21") as year;
 year
-NULL
+null
 SELECT YEAR("12415141412-12-21") as year;
 year
-NULL
+null
 SELECT YEAR("0000-00-00") as year;
 year
-NULL
+null
 SELECT YEAR("2049-14-34") as year;
 year
-NULL
+null
 SELECT YEAR("2015-09") as year;
 year
-NULL
+null
 SELECT YEAR(2015) as year;
 year
-NULL
+null
 SELECT YEAR(1340124) as year;
 year
 134
@@ -33,13 +33,13 @@ year
 0
 SELECT YEAR(1=1) as year;
 year
-NULL
+null
 SELECT YEAR('2015-09.30') as year;
 year
 2015
 SELECT YEAR('2015-0') as year;
 year
-NULL
+null
 SELECT YEAR('2015-09.30 12') as year;
 year
 2015
@@ -75,7 +75,7 @@ YEAR("2015-09-10")!=YEAR("2016-04-24")
 1
 SELECT YEAR(NULL) AS Year ;
 Year
-NULL
+null
 CREATE TABLE Product(Product_id INT AUTO_INCREMENT,  Product_name VARCHAR(100) NOT NULL,Buying_price DECIMAL(13, 2) NOT NULL,Selling_price DECIMAL(13, 2) NOT NULL,Selling_Date Date NOT NULL,PRIMARY KEY(Product_id));
 INSERT INTO  Product(Product_name, Buying_price, Selling_price, Selling_Date) VALUES ('Audi Q8', 10000000.00, 15000000.00, '2018-01-26' ),('Volvo XC40', 2000000.00, 3000000.00, '2018-04-20' ),('Audi A6', 4000000.00, 5000000.00, '2018-07-25' ),('BMW X5', 5000500.00, 7006500.00, '2018-10-18'  ),('Jaguar XF', 5000000, 7507000.00, '2019-01-27'  ),('Mercedes-Benz C-Class', 4000000.00, 6000000.00, '2019-04-01'  ),('Jaguar F-PACE', 5000000.00, 7000000.00, '2019-12-26'  ),('Porsche Macan', 6500000.00, 8000000.00, '2020-04-16' ) ;
 SELECT * FROM Product;
@@ -120,7 +120,8 @@ SELECT t1.a, t2.a FROM t1 JOIN t2 ON (year(t1.b) = year(t2.b));
 a	a
 4	4
 1	4
-drop table t1, t2;
+drop table t1;
+drop table t2;
 drop table if exists t1;
 create table t1(a INT,  b date);
 insert into t1 values(1, "2012-10-12"),(1, "2012-07-12"),(2, "2004-04-24"),(3, "2008-12-04"),(4, "2012-03-23");

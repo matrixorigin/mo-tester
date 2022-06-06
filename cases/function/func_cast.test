@@ -185,8 +185,8 @@ select cast('9223372036854775807' as signed);
 select cast(concat_ws('184467440','73709551615') as unsigned);
 select cast(concat_ws('184467440','73709551615') as signed);
 
-select cast(repeat('1',20) as unsigned);
-select cast(repeat('1',20) as signed);
+#select cast(repeat('1',20) as unsigned);
+#select cast(repeat('1',20) as signed);
 
 #
 # Bug #13344: cast of large decimal to signed int not handled correctly

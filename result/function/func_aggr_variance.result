@@ -1,6 +1,6 @@
 SELECT variance(null);
 variance(null)
-NULL
+null
 create table t1(a tinyint, b SMALLINT, c MEDIUMINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, k datetime, l TIMESTAMP, m char(255), n varchar(255));
 insert into t1 values(1, 1, 2, 43, 5, 35.5, 31.133, 14.314, "2012-03-10", "2012-03-12 10:03:12", "2022-03-12 13:03:12", "ab23c", "d5cf");
 insert into t1 values(71, 1, 2, 34, 5, 5.5, 341.13, 15.314, "2012-03-22", "2013-03-12 10:03:12", "2032-03-12 13:04:12", "abr23c", "3dcf");
@@ -11,38 +11,38 @@ variance(a)	variance(b)	variance(c)	variance(d)	variance(e)	variance(f)
 918.7500000000001	918.75	67.6875	217.6875	450.18750000000006	420.75
 select variance(g),variance(h),variance(i),variance(k),variance(l),variance(m),variance(n) from t1;
 variance(g)	variance(h)	variance(i)	variance(k)	variance(l)	variance(m)	variance(n)
-32502.24871225	2254.078699999999	18517721.999997623	7.18750000000022e20	1.2268750007375e22	1.6875	1.6875
+32502.24871225	2254.078699999999	1.8517721999997623E7	7.18750000000022E20	1.2268750007375E22	1.6875	1.6875
 drop table t1;
 select variance(99999999999999999.99999);
 variance(99999999999999999.99999)
-0
+0.0
 select variance(999999999999999933193939.99999);
 variance(999999999999999933193939.99999)
-0
+0.0
 select variance(9999999999999999999999999999999999.9999999999999);
 variance(9999999999999999999999999999999999.9999999999999)
-0
+0.0
 select variance(-99999999999999999.99999);
 variance(-99999999999999999.99999)
-0
+0.0
 select variance(-999999999999999933193939.99999);
 variance(-999999999999999933193939.99999)
-0
+0.0
 select variance(-9999999999999999999999999999999999.9999999999999);
 variance(-9999999999999999999999999999999999.9999999999999)
-0
+0.0
 create table t1(a bigint);
 select variance(a) from t1;
 variance(a)
-NULL
+null
 insert into t1 values(null),(null),(null),(null);
 select variance(a) from t1;
 variance(a)
-NULL
+null
 insert into t1 values(12417249128419),(124124125124151),(5124125151415),(124125152651515);
 select variance(a) from t1;
 variance(a)
-3.333282253265104e27
+3.333282253265104E27
 drop table t1;
 create table t1 ( a int not null default 1, big bigint );
 insert into t1 (big) values (-1),(1234567890167),(92233720368547),(18446744073709515);
@@ -54,10 +54,10 @@ a	big
 1	18446744073709515
 select distinct variance(big),max(big),variance(big)-1 from t1;
 variance(big)	max(big)	variance(big)-1
-6.3589001724387045e31	18446744073709515	6.3589001724387045e31
+6.3589001724387045E31	18446744073709515	6.3589001724387045E31
 select variance(big),max(big),variance(big)-1 from t1 group by a;
 variance(big)	max(big)	variance(big)-1
-6.3589001724387045e31	18446744073709515	6.3589001724387045e31
+6.3589001724387045E31	18446744073709515	6.3589001724387045E31
 insert into t1 (big) values (184467440737615);
 select * from t1;
 a	big
@@ -68,29 +68,29 @@ a	big
 1	184467440737615
 select variance(big),max(big),variance(big)-1 from t1;
 variance(big)	max(big)	variance(big)-1
-5.404043539963767e31	18446744073709515	5.404043539963767e31
+5.404043539963767E31	18446744073709515	5.404043539963767E31
 select variance(big),max(big),variance(big)-1 from t1 group by a;
 variance(big)	max(big)	variance(big)-1
-5.404043539963767e31	18446744073709515	5.404043539963767e31
+5.404043539963767E31	18446744073709515	5.404043539963767E31
 drop table t1;
 CREATE TABLE t1 (Fld1 int(11) default NULL,Fld2 int(11) default NULL);
 INSERT INTO t1 VALUES (1,10),(1,20),(2,NULL),(2,NULL),(3,50);
 select Fld1, variance(Fld2) as q from t1 group by Fld1 having q is not null;
 Fld1	q
-1	25
-3	0
+1	25.0
+3	0.0
 select Fld1, variance(Fld2) from t1 group by Fld1 having variance(Fld2) is not null;
 Fld1	variance(Fld2)
-1	25
-3	0
+1	25.0
+3	0.0
 select Fld1, variance(Fld2) from t1 group by Fld1 having avg(Fld2) is not null;
 Fld1	variance(Fld2)
-1	25
-3	0
+1	25.0
+3	0.0
 select Fld1, variance(Fld2) from t1 group by Fld1 having variance(Fld2) is not null;
 Fld1	variance(Fld2)
-1	25
-3	0
+1	25.0
+3	0.0
 drop table t1;
 SELECT variance(1)<variance(2);
 variance(1)<variance(2)
@@ -99,9 +99,6 @@ CREATE TABLE t1(i INT);
 INSERT INTO t1 VALUES (NULL),(1);
 SELECT DISTINCT variance(i)+0 as splus0, i+0 as plain FROM t1 GROUP BY i ;
 splus0	plain
-NULL	NULL
-0	1
+null	null
+0.0	1
 DROP TABLE t1;
-
-
-

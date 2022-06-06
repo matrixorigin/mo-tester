@@ -25,8 +25,8 @@ select any_value(a), sum(b) from t1;
 select any_value(a), sum(b) from (select * from t1 order by a desc) as d;
 select a,any_value(b),sum(c) from t1 group by a;
 select a,any_value(b),sum(c) from (select * from t1 order by a desc, b desc) as d group by a;
-drop table t1,t2;
-
+drop table t1;
+drop table t2;
 
 
 #NULL
@@ -80,7 +80,8 @@ create table t2(a INT,  b float);
 insert into t1 values(12124, -4213.413), (1212, -42413.409);
 insert into t2 values(14124, -4213.413), (8479, -980.409);
 SELECT t1.a, t2.a FROM t1 JOIN t2 ON (any_value(t1.b) = any_value(t2.b));
-drop table t1, t2;
+drop table t1;
+drop table t2;
 
 #HAVING，比较操作
 drop table if exists t1;

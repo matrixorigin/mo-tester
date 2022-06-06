@@ -18,7 +18,7 @@ drop table t1;
 #SELECT, 嵌套，NULL
 select concat_ws(', ','monty','was here','again');
 select concat_ws(',','',NULL,'a');
-SELECT CONCAT_WS('"',CONCAT_WS('";"',repeat('a',60),repeat('b',60),repeat('c',60),repeat('d',100)), '"');
+SELECT CONCAT_WS('"',CONCAT_WS('";"',space(60),space(60),space(60),space(100)), '"');
 
 
 #WHERE 
@@ -36,7 +36,11 @@ INSERT INTO t1 VALUES (1, 'April In Paris'), (2, 'Autumn In New York');
 INSERT INTO t2 VALUES (1, 'Vernon Duke');
 INSERT INTO t3 VALUES (1,1);
 SELECT CONCAT_WS(' ', trackname, artistname) trackname, artistname FROM t1 LEFT JOIN t3 ON t1.trackid=t3.trackid LEFT JOIN t2 ON t2.artistid=t3.artistid WHERE CONCAT_WS(' ', trackname, artistname) LIKE '%In%';
-DROP TABLE t1,t2,t3;
+drop table t1;
+drop table t2;
+drop table t3;
+
+
 
 #子查询
 CREATE TABLE t1 (f2 VARCHAR(20));
@@ -44,7 +48,8 @@ CREATE TABLE t2 (f2 VARCHAR(20));
 INSERT INTO t1 VALUES ('MIN'),('MAX');
 INSERT INTO t2 VALUES ('LOAD');
 SELECT CONCAT_WS('_', (SELECT t2.f2 FROM t2), t1.f2) AS concat_name FROM t1;
-DROP TABLE t1, t2;
+drop table t1;
+drop table t2;
 
 #嵌套
 create table t1 (a int, b int);
@@ -100,12 +105,12 @@ SELECT CONCAT_WS("123", "你好", "français", "にほんご");
 SELECT CONCAT_WS(1, 0.213, 213.4131, "abc", "2012-03-21 03:03:02", NULL);
 
 #ON CONDITION, HAVING, 比较操作
-drop table if exists t1, t2;
 create table t1(a INT,  b date);
 create table t2(a INT,  b date);
 insert into t1 values(1, "2012-10-12"),(2, "2004-04-24"),(3, "2008-12-04"),(4, "2012-03-23");
 insert into t2 values(1, "2012-10-12"),(2, "1994-10-04"),(3, "2018-06-04"),(4, "2012-10-12");
 SELECT t1.a,t1.b, t2.a,t2.b FROM t1 JOIN t2 ON (concat_ws(t1.a, t1.b) = concat_ws(t2.a, t2.b)) HAVING substring(concat_ws(t1.a, t1.b),1,1)='2';
-drop table t1, t2;
+drop table t1;
+drop table t2;
 
 

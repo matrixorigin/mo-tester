@@ -149,7 +149,6 @@ drop table t1;
 
 
 #ON CONDITION
-drop table if exists t1, t2;
 create table t1(a INT,  b float);
 create table t2(a INT,  b float);
 insert into t1 values(1, 0),(0, 1),(1,1),(0,0);
@@ -162,7 +161,8 @@ SELECT t1.a, t2.a FROM t1 JOIN t2 ON (cot(t1.a-0.5)=cot(t2.b-0.5));
 SELECT t1.a, t2.a FROM t1 JOIN t2 ON (acos(t1.a)=acos(t2.b));
 SELECT t1.a, t2.a FROM t1 JOIN t2 ON (atan(t1.a)=atan(t2.b));
 #SELECT t1.a, t2.a FROM t1 JOIN t2 ON (atan2(t1.a, t1.b)=atan2(t2.a, t2.b));
-drop table t1, t2;
+drop table t1;
+drop table t2;
 
 #HAVING
 drop table if exists t1;

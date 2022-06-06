@@ -106,7 +106,7 @@ drop table t1;
 
 #SELECT, GROUP BY
 CREATE TABLE t1 (a varchar(2000), b varchar(10));
-INSERT INTO t1 VALUES (repeat('1', 1300),'one'), (repeat('1', 1300),'two');
+INSERT INTO t1 VALUES (space(1300),'one'), (space(1300),'two');
 SELECT SUBSTRING(a,1,10), LENGTH(a) FROM t1 GROUP BY a;
 drop table t1;
 CREATE TABLE t1(a INT);
@@ -121,7 +121,8 @@ create table t2(id int not null auto_increment primary key, t2 varchar(50));
 insert into t2 (t2) select distinct substring(email, locate('@', email)+1) from t1;
 select id from t2;
 select t2 from t2;
-drop table t1,t2;
+drop table t1;
+drop table t2;
 
 
 #字符集
@@ -154,7 +155,8 @@ create table t2(a varchar(20));
 insert into t1 values('ab'), ('abc'), ('abcd'), ('abcde');
 insert into t2 values("2013-04-30"),("1994-10-04"),("2018-06-04"),("2012-10-12"), ("abc"),("abcd");
 SELECT t1.a, t2.a FROM t1 JOIN t2 ON (substring(t1.a, 1,1) = substring(t2.a, 1,1 ));
-drop table t1, t2;
+drop table t1;
+drop table t2;
 
 
 

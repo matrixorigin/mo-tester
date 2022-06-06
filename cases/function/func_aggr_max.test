@@ -55,8 +55,8 @@ insert into t2 select * from t1;
 select * from t1 order by name;
 select concat_ws(",","*",name,"*") from t1 order by 1;
 select min(name),min(concat_ws(",","*",name,"*")),max(name),max(concat("*",name,"*")) from t1;
-drop table t1, t2;
-
+drop table t1;
+drop table t2;
 
 #HAVING,DISTINCT
 CREATE TABLE t1 (Fld1 int(11) default NULL,Fld2 int(11) default NULL);
@@ -83,7 +83,8 @@ insert into t1 values (null,null,'');
 select count(distinct a),count(distinct grp) from t1;
 create table t2 (grp int, a bigint unsigned, c char(10));
 insert into t2 select grp,max(a)+max(grp),max(c) from t1 group by grp;
-drop table t1,t2;
+drop table t1;
+drop table t2;
 
 
 
@@ -106,7 +107,8 @@ select max(t2.a1) from t2 left outer join t1 on t2.a2=10 where t2.a2=20;
 select max(t2.a1) from t2 left outer join t1 on t2.a2=10 where t2.a2=10;
 select max(t2.a1) from t1 left outer join t2 on t1.a2=t2.a1 and 1=0 where t2.a1='AAA';
 select max(t1.a2),max(t2.a1) from t1 left outer join t2 on t1.a1=10;
-drop table t1,t2;
+drop table t1;
+drop table t2;
 
 
 CREATE TABLE t1 (a int, b int);
@@ -186,7 +188,8 @@ select min(a3) from t1 where a2 = 2 and a3 >= 'CHI' and a3 < 'SEA';
 select min(a3) from t1 where a2 = 2 and a3 >= 'CHI' and a3 = 'MIN';
 select min(a3) from t1 where a2 = 2 and a3 >= 'SEA' and a3 = 'MIN';
 select min(t1.a1), min(t2.a4) from t1,t2 where t1.a1 < 'KKK' and t2.a4 < 'KKK';
-drop table t1, t2;
+drop table t1;
+drop table t2;
 
 
 

@@ -1,12 +1,12 @@
 SELECT DATE(0.0124);
 DATE(0.0124)
-NULL
+null
 SELECT DATE("2112123");
 DATE("2112123")
 2021-12-12
 SELECT DATE(1231241.4513);
 DATE(1231241.4513)
-NULL
+null
 SELECT DATE("2017-06-15");
 DATE("2017-06-15")
 2017-06-15
@@ -15,25 +15,25 @@ DATE("2017-06-15 09:34:21")
 2017-06-15
 SELECT DATE("The date is 2017-06-15");
 DATE("The date is 2017-06-15")
-NULL
+null
 SELECT DATE('2008-05-17 11:31:31') as required_DATE;
 required_DATE
 2008-05-17
 select coalesce(date(NULL)), coalesce(cast(NULL as DATE));
 coalesce(date(NULL))	coalesce(cast(NULL as DATE))
-NULL	NULL
+null	null
 select date(NULL);
 date(NULL)
-NULL
+null
 CREATE TABLE t1 (d1 datetime);
 INSERT INTO t1(d1) VALUES ('2007-07-19 08:30:00'), (NULL),
 ('2007-07-19 08:34:00'), (NULL), ('2007-07-19 08:36:00');
 SELECT cast(date(d1) as signed) FROM t1;
 cast(date(d1) as signed)
 20070719
-NULL
+null
 20070719
-NULL
+null
 20070719
 drop table t1;
 CREATE TABLE t1 (d1 datetime);
@@ -58,13 +58,13 @@ date("1997-12-31 23:59:59.000001")
 1997-12-31
 select date("1997-13-31 23:59:59.000001");
 date("1997-13-31 23:59:59.000001")
-NULL
+null
 SELECT DATE(20110512154559.6 + 0e0);
 DATE(20110512154559.6 + 0e0)
 2011-05-12
 SELECT DATE(concat_ws('a', 0));
 DATE(concat_ws('a', 0))
-NULL
+null
 CREATE TABLE t1 (a timestamp);
 INSERT INTO t1 VALUES ("2020-12-31 12:01:32");
 SELECT DATE(MIN(a)) FROM t1;
@@ -78,8 +78,7 @@ SELECT
 DATE_ADD(coalesce(last_recharge, first_usage), INTERVAL life_time DAY ) as dt,
 DATE_ADD(coalesce(last_recharge, first_usage), INTERVAL life_time DAY ) <
 DATE('2011-04-28') as exp FROM t1;
-dt	exp
-2013-10-13 00:00:00	0
+Can not issue SELECT via executeUpdate() or executeLargeUpdate().
 DROP TABLE t1;
 SELECT DATE(20110512154559.616), DATE(FLOOR(20110512154559.616));
 DATE(20110512154559.616)	DATE(FLOOR(20110512154559.616))
@@ -323,7 +322,6 @@ a	b
 3	2008-12-04
 4	2012-03-23
 drop table t1;
-drop table if exists t1, t2;
 create table t1(a INT,  b date);
 create table t2(a INT,  b date);
 insert into t1 values(1, "2012-10-12"),(2, "2004-04-24"),(3, "2008-12-04"),(4, "2012-03-23");
@@ -331,5 +329,5 @@ insert into t2 values(1, "2013-04-30"),(2, "1994-10-04"),(3, "2018-06-04"),(4, "
 SELECT t1.a, t2.a FROM t1 JOIN t2 ON (date(t1.b) = date(t2.b));
 a	a
 1	4
-drop table t1, t2;
-
+drop table t1;
+drop table t2;

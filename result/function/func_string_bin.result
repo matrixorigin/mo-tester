@@ -12,7 +12,7 @@ bin(2e5)
 110000110101000000
 SELECT bin(null);
 bin(null)
-NULL
+null
 SELECT concat_ws(",", bin(1000), bin(2000));
 concat_ws(",", bin(1000), bin(2000))
 1111101000,11111010000
@@ -41,7 +41,7 @@ create table t1(a int);
 insert into t1 values();
 select bin(a) from t1;
 bin(a)
-NULL
+null
 drop table t1;
 create table t1(a tinyint, b SMALLINT, c MEDIUMINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, k datetime, l TIMESTAMP, m char(255), n varchar(255));
 insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
@@ -76,10 +76,10 @@ create table t1(a INT,  b int);
 insert into t1 values(1, 2),(2, 3),(3, 4),(4, 5);
 select bin(a)+bin(b) from t1 where bin(a)+bin(b)<>0;
 bin(a)+bin(b)
-11
-21
-111
-201
+11.0
+21.0
+111.0
+201.0
 drop table t1;
 CREATE TABLE t1 (a int);
 CREATE TABLE t2 (a int);
@@ -90,8 +90,5 @@ a	a
 100	100
 10	10
 300	300
-DROP TABLE t1, t2;
-
-
-
-
+drop table t1;
+drop table t2;

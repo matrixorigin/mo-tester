@@ -24,19 +24,19 @@ cast(5 as unsigned) -6.0
 -1.0
 select cast(NULL as signed), cast(1/0 as signed);
 cast(NULL as signed)	cast(1/0 as signed)
-NULL	NULL
+null	null
 select cast("2001-1-1" as DATE), cast("2001-1-1" as DATETIME);
 cast("2001-1-1" as DATE)	cast("2001-1-1" as DATETIME)
 2001-01-01	2001-01-01 00:00:00
 select 10+'10';
 10+'10'
-20
+20.0
 select 10.0+'10';
 10.0+'10'
-20
+20.0
 select 10E+0+'10';
 10E+0+'10'
-20
+20.0
 select CAST(0xb3 as signed);
 CAST(0xb3 as signed)
 179
@@ -57,13 +57,13 @@ cast('a10' as unsigned integer)
 0
 select 10+'a';
 10+'a'
-10
+10.0
 select 10.0+cast('a' as decimal);
 10.0+cast('a' as decimal)
 10.0
 select 10E+0+'a';
 10E+0+'a'
-10
+10.0
 select cast('18446744073709551616' as unsigned);
 cast('18446744073709551616' as unsigned)
 18446744073709551615
@@ -93,7 +93,7 @@ cast("2001-1-1" as datetime) = "2001-01-01 00:00:00"
 1
 select cast(NULL as DATE);
 cast(NULL as DATE)
-NULL
+null
 CREATE TABLE t1 (a enum ('aac','aab','aaa') not null);
 INSERT INTO t1 VALUES ('aaa'),('aab'),('aac');
 SELECT a, CAST(a AS CHAR) FROM t1 ORDER BY CAST(a AS UNSIGNED) ;
@@ -131,12 +131,6 @@ cast(concat_ws('184467440','73709551615') as unsigned)
 select cast(concat_ws('184467440','73709551615') as signed);
 cast(concat_ws('184467440','73709551615') as signed)
 73709551615
-select cast(repeat('1',20) as unsigned);
-cast(repeat('1',20) as unsigned)
-11111111111111111111
-select cast(repeat('1',20) as signed);
-cast(repeat('1',20) as signed)
--7335632962598440505
 select cast(1.0e+300 as signed int);
 cast(1.0e+300 as signed int)
 9223372036854775807
@@ -145,8 +139,8 @@ INSERT INTO t1 SET f1 = -1.0e+30 ;
 INSERT INTO t1 SET f1 = +1.0e+30 ;
 SELECT f1 AS double_val, CAST(f1 AS SIGNED INT) AS cast_val FROM t1;
 double_val	cast_val
--1e30	-9223372036854775808
-1e30	9223372036854775807
+-1.0E30	-9223372036854775808
+1.0E30	9223372036854775807
 DROP TABLE t1;
 SELECT CAST(cast('01-01-01' as date) AS UNSIGNED);
 CAST(cast('01-01-01' as date) AS UNSIGNED)
@@ -159,7 +153,7 @@ cast('1.2' as decimal(3,2))
 1.20
 select 1e18 * cast('1.2' as decimal(3,2));
 1e18 * cast('1.2' as decimal(3,2))
-1.2e18
+1.2E18
 select cast(cast('1.2' as decimal(3,2)) as signed);
 cast(cast('1.2' as decimal(3,2)) as signed)
 1
@@ -180,15 +174,15 @@ CAST(v AS DECIMAL)	CAST(tt AS DECIMAL)	CAST(t AS DECIMAL)	CAST(mt AS DECIMAL)	CA
 DROP TABLE t1;
 select cast(NULL as decimal(6)) as t1;
 t1
-NULL
+null
 CREATE TABLE t1 (d1 datetime);
 INSERT INTO t1(d1) VALUES ('2007-07-19 08:30:00'), (NULL), ('2007-07-19 08:34:00'), (NULL), ('2007-07-19 08:36:00');
 SELECT cast(date(d1) as signed) FROM t1;
 cast(date(d1) as signed)
 20070719
-NULL
+null
 20070719
-NULL
+null
 20070719
 drop table t1;
 CREATE TABLE t1 (f1 DATE);
@@ -196,16 +190,16 @@ INSERT INTO t1 VALUES ('2007-07-19'), (NULL);
 SELECT HOUR(f1),MINUTE(f1),SECOND(f1) FROM t1;
 HOUR(f1)	MINUTE(f1)	SECOND(f1)
 0	0	0
-NULL	NULL	NULL
+null	null	null
 SELECT HOUR(CAST('2007-07-19' AS DATE)),MINUTE(CAST('2007-07-19' AS DATE)),SECOND(CAST('2007-07-19' AS DATE));
 HOUR(CAST('2007-07-19' AS DATE))	MINUTE(CAST('2007-07-19' AS DATE))	SECOND(CAST('2007-07-19' AS DATE))
 0	0	0
 SELECT HOUR(CAST(NULL AS DATE)),MINUTE(CAST(NULL AS DATE)),SECOND(CAST(NULL AS DATE));
 HOUR(CAST(NULL AS DATE))	MINUTE(CAST(NULL AS DATE))	SECOND(CAST(NULL AS DATE))
-NULL	NULL	NULL
+null	null	null
 SELECT HOUR(NULL),MINUTE(NULL),SECOND(NULL);
 HOUR(NULL)	MINUTE(NULL)	SECOND(NULL)
-NULL	NULL	NULL
+null	null	null
 DROP TABLE t1;
 CREATE TABLE t (c1 ENUM('a','b','c'));
 INSERT INTO t VALUES ('a'), ('b'), ('c');
@@ -225,38 +219,38 @@ float_col	double_col	real_col
 0.333333	0.333333333	0.333333333
 SELECT CAST(DATE'2000-01-01' AS FLOAT), CAST(DATE'2000-01-01' AS DOUBLE);
 CAST(DATE'2000-01-01' AS FLOAT)	CAST(DATE'2000-01-01' AS DOUBLE)
-20000100	20000101
+2.00001E7	2.0000101E7
 SELECT CAST(TIMESTAMP'2000-01-01 23:59:59' AS FLOAT), CAST(TIMESTAMP'2000-01-01 23:59:59' AS DOUBLE);
 CAST(TIMESTAMP'2000-01-01 23:59:59' AS FLOAT)	CAST(TIMESTAMP'2000-01-01 23:59:59' AS DOUBLE)
-20000100000000	20000101235959
+2.00001E13	2.0000101235959E13
 SELECT CAST(TIMESTAMP'2000-01-01 23:59:59.123456' AS FLOAT), CAST(TIMESTAMP'2000-01-01 23:59:59.123456' AS DOUBLE);
 CAST(TIMESTAMP'2000-01-01 23:59:59.123456' AS FLOAT)	CAST(TIMESTAMP'2000-01-01 23:59:59.123456' AS DOUBLE)
-20000100000000	20000101235959.125
+2.00001E13	2.0000101235959125E13
 SELECT CAST(NULL AS REAL), CAST(NULL AS FLOAT), CAST(NULL AS DOUBLE);
 CAST(NULL AS REAL)	CAST(NULL AS FLOAT)	CAST(NULL AS DOUBLE)
-NULL	NULL	NULL
+null	null	null
 CREATE TABLE t (col_datetime datetime, col_date date, col_char char);
 insert into t values ('2013-03-15 18:35:20', '2013-03-15','L'),('2003-01-10 00:00:23', '2003-01-10', NULL);
 SELECT CAST(col_char AS DATETIME) FROM t;
 CAST(col_char AS DATETIME)
-NULL
-NULL
+null
+null
 SELECT col_char <> col_datetime FROM t;
 col_char <> col_datetime
 1
-NULL
+null
 SELECT CAST(col_char AS DATE) FROM t;
 CAST(col_char AS DATE)
-NULL
-NULL
+null
+null
 SELECT col_char <> col_date FROM t;
 col_char <> col_date
 1
-NULL
+null
 SELECT CAST(col_char as TIME) FROM t;
 CAST(col_char as TIME)
-NULL
-NULL
+null
+null
 DROP TABLE t;
 CREATE TABLE `BB` (`col_char_key` char(1));
 CREATE TABLE `CC` ( `pk` int, `col_datetime_key` datetime);
@@ -359,6 +353,3 @@ f1	gc_int	gc_date
 SELECT * FROM t1 WHERE f1 + 1 > CAST(070707 AS DATE);
 f1	gc_int	gc_date
 DROP TABLE t1;
-
-
-
