@@ -19,6 +19,7 @@ public class RESULT {
     public static String ERROR_CKFILE_CONTENT_WRONG_DESC = "The content of the expected result file can not be parsed.Please check this.";
     public static String ERROR_NOT_EXEC_DESC = "The script does not been executed because the result file does not exists.";
     public static String ERROR_CONNECTION_LOST_DESC = "The connection has been lost becuase of unknown reason.";
+    public static String ERROR_UNKNOWN_DESC = "The result is not correct because of unexpected reason,Message: ";
 
 
     public static String RESULT_TYPE_PASS = "PASS";

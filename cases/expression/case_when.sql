@@ -29,6 +29,8 @@ select case 1.001 when 0.1 then "a" when 1 then "b" else "c" END;
 -- @case
 -- @desc:test for case_when expression with normal select
 -- @label:bvt
+drop table if exists t1;
+drop table if exists t2;
 CREATE TABLE t1 (a varchar(10), PRIMARY KEY (a));
 CREATE TABLE t2 (a varchar(10), b date, PRIMARY KEY(a));
 INSERT INTO t1 VALUES ('test1');
@@ -72,7 +74,8 @@ drop table if exists  t1;
 -- @case
 -- @desc:test for case_when expression with join
 -- @label:bvt
-drop table if exists  t1,t2;
+drop table if exists  t1;
+drop table if exists  t2;
 create table t1 (a int, b bigint unsigned);
 create table t2 (c int);
 insert into t1 (a, b) values (1,4572794622775114594), (2,18196094287899841997),
@@ -83,7 +86,8 @@ select t1.a, (case t1.a when 0 then 0 else t1.b end) d from t1
 select t1.a, (case t1.a when 0 then 0 else t1.b end) d from t1
   join t2 on t1.a=t2.c where b=11120436154190595086 order by d;
 
-drop table if exists small, big;
+drop table if exists small;
+drop table if exists big;
 CREATE TABLE small (id int not null,PRIMARY KEY (id));
 CREATE TABLE big (id int not null,PRIMARY KEY (id));
 INSERT INTO small VALUES (1), (2);
@@ -94,7 +98,8 @@ SELECT big.*, dt.* FROM big LEFT JOIN (SELECT id as dt_id,
                     FROM small) AS dt
      ON big.id=dt.dt_id;
 
-drop table if exists small, big;
+drop table if exists small;
+drop table if exists big;
 
 -- @case
 -- @desc:test for case_when expression with union

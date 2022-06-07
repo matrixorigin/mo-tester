@@ -3,6 +3,10 @@
 -- @case
 -- @desc:test for [any] subquery with operand-is-column
 -- @label:bvt
+DROP TABLE IF EXISTS t1;
+DROP TABLE IF EXISTS t2;
+DROP TABLE IF EXISTS t3;
+DROP TABLE IF EXISTS t4;
 create table t1 (a int);
 create table t2 (a int, b int);
 create table t3 (a int);
@@ -23,16 +27,21 @@ select * from t3 where a < some (select b from t2);
 select * from t3 where a >= some (select b from t2);
 select * from t3 where a >= some (select b from t2);
 
-DROP TABLE IF EXISTS t1,t2,t3;
-create table t1 (s1 char(5), index s1(s1));
-create table t2 (s1 char(5), index s1(s1));
+DROP TABLE IF EXISTS t1;
+DROP TABLE IF EXISTS t2;
+DROP TABLE IF EXISTS t3;
+DROP TABLE IF EXISTS t4;
+create table t1 (s1 char(5));
+create table t2 (s1 char(5));
 insert into t1 values ('a1'),('a2'),('a3');
 insert into t2 values ('a1'),('a2');
 select s1, s1 = ANY (SELECT s1 FROM t2) from t1;
 select s1, s1 < ANY (SELECT s1 FROM t2) from t1;
 select s1, s1 = ANY (SELECT s1 FROM t2) from t1;
 
-DROP TABLE IF EXISTS t1,t2;
+DROP TABLE IF EXISTS t1;
+DROP TABLE IF EXISTS t2;
+DROP TABLE IF EXISTS t3;
 create table t2 (a int, b int);
 create table t3 (a int);
 insert into t3 values (6),(7),(3);
@@ -44,7 +53,9 @@ select * from t3 where NULL >= some (select b from t2);
 select * from t3 where NULL >= some (select b from t2 group by 1);
 insert into t2 values (2,2), (2,1), (3,3), (3,1);
 
-DROP TABLE IF EXISTS t2,t3;
+DROP TABLE IF EXISTS t1;
+DROP TABLE IF EXISTS t2;
+DROP TABLE IF EXISTS t3;
 CREATE TABLE t1 ( a int, b int );
 INSERT INTO t1 VALUES (1,1),(2,2),(3,3);
 SELECT a FROM t1 WHERE a > ANY ( SELECT a FROM t1 WHERE b = 2 );
@@ -95,14 +106,16 @@ SELECT a FROM t1 WHERE a >= ANY (SELECT a FROM t1 WHERE b = '2');
 SELECT a FROM t1 WHERE a <= ANY (SELECT a FROM t1 WHERE b = '2');
 SELECT a FROM t1 WHERE a <> ANY (SELECT a FROM t1 WHERE b = '2');
 
-DROP TABLE IF EXISTS t1,t2;
+DROP TABLE IF EXISTS t1;
+DROP TABLE IF EXISTS t2;
 create table t1 (a1 int);
 create table t2 (b1 int);
 --error
 select * from t1 where a2 > any(select b1 from t2);
 select * from t1 where a1 > any(select b1 from t2);
 
-DROP TABLE IF EXISTS t1,t2;
+DROP TABLE IF EXISTS t1;
+DROP TABLE IF EXISTS t2;
 create table t1 (s1 char);
 insert into t1 values (1),(2);
 select * from t1 where (s1 < any (select s1 from t1));
@@ -110,13 +123,14 @@ select * from t1 where not (s1 < any (select s1 from t1));
 select * from t1 where (s1+1 = ANY (select s1 from t1));
 select * from t1 where NOT(s1+1 = ANY (select s1 from t1));
 
-DROP TABLE IF EXISTS t1,t2;
+DROP TABLE IF EXISTS t1;
+DROP TABLE IF EXISTS t2;
 CREATE TABLE t1 (s1 CHAR(1));
 INSERT INTO t1 VALUES ('a');
 SELECT * FROM t1 WHERE 'a' = ANY (SELECT s1 FROM t1);
 
 DROP TABLE IF EXISTS t1;
-
+DROP TABLE IF EXISTS t2;
 
 -- @case
 -- @desc:test for [any] subquery with with * and mutil tuple
@@ -142,7 +156,7 @@ CREATE TABLE `t1` (
   `numeropost` mediumint(8) unsigned NOT NULL auto_increment,
   `maxnumrep` int(10) unsigned NOT NULL default 0,
   PRIMARY KEY  (`numeropost`)
-) ENGINE=INNODB ;
+)
 INSERT INTO t1 (numeropost,maxnumrep) VALUES (40143,1),(43506,2);
 CREATE TABLE `t2` (
       `mot` varchar(30) NOT NULL default '',
@@ -157,7 +171,8 @@ SELECT * from t2 where topic = any (SELECT SUM(topic) FROM t1);
 SELECT * from t2 where topic <> any (SELECT SUM(topic) FROM t2);
 SELECT * from t2 where topic = any (SELECT topic FROM t2 GROUP BY topic HAVING topic < 41000);
 
-DROP TABLE IF EXISTS t1,t2;
+DROP TABLE IF EXISTS t1;
+DROP TABLE IF EXISTS t2;
 CREATE TABLE t1 ( a int, b int );
 INSERT INTO t1 VALUES (1,1),(2,2),(3,3);
 SELECT a FROM t1 WHERE a > ANY (SELECT a FROM t1 HAVING a = 2);
@@ -181,14 +196,16 @@ SELECT a FROM t1 WHERE a >= ANY (SELECT a FROM t1 group by a HAVING a = 2);
 SELECT a FROM t1 WHERE a <= ANY (SELECT a FROM t1 group by a HAVING a = 2);
 SELECT a FROM t1 WHERE a <> ANY (SELECT a FROM t1 group by a HAVING a = 2);
 
-DROP TABLE IF EXISTS t1,t2;
+DROP TABLE IF EXISTS t1;
+DROP TABLE IF EXISTS t2;
 CREATE TABLE `t1` ( `a` int(11) default NULL);
 insert into t1 values (1);
 CREATE TABLE `t2` ( `b` int(11) default NULL, `a` int(11) default NULL);
 insert into t2 values (1,2);
 select t000.a, count(*) `C` FROM t1 t000 GROUP BY t000.a HAVING count(*) > ALL (SELECT count(*) FROM t2 t001 WHERE t001.a=1);
 
-DROP TABLE IF EXISTS t1,t2;
+DROP TABLE IF EXISTS t1;
+DROP TABLE IF EXISTS t2;
 CREATE TABLE t1 (
   field1 int NOT NULL,
   field2 int NOT NULL,
@@ -206,7 +223,8 @@ SELECT field1, field2
       HAVING COUNT(*) < ANY (SELECT fieldB
                                FROM t2 WHERE fieldA = field1);
 
-DROP TABLE IF EXISTS t1,t2;
+DROP TABLE IF EXISTS t1;
+DROP TABLE IF EXISTS t2;
 CREATE TABLE t1 (
  pk INT NOT NULL PRIMARY KEY,
  number INT
@@ -225,12 +243,14 @@ INSERT INTO t2 VALUES (4,166);
 SELECT * FROM t1 WHERE t1.number < ANY(SELECT number FROM t2 GROUP BY number);
 SELECT * FROM t1 WHERE t1.number < ANY(SELECT number FROM t2);
 
-DROP TABLE IF EXISTS t1,t2;
+DROP TABLE IF EXISTS t1;
+DROP TABLE IF EXISTS t2;
 CREATE TABLE t1 (a varchar(5), b varchar(10));
 INSERT INTO t1 VALUES ('AAA', 5), ('BBB', 4), ('BBB', 1), ('CCC', 2), ('CCC', 7), ('AAA', 2), ('AAA', 4), ('BBB', 3), ('AAA', 8);
 SELECT * FROM t1 WHERE (a,b) = ANY (SELECT a, max(b) FROM t1 GROUP BY a);
 
-DROP TABLE IF EXISTS t1,t2;
+DROP TABLE IF EXISTS t1;
+DROP TABLE IF EXISTS t2;
 
 -- @case
 -- @desc:test for [any] subquery with uion
@@ -241,7 +261,8 @@ ANALYZE TABLE t1;
 select * from t1 where 'f' > any (select s1 from t1);
 select * from t1 where 'f' > any (select s1 from t1 union select s1 from t1);
 
-DROP TABLE IF EXISTS t1,t2;
+DROP TABLE IF EXISTS t1;
+DROP TABLE IF EXISTS t2;
 CREATE TABLE t1 ( a int, b int );
 INSERT INTO t1 VALUES (1,1),(2,2),(3,3);
 SELECT a FROM t1 WHERE a > ANY (SELECT a FROM t1 WHERE b = 2 UNION SELECT a FROM t1 WHERE b = 2);
@@ -295,7 +316,8 @@ SELECT * FROM t1 WHERE a = ANY ( SELECT 1 UNION ( SELECT 1 UNION SELECT 1 ) );
 SELECT * FROM t1 WHERE a = ANY ( ( SELECT 1 UNION SELECT 1 )  UNION SELECT 1 );
 SELECT * FROM t1 WHERE a = ANY ( SELECT 1 UNION SELECT 1 UNION SELECT 1 );
 
-DROP TABLE IF EXISTS t1,t2;
+DROP TABLE IF EXISTS t1;
+DROP TABLE IF EXISTS t2;
 
 -- @case
 -- @desc:test for [any] subquery with join
@@ -314,7 +336,9 @@ WHERE NOT t1.I = ANY
   t1s LEFT OUTER JOIN t2s ON t2s.i = t1s.i
   HAVING t2s.i = 999
 );
-DROP TABLE IF EXISTS t1,t1s,t2s;
+DROP TABLE IF EXISTS t1;
+DROP TABLE IF EXISTS t1s;
+DROP TABLE IF EXISTS t2s;
 
 
 

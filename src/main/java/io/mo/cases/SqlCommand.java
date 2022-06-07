@@ -68,7 +68,9 @@ public class SqlCommand {
     private void check() {
         String command = this.command.toString();
         String opt = command.split(" ")[0];
-        if (opt.equalsIgnoreCase("select") || opt.equalsIgnoreCase("show"))
+        if (opt.equalsIgnoreCase("select")
+                || opt.equalsIgnoreCase("show")
+                || opt.equalsIgnoreCase("with"))
             this.update = false;
         else
             this.update = true;

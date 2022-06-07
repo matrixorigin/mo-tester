@@ -117,7 +117,7 @@ select date_sub("1998-01-02",INTERVAL 31 DAY);
 -- @case
 -- @desc:test for temporal interval unit with timestamp_sub
 -- @label:bvt
- select TIMESTAMPADD(MINUTE,8820,'2012-08-24 09:00:00');
+-- select TIMESTAMPADD(MINUTE,8820,'2012-08-24 09:00:00');
 
 -- @case
 -- @desc:test for temporal interval unit with expression+-
@@ -136,8 +136,6 @@ SELECT "1900-01-01 00:00:00" + INTERVAL 1<<33 MINUTE;
 SELECT "1900-01-01 00:00:00" + INTERVAL 1<<30 HOUR;
 SELECT "1900-01-01 00:00:00" + INTERVAL "1000000000:214748364700" MINUTE_SECOND;
 
-SELECT STR_TO_DATE('10:00 PM', '%h:%i %p') + INTERVAL 10 MINUTE;
-SELECT STR_TO_DATE('10:00 PM', '%h:%i %p') + INTERVAL (INTERVAL(1,2,3) + 1) MINUTE;
 SELECT "1997-12-31 23:59:59" + INTERVAL 1 SECOND;
 SELECT 1 + INTERVAL(1,0,1,2) + 1;
 SELECT INTERVAL(1^1,0,1,2) + 1;
@@ -170,21 +168,14 @@ select i + INTERVAL 1 SECOND from t1;
 -- @label:bvt
 select month(date_sub("1998-01-01 00:00:00",INTERVAL 1 SECOND));
 select weekday(date_sub("1998-01-01 00:00:00",INTERVAL 1 MINUTE));
-select week(date_sub("1998-01-01 00:00:00",INTERVAL 1 HOUR));
 select date(date_sub("1998-01-01 00:00:00",INTERVAL 1 DAY));
 select dayofyear(date_sub("1998-01-01 00:00:00",INTERVAL 1 MONTH));
-select minute(date_sub("1998-01-01 00:00:00",INTERVAL 1 QUARTER));
-select second(date_sub("1998-01-01 00:00:00",INTERVAL 1 YEAR));
 
 select month(date_add("1997-12-31 23:59:59",INTERVAL "1:1" MINUTE_SECOND));
 select weekday(date_add("1997-12-31 23:59:59",INTERVAL "1:1" HOUR_MINUTE));
-select week(date_add("1997-12-31 23:59:59",INTERVAL "1:1" DAY_HOUR));
 select date(date_add("1997-12-31 23:59:59",INTERVAL "1 1" YEAR_MONTH));
 select dayofyear(date_add("1997-12-31 23:59:59",INTERVAL "1:1:1" HOUR_SECOND));
-select minute(date_add("1997-12-31 23:59:59",INTERVAL "1 1:1" DAY_MINUTE));
-select second(date_add("1997-12-31 23:59:59",INTERVAL "1 1:1:1" DAY_SECOND));
 
-select minute("1997-12-31 23:59:59" + INTERVAL 1 SECOND);
 select date("1997-12-31 23:59:59" + INTERVAL 1 SECOND) + INTERVAL "1:1:1" HOUR_SECOND;
 
 SELECT CAST(CAST('2006-08-10 10:11:12' AS DATETIME) AS DECIMAL(20,6));

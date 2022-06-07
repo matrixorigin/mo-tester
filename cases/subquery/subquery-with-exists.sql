@@ -4,7 +4,13 @@
 -- @desc:test for  subquery with  exists
 -- @label:bvt
 SELECT EXISTS(SELECT 1+1);
-drop table if exists t1,t2,t3,t4,t5,t6,t7;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
+drop table if exists t4;
+drop table if exists t5;
+drop table if exists t6;
+drop table if exists t7;
 create table t1 (a int);
 create table t2 (a int, b int);
 create table t3 (a int);
@@ -27,7 +33,13 @@ insert into t7 values(1,"Oblastnaia bolnitsa"),(2,"Bolnitsa Krasnogo Kresta");
 insert into t6 values (1,1),(1,2),(2,2),(1,3);
 select * from t6 where exists (select * from t7 where uq = clinic_uq);
 
-drop table if exists t1,t2,t3,t4,t5,t6,t7;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
+drop table if exists t4;
+drop table if exists t5;
+drop table if exists t6;
+drop table if exists t7;
 CREATE TABLE `t1` (
   `numeropost` mediumint(8) unsigned NOT NULL auto_increment,
   `maxnumrep` int(10) unsigned NOT NULL default '0',
@@ -46,7 +58,9 @@ CREATE TABLE `t2` (
 INSERT INTO t2 (mot,topic,dt,pseudo) VALUES ('joce','40143','2002-10-22','joce'), ('joce','43506','2002-10-22','joce');
 SELECT numeropost,maxnumrep FROM t1 WHERE exists (SELECT 1 FROM t2 WHERE (mot='joce') AND dt >= '2002-10-21' AND t1.numeropost = t2.topic) ORDER BY maxnumrep DESC LIMIT 0, 20;
 
-drop table if exists t1,t2,t3;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE `t1` (
   `mot` varchar(30) NOT NULL default '',
   `topic` mediumint(8) unsigned NOT NULL default 0,
@@ -70,13 +84,17 @@ INSERT INTO t3 VALUES (1,1);
 SELECT DISTINCT topic FROM t2 WHERE NOT EXISTS(SELECT * FROM t3 WHERE numeropost=topic);
 DELETE FROM t1 WHERE topic IN (SELECT DISTINCT topic FROM t2 WHERE NOT EXISTS(SELECT * FROM t3 WHERE numeropost=topic));
 select * from t1;
-drop table if exists t1,t2,t3;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 
 create table t1 (a int, b int);
 insert into t1 values (1,2),(3,4);
 select * from t1 up where exists (select * from t1 where t1.a=up.a);
 
-drop table if exists t1,t2,t3;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (a INT, b INT);
 INSERT INTO t1 VALUES (1,1),(2,2);
 CREATE TABLE t2 (a INT, b INT);
@@ -85,7 +103,9 @@ CREATE TABLE t3 (a INT, b INT);
 SELECT COUNT(*) FROM t1 WHERE NOT EXISTS (SELECT 1 FROM t2 WHERE 1 = (SELECT MIN(t2.b) FROM t3)) ORDER BY COUNT(*);
 SELECT COUNT(*) FROM t1 WHERE NOT EXISTS (SELECT 1 FROM t2 WHERE 1 = (SELECT MIN(t2.b) FROM t3)) ORDER BY COUNT(*);
 
-DROP TABLE if exists t1,t2,t3;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (f1 varchar(1));
 INSERT INTO t1 VALUES ('v'),('s');
 CREATE TABLE t2 (f1_key varchar(1));
@@ -97,7 +117,9 @@ SELECT DISTINCT f1_key
 FROM t2
 WHERE f1_key != table2.f1_key AND f1_key >= table1.f1 );
 
-DROP TABLE if exists t1,t2,t3;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1( pk int PRIMARY KEY,uk int,ukn int NOT NULL,ik int,d int);
 INSERT INTO t1 VALUES (0, NULL, 0, NULL, NULL),(1, 10, 20, 30, 40),(2, 20, 40, 60, 80);
 CREATE TABLE t2(pk int PRIMARY KEY);
@@ -133,26 +155,33 @@ SELECT * FROM t2 AS ot WHERE EXISTS (SELECT * FROM t1 AS it WHERE it.d = ot.pk);
 SELECT * FROM t1 AS ot WHERE EXISTS (SELECT * FROM t2 AS it WHERE ot.d = it.pk - 1);
 SELECT * FROM t1 AS ot WHERE EXISTS (SELECT * FROM t1 AS it1 JOIN t2 AS it2 ON it1.pk > it2.pk WHERE ot.d = it2.pk);
 
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (a int);
 SELECT * FROM t1 WHERE EXISTS (SELECT * FROM t1 WHERE 127 = 55);
 
 -- @case
 -- @desc:test for  subquery with group by and having
 -- @label:bvt
-drop table if exists t1,t2,t3;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 create table t1 (s1 int);
 create table t2 (s1 int);
 insert into t1 values (1);
 insert into t2 values (1);
 select * from t1 where exists (select s1 from t2 group by s1 having max(t2.s1)=t1.s1);
 
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
 create table t1 (id int not null, text varchar(20) not null default '', primary key (id));
 insert into t1 (id, text) values (1, 'text1'), (2, 'text2'), (3, 'text3'), (4, 'text4'), (5, 'text5'), (6, 'text6'), (7, 'text7'), (8, 'text8'), (9, 'text9'), (10, 'text10'), (11, 'text11'), (12, 'text12');
 select * from t1 as tt where not exists (select id from t1 where id < 8 and (id = tt.id or id is null) having id is not null);
 
-drop table if exists t1,t2,t3;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (a int, b int);
 CREATE TABLE t2 (c int, d int);
 CREATE TABLE t3 (e int);
@@ -194,7 +223,9 @@ SELECT t1.a FROM t1 GROUP BY t1.a
                            WHERE EXISTS(SELECT t3.e FROM t3
                                           WHERE SUM(t1.a+t2.c) < t3.e/4));
 
-drop table if exists t1,t2,t3;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (id int NOT NULL, st CHAR(2), UNIQUE INDEX idx(id));
 INSERT INTO t1 VALUES (3,'FL'), (2,'GA'), (4,'FL'), (1,'GA'), (5,'NY'), (7,'FL'), (6,'NY');
 CREATE TABLE t2 (id int NOT NULL, INDEX idx(id));
@@ -204,7 +235,9 @@ SELECT id, st FROM t1  WHERE st IN ('GA','FL') AND EXISTS(SELECT 1 FROM t2 WHERE
 SELECT id, st FROM t1 WHERE st IN ('GA','FL') AND NOT EXISTS(SELECT 1 FROM t2 WHERE t2.id=t1.id);
 SELECT id, st FROM t1 WHERE st IN ('GA','FL') AND NOT EXISTS(SELECT 1 FROM t2 WHERE t2.id=t1.id) GROUP BY id;
 
-DROP TABLE if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (a INT, b INT);
 INSERT INTO t1 VALUES (1, 2), (1,3), (1,4), (2,1), (2,2);
 SELECT a1.a, COUNT(*) FROM t1 a1 WHERE a1.a = 1 AND EXISTS( SELECT a2.a FROM t1 a2 WHERE a2.a = a1.a) GROUP BY a1.a;
@@ -214,7 +247,8 @@ DROP TABLE if exists t1;
 -- @case
 -- @desc:test for  subquery with func
 -- @label:bvt
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
 CREATE TABLE t1 ( a int, b int );
 INSERT INTO t1 VALUES (1,1),(2,2),(3,3);
 SELECT concat(EXISTS(SELECT a FROM t1 WHERE b = 2 and a.a > t1.a), '-') from t1 a;
@@ -244,7 +278,9 @@ SELECT * FROM t1 WHERE NOT EXISTS
   );
 SELECT * FROM t1 WHERE NOT EXISTS (((SELECT i FROM t1) UNION (SELECT i FROM t1)));
 
-drop table if exists t1,t2,t3;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (id char(4) PRIMARY KEY, c int);
 CREATE TABLE t2 (c int);
 INSERT INTO t1 VALUES ('aa', 1);
@@ -266,7 +302,9 @@ SELECT * FROM t1
                 UNION
                 SELECT c from t2 WHERE c=t1.c);
 
-DROP TABLE if exists t1,t2,t3;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (a INT);
 CREATE TABLE t2 (a INT);
 INSERT INTO t1 VALUES (1),(2);
@@ -274,12 +312,15 @@ INSERT INTO t2 VALUES (1),(2);
 SELECT 2 FROM t1 WHERE EXISTS ((SELECT 1 FROM t2 WHERE t1.a=t2.a));
 SELECT 2 FROM t1 WHERE EXISTS ((SELECT 1 FROM t2 WHERE t1.a=t2.a) UNION (SELECT 1 FROM t2 WHERE t1.a = t2.a));
 
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
 
 -- @case
 -- @desc:test for  subquery with join
 -- @label:bvt
-DROP TABLE if exists t1,t2,t3;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 ( c1 int );
 INSERT INTO t1 VALUES ( 1 );
 INSERT INTO t1 VALUES ( 2 );
@@ -299,7 +340,9 @@ INSERT INTO t3 VALUES ( 8 );
 SELECT c1,c2 FROM t1 LEFT JOIN t2 ON c1 = c2
   WHERE EXISTS (SELECT c3 FROM t3 WHERE c2 IS NULL );
 
-DROP TABLE if exists t1,t2,t3;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (a int);
 INSERT INTO t1 VALUES
  (1), (2), (3), (4), (5), (6), (7), (8), (9),(10);
@@ -338,12 +381,13 @@ WHERE EXISTS (SELECT * FROM t1) AND
 -- @case
 -- @desc:test for  subquery with DISTINCT and ORDER BY
 -- @label:bvt
-DROP TABLE if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
 CREATE TABLE t1(pk INT PRIMARY KEY, a INT);
 INSERT INTO t1 VALUES (1, 10), (3, 30), (2, 20);
 CREATE TABLE t2(pk INT PRIMARY KEY, a INT, b INT);
 INSERT INTO t2 VALUES (2, 20, 700), (1, 10, 200), (4, 10, 100);
 SELECT * FROM t1  WHERE EXISTS (SELECT DISTINCT a FROM t2 WHERE t1.a < t2.a ORDER BY b);
 
-DROP TABLE if exists t1,t2;
-
+drop table if exists t1;
+drop table if exists t2;

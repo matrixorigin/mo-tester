@@ -84,9 +84,11 @@ public class Executor {
                     continue;
                 }
                 statement = connection.createStatement();
+                //statement.setQueryTimeout(30);
                 if (command.isUpdate()) {
                     //if no-query-type statement is executed successfully,do not need check
                     int num = statement.executeUpdate(command.getCommand());
+                    LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"]: row affect: "+num);
                     //but need to get the expected result,to skip the read pos
                     ResultParser.skip(command.getCommand());
                     LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed successfully");
@@ -538,6 +540,9 @@ public class Executor {
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
+        }catch(NumberFormatException e){
+            e.printStackTrace();
+            System.exit(1);
         }
     }
 
@@ -575,6 +580,8 @@ public class Executor {
         } catch (SQLException e) {
             e.printStackTrace();
             System.exit(1);
+        }catch(NumberFormatException e){
+            return RESULT.ERROR_UNKNOWN_DESC + e.getMessage();
         }
         return null;
     }

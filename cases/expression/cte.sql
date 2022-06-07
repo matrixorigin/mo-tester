@@ -80,7 +80,6 @@ SELECT qn.a  FROM qn;
 drop table if exists t1;
 create table t1(a int, b int, c int);
 insert into t1 values(null,null,null),(2,3,4);
-explain with qn as (select 1) select 2;
 with qn as (select 1) select 2;
 
 -- @case
@@ -109,8 +108,7 @@ select (select max(a) from qn where a=0),
 drop table if exists sales_days;
 create table sales_days(day_of_sale DATE, amount INT);
 insert into sales_days values('2015-01-02', 100), ('2015-01-05', 200),('2015-02-02', 10),  ('2015-02-10', 100),('2015-03-02', 10),  ('2015-03-18', 1);
-with
- sales_by_month(month,total) as
+with sales_by_month(month,total) as
  (select month(day_of_sale), sum(amount) from sales_days
   where year(day_of_sale)=2015
   group by month(day_of_sale)),
@@ -148,7 +146,6 @@ FROM t1 as t2;
 WITH qn AS (SELECT b as a FROM t1)
 SELECT (WITH qn2 AS (SELECT a FROM qn WHERE a IS NULL or a>0)
         SELECT qn2.a FROM qn2) FROM qn;
-}
 
 WITH qn AS (select "outer" as a)
 SELECT (WITH qn AS (SELECT "inner" as a) SELECT a from qn),
@@ -158,7 +155,8 @@ FROM qn;
 -- @case
 -- @desc:test for with insert select
 -- @label:bvt
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
 create table t1(a int, b int, c int);
 insert into t1 values(null,null,null),(2,3,4),(4,5,6);
 CREATE TABLE t2
@@ -171,12 +169,14 @@ WITH qn AS (SELECT 10*a as a FROM t1),
       qn2 AS (SELECT 3*a AS b FROM qn)
       SELECT * from qn2;
 SELECT * FROM t2;
-DROP TABLE if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
 
 -- @case
 -- @desc:test for with order by ,limit .etc
 -- @label:bvt
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
 create table t1(a int, b int, c int);
 insert into t1 values(null,null,null),(2,3,4),(4,5,6);
 with qn as (select a from t1 order by 1)
@@ -191,7 +191,8 @@ select qn.a from qn, t1 as t2;
 -- @case
 -- @desc:test for with group by
 -- @label:bvt
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
 create table t1(a int, b int, c int);
 insert into t1 values(null,null,null),(2,3,4),(4,5,6);
 with qn as (select a, b from t1)
@@ -206,7 +207,8 @@ select s from qn group by a;
 -- @case
 -- @desc:test for with using column in name
 -- @label:bvt
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
 create table t1(a int, b int, c int);
 insert into t1 values(null,null,null),(2,3,4),(4,5,6),(4,5,6),(8,9,10);
 -- error
@@ -227,7 +229,9 @@ with qn (foo, bar) as (select a, b from t1 limit 2) select qn.bar,foo from qn;
 -- @case
 -- @desc:test for with-as with where filtler and in ,some ,any
 -- @label:bvt
-DROP TABLE IF EXISTS t1,t2,t3;
+drop table if exists t1;
+drop table if exists t2;
+DROP TABLE IF EXISTS t3;
 create table t1 (s1 char(5), index s1(s1));
 create table t2 (s1 char(5), index s1(s1));
 insert into t1 values ('a1'),('a2'),('a3');
@@ -239,7 +243,9 @@ select s1, s1 < ANY (select * from qn) from t1;
 with qn as (SELECT s1 FROM t2)
 select s1, s1 = ANY (select * from qn) from t1;
 
-DROP TABLE IF EXISTS t1,t2,t3;
+drop table if exists t1;
+drop table if exists t2;
+DROP TABLE IF EXISTS t3;
 create table t1 (a int);
 create table t2 (a int, b int);
 create table t3 (a int);
@@ -258,9 +264,13 @@ select * from t3 where a in (select * from qn);
 with qn as (select b from t2 where b > 7)
 select * from t3 where a not in (select * from qn);
 
-DROP TABLE IF EXISTS t1,t2,t3,t4;
-
-drop table if exists t1,t2,t3,t4,t5,t6,t7;
+drop table if exists t1;
+drop table if exists t2;
+DROP TABLE IF EXISTS t3;
+DROP TABLE IF EXISTS t4;
+DROP TABLE IF EXISTS t5;
+DROP TABLE IF EXISTS t6;
+DROP TABLE IF EXISTS t7;
 create table t1 (a int);
 create table t2 (a int, b int);
 create table t3 (a int);
@@ -273,7 +283,13 @@ with qn as (select * from t2 where t2.b=t3.a)
 select * from t3 where exists (select * from qn);
 with qn as (select * from t2 where t2.b=t3.a)
 select * from t3 where not exists (select * from qn);
-drop table if exists t1,t2,t3,t4,t5,t6,t7;
+drop table if exists t1;
+drop table if exists t2;
+DROP TABLE IF EXISTS t3;
+DROP TABLE IF EXISTS t4;
+DROP TABLE IF EXISTS t5;
+DROP TABLE IF EXISTS t6;
+DROP TABLE IF EXISTS t7;
 
 -- @case
 -- @desc:test for with-as with lots of expression
