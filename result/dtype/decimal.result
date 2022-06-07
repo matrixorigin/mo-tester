@@ -63,9 +63,6 @@ a	big
 select min(big),max(big),max(big)-1 from t1;
 min(big)	max(big)	max(big)-1
 0.0000	18446744073.0000	18446744072.0000
-select min(big),count(big),max(big)-1 from t1 group by a;
-min(big)	count(big)	max(big)-1
-0.0000	5	18446744072.0000
 drop table if exists t1;
 drop table if exists t2;
 create table t1 (
