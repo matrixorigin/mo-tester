@@ -2,12 +2,12 @@ drop table if exists t1;
 create table t1(a int,b int);
 insert into t1 values(5,-2),(10,3),(100,0),(4,3),(6,-3);
 select power(a,b) from t1;
-power(a, b)
+power(a,b)
 0.04
 1000.0
 1.0
 64.0
-0.0046
+0.004629629629629629
 select power(a,2) as a1, power(b,2) as b1 from t1 where power(a,2) > power(b,2) order by a1 asc;
 a1	b1
 16.0	9.0
@@ -57,19 +57,19 @@ insert into t1 values(0,0),(-15,-20),(-22,-12.5);
 insert into t1 values(0,360),(30,390),(90,450),(180,270),(180,180);
 select acos(a*pi()/180) as acosa,acos(b*pi()/180) acosb from t1;
 acosa	acosb
-1.5708	1.5708
-1.8357	1.9274
-1.9649	1.7907
-1.5708	null
-1.0197	null
+1.5707963267948966	1.5707963267948966
+1.8356824738191324	1.927370391646567
+1.9648910192076245	1.7907312931992256
+1.5707963267948966	null
+1.0197267436954502	null
 null	null
 null	null
 null	null
 select acos(a*pi()/180)*acos(b*pi()/180) as acosab,acos(acos(a*pi()/180)) as c from t1;
 acosab	c
-2.4674	null
-3.538	null
-3.5186	null
+2.4674011002723395	null
+3.5380400485035204	null
+3.518591835821214	null
 null	null
 null	null
 null	null
@@ -86,23 +86,23 @@ insert into t1 values(0,360),(30,390),(90,450),(180,270),(180,180);
 select atan(a*pi()/180) as atana,atan(b*pi()/180) atanb from t1;
 atana	atanb
 0.0	0.0
--0.2561	-0.3358
--0.3666	-0.2148
-0.0	1.413
-0.4823	1.4249
-1.0039	1.4442
-1.2626	1.3617
-1.2626	1.2626
+-0.25605276998075555	-0.3358423725664079
+-0.3666136182932664	-0.2148004503403853
+0.0	1.4129651365067377
+0.48234790710102493	1.4249275378445119
+1.0038848218538872	1.4441537892065188
+1.2626272556789115	1.3616916829711636
+1.2626272556789115	1.2626272556789115
 select atan(a*pi()/180)*atan(b*pi()/180) as atanab,atan(atan(a*pi()/180)) as c from t1;
 atanab	c
 0.0	0.0
-0.086	-0.2507
-0.0787	-0.3514
+0.08599336977253766	-0.25066722482387166
+0.07874877031031174	-0.3513980316581596
 0.0	0.0
-0.6873	0.4494
-1.4498	0.7873
-1.7193	0.901
-1.5942	0.901
+0.6873108156499168	0.44942647356532794
+1.4497640694072023	0.7873368062499202
+1.7193090327506788	0.900952887864509
+1.5942275867832594	0.900952887864509
 select b from t1 where atan(a*pi()/180)<=atan(b*pi()/180)  order by a;
 b
 -12.5
@@ -132,12 +132,12 @@ VALUES
 ('Sudip Majhi', 'ABC Corp.', 'Delhi', '2018-10-30', 600000),
 ('Sanjoy Kohli', 'XYZ Digital', 'Delhi', '2019-04-18', 450000);
 SELECT Working_At, BIT_AND(Annual_Income) AS BITORINCOME FROM t1 group by Working_At;
-working_at	bitorincome
+Working_At	BITORINCOME
 XYZ Digital	262144
 ABC Corp.	65792
 PQR Soln.	4096
 SELECT Work_Location, BIT_AND(Annual_Income) AS BITORINCOME FROM t1 Group By Work_Location;
-work_location	bitorincome
+Work_Location	BITORINCOME
 Kolkata	262144
 Delhi	0
 drop table if exists t1;
@@ -160,11 +160,11 @@ VALUES
 ('Sudip Majhi', 'ABC Corp.', 'Delhi', '2018-10-30', 600000),
 ('Sanjoy Kohli', 'XYZ Digital', 'Delhi', '2019-04-18', 450000);
 SELECT Work_Location, BIT_AND(Annual_Income) AS BITORINCOME FROM t1 Group By Work_Location;
-work_location	bitorincome
+Work_Location	BITORINCOME
 Kolkata	262144
 Delhi	0
 SELECT Working_At, BIT_AND(Annual_Income) AS BITORINCOME FROM t1 group by Working_At;
-working_at	bitorincome
+Working_At	BITORINCOME
 XYZ Digital	262144
 ABC Corp.	65792
 PQR Soln.	4096
@@ -188,11 +188,11 @@ VALUES
 ('Sudip Majhi', 'ABC Corp.', 'Delhi', '2018-10-30', 600000),
 ('Sanjoy Kohli', 'XYZ Digital', 'Delhi', '2019-04-18', 450000);
 SELECT Work_Location, BIT_XOR(Annual_Income) AS BITORINCOME FROM t1 Group By Work_Location;
-work_location	bitorincome
+Work_Location	BITORINCOME
 Kolkata	350624
 Delhi	912976
 SELECT Working_At, BIT_XOR(Annual_Income) AS BITORINCOME FROM t1 group by Working_At;
-working_at	bitorincome
+Working_At	BITORINCOME
 XYZ Digital	94816
 ABC Corp.	774608
 PQR Soln.	136256
@@ -203,19 +203,19 @@ insert into t1 values(0,360),(30,390),(90,450),(180,270),(180,180);
 select cos(a),cos(b) from t1;
 cos(a)	cos(b)
 1.0	1.0
-1.0	-0.2837
-0.1543	0.9037
--0.4481	-0.7302
--0.5985	0.9844
--0.5985	-0.5985
+1.0	-0.2836910914865273
+0.15425144988758405	0.9036792973912307
+-0.4480736161291702	-0.7301529641805058
+-0.5984600690578581	0.9843819506325049
+-0.5984600690578581	-0.5984600690578581
 select cos(a)*cos(b),cos(cos(a)) as c from t1;
-cos(a) * cos(b)	c
-1.0	0.5403
--0.2837	0.5403
-0.1394	0.9881
-0.3272	0.9013
--0.5891	0.8262
-0.3582	0.8262
+cos(a)*cos(b)	c
+1.0	0.5403023058681398
+-0.2836910914865273	0.5403023058681398
+0.13939384185599057	0.9881268151992376
+0.3271622789877917	0.9012833416649747
+-0.5891132901548379	0.8262041463870422
+0.35815445425673625	0.8262041463870422
 select distinct a from t1 where cos(a)<=cos(b) order by a desc;
 a
 180
@@ -226,33 +226,11 @@ create table t1(a int,b float);
 insert into t1 values(0,0),(-15,-20),(-22,-12.5);
 insert into t1 values(0,360),(30,390),(90,450),(180,270),(180,180);
 select cot(a*pi()/180) as cota,cot(b*pi()/180) cotb from t1;
-cota	cotb
-1.0	1.0
-1.2679	1.364
-1.404	1.2217
-1.0	1.0
-0.4226	0.4226
--1.6331239353195392E16	-3.2662478706390775E15
-1.0	-5.44374645106513E15
-1.0	1.0
+Data truncation: DOUBLE value is out of range in 'cot(((`builtin`.`t1`.`a` * pi()) / 180))'
 select cot(a*pi()/180)*cot(b*pi()/180) as cotab,cot(cot(a*pi()/180)) as c from t1;
-cotab	c
-1.0	-0.5574
-1.7294	-2.2004
-1.7153	-4.9406
-1.0	-0.5574
-0.1786	0.5502
-5.334187576227155E31	4.4834
--5.443746451065131E15	-0.5574
-1.0	-0.5574
+Data truncation: DOUBLE value is out of range in 'cot(((`builtin`.`t1`.`a` * pi()) / 180))'
 select b from t1 where cot(a*pi()/180)<=cot(b*pi()/180)  order by a;
-b
--20.0
-0.0
-360.0
-390.0
-450.0
-180.0
+Data truncation: DOUBLE value is out of range in 'cot(((`builtin`.`t1`.`a` * pi()) / 180))'
 drop table if exists t1;
 create table t1(a date, b datetime,c varchar(30));
 insert into t1 values('2022-01-01','2022-01-01 01:01:01','2022-01-01 01:01:01');
@@ -289,17 +267,9 @@ VALUES
 (5,'Riya Jain', 'IX'),
 (6,'Tapan Samanta', 'XI');
 select a,endswith(b,'a') from t1;
-a	endswith(b, a)
-1	0
-2	1
-3	1
-4	0
-5	0
-6	1
+FUNCTION builtin.endswith does not exist
 select a,b,c from t1 where endswith(b,'a')=1 and endswith(c,'I')=1;
-a	b	c
-3	Aniket Sharma	XI
-6	Tapan Samanta	XI
+FUNCTION builtin.endswith does not exist
 drop table if exists t1;
 CREATE TABLE t1(Student_id INT,Student_name VARCHAR(100),Student_Class CHAR(20));
 INSERT INTO t1
@@ -311,7 +281,7 @@ VALUES
 (5,'Riya Jain', 'IX'),
 (6,'Tapan Samanta', 'X');
 SELECT Student_id, Student_name,LPAD(Student_Class, 10, ' _') AS LeftPaddedString FROM t1;
-student_id	student_name	leftpaddedstring
+Student_id	Student_name	LeftPaddedString
 1	Ananya Majumdar	 _ _ _ _IX
 2	Anushka Samanta	 _ _ _ _ X
 3	Aniket Sharma	 _ _ _ _XI
@@ -319,7 +289,7 @@ student_id	student_name	leftpaddedstring
 5	Riya Jain	 _ _ _ _IX
 6	Tapan Samanta	 _ _ _ _ X
 SELECT Student_id, lpad(Student_name,4,'new') AS LeftPaddedString FROM t1;
-student_id	leftpaddedstring
+Student_id	LeftPaddedString
 1	Anan
 2	Anus
 3	Anik
@@ -327,15 +297,15 @@ student_id	leftpaddedstring
 5	Riya
 6	Tapa
 SELECT Student_id, lpad(Student_name,-4,'new') AS LeftPaddedString FROM t1;
-student_id	leftpaddedstring
-1	NULL
-2	NULL
-3	NULL
-4	NULL
-5	NULL
-6	NULL
+Student_id	LeftPaddedString
+1	null
+2	null
+3	null
+4	null
+5	null
+6	null
 SELECT Student_id, lpad(Student_name,0,'new') AS LeftPaddedString FROM t1;
-student_id	leftpaddedstring
+Student_id	LeftPaddedString
 1	
 2	
 3	
@@ -353,7 +323,7 @@ VALUES
 (5,'Riya Jain', 'IX'),
 (6,'Tapan Samanta', 'X');
 SELECT Student_id, Student_name,RPAD(Student_Class, 10, ' _') AS LeftPaddedString FROM t1;
-student_id	student_name	leftpaddedstring
+Student_id	Student_name	LeftPaddedString
 1	Ananya Majumdar	IX _ _ _ _
 2	Anushka Samanta	X _ _ _ _ 
 3	Aniket Sharma	XI _ _ _ _
@@ -361,7 +331,7 @@ student_id	student_name	leftpaddedstring
 5	Riya Jain	IX _ _ _ _
 6	Tapan Samanta	X _ _ _ _
 SELECT Student_id, rpad(Student_name,4,'new') AS LeftPaddedString FROM t1;
-student_id	leftpaddedstring
+Student_id	LeftPaddedString
 1	Anan
 2	Anus
 3	Anik
@@ -369,7 +339,7 @@ student_id	leftpaddedstring
 5	Riya
 6	Tapa
 SELECT Student_id, rpad(Student_name,-4,'new') AS LeftPaddedString FROM t1;
-student_id	leftpaddedstring
+Student_id	LeftPaddedString
 1	null
 2	null
 3	null
@@ -377,7 +347,7 @@ student_id	leftpaddedstring
 5	null
 6	null
 SELECT Student_id, rpad(Student_name,0,'new') AS LeftPaddedString FROM t1;
-student_id	leftpaddedstring
+Student_id	LeftPaddedString
 1	
 2	
 3	
@@ -403,7 +373,7 @@ VALUES
 ('   Ankana Jana', '2018-08-17'),
 ('  Shreya Ghosh', '2020-09-10') ;
 SELECT LTRIM( Employee_name) LTrimName,RTRIM(Employee_name) AS RTrimName FROM t1 order by  RTrimName desc;
-ltrimname	rtrimname
+LTrimName	RTrimName
 Shreya Ghosh	  Shreya Ghosh
 Riya Jain	  Riya Jain
 Deepak Sharma	   Deepak Sharma
@@ -414,7 +384,7 @@ Anik Das	   Anik Das
 Tapan Samanta	    Tapan Samanta
 Ananya Majumdar	     Ananya Majumdar
 SELECT LTRIM(RTRIM(Employee_name)) as TrimName from t1 where Employee_name like '%Ani%' order by TrimName asc;
-trimname
+TrimName
 Anik Das
 Aniket Sharma
 drop table if exists t1;
@@ -424,19 +394,19 @@ insert into t1 values(0,360),(30,390),(90,450),(180,270),(180,180);
 select sin(a),sin(b) from t1;
 sin(a)	sin(b)
 0.0	0.0
-0.0	0.9589
--0.988	0.4282
-0.894	-0.6833
--0.8012	-0.176
--0.8012	-0.8012
+0.0	0.9589157234143065
+-0.9880316240928618	0.42820991051876856
+0.8939966636005579	-0.6832837250355236
+-0.8011526357338304	-0.1760459464712114
+-0.8011526357338304	-0.8011526357338304
 select sin(a)*sin(b),sin(sin(a)) as c from t1;
-sin(a) * sin(b)	c
+sin(a)*sin(b)	c
 0.0	0.0
 0.0	0.0
--0.4231	-0.8349
--0.6109	0.7796
-0.141	-0.7182
-0.6418	-0.7182
+-0.42308493334251795	-0.8349443318035336
+-0.6108533704743191	0.77958108276669
+0.14103967402566786	-0.7181586632423702
+0.6418455457432636	-0.7181586632423702
 select distinct a from t1 where sin(a)<=sin(b) order by a desc;
 a
 180
@@ -447,34 +417,11 @@ create table t1(a int,b float);
 insert into t1 values(0,0),(-15,-20),(-22,-12.5);
 insert into t1 values(0,360),(30,390),(90,450),(180,270),(180,180);
 select sinh(a*pi()/180) as sinha,sinh(b*pi()/180) sinhb from t1;
-sinha	sinhb
-0.0	0.0
--0.2648	-0.3562
--0.3935	-0.2199
-0.0	267.7449
-0.5479	451.979
-2.3013	1287.9851
-11.5487	55.6544
-11.5487	11.5487
+FUNCTION builtin.sinh does not exist
 select sinh(a*pi()/180)*sinh(b*pi()/180) as sinhab,sinh(sinh(a*pi()/180)) as c from t1;
-sinhab	c
-0.0	0.0
-0.0943	-0.2679
-0.0865	-0.4037
-0.0	0.0
-247.6183	0.5757
-2964.0386	4.9435
-642.7381	51823.1467
-133.3734	51823.1467
+FUNCTION builtin.sinh does not exist
 select b from t1 where sinh(a*pi()/180)<=sinh(b*pi()/180)  order by a;
-b
--12.5
-0.0
-360.0
-390.0
-450.0
-270.0
-180.0
+FUNCTION builtin.sinh does not exist
 drop table if exists t1;
 CREATE TABLE t1
 (
@@ -496,7 +443,7 @@ VALUES
 INSERT INTO t1
 (Employee_name, Joining_Date ) values('     ','2014-12-01');
 select * from t1 where Employee_name=space(5);
-employee_name	joining_date
+Employee_name	Joining_Date
      	2014-12-01
 drop table if exists t1;
 CREATE TABLE t1(a INT,b VARCHAR(100),c CHAR(20));
@@ -509,25 +456,18 @@ VALUES
 (5,'Riya Jain', 'IX'),
 (6,'Tapan Samanta', 'X');
 select a,startswith(b,'An') from t1;
-a	startswith(b, An)
-1	1
-2	1
-3	1
-4	1
-5	0
-6	0
+FUNCTION builtin.startswith does not exist
 select a,b,c from t1 where startswith(b,'An')=1 and startswith(c,'I')=1;
-a	b	c
-1	Ananya Majumdar	IX
+FUNCTION builtin.startswith does not exist
 drop table if exists t1;
 CREATE TABLE t1(PlayerName VARCHAR(100) NOT NULL,RunScored INT NOT NULL,WicketsTaken INT NOT NULL);
 INSERT INTO t1 VALUES('KL Rahul', 52, 0 ),('Hardik Pandya', 30, 1 ),('Ravindra Jadeja', 18, 2 ),('Washington Sundar', 10, 1),('D Chahar', 11, 2 ),  ('Mitchell Starc', 0, 3);
 SELECT STDDEV_POP(RunScored) as Pop_Standard_Deviation FROM t1;
-pop_standard_deviation
-16.8762
+Pop_Standard_Deviation
+16.87618308609964
 SELECT  STDDEV_POP(WicketsTaken) as Pop_Std_Dev_Wickets FROM t1;
-pop_std_dev_wickets
-0.9574
+Pop_Std_Dev_Wickets
+0.9574271077563381
 drop table if exists t1;
 create table t1(a int,b float);
 insert into t1 values(0,0),(-15,-20),(-22,-12.5);
@@ -535,23 +475,23 @@ insert into t1 values(0,360),(30,390),(90,450),(180,270),(180,180);
 select tan(a*pi()/180) as tana,tan(b*pi()/180) tanb from t1;
 tana	tanb
 0.0	0.0
--0.2679	-0.364
--0.404	-0.2217
-0.0	-0.0
-0.5774	0.5774
-1.6331239353195392E16	3.2662478706390785E15
--0.0	5.443746451065131E15
--0.0	-0.0
+-0.2679491924311227	-0.36397023426620234
+-0.4040262258351568	-0.2216946626429399
+0.0	-2.4492935982947064E-16
+0.5773502691896256	0.5773502691896246
+1.633123935319537E16	3.2662478706390735E15
+-1.2246467991473532E-16	5.443746451065123E15
+-1.2246467991473532E-16	-1.2246467991473532E-16
 select tan(a*pi()/180)*tan(b*pi()/180) as tanab,tan(tan(a*pi()/180)) as c from t1;
 tanab	c
 0.0	0.0
-0.0975	-0.2746
-0.0896	-0.4275
+0.09752553034059545	-0.2745514959115463
+0.08957045783542533	-0.42754726729214687
 -0.0	0.0
-0.3333	0.6514
-5.334187576227157E31	3.4834
--0.6667	-0.0
-0.0	-0.0
+0.3333333333333326	0.6513878866881446
+5.334187576227142E31	3.370587556518889
+-0.6666666666666666	-1.2246467991473532E-16
+1.4997597826618576E-32	-1.2246467991473532E-16
 select b from t1 where tan(a*pi()/180)<=tan(b*pi()/180)  order by a;
 b
 -12.5

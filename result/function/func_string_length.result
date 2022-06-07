@@ -1,13 +1,3 @@
-CREATE TABLE t1 (s CHAR(8) BINARY);
-INSERT INTO t1 VALUES ('test');
-SELECT LENGTH(s) FROM t1;
-LENGTH(s)
-4
-ALTER TABLE t1 MODIFY s CHAR(10) BINARY;
-SELECT LENGTH(s) FROM t1;
-LENGTH(s)
-4
-DROP TABLE t1;
 CREATE TABLE t1 (s CHAR(8));
 INSERT INTO t1 VALUES ('test');
 SELECT LENGTH(s) FROM t1;
@@ -18,23 +8,24 @@ INSERT INTO t2 VALUES ('1234589002');
 SELECT LENGTH(s) FROM t2;
 LENGTH(s)
 10
-DROP TABLE t1,t2;
-CREATE TABLE t1 (s BINARY(8), b CHAR(100), c VARCHAR(255), d int, e float, f datetime);
+drop table t1;
+drop table t2;
+CREATE TABLE t1 (s char(8), b CHAR(100), c VARCHAR(255), d int, e float, f datetime);
 INSERT INTO t1 VALUES ('test', "hhhhhhh", "12jknfjniosdjcoijcpowef", 1234, 0.14123123, "2012-02-08 12:03:23");
 SELECT LENGTH(s), length(b), length(c), length(d), length(e), length(f) FROM t1;
 LENGTH(s)	length(b)	length(c)	length(d)	length(e)	length(f)
-8	7	23	4	8	19
+4	7	23	4	8	19
 DROP TABLE t1;
 CREATE TABLE t1 (t1_fld1 int, b varchar(255));
 CREATE TABLE t2 (t2_fld1 int, b varchar(255));
 CREATE TABLE t3 (t3_fld1 int, b varchar(255));
-INSERT INTO t1 VALUES (LENGTH(REPEAT('a',300)), "abcdefg");
-INSERT INTO t1 VALUES (LENGTH(REPEAT('b',300)), "123124141");
-INSERT INTO t2 VALUES (LENGTH(REPEAT('b',65680)), "abcdefg");
-INSERT INTO t2 VALUES (LENGTH(REPEAT('b',65680)), "1238193");
-INSERT INTO t3 VALUES (LENGTH(REPEAT('c',65680)), "1238193");
-INSERT INTO t3 VALUES (LENGTH(REPEAT('c',16777300)),"123124141");
-INSERT INTO t3 VALUES (LENGTH(REPEAT('c',16777300)),"123asdq");
+INSERT INTO t1 VALUES (LENGTH(space(300)), "abcdefg");
+INSERT INTO t1 VALUES (LENGTH(space(300)), "123124141");
+INSERT INTO t2 VALUES (LENGTH(space(65680)), "abcdefg");
+INSERT INTO t2 VALUES (LENGTH(space(65680)), "1238193");
+INSERT INTO t3 VALUES (LENGTH(space(65680)), "1238193");
+INSERT INTO t3 VALUES (LENGTH(space(16777300)),"123124141");
+INSERT INTO t3 VALUES (LENGTH(space(16777300)),"123asdq");
 SELECT DISTINCT * from t1;
 t1_fld1	b
 300	abcdefg
@@ -47,7 +38,9 @@ t1_fld1	t2_fld1	t3_fld1
 300	65680	16777300
 300	65680	16777300
 300	65680	16777300
-DROP TABLE t1, t2, t3;
+drop table t1;
+drop table t2;
+drop table t3;
 select length('\n\t\r\b\0\_\%\\');
 length('\n\t\r\b\0\_\%\\')
 10
@@ -74,16 +67,16 @@ a	c
 abc	abc, ,abc
 xyz	xyz, ,xyz
 DROP TABLE t1;
-select length(repeat("",1)) as a;
+select length(space(1)) as a;
 a
-0
-select length(repeat("",1024*1024*1024)) as a;
+1
+select length(space(1024*1024*1024)) as a;
 a
-0
-select length(repeat("1",1024*1024)) as a;
+null
+select length(space(1024*1024)) as a;
 a
 1048576
-select length(repeat("1",1024*1024*1024)) as a;
+select length(space(1024*1024*1024)) as a;
 a
 null
 drop table if exists t1;

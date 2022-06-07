@@ -23,7 +23,8 @@ FROM t1 LEFT JOIN t2 ON t1.EMPNUM=t2.EMPNUM;
 CEMPNUM	EMPMUM1	EMPNUM2
 0.00	0	0.00
 2.00	2	null
-DROP TABLE t1,t2;
+drop table t1;
+drop table t2;
 CREATE TABLE t0(c0 BIGINT UNSIGNED);
 INSERT INTO t0(c0) VALUES(NULL);
 SELECT * FROM t0 WHERE CAST(COALESCE(t0.c0, -1) AS UNSIGNED);
@@ -39,13 +40,13 @@ SELECT CAST(COALESCE(t0.c0, -1) AS UNSIGNED) FROM t0;
 CAST(COALESCE(t0.c0, -1) AS UNSIGNED)
 18446744073709551615
 DROP TABLE t0;
-CREATE TABLE t1 (a SET('a'), b INT);
+CREATE TABLE t1 (a char(10), b INT);
 INSERT INTO t1 VALUES ('', 0);
 SELECT COALESCE(a) = COALESCE(b) FROM t1;
 COALESCE(a) = COALESCE(b)
 1
 DROP TABLE t1;
-CREATE TABLE t1 ( a INTEGER, b LONGTEXT );
+CREATE TABLE t1 ( a INTEGER, b varchar(255) );
 INSERT INTO t1 VALUES (1,'z');
 INSERT INTO t1 VALUES (2,'y');
 INSERT INTO t1 VALUES (3,'x');
@@ -56,9 +57,9 @@ y
 z
 SELECT MIN(b) AS min_b FROM t1 GROUP BY a ORDER BY COALESCE(min_b, 'a');
 min_b
-z
-y
 x
+y
+z
 SELECT MIN(b) AS min_b FROM t1 GROUP BY a ORDER BY COALESCE(MIN(b), 'a') DESC;
 min_b
 z
@@ -86,11 +87,13 @@ i	c	co
 1111111111111111111	1111111111111111111	1111111111111111111
 CREATE TABLE ot (col_int_nokey int(11), col_varchar_nokey varchar(1));
 INSERT INTO ot VALUES (1,'x');
-CREATE TABLE it (col_int_key int(11), col_varchar_key varchar(1), KEY idx_cvk_cik (col_varchar_key,col_int_key));
+CREATE TABLE it (col_int_key int(11), col_varchar_key varchar(1));
 INSERT INTO it VALUES (NULL,'x'), (NULL,'f');
 SELECT col_int_nokey FROM ot WHERE col_varchar_nokey IN(SELECT col_varchar_key FROM it WHERE coalesce(col_int_nokey, 1) );
 col_int_nokey
 1
+drop table ot;
+drop table it;
 CREATE TABLE ot1(a INT);
 CREATE TABLE ot2(a INT);
 CREATE TABLE ot3(a INT);
@@ -171,15 +174,20 @@ a	a	a
 5	null	null
 6	6	6
 7	null	null
-drop table ot1, ot2, ot3, it1, it2, it3;
-CREATE TABLE t1 (dt2 DATETIME(2), t3 TIME(3), d DATE);
-INSERT INTO t1 VALUES ('2001-01-01 00:00:00.12', '00:00:00.567', '2002-01-01');
+drop table ot1;
+drop table ot2;
+drop table ot3;
+drop table it1;
+drop table it2;
+drop table it3;
+CREATE TABLE t1 (dt2 DATETIME(2), t3 TIMESTAMP, d DATE);
+INSERT INTO t1 VALUES ('2001-01-01 00:00:00.12', '2001-01-01 00:00:00.567', '2002-01-01');
 SELECT distinct COALESCE(dt2, t3) FROM t1;
 COALESCE(dt2, t3)
 2001-01-01 00:00:00.120000000
-SELECT CONCAT(COALESCE(dt2, t3)) FROM t1;
-CONCAT(COALESCE(dt2, t3))
-2001-01-01 00:00:00.120
+SELECT CONCAT_WS(",", COALESCE(dt2, t3)) FROM t1;
+CONCAT_WS(",", COALESCE(dt2, t3))
+2001-01-01 00:00:00.12
 DROP TABLE t1;
 CREATE TABLE t1 (a DATE);
 INSERT INTO t1 VALUES ('2000-01-01');
@@ -248,4 +256,5 @@ SELECT t1.a, t2.a FROM t1 JOIN t2 ON (length(COALESCE(t1.b)) = length(COALESCE(t
 a	a
 3	4
 1	4
-drop table t1, t2;
+drop table t1;
+drop table t2;

@@ -29,7 +29,9 @@ INSERT INTO t1 VALUES(18446744073709551615);
 CREATE TABLE t2 AS
 SELECT CEILING(a) AS c, FLOOR(a) AS f FROM t1;
 SELECT * FROM t2;
-DROP TABLE t1, t2;
+drop table t1;
+drop table t2;
+
 CREATE TABLE t AS SELECT CEILING(18446744073709551615) AS c, FLOOR(18446744073709551615) AS f;
 SELECT * FROM t;
 DROP TABLE t;
@@ -80,7 +82,8 @@ t2
 WHERE
 t1.col1 = t2.col1
 AND t1.col1 = FLOOR(2);
-DROP TABLE t1, t2;
+drop table t1;
+drop table t2;
 
 #INSERT INTO
 CREATE TABLE t1 (a VARCHAR(250), b INT auto_increment, PRIMARY KEY (b));
@@ -99,21 +102,21 @@ insert into t1 (a) select FLOOR(1244.53 * 100) from t1;
 insert into t1 (a) select FLOOR(6604.642222 * 100) from t1;
 insert into t1 (a) select FLOOR(1415.313 * 100) from t1;
 SELECT a,
-(SELECT REPEAT(' ',250) FROM t1 i1
+(SELECT space(250) FROM t1 i1
 WHERE i1.b=t1.a ORDER BY 1 LIMIT 1) AS a
 FROM t1 ORDER BY a LIMIT 5;
 DROP TABLE t1;
 
-#0.5 MO不支持CREATE SELECT
-CREATE TABLE t1(a INT, b INT);
-INSERT INTO t1 (a) VALUES (1), (2);
-CREATE TABLE t2 SELECT * FROM t1;
-SELECT (WITH RECURSIVE dt AS (SELECT t1.a AS a UNION
-SELECT a+1 FROM dt WHERE a<10)
-SELECT t1.a * CONCAT(COUNT(*), '.', FLOOR(AVG(dt.a)))
-FROM dt) AS subq
-FROM t1;
-DROP TABLE t1;
+#0.5 MO不支持CREATE SELECT, 也不支持 WITH RECURSIVE AS
+#CREATE TABLE t1(a INT, b INT);
+#INSERT INTO t1 (a) VALUES (1), (2);
+#CREATE TABLE t2 SELECT * FROM t1;
+#SELECT (WITH RECURSIVE dt AS (SELECT t1.a AS a UNION
+#SELECT a+1 FROM dt WHERE a<10)
+#SELECT t1.a * CONCAT(COUNT(*), '.', FLOOR(AVG(dt.a)))
+#FROM dt) AS subq
+#FROM t1;
+#DROP TABLE t1;
 
 #嵌套
 SELECT DATE(FLOOR(20110512154559.616));
@@ -139,13 +142,13 @@ drop table t1;
 
 
 #ON CONDITION
-drop table if exists t1, t2;
 create table t1(a INT,  b float);
 create table t2(a INT,  b float);
 insert into t1 values(floor(12124.413), floor(-4213.413)), (floor(12124.123), floor(-42413.409));
 insert into t2 values(floor(14124.413), floor(-4213.413)), (floor(984798.123), floor(-980.409));
 SELECT t1.a, t2.a FROM t1 JOIN t2 ON (floor(t1.b) = floor(t2.b));
-drop table t1, t2;
+drop table t1;
+drop table t2;
 
 #HAVING，比较操作
 drop table if exists t1;
@@ -156,11 +159,11 @@ drop table t1;
 
 
 #MO支持的floor是clickhouse语义的，所以可以有两个参数, 以下在MO中运行测试,mysql跑不过
-#select floor(123.342, 1);
-#select floor(123.45, -1);
-#select floor(123.342124124214, 100);
-#select floor(-123.342124124214, -100);
-#select floor(123.342, null);
-#select floor(null, 1);
-#select floor(null, null);
+select floor(123.342, 1);
+select floor(123.45, -1);
+select floor(123.342124124214, 100);
+select floor(-123.342124124214, -100);
+select floor(123.342, null);
+select floor(null, 1);
+select floor(null, null);
 

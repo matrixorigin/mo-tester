@@ -16,6 +16,7 @@ SELECT ADDDATE(TIMESTAMP'2021-01-01 00:00:00', INTERVAL 1 DAY);
 SELECT ADDDATE(TIMESTAMP'2021-01-01 00:00:00', INTERVAL 1 HOUR);
 SELECT DATE(ts) = CURRENT_DATE + INTERVAL '1' DAY AS is_tomorrow, TIME(ts)
 FROM (SELECT ADDDATE(TIME'00:00:00', INTERVAL 1 DAY) AS ts) AS dt;
+
 SELECT ADDDATE(TIME'00:00:00', INTERVAL 1 HOUR);
 SELECT ADDDATE('2021-01-01', INTERVAL 1 DAY);
 SELECT ADDDATE('2021-01-01', INTERVAL 1 HOUR);
@@ -63,12 +64,13 @@ select date_add("1997-12-31",INTERVAL "1 1" YEAR_MONTH);
 
 #函数嵌套
 #0.5暂不支持str_to_date
-SELECT DATE_ADD(str_to_date('9999-12-30 23:59:00','%Y-%m-%d %H:%i:%s'), INTERVAL 1 MINUTE);
+#SELECT DATE_ADD(str_to_date('9999-12-30 23:59:00','%Y-%m-%d %H:%i:%s'), INTERVAL 1 MINUTE);
+
 SELECT extract(week from DATE_ADD('2020-12-30 23:59:00', INTERVAL 1 year));
 
 #不同数据类型
-CREATE TABLE t1 (datetime datetime, timestamp timestamp, date date, time time);
-INSERT INTO t1 values ("2001-01-02 03:04:05", "2002-01-02 03:04:05", "2003-01-02", "06:07:08");
+CREATE TABLE t1 (datetime datetime, timestamp timestamp, date date);
+INSERT INTO t1 values ("2001-01-02 03:04:05", "2002-01-02 03:04:05", "2003-01-02");
 select date_add(datetime, INTERVAL 1 SECOND) from t1;
 select date_add(datetime, INTERVAL 1 YEAR) from t1;
 select date_add(date,INTERVAL 1 SECOND) from t1;
@@ -86,8 +88,15 @@ select date_add(date,INTERVAL "1 1:1" DAY_MINUTE) from t1;
 select date_add(date,INTERVAL "1 1:1:1" DAY_SECOND) from t1;
 select date_add(date,INTERVAL "1" WEEK) from t1;
 select date_add(date,INTERVAL "1" QUARTER) from t1;
-select date_add(time,INTERVAL 1 SECOND) from t1;
 drop table t1;
+
+
+#0.5 doesn't support time
+#CREATE TABLE t1(time time);
+#INSERT INTO t1 values ("06:07:08");
+#select date_add(time,INTERVAL 1 SECOND) from t1;
+#drop table t1;
+
 
 #EXTREME VALUE
 select DATE_ADD('20071108181000', INTERVAL 1 DAY);
@@ -153,7 +162,9 @@ create table t2(a INT,  b date);
 insert into t1 values(1, "2012-10-11"),(2, "2004-04-24"),(3, "2008-12-04"),(4, "2012-03-23");
 insert into t2 values(1, "2011-10-12"),(2, "1994-10-04"),(3, "2018-06-04"),(4, "2012-10-12");
 SELECT t1.a, t2.a FROM t1 JOIN t2 ON (date_add(t1.b, INTERVAL 1 day) = date_add(t2.b, INTERVAL 1 year));
-drop table t1, t2;
+drop table t1;
+drop table t2;
+
 
 
 #HAVING & 算术运算
@@ -162,5 +173,76 @@ create table t1(a INT,  b datetime);
 insert into t1 values(1, "2017-06-15 09:34:21"),(1, "2019-06-25 10:12:21"),(2, "2019-06-25 18:20:49"),(3, "2019-06-25 18:20:49");
 select b from t1 group by b having (date_add(t1.b, INTERVAL 1 day)-date_add(t1.b, INTERVAL 1 hour))>10;
 drop table t1;
+
+
+
+SELECT
+DATE_SUB('2007-08-03', INTERVAL 1 MINUTE) AS field_str1,
+DATE_SUB('2007-08-03 17:33:00', INTERVAL 1 MINUTE) AS field1_str2,
+DATE_SUB(DATE('2007-08-03'), INTERVAL 1 DAY) AS field_date,
+DATE_SUB(CAST('2007-08-03 17:33:00' AS DATETIME), INTERVAL 1 MINUTE) AS field_datetime;
+
+SELECT
+OCT(DATE_SUB('2007-08-03', INTERVAL 1 MINUTE)) AS field_str1,
+OCT(DATE_SUB('2007-08-03 17:33:00', INTERVAL 1 MINUTE)) AS field1_str2,
+OCT(DATE_SUB(DATE('2007-08-03'), INTERVAL 1 DAY)) AS field_date,
+OCT(DATE_SUB(CAST('2007-08-03 17:33:00' AS DATETIME), INTERVAL 1 MINUTE)) AS field_datetime;
+
+select date_sub("1998-01-01 00:00:00.000001",INTERVAL "1 1:1:1.000002" DAY_MICROSECOND);
+select date_sub("1998-01-01 00:00:00.000001",INTERVAL "1:1:1.000002" HOUR_MICROSECOND);
+select date_sub("1998-01-01 00:00:00.000001",INTERVAL "1:1.000002" MINUTE_MICROSECOND);
+select date_sub("1998-01-01 00:00:00.000001",INTERVAL "1.000002" SECOND_MICROSECOND);
+select date_sub("1998-01-01 00:00:00.000001",INTERVAL "000002" MICROSECOND);
+select date_sub("1998-01-01 00:00:00",INTERVAL 1 SECOND);
+select date_sub("1998-01-01 00:00:00",INTERVAL 1 MINUTE);
+select date_sub("1998-01-01 00:00:00",INTERVAL 1 HOUR);
+select date_sub("1998-01-01 00:00:00",INTERVAL 1 DAY);
+select date_sub("1998-01-01 00:00:00",INTERVAL 1 MONTH);
+select date_sub("1998-01-01 00:00:00",INTERVAL 1 YEAR);
+select date_sub("1998-01-01 00:00:00",INTERVAL "1:1" MINUTE_SECOND);
+select date_sub("1998-01-01 00:00:00",INTERVAL "1:1" HOUR_MINUTE);
+select date_sub("1998-01-01 00:00:00",INTERVAL "1:1" DAY_HOUR);
+select date_sub("1998-01-01 00:00:00",INTERVAL "1 1" YEAR_MONTH);
+select date_sub("1998-01-01 00:00:00",INTERVAL "1:1:1" HOUR_SECOND);
+select date_sub("1998-01-01 00:00:00",INTERVAL "1 1:1" DAY_MINUTE);
+select date_sub("1998-01-01 00:00:00",INTERVAL "1 1:1:1" DAY_SECOND);
+select date_sub("0050-01-01 00:00:01",INTERVAL 2 SECOND);
+select date_sub("0199-01-01 00:00:01",INTERVAL 2 SECOND);
+select date_add("0199-12-31 23:59:59",INTERVAL 2 SECOND);
+select date_sub("0200-01-01 00:00:01",INTERVAL 2 SECOND);
+select date_sub("0200-01-01 00:00:01",INTERVAL 1 SECOND);
+select date_sub("0200-01-01 00:00:01",INTERVAL 2 SECOND);
+select date_add("2001-01-01 23:59:59",INTERVAL -2000 YEAR);
+select date_sub("50-01-01 00:00:01",INTERVAL 2 SECOND);
+select date_sub("90-01-01 00:00:01",INTERVAL 2 SECOND);
+select date_sub("0069-01-01 00:00:01",INTERVAL 2 SECOND);
+select date_sub("0169-01-01 00:00:01",INTERVAL 2 SECOND);
+
+
+
+CREATE TABLE t1 (a DATETIME(6));
+INSERT INTO t1 VALUES ('1000-01-01 01:00:00.000000');
+INSERT INTO t1 VALUES ('1000-01-01 01:00:00.000001');
+INSERT INTO t1 VALUES ('2001-01-01 00:00:00.000000');
+INSERT INTO t1 VALUES ('2001-01-01 00:00:00.000001');
+INSERT INTO t1 VALUES ('2001-01-01 01:00:00.000000');
+INSERT INTO t1 VALUES ('2001-01-01 01:00:00.000001');
+SELECT DATE_SUB(a, INTERVAL 1 MINUTE) FROM t1 ORDER BY a;
+SELECT a, DATE_SUB(a, INTERVAL 1.1 SECOND) FROM t1 ORDER BY a;
+SELECT a, DATE_SUB(a, INTERVAL 1.000009 SECOND) FROM t1 ORDER BY a;
+SELECT a, DATE_SUB(a, INTERVAL -0.1 SECOND) FROM t1 ORDER BY a;
+SELECT DATE_SUB(CAST(a AS DATETIME), INTERVAL 1 MINUTE) FROM t1 ORDER BY a;
+SELECT DATE_SUB(CAST(a AS DATETIME), INTERVAL 1 MICROSECOND) FROM t1 ORDER BY a;
+drop table t1;
+
+CREATE TABLE `t2` (
+  `DATE_ADD(a, INTERVAL 1 SECOND)` datetime(6) DEFAULT NULL,
+  `DATE_SUB(a, INTERVAL 1 SECOND)` datetime(6) DEFAULT NULL,
+  `DATE_ADD(CAST(a AS DATETIME), INTERVAL 1 SECOND)` datetime DEFAULT NULL,
+  `DATE_SUB(CAST(a AS DATETIME), INTERVAL 1 SECOND)` datetime DEFAULT NULL,
+  `DATE_ADD(CAST(a AS DATETIME), INTERVAL 1 MICROSECOND)` datetime(6) DEFAULT NULL,
+  `DATE_SUB(CAST(a AS DATETIME), INTERVAL 1 MICROSECOND)` datetime(6) DEFAULT NULL
+);
+DROP TABLE t2;
 
 

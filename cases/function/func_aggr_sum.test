@@ -1,5 +1,4 @@
 #ORDER BY
-#0.5暂不支持ifnull
 CREATE TABLE t (i1 INT,
 d1 DOUBLE,
 e2 DECIMAL(5,2));
@@ -7,7 +6,7 @@ INSERT INTO t VALUES ( 6,    6.0,  10.0/3),
 ( null, 9.0,  10.0/3),
 ( 1,    null, 10.0/3),
 ( 2,    2.0,  null  );
-SELECT IFNULL(e2,i1) nullif_c,
+SELECT coalesce(e2,i1) nullif_c,
 IF(e2 IS NULL,i1,e2) if_c,
 SUM(d1) FROM t
 GROUP BY e2,i1 ORDER BY nullif_c, SUM(d1);
@@ -22,10 +21,11 @@ SELECT t1.a, t2.a FROM t1 JOIN t2
 ON t1.a+t2.a = (SELECT COUNT(*) FROM t1);
 SELECT a + (SELECT SUM(a) + (SELECT COUNT(a) FROM t1) FROM t1) AS cnt
 FROM t2;
-DROP TABLE t1, t2;
+drop table t1;
+drop table t2;
 
 #HAVING
-CREATE TABLE t1 (name char(1) default NULL, val int(5) default NULL);
+CREATE TABLE t1 (name char(1) default NULL, val int default NULL);
 INSERT INTO t1 VALUES ('a',1),  ('a',2),  ('a',2),  ('a',2),  ('a',3),  ('a',6), ('a',7), ('a',11), ('a',11), ('a',12), ('a',13), ('a',13), ('a',20), ('b',2), ('b',3), ('b',4), ('b',5);
 SELECT s.name, AVG(s.val) AS median FROM (SELECT x.name, x.val FROM t1 x, t1 y WHERE x.name=y.name GROUP BY x.name, x.val HAVING SUM(y.val <= x.val) >= COUNT(*)/2 AND SUM(y.val >= x.val) >= COUNT(*)/2) AS s GROUP BY s.name;
 drop table t1;
@@ -60,7 +60,8 @@ GROUP BY a)
 SELECT t2.a, (SELECT MIN(c) FROM cte AS cte2 WHERE t2.d = cte2.b)
 FROM t2 LEFT JOIN cte AS cte1 ON t2.a = cte1.a
 LEFT JOIN t2 AS tx ON tx.e = cte1.c;
-DROP TABLE t1, t2;
+drop table t1;
+drop table t2;
 
 #IF
 create table t1 (num  double(12,2));
@@ -95,7 +96,38 @@ select sum(1)>sum(0);
 
 #EXTRME VALUE
 create table t1(a bigint, b float, c double, d double, e varchar(1000));
-insert into t1 values(21474836471, 12412490231412.124124124124, 124141231249124124.1241241243124123, 12421512141241241241241241849912840129402.1241124124241241, repeat("a",1000));
-insert into t1 values(21474836471, 12412490231412.124124124124, 124141231249124124.1241241243124123, 12421512141241241241241241849912840129402.1241124124241241, repeat("a",1000));
+insert into t1 values(21474836471, 12412490231412.124124124124, 124141231249124124.1241241243124123, 12421512141241241241241241849912840129402.1241124124241241, space(1000));
+insert into t1 values(21474836471, 12412490231412.124124124124, 124141231249124124.1241241243124123, 12421512141241241241241241849912840129402.1241124124241241, space(1000));
 select sum(a), sum(b),sum(c),sum(d),sum(e) from t1;
 drop table t1;
+
+
+
+create table t1 (num float(5,2),user char(20));
+insert into t1 values (10.3,'nem'),(20.53,'monty'),(30.23,'sinisa');
+insert into t1 values (30.13,'nem'),(20.98,'monty'),(10.45,'sinisa');
+insert into t1 values (5.2,'nem'),(8.64,'monty'),(11.12,'sinisa');
+select sum(num) from t1;
+select sum(num) from t1 group by user;
+drop table t1;
+
+
+create table t2 (ff double);
+insert into t2 values (2.2);
+select cast(sum(distinct ff) as decimal(5,2)) from t2;
+select cast(sum(distinct ff) as signed) from t2;
+select cast(variance(ff) as decimal(10,3)) from t2;
+select cast(min(ff) as decimal(5,2)) from t2;
+create table t1 (df decimal(5,1));
+insert into t1 values(1.1);
+insert into t1 values(2.2);
+select cast(sum(distinct df) as signed) from t1;
+select cast(min(df) as signed) from t1;
+select 1e8 * sum(distinct df) from t1;
+select 1e8 * min(df) from t1;
+create table t3 (ifl int);
+insert into t3 values(1), (2);
+select cast(min(ifl) as decimal(5,2)) from t3;
+drop table t1;
+drop table t2;
+drop table t3;
