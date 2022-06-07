@@ -42,13 +42,9 @@ public class Executor {
             return;
         }
 
-
-
-
         //create a database named filename for test;
         String def_db = rsf.getName().substring(0,rsf.getName().indexOf(COMMON.R_FILE_SUFFIX));
         createTestDB(connection,def_db);
-
 
         ResultParser.reset();
         ResultParser.parse(rsf.getPath());
@@ -88,12 +84,13 @@ public class Executor {
                 if (command.isUpdate()) {
                     //if no-query-type statement is executed successfully,do not need check
                     int num = statement.executeUpdate(command.getCommand());
-                    LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"]: row affect: "+num);
+                    //LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"]: row affect: "+num);
                     //but need to get the expected result,to skip the read pos
                     ResultParser.skip(command.getCommand());
-                    LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed successfully");
+                    LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed successfully,row affect: "+num);
                 } else {
                     //if query-type statment is executed successfully,need compare the expected result and the actual result
+                    LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] is being executing");
                     hasResults = statement.execute(command.getCommand());
                     //statement.executeQuery(command.getCommand());
                     act_res = getRS(statement.getResultSet());

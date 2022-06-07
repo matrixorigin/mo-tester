@@ -42,9 +42,6 @@ a	big
 select min(big),max(big),max(big)-1 from t1;
 min(big)	max(big)	max(big)-1
 -1.00000000000	92.23372036855	91.23372036855
-select min(big),avg(big),max(big)-1 from t1 group by a;
-min(big)	avg(big)	max(big)-1
--1.00000000000	34.526466426966667	91.23372036855
 drop table t1;
 create table t1 ( a int not null default 1, big decimal(20,4) primary key);
 insert into t1 (big) values (0),(18446744073), (0xFFFFFE), (184467.13), (184462);
