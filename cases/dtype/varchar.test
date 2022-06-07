@@ -1,7 +1,3 @@
--- @suite                                                                                                                                                                                
--- @case
--- @desc:test for varchar the datatype                                                                                                                                                   
--- @label:bvt  
 drop table if exists t1;
 create table t1 (a varchar(10));
 insert into t1 values('abcdef');
@@ -31,11 +27,11 @@ INSERT INTO Demovarchar VALUES('Rapier', 'Abigail','F',	'Human Resources',38);
 INSERT INTO Demovarchar VALUES('Martin', 'Kelly','F','Information Services',54);
 INSERT INTO Demovarchar VALUES('Poland', 'Carole','F','Production Control',29);
 SELECT * FROM Demovarchar;
-select concat(LastName,FirstName) from Demovarchar where Age > 40;
+select concat(LastName,FirstName) from Demovarchar where Age > 40 order by 1 asc;
 select concat(LastName,FirstName) as fullname from Demovarchar where Age > 40 order by fullname desc;
 select concat(LastName,FirstName),Gender,Age from Demovarchar where Gender='F' order by Age asc;
 select cast(Age as char) as cAge from Demovarchar where cast(Age as char) like '2_';
-select cast(Age as char) and Age as cAge from Demovarchar where Age>=50;
+select cast(Age as char) and Age as cAge from Demovarchar where Age>=50 order by cAge desc;
 CREATE TABLE employees (
   employeeNumber int(11) NOT NULL,
   lastName varchar(50) NOT NULL,
@@ -67,12 +63,12 @@ insert  into employees(employeeNumber,lastName,firstName,extension,email,officeC
 (1504,'Jones','Barry','x102','bjones@classicmodelcars.com','7',1102,'Sales Rep'),                                                                                                        
 (1611,'Fixter','Andy','x101','afixter@classicmodelcars.com','6',1088,'Sales Rep');
 select officeCode,count(officeCode) from employees group by officeCode having count(officeCode)>2;
-select lastName,firstName from employees where cast(officeCode as unsigned)>5;
+select lastName,firstName from employees where cast(officeCode as unsigned)>5 limit 2 offset 1;
 select max(lastName),min(lastName) from employees;
 select max(lastName),min(lastName),JobTitle from employees group by JobTitle;
 select lastName,firstName from employees where lastName>=firstName;
 select lastName,firstName from employees where lastName between firstName and JobTitle;
-select * from employees where officeCode in ('2','3','4');
+select * from employees where officeCode in ('2','3','4') order by 1 asc,3 desc limit 1,2;
 select * from employees where officeCode not in ('5','7','1');
 select avg(officeCode) from employees where jobTitle like 'Sales%' group by jobTitle; 
 select officeCode,sum(cast(officeCode as unsigned)) from employees group by officeCode;

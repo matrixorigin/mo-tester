@@ -48,7 +48,7 @@ Poland	Carole	F	Production Control	29
 Rapier	Abigail	F	Human Resources	38
 Sharma	Bradley	M	Production	27
 Tamburello	Andrea	F	Marketing	45
-select concat(LastName,FirstName) from Demovarchar where Age > 40;
+select concat(LastName,FirstName) from Demovarchar where Age > 40 order by 1 asc;
 concat(LastName,FirstName)
 JohnsonDavid
 MartinKelly
@@ -68,7 +68,7 @@ select cast(Age as char) as cAge from Demovarchar where cast(Age as char) like '
 cAge
 29
 27
-select cast(Age as char) and Age as cAge from Demovarchar where Age>=50;
+select cast(Age as char) and Age as cAge from Demovarchar where Age>=50 order by cAge desc;
 cAge
 1
 1
@@ -106,12 +106,10 @@ select officeCode,count(officeCode) from employees group by officeCode having co
 officeCode	count(officeCode)
 1	6
 4	4
-select lastName,firstName from employees where cast(officeCode as unsigned)>5;
+select lastName,firstName from employees where cast(officeCode as unsigned)>5 limit 2 offset 1;
 lastName	firstName
-Patterson	William
 Bott	Larry
 Jones	Barry
-Fixter	Andy
 select max(lastName),min(lastName) from employees;
 max(lastName)	min(lastName)
 Vanauf	Bondur
@@ -143,16 +141,10 @@ Bow	Anthony
 Hernandez	Gerard
 Jones	Barry
 Fixter	Andy
-select * from employees where officeCode in ('2','3','4');
+select * from employees where officeCode in ('2','3','4') order by 1 asc,3 desc limit 1,2;
 employeeNumber	lastName	firstName	extension	email	officeCode	reportsTo	jobTitle
-1102	Bondur	Gerard	x5408	gbondur@classicmodelcars.com	4	1056	Sale Manager (EMEA)
 1188	Firrelli	Julie	x2173	jfirrelli@classicmodelcars.com	2	1143	Sales Rep
 1216	Patterson	Steve	x4334	spatterson@classicmodelcars.com	2	1143	Sales Rep
-1286	Tseng	Foon Yue	x2248	ftseng@classicmodelcars.com	3	1143	Sales Rep
-1323	Vanauf	George	x4102	gvanauf@classicmodelcars.com	3	1143	Sales Rep
-1337	Bondur	Loui	x6493	lbondur@classicmodelcars.com	4	1102	Sales Rep
-1370	Hernandez	Gerard	x2028	ghernande@classicmodelcars.com	4	1102	Sales Rep
-1401	Castillo	Pamela	x2759	pcastillo@classicmodelcars.com	4	1102	Sales Rep
 select * from employees where officeCode not in ('5','7','1');
 employeeNumber	lastName	firstName	extension	email	officeCode	reportsTo	jobTitle
 1088	Patterson	William	x4871	wpatterson@classicmodelcars.com	6	1056	Sales Manager (APAC)
