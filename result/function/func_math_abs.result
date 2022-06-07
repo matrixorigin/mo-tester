@@ -83,7 +83,8 @@ c0	c1	c2
 SELECT t1.c0, t2.c0 from t1 join t2 on abs(t1.c0) = abs(t2.c0) having abs(t1.c0)>100;
 c0	c0
 342	342
-drop table t1, t2;
+drop table t1;
+drop table t2;
 SELECT abs(10)-abs(-34);
 abs(10)-abs(-34)
 -24

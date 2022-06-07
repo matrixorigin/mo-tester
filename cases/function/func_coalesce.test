@@ -18,7 +18,8 @@ INSERT INTO t2 VALUES (0.0), (9.0);
 SELECT COALESCE(t2.EMPNUM,t1.EMPNUM) AS CEMPNUM,
 t1.EMPNUM AS EMPMUM1, t2.EMPNUM AS EMPNUM2
 FROM t1 LEFT JOIN t2 ON t1.EMPNUM=t2.EMPNUM;
-DROP TABLE t1,t2;
+drop table t1;
+drop table t2;
 
 # 嵌套
 #0.5的IFNULL暂不支持
@@ -31,13 +32,13 @@ SELECT CAST(COALESCE(t0.c0, -1) AS UNSIGNED) FROM t0;
 DROP TABLE t0;
 
 # Comparison
-CREATE TABLE t1 (a SET('a'), b INT);
+CREATE TABLE t1 (a char(10), b INT);
 INSERT INTO t1 VALUES ('', 0);
 SELECT COALESCE(a) = COALESCE(b) FROM t1;
 DROP TABLE t1;
 
 # ORDER BY clause, DATE TYPE
-CREATE TABLE t1 ( a INTEGER, b LONGTEXT );
+CREATE TABLE t1 ( a INTEGER, b varchar(255) );
 INSERT INTO t1 VALUES (1,'z');
 INSERT INTO t1 VALUES (2,'y');
 INSERT INTO t1 VALUES (3,'x');
@@ -62,9 +63,11 @@ select if(1, cast(1111111111111111111 as unsigned), 1) i,case when 1 then cast(1
 # IN Subquery
 CREATE TABLE ot (col_int_nokey int(11), col_varchar_nokey varchar(1));
 INSERT INTO ot VALUES (1,'x');
-CREATE TABLE it (col_int_key int(11), col_varchar_key varchar(1), KEY idx_cvk_cik (col_varchar_key,col_int_key));
+CREATE TABLE it (col_int_key int(11), col_varchar_key varchar(1));
 INSERT INTO it VALUES (NULL,'x'), (NULL,'f');
 SELECT col_int_nokey FROM ot WHERE col_varchar_nokey IN(SELECT col_varchar_key FROM it WHERE coalesce(col_int_nokey, 1) );
+drop table ot;
+drop table it;
 
 #WHERE
 CREATE TABLE ot1(a INT);
@@ -101,13 +104,18 @@ SELECT *
 FROM ot1 LEFT JOIN ot2 ON ot1.a=ot2.a
 LEFT JOIN ot3 ON ot2.a=ot3.a
 WHERE COALESCE(ot3.a,0) IN (SELECT a FROM it3);
-drop table ot1, ot2, ot3, it1, it2, it3;
+drop table ot1;
+drop table ot2;
+drop table ot3;
+drop table it1;
+drop table it2;
+drop table it3;
 
 #DATATYPE, distinct
-CREATE TABLE t1 (dt2 DATETIME(2), t3 TIME(3), d DATE);
-INSERT INTO t1 VALUES ('2001-01-01 00:00:00.12', '00:00:00.567', '2002-01-01');
+CREATE TABLE t1 (dt2 DATETIME(2), t3 TIMESTAMP, d DATE);
+INSERT INTO t1 VALUES ('2001-01-01 00:00:00.12', '2001-01-01 00:00:00.567', '2002-01-01');
 SELECT distinct COALESCE(dt2, t3) FROM t1;
-SELECT CONCAT(COALESCE(dt2, t3)) FROM t1;
+SELECT CONCAT_WS(",", COALESCE(dt2, t3)) FROM t1;
 DROP TABLE t1;
 
 #SELECT 嵌套
@@ -154,4 +162,6 @@ create table t2(a INT,  b varchar(255));
 insert into t1 values(1, "你好"), (3, "再见");
 insert into t2 values(2, "日期时间"), (4, "明天");
 SELECT t1.a, t2.a FROM t1 JOIN t2 ON (length(COALESCE(t1.b)) = length(COALESCE(t2.b)));
-drop table t1, t2;
+drop table t1;
+drop table t2;
+

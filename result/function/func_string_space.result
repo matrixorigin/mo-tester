@@ -6,9 +6,9 @@ insert into t1 values ('string',1);
 select reverse("123"+space(level)+"456") from t1;
 reverse("123"+space(level)+"456")
 975
-select concat(name,space(level)), concat(name, repeat(' ',level)) from t1;
-concat(name,space(level))	concat(name, repeat(' ',level))
-string 	string
+select concat_ws("abc", name,space(level)), concat_ws("abc",name, space(level)) from t1;
+concat_ws("abc", name,space(level))	concat_ws("abc",name, space(level))
+stringabc 	stringabc
 drop table t1;
 create table t1 (a varchar(16383));
 insert t1 values (space(50000));
@@ -16,9 +16,9 @@ select length(a) from t1;
 length(a)
 16383
 drop table t1;
-select repeat('monty',5),concat_ws('*',space(5),'*');
-repeat('monty',5)	concat_ws('*',space(5),'*')
-montymontymontymontymonty	     **
+select space(5),concat_ws('*',space(5),'*');
+space(5)	concat_ws('*',space(5),'*')
+     	     **
 select space(-1);
 space(-1)
 select space(-4294967295);
@@ -108,7 +108,8 @@ a	a
 1	1
 3	3
 4	4
-drop table t1, t2;
+drop table t1;
+drop table t2;
 SELECT space("你好")+"你好";
 space("你好")+"你好"
 0.0

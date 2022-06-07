@@ -5,9 +5,9 @@ select round(5.64,1),round(5.64,2),round(5.64,-1),round(5.64,-2);
 
 #INSERT
 #0.5 MO暂不支持Create select
-create table t1 select round(1, 6);
-select * from t1;
-drop table t1;
+#create table t1 select round(1, 6);
+#select * from t1;
+#drop table t1;
 
 #extreme value
 select round(111,-10);
@@ -40,7 +40,7 @@ DROP TABLE t1;
 
 #嵌套 
 #LEAST函数0.5MO暂时不支持
-SELECT ROUND(LEAST(15, -4939092, 0.2704), STDDEV('a'));
+#SELECT ROUND(LEAST(15, -4939092, 0.2704), STDDEV('a'));
 SELECT ROUND(sin(0.45), cos(0.8));
 
 #extreme value
@@ -53,9 +53,8 @@ select round(999999999999999999.0, -18);
 CREATE TABLE t1 (
 id           VARCHAR(80) NOT NULL PRIMARY KEY,
 sujet        VARCHAR(80),
-motsclefs    TEXT,
-texte        MEDIUMTEXT,
-FULLTEXT(sujet, motsclefs, texte)
+motsclefs    varchar(255),
+texte        varchar(255)
 );
 INSERT INTO t1 VALUES('123','toto','essai','test');
 INSERT INTO t1 VALUES('456','droit','penal','lawyer');
@@ -68,11 +67,14 @@ INSERT INTO t2 VALUES('123', 'moi');
 INSERT INTO t2 VALUES('123', 'lui');
 INSERT INTO t2 VALUES('456', 'lui');
 #match against 0.5 MO暂不支持
-select round(match(t1.texte,t1.sujet,t1.motsclefs) against('droit'),5)
+#select round(match(t1.texte,t1.sujet,t1.motsclefs) against('droit'),5)
+#from t1 left join t2 on t2.id=t1.id;
+#select match(t1.texte,t1.sujet,t1.motsclefs) against('droit' IN BOOLEAN MODE)
+#from t1 left join t2 on t2.id=t1.id;
+select round((length(t1.texte)+length(t1.sujet))/length(t2.author))
 from t1 left join t2 on t2.id=t1.id;
-select match(t1.texte,t1.sujet,t1.motsclefs) against('droit' IN BOOLEAN MODE)
-from t1 left join t2 on t2.id=t1.id;
-drop table t1, t2;
+drop table t1;
+drop table t2;
 
 #嵌套，extreme value, 科学计算
 select round(cast(-2 as unsigned), 1), round(18446744073709551614, 1), round(-2, 1);
@@ -135,27 +137,31 @@ SELECT ROUND(qty,3), dps, ROUND(qty,dps) FROM t1;
 DROP TABLE t1;
 CREATE TABLE t1( a NUMERIC, b INT );
 INSERT INTO t1 VALUES (123456, 40), (123456, 40);
-SELECT TRUNCATE( a, b ) AS c FROM t1 ORDER BY c;
+#SELECT TRUNCATE( a, b ) AS c FROM t1 ORDER BY c;
 SELECT ROUND( a, b ) AS c FROM t1 ORDER BY c;
 SELECT ROUND( a, 100 ) AS c FROM t1 ORDER BY c;
 CREATE TABLE t2( a NUMERIC, b INT );
 INSERT INTO t2 VALUES (123456, 100);
-SELECT TRUNCATE( a, b ) AS c FROM t2 ORDER BY c;
+#SELECT TRUNCATE( a, b ) AS c FROM t2 ORDER BY c;
 SELECT ROUND( a, b ) AS c FROM t2 ORDER BY c;
 CREATE TABLE t3( a DECIMAL, b INT );
 INSERT INTO t3 VALUES (123456, 40), (123456, 40);
-SELECT TRUNCATE( a, b ) AS c FROM t3 ORDER BY c;
+#SELECT TRUNCATE( a, b ) AS c FROM t3 ORDER BY c;
 SELECT ROUND( a, b ) AS c FROM t3 ORDER BY c;
 SELECT ROUND( a, 100 ) AS c FROM t3 ORDER BY c;
 CREATE TABLE t4( a DECIMAL, b INT );
 INSERT INTO t4 VALUES (123456, 40), (123456, 40);
-SELECT TRUNCATE( a, b ) AS c FROM t4 ORDER BY c;
+#SELECT TRUNCATE( a, b ) AS c FROM t4 ORDER BY c;
 SELECT ROUND( a, b ) AS c FROM t4 ORDER BY c;
 SELECT ROUND( a, 100 ) AS c FROM t4 ORDER BY c;
 delete from t1;
 INSERT INTO t1 VALUES (1234567890, 20), (999.99, 5);
 select round(a,b) as c from t1 order by c;
-DROP TABLE t1, t2, t3, t4;
+drop table t1;
+drop table t2;
+drop table t3;
+drop table t4;
+
 CREATE TABLE t1( a DECIMAL(4, 3), b INT );
 INSERT INTO t1 VALUES ( 1, 5 ), ( 2, 4 ), ( 3, 3 ), ( 4, 2 ), ( 5, 1 );
 SELECT a, b, ROUND( a, b ) AS c FROM t1 ORDER BY c;
@@ -178,10 +184,17 @@ CREATE TABLE t6( a INT );
 INSERT INTO t6 VALUES( 6 / 8 );
 SELECT * FROM t6;
 SELECT ROUND(20061108085411.000002);
-DROP TABLE t1, t2, t3, t4, t5, t6;
+drop table t1;
+drop table t2;
+drop table t3;
+drop table t4;
+drop table t5;
+drop table t6;
+
 CREATE TABLE t5(c1 DECIMAL(16,6), c2 tinyint);
 INSERT INTO t5 VALUES(1.1325,3);
-SELECT ROUND(c1,c2),TRUNCATE(c1,c2) FROM t5;
+SELECT ROUND(c1,c2) from t5;
+#select TRUNCATE(c1,c2) FROM t5;
 DROP TABLE t5;
 
 #null 
@@ -198,10 +211,10 @@ select * from t1 where round(a)=12124;
 drop table t1;
 
 #ON CONDITION
-drop table if exists t1, t2;
 create table t1(a INT,  b float);
 create table t2(a INT,  b float);
 insert into t1 values(round(12124.413), round(-4213.413)), (round(12124.123), round(-42413.409));
 insert into t2 values(round(14124.413), round(-4213.413)), (round(984798.123), round(-980.409));
 SELECT t1.a, t2.a FROM t1 JOIN t2 ON (round(t1.b) = round(t2.b));
-drop table t1, t2;
+drop table t1;
+drop table t2;

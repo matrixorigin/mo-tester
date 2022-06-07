@@ -50,7 +50,9 @@ INSERT INTO t2 values(abs(-341.5612), abs(-23413), abs(-14141));
 select * from t1;
 select * from t2;
 SELECT t1.c0, t2.c0 from t1 join t2 on abs(t1.c0) = abs(t2.c0) having abs(t1.c0)>100;
-drop table t1, t2;
+drop table t1;
+drop table t2;
+
 
 
 #算式操作

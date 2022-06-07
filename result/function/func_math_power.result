@@ -73,7 +73,6 @@ a	b
 10.0	100.0
 2.0	5.0
 drop table t1;
-drop table if exists t1, t2;
 create table t1(a INT, b int);
 create table t2(a INT, b int);
 insert into t1 values(2,4), (100,23);
@@ -84,7 +83,8 @@ a	a
 2	10
 100	4
 2	4
-drop table t1, t2;
+drop table t1;
+drop table t2;
 drop table if exists t1;
 create table t1(a float,  b float);
 insert into t1 values(14.3, 4.413), (9.123, 9.409);

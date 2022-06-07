@@ -109,12 +109,13 @@ a	a
 1	1
 3	1
 4	4
-drop table t1, t2;
+drop table t1;
+drop table t2;
 SELECT REVERSE("@($)@($#)_@(#");
 REVERSE("@($)@($#)_@(#")
 #(@_)#$(@)$(@
-SELECT REVERSE(repeat('a', 500)+repeat('b', 600));
-REVERSE(repeat('a', 500)+repeat('b', 600))
+SELECT REVERSE(space(500)+space(600));
+REVERSE(space(500)+space(600))
 0
 SELECT REVERSE(123124);
 REVERSE(123124)

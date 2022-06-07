@@ -142,7 +142,7 @@ eso
 select substring('abc', cast(2 as unsigned int));
 substring('abc', cast(2 as unsigned int))
 bc
-create table t1(f1 longtext);
+create table t1(f1 varchar(255));
 insert into t1 values ("123"),("456");
 select substring(f1,1,1) from t1 group by 1;
 substring(f1,1,1)
@@ -177,15 +177,6 @@ substr(c1, -2147483647, 2147483648)
 SELECT DISTINCT substr(c1, 9223372036854775807, 23) FROM t1;
 substr(c1, 9223372036854775807, 23)
 DROP TABLE t1;
-CREATE TABLE t1 (f1 LONGTEXT , f2  INTEGER);
-INSERT INTO t1 VALUES (REPEAT('a', 500000), 0), (REPEAT('b', 500000), 1), (REPEAT('c', 500000), 2);
-SELECT SUBSTRING(GROUP_CONCAT(DISTINCT f1 ORDER BY f1 DESC), 1, 5) FROM t1;
-SUBSTRING(GROUP_CONCAT(DISTINCT f1 ORDER BY f1 DESC), 1, 5)
-ccccc
-SELECT SUBSTRING(GROUP_CONCAT(DISTINCT UPPER(f1) ORDER BY f1), 1, 5) FROM t1;
-SUBSTRING(GROUP_CONCAT(DISTINCT UPPER(f1) ORDER BY f1), 1, 5)
-AAAAA
-DROP TABLE t1;
 create table t1 (b varchar(5));
 insert t1 values ('ab'), ('abc'), ('abcd'), ('abcde');
 select *,substring(b,1),substring(b,-1),substring(b,-2),substring(b,-3),substring(b,-4),substring(b,-5) from t1;
@@ -201,33 +192,34 @@ abc	abc	c	bc	abc
 abcd	abcd	d	cd	bcd	abcd	
 abcde	abcde	e	de	cde	bcde	abcde
 drop table t1;
-CREATE TABLE t1 (a text, b varchar(10));
-INSERT INTO t1 VALUES (repeat('1', 1300),'one'), (repeat('1', 1300),'two');
-SELECT SUBSTRING(a,1,10), LENGTH(a), GROUP_CONCAT(b) FROM t1 GROUP BY a;
-SUBSTRING(a,1,10)	LENGTH(a)	GROUP_CONCAT(b)
-1111111111	1300	one,two
+CREATE TABLE t1 (a varchar(2000), b varchar(10));
+INSERT INTO t1 VALUES (space(1300),'one'), (space(1300),'two');
+SELECT SUBSTRING(a,1,10), LENGTH(a) FROM t1 GROUP BY a;
+SUBSTRING(a,1,10)	LENGTH(a)
+          	1300
 drop table t1;
 CREATE TABLE t1(a INT);
 INSERT INTO t1 VALUES (0),(0);
-SELECT 1 FROM t1 GROUP BY SUBSTRING('',SLEEP(0),'');
+SELECT 1 FROM t1 GROUP BY SUBSTRING('',1,'');
 1
 1
 drop table t1;
 create table t1 (email varchar(50));
 insert into t1 values ('sasha@mysql.com'),('monty@mysql.com'),('foo@hotmail.com'),('foo@aol.com'),('bar@aol.com');
-create table t2(id int not null auto_increment primary key, t2 varchar(50), unique(t2));
+create table t2(id int not null auto_increment primary key, t2 varchar(50));
 insert into t2 (t2) select distinct substring(email, locate('@', email)+1) from t1;
 select id from t2;
 id
-3
-2
 1
+2
+3
 select t2 from t2;
 t2
-aol.com
-hotmail.com
 mysql.com
-drop table t1,t2;
+hotmail.com
+aol.com
+drop table t1;
+drop table t2;
 create table t1 (a varchar(50));
 insert into t1 value("你好"), ("再见"), ("今天");
 select * from t1;
@@ -278,4 +270,5 @@ abcde	abcd
 abcd	abcd
 abc	abcd
 ab	abcd
-drop table t1, t2;
+drop table t1;
+drop table t2;
