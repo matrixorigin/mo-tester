@@ -33,11 +33,9 @@ CREATE TABLE t1 (a varchar(10), PRIMARY KEY (a));
 CREATE TABLE t2 (a varchar(10), b date, PRIMARY KEY(a));
 INSERT INTO t1 VALUES ('test1');
 INSERT INTO t2 VALUES
-('test1','2016-12-13'),('test1','2016-12-14'),('test1','2016-12-15');
+('test1','2016-12-13'),('test2','2016-12-14'),('test3','2016-12-15');
 SELECT b, b = '20161213',
        CASE b WHEN '20161213' then 'found' ELSE 'not found' END FROM t2;
-
-
 
 -- @case
 -- @desc:test for case_when expression with group by
