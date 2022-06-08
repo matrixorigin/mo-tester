@@ -25,7 +25,7 @@ ts
 drop table t1;
 select utc_timestamp()-utc_timestamp(),weekday(current_timestamp())-weekday(utc_timestamp()),unix_timestamp()-unix_timestamp(utc_timestamp());
 utc_timestamp()-utc_timestamp()	weekday(current_timestamp())-weekday(utc_timestamp())	unix_timestamp()-unix_timestamp(utc_timestamp())
-0	0	-36000
+0	-1	-36000
 CREATE TABLE t1 (a TIMESTAMP);
 INSERT INTO t1 VALUES (utc_timestamp()), (utc_timestamp());
 SELECT 1 FROM t1 ORDER BY 1;
