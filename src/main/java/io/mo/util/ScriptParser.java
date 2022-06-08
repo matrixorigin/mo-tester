@@ -36,15 +36,19 @@ public class ScriptParser {
             SqlCommand command = new SqlCommand();
             String line = lineReader.readLine();
             String trimmedLine = null;
-
+            boolean ignore = false;
             while (line != null) {
                 line = new String(line.getBytes(), "utf-8");
-
                 trimmedLine = line.trim();
 
                 //extract sql commands from the script file
-                //if line is comment or null,ignore
+                //if line is comment or null or mark to ignore flag,ignore
                 if (trimmedLine.equals("") || lineIsComment(trimmedLine)) {
+
+                    if(trimmedLine.startsWith(COMMON.IGNORE_START_FLAG) && COMMON.IGNORE_MODEL)
+                        ignore = true;
+                    if(trimmedLine.startsWith(COMMON.IGNORE_END_FLAG))
+                        ignore = false;
                     line = lineReader.readLine();
                     continue;
                 }
@@ -52,6 +56,7 @@ public class ScriptParser {
                 if(trimmedLine.contains(delimiter) || trimmedLine.equals(delimiter)){
                     command.append(trimmedLine);
                     command.setConn_id(COMMON.CONNECTION_ID);
+                    command.setIgnore(ignore);
                     testScript.addCommand(command);
                     command = new SqlCommand();
                 }else {

@@ -41,7 +41,7 @@ drop table if exists t5;
 drop table if exists t6;
 drop table if exists t7;
 CREATE TABLE `t1` (
-  `numeropost` mediumint(8) unsigned NOT NULL auto_increment,
+  `numeropost` int(8) unsigned NOT NULL auto_increment,
   `maxnumrep` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`numeropost`)
 );
@@ -50,7 +50,7 @@ INSERT INTO t1 (numeropost,maxnumrep) VALUES (40143,1),(43506,2);
 
 CREATE TABLE `t2` (
       `mot` varchar(30) NOT NULL default '',
-      `topic` mediumint(8) unsigned NOT NULL default 0,
+      `topic` int(8) unsigned NOT NULL default 0,
       `dt` date,
       `pseudo` varchar(35) NOT NULL default ''
     );
@@ -63,18 +63,18 @@ drop table if exists t2;
 drop table if exists t3;
 CREATE TABLE `t1` (
   `mot` varchar(30) NOT NULL default '',
-  `topic` mediumint(8) unsigned NOT NULL default 0,
+  `topic` int(8) unsigned NOT NULL default 0,
   `dt` date ,
   `pseudo` varchar(35) NOT NULL default ''
 );
 CREATE TABLE `t2` (
   `mot` varchar(30) character set latin1 NOT NULL default '',
-  `topic` mediumint(8) unsigned NOT NULL default '0',
+  `topic` int(8) unsigned NOT NULL default '0',
   `dt` date,
   `pseudo` varchar(35) character set latin1 NOT NULL default ''
 ) ;
 CREATE TABLE `t3` (
-  `numeropost` mediumint(8) unsigned NOT NULL auto_increment,
+  `numeropost` int(8) unsigned NOT NULL auto_increment,
   `maxnumrep` int(10) unsigned NOT NULL default 0,
   PRIMARY KEY  (`numeropost`)
 );

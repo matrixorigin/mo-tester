@@ -29,14 +29,15 @@ public class Executor {
             LOG.error("No valid connnection,please check the config..");
             //System.exit(1);
         }
+
         boolean hasResults = false;
         Statement statement = null;
+
         //check whether the result file exists
         File rsf = new File(script.getFileName().replaceFirst(COMMON.CASES_PATH,COMMON.RESULT_PATH).replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX));
         System.out.println(rsf.getPath());
         if(!rsf.exists()) {
             LOG.warn("The result of the test script file["+script.getFileName()+"] does not exists,please check....");
-
             //set the execution status of test script to  false
             script.setExecStatus(false);
             return;
@@ -53,13 +54,26 @@ public class Executor {
         long start = System.currentTimeMillis();
 
         for (int j = 0; j < commands.size(); j++) {
-
             SqlCommand command = null;
             String exp_res = null;
             String act_res = null;
 
             try{
                 command = commands.get(j);
+
+                //if the the command is marked to ignore flag and the IGNORE_MODEL = true
+                //skip the command directly
+                if(COMMON.IGNORE_MODEL && command.isIgnore()){
+                    LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] is ignored");
+                    //to skip the read pos in the expected result
+                    ResultParser.skip(command.getCommand());
+                    /*command.getResult().setErrorCode(RESULT.ERROR_CASE_IGNORE_CODE);
+                    command.getResult().setErrorDesc(RESULT.ERROR_CASE_IGNORE_DESC);
+                    command.getResult().setResult(RESULT.RESULT_TYPE_NOEXEC);
+                    script.addNoExecCmd(command);*/
+                    continue;
+                }
+
                 connection = getConnection(command);
                 if(connection == null){
                     LOG.error("No valid connnection,please check the config..");
@@ -84,13 +98,12 @@ public class Executor {
                 if (command.isUpdate()) {
                     //if no-query-type statement is executed successfully,do not need check
                     int num = statement.executeUpdate(command.getCommand());
-                    //LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"]: row affect: "+num);
+                    LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"]: row affect: "+num);
                     //but need to get the expected result,to skip the read pos
                     ResultParser.skip(command.getCommand());
-                    LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed successfully,row affect: "+num);
+                    LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed successfully");
                 } else {
                     //if query-type statment is executed successfully,need compare the expected result and the actual result
-                    LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] is being executing");
                     hasResults = statement.execute(command.getCommand());
                     //statement.executeQuery(command.getCommand());
                     act_res = getRS(statement.getResultSet());

@@ -6,6 +6,7 @@ public class COMMON {
 
     public static String T_FILE_SUFFIX = ".sql";
 
+    public static Boolean IGNORE_MODEL = false;
 
     public static String R_FILE_SUFFIX = ".result";
 
@@ -25,8 +26,11 @@ public class COMMON {
 
     public static String DELIMITER_FLAGE = "-- @delimiter:";
 
-    public static String NEW_SESSION_START_FLAG = "-- @ session";
+    public static String NEW_SESSION_START_FLAG = "-- @session{";
     public static String NEW_SESSION_END_FLAG = "-- session}";
+
+    public static String IGNORE_START_FLAG = "-- @ignore{";
+    public static String IGNORE_END_FLAG = "-- @ignore}";
 
     public static String LOG_PATH = "log";
     public static String RESULT_PATH = "result";

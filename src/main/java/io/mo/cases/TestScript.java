@@ -42,7 +42,13 @@ public class TestScript {
     }
 
     public int getSize(){
-        return  commands.size();
+        int count = 0;
+        for(int i = 0;i < commands.size();i++){
+            if(!commands.get(i).isIgnore())
+                count++;
+        }
+
+        return  count;
     }
 
     public ArrayList<SqlCommand>  getCommands(){

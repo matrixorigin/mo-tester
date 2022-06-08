@@ -201,7 +201,10 @@ public class TestReport {
     public void writeTXTReport(){
         type = type = RunConfUtil.getType();
         if(type.equalsIgnoreCase("script")){
-            rate  = (total_cmd - error_cmd - noexec_cmd)*100/total_cmd;
+            if(total_cmd != 0)
+                rate  = (total_cmd - error_cmd - noexec_cmd)*100/total_cmd;
+            else
+                rate = 0;
             ArrayList<SqlCommand> e_commands = new ArrayList<SqlCommand>();
             try {
                 BufferedWriter r_writer = new BufferedWriter(new FileWriter(COMMON.REPORT_PATH+"/report.txt"));
@@ -286,8 +289,6 @@ public class TestReport {
                 e.printStackTrace();
             }
         }
-
-
     }
 
     public void collect(TestCase _case){
@@ -344,7 +345,10 @@ public class TestReport {
         buffer.append(", ");
         buffer.append("NOEXE :"+noexec);
         buffer.append(", ");
-        buffer.append("SUCCESS RATE : "+(((total - error - noexec)*100/total))+"%\n");
+        if(total != 0)
+            buffer.append("SUCCESS RATE : "+(((total - error - noexec)*100/total))+"%\n");
+        else
+            buffer.append("SUCCESS RATE : 0%\n");
         return buffer.toString();
     }
 

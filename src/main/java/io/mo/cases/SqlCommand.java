@@ -20,6 +20,8 @@ public class SqlCommand {
 
     private boolean update = false;
 
+    private boolean ignore = false;
+
     private int conn_id = 0;
     private String conn_user = null;
     private String conn_pswd = null;
@@ -159,6 +161,14 @@ public class SqlCommand {
 
     public void setResult(TestResult result) {
         this.result = result;
+    }
+
+    public boolean isIgnore() {
+        return ignore;
+    }
+
+    public void setIgnore(boolean ignore) {
+        this.ignore = ignore;
     }
 
     public void print(){

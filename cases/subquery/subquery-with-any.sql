@@ -153,14 +153,14 @@ select 1 from dual where 2 > any (select 1);
 -- @desc:test for [any] subquery with group by and having
 -- @label:bvt
 CREATE TABLE `t1` (
-  `numeropost` mediumint(8) unsigned NOT NULL auto_increment,
+  `numeropost` int(8) unsigned NOT NULL auto_increment,
   `maxnumrep` int(10) unsigned NOT NULL default 0,
   PRIMARY KEY  (`numeropost`)
 )
 INSERT INTO t1 (numeropost,maxnumrep) VALUES (40143,1),(43506,2);
 CREATE TABLE `t2` (
       `mot` varchar(30) NOT NULL default '',
-      `topic` mediumint(8) unsigned NOT NULL default 0,
+      `topic` int(8) unsigned NOT NULL default 0,
       `dt` date,
       `pseudo` varchar(35) NOT NULL default ''
     );

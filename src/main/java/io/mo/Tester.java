@@ -2,6 +2,7 @@ package io.mo;
 
 import io.mo.cases.TestScript;
 import io.mo.cases.TestSuite;
+import io.mo.constant.COMMON;
 import io.mo.db.Debugger;
 import io.mo.db.Executor;
 import io.mo.result.TestReport;
@@ -19,11 +20,61 @@ public class Tester {
 
     private static Logger LOG = Logger.getLogger(Tester.class.getName());
 
+    private static String path = null;
+    private static String method = null;
+    private static String type = null;
+    private static int rate = 100;
+
+    private static String[] includes = null;
+    private static String[] excludes = null;
+
     public static void main(String[] args){
 
-        String path = RunConfUtil.getPath();
-        String method = RunConfUtil.getMethod();
-        String type = RunConfUtil.getType();
+        path = RunConfUtil.getPath();
+        method = RunConfUtil.getMethod();
+        type = RunConfUtil.getType();
+        rate = RunConfUtil.getRate();
+
+        //parse the paras
+        if(args != null){
+            for(int i = 0; i < args.length; i++){
+
+                //get path
+                if(args[i].startsWith("path")){
+                    type = args[i].split("=")[1];
+                }
+
+                //get method
+                if(args[i].startsWith("method")){
+                    method = args[i].split("=")[1];
+                }
+
+                //get type
+                if(args[i].startsWith("type")){
+                    type = args[i].split("=")[1];
+                }
+
+                //get sucess rate
+                if(args[i].startsWith("rate")){
+                    rate = Integer.parseInt(args[i].split("=")[1]);
+                }
+
+                //get ignore
+                if(args[i].equalsIgnoreCase("ignore")){
+                    COMMON.IGNORE_MODEL = true;
+                }
+
+                //get includes
+                if(args[i].startsWith("include")){
+                    includes = args[i].split("=")[1].split(",");
+                }
+
+                //ßget excludes
+                if(args[i].startsWith("exclude")){
+                    excludes = args[i].split("=")[1].split(",");
+                }
+            }
+        }
 
         if(path == null){
             LOG.error("The scripts file path is not configured,pleas check the config file conf/run.yml.");
@@ -55,11 +106,11 @@ public class Tester {
             report.write();
             LOG.info("The test report has been generated in files[report.txt,report.xml].");
 
-            if(report.getRate() < RunConfUtil.getRate()){
-                LOG.error("The execution success rate is "+ report.getRate()+"%,and less than config value "+RunConfUtil.getRate()+"%,this test fail.");
+            if(report.getRate() < rate){
+                LOG.error("The execution success rate is "+ report.getRate()+"%,and less than config value "+rate+"%,this test fail.");
                 System.exit(1);
             }else {
-                LOG.error("The execution success rate is "+ report.getRate()+"%,and not less than config value "+RunConfUtil.getRate()+"%,this test succeed.");
+                LOG.error("The execution success rate is "+ report.getRate()+"%,and not less than config value "+rate+"%,this test succeed.");
                 System.exit(0);
             }
         }
@@ -71,7 +122,7 @@ public class Tester {
         if(method.equalsIgnoreCase("genrs")){
             LOG.info("The method is [genrs],now start to generate the checkpoints in the path["+path+"].");
             generateRs(file);
-            LOG.info("ALL the results in the path["+path+"] have been generated or updated.");
+            //LOG.info("ALL the results in the path["+path+"] have been generated or updated.");
         }
 
         if(!method.equalsIgnoreCase("genrs")&&!method.equalsIgnoreCase("debug")&&!method.equalsIgnoreCase("run")){
@@ -84,21 +135,22 @@ public class Tester {
     public static void run(File file,String type){
         if(file.isFile()){
             if(type.equalsIgnoreCase("script")){
-                ScriptParser.parseScript(file.getPath());
-                TestScript script = ScriptParser.getTestScript();
-                Executor.run(script);
-                report.collect(script);
-                return;
+                if(isInclude(file.getName())) {
+                    ScriptParser.parseScript(file.getPath());
+                    TestScript script = ScriptParser.getTestScript();
+                    Executor.run(script);
+                    report.collect(script);
+                }
             }
 
             if(type.equalsIgnoreCase("suite")){
-                ScriptParser.parseSuite(file.getPath());
-                ArrayList<TestSuite> suites = ScriptParser.getTestSuites();
-                Executor.run(suites,file.getPath());
-                report.collect(suites);
-                return;
+                if(isInclude(file.getName())) {
+                    ScriptParser.parseSuite(file.getPath());
+                    ArrayList<TestSuite> suites = ScriptParser.getTestSuites();
+                    Executor.run(suites, file.getPath());
+                    report.collect(suites);
+                }
             }
-            System.out.println(file.getPath());
             return;
         }
         File[] fs = file.listFiles();
@@ -112,9 +164,12 @@ public class Tester {
 
     public static void generateRs(File file){
         if(file.isFile()){
-            ScriptParser.parseScript(file.getPath());
-            TestScript script = ScriptParser.getTestScript();
-            Executor.genRS(script);
+            if(isInclude(file.getName())) {
+                ScriptParser.parseScript(file.getPath());
+                TestScript script = ScriptParser.getTestScript();
+                Executor.genRS(script);
+                LOG.info("The results for the test script file["+file.getPath()+"] have been generated or updated.");
+            }
             return;
         }
         File[] fs = file.listFiles();
@@ -125,9 +180,11 @@ public class Tester {
 
     public static void debug(File file,String type){
         if(file.isFile()){
-            ScriptParser.parseScript(file.getPath());
-            TestScript script = ScriptParser.getTestScript();
-            Debugger.run(script);
+            if(isInclude(file.getName())) {
+                ScriptParser.parseScript(file.getPath());
+                TestScript script = ScriptParser.getTestScript();
+                Debugger.run(script);
+            }
             return;
         }
         File[] fs = file.listFiles();
@@ -152,5 +209,24 @@ public class Tester {
                 return f1.getName().compareTo(f2.getName());
             }
         });
+    }
+
+    public static boolean isInclude(String name){
+        if(includes == null){
+            if(excludes == null)
+                return true;
+            for(int i = 0; i < excludes.length;i++){
+                if(name.indexOf(excludes[i]) != -1)
+                    return false;
+            }
+            return true;
+        }
+
+        for(int i = 0; i < includes.length;i++){
+            if(name.indexOf(includes[i]) != -1)
+                return true;
+        }
+
+        return false;
     }
 }
