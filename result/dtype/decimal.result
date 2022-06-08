@@ -42,6 +42,9 @@ a	big
 select min(big),max(big),max(big)-1 from t1;
 min(big)	max(big)	max(big)-1
 -1.00000000000	92.23372036855	91.23372036855
+select min(big),avg(big),max(big)-1 from t1 group by a;
+min(big)	avg(big)	max(big)-1
+-1.00000000000	34.526466426966667	91.23372036855
 drop table t1;
 create table t1 ( a int not null default 1, big decimal(20,4) primary key);
 insert into t1 (big) values (0),(18446744073), (0xFFFFFE), (184467.13), (184462);
@@ -63,6 +66,9 @@ a	big
 select min(big),max(big),max(big)-1 from t1;
 min(big)	max(big)	max(big)-1
 0.0000	18446744073.0000	18446744072.0000
+select min(big),count(big),max(big)-1 from t1 group by a;
+min(big)	count(big)	max(big)-1
+0.0000	5	18446744072.0000
 drop table if exists t1;
 drop table if exists t2;
 create table t1 (
@@ -251,16 +257,16 @@ count(*)
 drop table t;
 SELECT CAST(1.00 AS decimal) BETWEEN 1 AND -1;
 CAST(1.00 AS decimal) BETWEEN 1 AND -1
-0
+false
 SELECT CAST(1.00 AS decimal) NOT BETWEEN 1 AND -1;
 CAST(1.00 AS decimal) NOT BETWEEN 1 AND -1
-1
+true
 SELECT CAST(-0 AS decimal) BETWEEN 0 AND -1;
 CAST(-0 AS decimal) BETWEEN 0 AND -1
-0
+false
 SELECT CAST(0 AS decimal) NOT BETWEEN 0 AND -1;
 CAST(0 AS decimal) NOT BETWEEN 0 AND -1
-1
+true
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;

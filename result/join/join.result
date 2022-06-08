@@ -1,12 +1,14 @@
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
 CREATE TABLE t1 (S1 INT);
 CREATE TABLE t2 (S1 INT);
 INSERT INTO t1 VALUES (1),(3),(4),(6);
 INSERT INTO t2 VALUES (2),(4),(5);
 SELECT * FROM t1 JOIN t2 on t1.S1=t2.S1;
-t1.s1	t2.s1
+t1.S1	t2.S1
 4	4
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
 create table t1 (id int);
 create table t2 (id int);
 insert into t1 values (75);
@@ -38,7 +40,8 @@ t1.id	count(t2.id)
 select t1.id,t2.id from t2 join t1 on t1.id=t2.id where t2.id=75;
 t1.id	t2.id
 75	75
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
 CREATE TABLE t1 (
 id int,
 token varchar(100) DEFAULT '' NOT NULL,
@@ -80,7 +83,9 @@ t1.id	catid	stateid	countyid
 27	2	12	11
 28	2	12	11
 29	2	12	25
-drop table if exists t1,t2,t3;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (
 t1_id int default NULL,
 t2_id int default NULL,
@@ -116,17 +121,20 @@ t2_id	name	type
 1	s5	Percent
 1	s5	Percent
 1	s5	Percent
-drop table t1,t2;
+drop table t1;
+drop table t2;
 CREATE TABLE t1 (ID INTEGER NOT NULL PRIMARY KEY, Value1 VARCHAR(255));
 CREATE TABLE t2 (ID INTEGER NOT NULL PRIMARY KEY, Value2 VARCHAR(255));
 INSERT INTO t1 VALUES (1, 'A');
 INSERT INTO t2 VALUES (1, 'B');
 SELECT t1.ID,Value2 FROM t1 JOIN t2 on t1.ID=t2.ID WHERE Value1 = 'A';
-t1.id	value2
+t1.ID	Value2
 1	B
 SELECT t1.ID,Value2 FROM t1 JOIN t2 on t1.ID=t2.ID WHERE Value1 = 'A' and Value2 <> 'B';
-t1.id	value2
-drop table if exists t1,t2,t3;
+t1.ID	Value2
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (a int);
 CREATE TABLE t2 (b int);
 CREATE TABLE t3 (c int);
@@ -136,7 +144,7 @@ insert into t3 values(1),(1),(3),(4),(7);
 select a,b,c from t1 join t2 on t1.a=t2.b join t3 on t1.a=t3.c where a>1;
 a	b	c
 3	3	3
-DROP TABLE if exists t1, t2, t3;
+ t2, t3;
 create table t1 (i int);
 create table t2 (i int);
 create table t3 (i int);
@@ -146,7 +154,12 @@ insert into t3 values (2),(4);
 select t3.i from t1 join t2 on t1.i=t2.i join t3 on t2.i=t3.i;
 t3.i
 2
-DROP TABLE if exists t1,t2,t3,t4,t5,t6;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
+drop table if exists t4;
+drop table if exists t5;
+drop table if exists t6;
 create table t1 (c int, b int);
 create table t2 (a int, b int);
 create table t3 (b int, c int);
@@ -165,7 +178,7 @@ insert into t5 values (11,4);
 insert into t6 values (2, 3);
 select distinct a,t1.b,t3.c from t1 join t2 on t1.b=t2.b join t3 on t1.b=t3.c;
 a	t1.b	t3.c
-drop table if exists t1,t2,t3,t4;
+t2,t3,t4;
 create table t1 (a1 int, a2 int);
 create table t2 (a1 int, b int);
 create table t3 (c1 int, c2 int);

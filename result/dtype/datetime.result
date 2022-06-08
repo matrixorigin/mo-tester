@@ -208,16 +208,16 @@ a
 drop table t1;
 SELECT CAST(20220101 AS datetime) BETWEEN 20220101 AND -1;
 CAST(20220101 AS datetime) BETWEEN 20220101 AND -1
-0
+false
 SELECT CAST(00000501 AS datetime) NOT BETWEEN 100 AND -1;
 CAST(00000501 AS datetime) NOT BETWEEN 100 AND -1
-1
+true
 SELECT CAST(0 AS datetime) BETWEEN 0 AND -1;
 CAST(0 AS datetime) BETWEEN 0 AND -1
 NULL
 SELECT CAST(1000101 as datetime) BETWEEN '1000-01-01' and '1000-01-02';
 CAST(1000101 as datetime) BETWEEN '1000-01-01' and '1000-01-02'
-0
+false
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
