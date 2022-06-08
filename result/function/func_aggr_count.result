@@ -1,7 +1,7 @@
 SELECT COUNT(NULL);
 COUNT(NULL)
 0
-create table t1(a tinyint, b SMALLINT, c MEDIUMINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, k datetime, l TIMESTAMP, m char(255), n varchar(255));
+create table t1(a tinyint, b SMALLINT, c bigint, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, k datetime, l TIMESTAMP, m char(255), n varchar(255));
 insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
 insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
 insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
@@ -20,9 +20,9 @@ count(*)
 4
 drop table t1;
 CREATE TABLE t1 (
-bug_id mediumint(9) NOT NULL,
+bug_id bigint(9) NOT NULL,
 groupset bigint(20) DEFAULT '0' NOT NULL,
-assigned_to mediumint(9) DEFAULT '0' NOT NULL,
+assigned_to bigint(9) DEFAULT '0' NOT NULL,
 bug_file_loc varchar(255)
 );
 CREATE TABLE t2 (

@@ -296,7 +296,7 @@ YEAR(c1)
 DROP TABLE t3;
 SELECT date(now()) = date(utc_timestamp());
 date(now()) = date(utc_timestamp())
-1
+0
 drop table if exists t1;
 create table t1(a date);
 insert into t1 values(DATE("2017-06-15 09:34:21")),(DATE("2019-06-25 10:12:21")),(DATE("2019-06-25 18:20:49"));
