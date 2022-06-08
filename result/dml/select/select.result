@@ -222,14 +222,6 @@ insert into tbl_01 values (2,3,"c");
 insert into tbl_01 values (3,4,"E");
 insert into tbl_01 values (3,5,"C");
 insert into tbl_01 values (3,6,"D");
-select a,c,sum(a) from tbl_01 group by a;
-a	c	sum(a)
-1	a	1
-2	b	2
-3	c	3
-4	E	4
-5	C	5
-6	D	6
 drop table if exists t1;
 drop table if exists t2;
 create table t1 (id int primary key);
@@ -247,7 +239,7 @@ insert into t1 values (106);
 insert into t1 values (107);
 insert into t2 values (107),(75),(1000);
 select t1.id, count(t2.id) from t1,t2 where t2.id = t1.id group by t1.id order by t1.id desc;
-t1.id	count(t2.id)
+id	count(t2.id)
 107	1
 75	1
 drop table t1;
@@ -342,8 +334,6 @@ create table t1 (a int, b int);
 insert into t1 values(10,null);
 create table t2 (c int, d int);
 insert into t2 values(20,null);
-select * from t1 join t2 on a=c group by a order by a;
-a	b	c	d
 drop table if exists t1;
 CREATE TABLE t1 (a int  default null, b varchar(16) default null, c datetime DEFAULT null);
 INSERT INTO t1(a, c) values (1,"2003-01-14 03:54:55");
