@@ -110,7 +110,7 @@ select * from t1;
 decimal20
 0.000000000000000000
 0.000000000000000001
-DROP TABLE t1;
+drop table t1;
 create table t1 (decimal_col decimal(29,0));
 insert into t1 values (-17666000000000000000);
 select * from t1 where decimal_col=-17666000000000000000 order by 1 asc;
@@ -214,7 +214,7 @@ id
 SELECT * from t_decimal WHERE id BETWEEN '1.1e0' AND '1.9e0';
 id
 1.10000
-DROP TABLE t1;
+drop table t1;
 CREATE TABLE t1 (a decimal(2,1));
 INSERT INTO t1 VALUES (1),(0.8999),(0.9);
 SELECT * FROM t1 WHERE coalesce(a) BETWEEN 0 and 0.9;
@@ -241,7 +241,7 @@ SELECT * FROM t1 WHERE a IN (0.8,0.9);
 a
 0.9
 0.9
-DROP TABLE t1;
+drop table t1;
 create table t (id decimal(23,3) unsigned, b int);
 insert into t values(889475494977969.3574,1);
 insert into t values(889475494977969.3579,2);
@@ -450,7 +450,8 @@ update t1 set a=a+(a MOD 2) where a is null;
 select * from t1;
 a
 0.00000
-DROP TABLE if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
 CREATE TABLE t1 (
 a decimal
 );
@@ -516,7 +517,10 @@ update t1,(select * from (select * from (select id,ti,si,de from (select * from 
 select max(id) from t1;
 max(id)
 34
-DROP TABLE IF EXISTS t1,t2,t3,t4;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
+drop table if exists t4;
 create table t1 (a decimal);
 create table t2 (a decimal, b int);
 create table t3 (a decimal);
@@ -645,7 +649,8 @@ delete t1 from t1 where a is null;
 select * from t1;
 a
 0.00000
-DROP TABLE if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
 CREATE TABLE t1 (
 a decimal
 );
@@ -687,7 +692,10 @@ select id from t1;
 id
 1
 2
-DROP TABLE IF EXISTS t1,t2,t3,t4;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
+drop table if exists t4;
 create table t3 (a decimal);
 create table t4 (a decimal(10,5) not null, b decimal not null);
 insert into t4 values (4,8.0000),(3,8.00001),(5,9);

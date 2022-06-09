@@ -1,3 +1,9 @@
+-- @suite                                                                                                                                                                                
+-- @case
+-- @desc:test for decimal datatype
+-- @label:bvt
+
+#Test cases of query without table, cast and interval included
 select cast('2000-01-01 00:00:00' as datetime);
 select cast('2000-01-01 00:00:00.0011' as datetime );
 select cast('2000-01-01 00:00:00.9011' as datetime );
@@ -19,6 +25,8 @@ SELECT DATE_ADD('2022-02-28 23:59:59.9999', INTERVAL -13 MONTH) '1 month earlier
 SELECT DATE_ADD('2022-02-28 23:59:59.9999', INTERVAL -1 YEAR) '1 year earlier';
 select cast(cast('2000-12-31' as date) as datetime);
 select cast(cast('2000-12-31' as datetime) as date);
+
+#Test cases of query with single table
 drop table if exists t1;
 create table t1 (a datetime  not null, primary key(a));
 insert into t1 values (20200101000000), ('2022-01-02'), ('2022-01-02 00:00:01'), ('2022-01-02 00:00:01.512345');
@@ -40,6 +48,8 @@ drop table t1;
 create table t1 (id datetime(6) not null default "2022-01-31 00:00:00.0000006", a int, primary key (a));
 insert into t1(a) values(1);
 select * from t1;
+
+#Test cases of query with multi tables
 drop table if exists t1;
 drop table if exists t2;
 create table t1 (
@@ -61,6 +71,8 @@ select * from t1;
 select * from t2;
 select * from t1 join t2 on t1.dt=t2.dt order by 1 desc, t2.dt asc;
 select * from t1 join t2 on t1.dt=t2.dt where t1.value32<>t2.value32;
+
+#Test cases of query with operators
 drop table if exists t1;
 drop table if exists t2;
 CREATE TABLE t_datetime(id datetime(6));
@@ -90,6 +102,8 @@ SELECT CAST(20220101 AS datetime) BETWEEN 20220101 AND -1;
 SELECT CAST(00000501 AS datetime) NOT BETWEEN 100 AND -1;
 SELECT CAST(0 AS datetime) BETWEEN 0 AND -1;
 SELECT CAST(1000101 as datetime) BETWEEN '1000-01-01' and '1000-01-02';
+
+#Test cases of update with single table
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -122,6 +136,8 @@ insert into t1 values (20220101,'apple'),('2022-01-02','apple');
 select * from t1;
 update t1, t1 as t2 set t1.a=t1.a+1*5 where t1.b = t2.b and t1.a > t2.a;
 select * from t1;
+
+#Test cases of update with multi tables
 drop table if exists t11;
 drop table if exists t12;
 drop table if exists t2;
@@ -210,6 +226,8 @@ insert into t3 values ('2022-01-03 01:00:00.00000'),(20220105);
 update t3,t2,t1 set t2.a=t3.a where t3.a in (select a from t4 where b > 8);
 select * from t1;
 select * from t2;
+
+#Test cases of delete with single table
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -240,6 +258,8 @@ select * from t1;
 delete t1 from t1,t1 as t2 where t1.b = t2.b and t1.a > t2.a;
 select * from t1;
 drop table t1;
+
+#Test cases of delete with multi tables
 create table t11 (a datetime(6) NOT NULL, b int, primary key (a));
 create table t12 (a datetime(6) NOT NULL, b int, primary key (a));
 create table t2 (a datetime(6) NOT NULL, b int, primary key (a));

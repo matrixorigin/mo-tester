@@ -1,3 +1,9 @@
+-- @suite                                                                                                                                                                                
+-- @case
+-- @desc:test for smallint datatype
+-- @label:bvt
+
+#Test cases of query with single table
 create table t1 (a smallint unsigned not null, primary key(a));
 insert into t1 values (65535), (0xFFFC), (65534), (65533);
 select * from t1;
@@ -23,6 +29,8 @@ create table t1 (id smallint, a smallint primary key);
 insert into t1 values (1,1);
 select * from t1;
 select * from t1 limit 9999;
+
+#Test cases of query with multi tables
 drop table if exists t1;
 drop table if exists t2;
 create table t1 (
@@ -57,6 +65,8 @@ insert into t1 values (65500);
 select * from t1 where smallint_col=65500;
 select * from t1 where smallint_col='65500';
 drop table t1;
+
+#Test cases of cast and operators
 select cast(65500 as unsigned) mod 50 as result;
 select cast(32767 as signed);
 select cast(-32768 as signed);
@@ -119,6 +129,8 @@ SELECT ( 32767 BETWEEN 65535 AND 1 );
 SELECT ( -1 BETWEEN 65535 AND 1 );
 SELECT ( 0 BETWEEN 65535 AND 1 );
 SELECT ( 1 BETWEEN 65535 AND 1 );
+
+#Test cases of update with single table
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -159,6 +171,8 @@ insert into t1 (b) values ('apple'), ('apple');
 select * from t1;
 update t1, t1 as t2 set t1.a=t1.a*2 where t1.b = t2.b and t1.a > t2.a;
 select * from t1;
+
+#Test cases of update with multi tables
 drop table t1;
 create table t11 (a smallint NOT NULL, b int, primary key (a));
 create table t12 (a smallint NOT NULL, b int, primary key (a));
@@ -263,6 +277,9 @@ insert into t3 values (100),(8);
 update t3,t2,t1 set t1.a=0 and t2.a=t2.a+t3.a where t3.a in (select b from t4 where b > 7);
 select * from t1;
 select * from t2;
+
+
+#Test cases of delete with single table
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -304,6 +321,8 @@ select * from t1;
 delete t1 from t1,t1 as t2 where t1.b = t2.b and t1.a > t2.a;
 select * from t1;
 drop table t1;
+
+#Test cases of delete with multi tables
 create table t11 (a smallint NOT NULL, b int, primary key (a));
 create table t12 (a smallint NOT NULL, b int, primary key (a));
 create table t2 (a smallint NOT NULL, b int, primary key (a));

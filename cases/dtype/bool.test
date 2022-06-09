@@ -1,7 +1,9 @@
 -- @suite                                                                                                                                                                                
 -- @case
--- @desc:test for boolean the datatype
+-- @desc:test for boolean datatype
 -- @label:bvt
+
+#Test cases of basic action
 DROP TABLE IF EXISTS t1;
 create table t1 (a boolean,b bool);
 insert into t1 values (0,1),(true,false),(true,1),(0,false),(NULL,NULL);
@@ -28,6 +30,8 @@ select max(b) from t1;
 select min(a) from t1;
 select max(b)<min(a) from t1;
 select distinct a from t1 where a=true;
+
+#Test cases of IS opertors
 select * from t1 where a IS NULL;
 select * from t1 where b is NOT NULL;
 select * from t1 where a IS NULL and b is NOT NULL;
@@ -35,6 +39,8 @@ select * from t1 where a>b order by a asc;
 select * from t2 where a<1 AND NOT b order by b desc;
 select b,max(b) from t1 where b is not NULL group by b order by b;
 select * from t1 where a<=b and a is not NULL;
+
+#Test cases of multi tables 
 select t1.a,t2.b from t1 join t2 on t1.a=t2.a order by t1.a desc;
 select a,count(a) from t1 group by a having count(a)>1; 
 select a,any_value(b) from t1 group by a order by a asc;
@@ -42,6 +48,8 @@ select a,b from t1 where a in (0,1);
 select a,b from t1 where a not in (0,2);
 select distinct t.a from (select * from t1) t where a not in (2) order by t.a asc;
 select a and b from t1 where exists (select a from t1 where a is null) order by a desc;
+
+#Test cases of update and delete
 update t1 set a=false where b is null;
 update t1,t2 set t1.b=1 where t1.a=t2.a;
 delete from t1 where a=false;

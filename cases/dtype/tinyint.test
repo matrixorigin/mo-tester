@@ -1,3 +1,9 @@
+-- @suite                                                                                                                                                                                
+-- @case
+-- @desc:test for tinyint datatype
+-- @label:bvt
+
+#Test cases of query with single tables
 create table t1 (a tinyint unsigned not null, primary key(a));
 insert into t1 values (255), (0xFC), (254), (253);
 select * from t1;
@@ -23,6 +29,8 @@ create table t1 (id tinyint primary key, a tinyint);
 insert into t1 values (1,1);
 select * from t1;
 select * from t1 limit 99;
+
+#Test cases of query with multi tables
 drop table if exists t1;
 drop table if exists t2;
 create table t1 (
@@ -57,6 +65,8 @@ insert into t1 values (250);
 select * from t1 where tinyint_col=250;
 select * from t1 where tinyint_col='250';
 drop table t1;
+
+#Test cases of query with operators
 select cast(250 as unsigned) mod 50 as result;
 select cast(127 as signed);
 select cast(-128 as signed);
@@ -119,6 +129,8 @@ SELECT ( 127 BETWEEN 255 AND 1 );
 SELECT ( -1 BETWEEN 255 AND 1 );
 SELECT ( 0 BETWEEN 255 AND 1 );
 SELECT ( 1 BETWEEN 255 AND 1 );
+
+#Test cases of update with single table
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -160,6 +172,8 @@ select * from t1;
 update t1, t1 as t2 set t1.a=t1.a*2 where t1.b = t2.b and t1.a > t2.a;
 select * from t1;
 drop table t1;
+
+#Test cases of update with multi tables
 create table t11 (a tinyint NOT NULL, b int, primary key (a));
 create table t12 (a tinyint NOT NULL, b int, primary key (a));
 create table t2 (a tinyint NOT NULL, b int, primary key (a));
@@ -263,6 +277,8 @@ insert into t3 values (100),(8);
 update t3,t2,t1 set t1.a=0 and t2.a=t2.a+t3.a where t3.a in (select b from t4 where b > 7);
 select * from t1;
 select * from t2;
+
+#Test cases of delte with single table
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -304,6 +320,8 @@ select * from t1;
 delete t1 from t1,t1 as t2 where t1.b = t2.b and t1.a > t2.a;
 select * from t1;
 drop table t1;
+
+#Test cases of delete with multi tables
 create table t11 (a tinyint NOT NULL, b int, primary key (a));
 create table t12 (a tinyint NOT NULL, b int, primary key (a));
 create table t2 (a tinyint NOT NULL, b int, primary key (a));
