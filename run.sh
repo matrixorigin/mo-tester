@@ -43,6 +43,7 @@ do
         echo -e "   -r  set The success rate that test cases should reach"
         echo -e "   -i  set the including list, and only script files in the path which name contain one of the list will be excuted,if more than one,seperated by ,"
         echo -e "   -e  set the excluding list, and script files in the path which name contain one of the list will not be excuted,if more than one,seperated by ,"
+        echo -e "   -g  means SQL commands which is marked with ignore-flag will not be executed"
         echo -e "Examples:"
         echo "   bash run.sh -p case -m run -t script -r 100 -i select,subquery -e substring -g"
         echo "For more support,please email to dong.su@matrixorigin.io"

@@ -41,7 +41,7 @@ public class Tester {
 
                 //get path
                 if(args[i].startsWith("path")){
-                    type = args[i].split("=")[1];
+                    path = args[i].split("=")[1];
                 }
 
                 //get method

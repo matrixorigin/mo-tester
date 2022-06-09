@@ -31,6 +31,7 @@ public class ResultParser {
                 buffer.append(line);
                 buffer.append("\n");
                 if(buffer.indexOf(cmd) != -1 && !cmd_deleted && !skip){
+                    LOG.info("##########"+line);
                     buffer.delete(0,buffer.length());
                     cmd_deleted = true;
                 }

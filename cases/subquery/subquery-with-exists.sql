@@ -82,8 +82,10 @@ INSERT INTO t1 VALUES ('joce','1',null,'joce'),('test','2',null,'test');
 INSERT INTO t2 VALUES ('joce','1',null,'joce'),('test','2',null,'test');
 INSERT INTO t3 VALUES (1,1);
 SELECT DISTINCT topic FROM t2 WHERE NOT EXISTS(SELECT * FROM t3 WHERE numeropost=topic);
+-- @ignore{
 DELETE FROM t1 WHERE topic IN (SELECT DISTINCT topic FROM t2 WHERE NOT EXISTS(SELECT * FROM t3 WHERE numeropost=topic));
 select * from t1;
+-- @ignore}
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;

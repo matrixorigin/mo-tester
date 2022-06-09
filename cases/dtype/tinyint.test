@@ -2,8 +2,10 @@ create table t1 (a tinyint unsigned not null, primary key(a));
 insert into t1 values (255), (0xFC), (254), (253);
 select * from t1;
 select * from t1 where a=255;
+-- @ignore{
 delete from t1 where a=255;
 select * from t1;
+-- @ignore}
 drop table t1;
 create table t1 ( a tinyint not null default 1, tinyint8 tinyint primary key);
 insert into t1 (tinyint8) values (-1),(127),(-128);
@@ -68,8 +70,10 @@ INSERT INTO t1 (a) VALUES
 (CAST(0x7F AS UNSIGNED)),
 (CAST(0x80 AS UNSIGNED)),
 (CAST(0xFF AS UNSIGNED));
+-- @ignore{
 UPDATE t1 SET b = a;
 select * from t1 where ((a = 255) and (b = '255')) order by 1 desc, 2 asc;
+-- @ignore}
 CREATE TABLE t_tinyint(id TINYINT);
 INSERT INTO t_tinyint VALUES (1), (2);
 SELECT id, id >= 1.1 FROM t_tinyint;
@@ -126,11 +130,13 @@ drop table if exists t11;
 drop table if exists t12;
 CREATE TABLE t1 (a tinyint(3), b tinyint(5) primary key);
 INSERT INTO t1 VALUES (1,1),(1,2);
+-- @ignore{
 update t1 set a=2 where a=1 limit 1;
 select * from t1;
 INSERT INTO t1 VALUES (1,3);
 update t1 set a=2 where a=1;
 select * from t1;
+-- @ignore}
 drop table t1;
 create table t1 (
 a tinyint not null,
@@ -145,6 +151,7 @@ i tinyint not null default 0,
 j tinyint not null default 0,
 primary key (a));
 insert into t1 (a) values (2),(4),(6),(8),(10),(12),(14),(16),(18),(20),(22),(24),(26),(23);
+-- @ignore{
 update t1 set a=a+101;
 select a,b from t1;
 update t1 set a=127 where a=25;
@@ -153,12 +160,15 @@ update t1 set a=a-1 where 1 > 2;
 select a,b from t1;
 update t1 set a=a-1 where 3 > 2;
 select a,b from t1;
+-- @ignore}
 drop table t1;
 create table t1 (a tinyint not null auto_increment primary key, b char(32));
 insert into t1 (b) values ('apple'), ('apple');
 select * from t1;
+-- @ignore{
 update t1, t1 as t2 set t1.a=t1.a*2 where t1.b = t2.b and t1.a > t2.a;
 select * from t1;
+-- @ignore}
 drop table t1;
 create table t11 (a tinyint NOT NULL, b int, primary key (a));
 create table t12 (a tinyint NOT NULL, b int, primary key (a));
@@ -166,25 +176,31 @@ create table t2 (a tinyint NOT NULL, b int, primary key (a));
 insert into t11 values (0, 10),(1, 11),(2, 12);
 insert into t12 values (33, 10),(0, 11),(2, 12);
 insert into t2 values (0, 21),(1, 12),(3, 23);
+-- @ignore{
 update t12 join t11 on t11.a = t12.a set t11.a=t12.a where t11.b <> (select b from t2 where t11.a = t2.a);
 select * from t11;
 select * from t12;
 update t11,t12 set t11.a=t11.a+t11.b where t11.b <> (select b from t2 where t11.a = t2.a);
 select * from t11;
+-- @ignore}
 drop table if exists t1;
 drop table if exists t2;
 CREATE TABLE t1(a tinyint PRIMARY KEY);
 INSERT INTO t1 VALUES(10),(20);
 CREATE TABLE t2(b tinyint);
 INSERT INTO t2 VALUES(10),(20);
+-- @ignore{
 update t1 JOIN t2 on t1.a=t2.b set t1.a=5 WHERE t1.a = 10;
 select * from t1;
 select * from t2;
+-- @ignore}
 drop table t1;
 CREATE TABLE t1 ( a tinyint PRIMARY KEY );
 INSERT INTO t1 VALUES (0),(1),(2);
+-- @ignore{
 update t1 set a=a*10%3 WHERE t1.a > 0 ORDER BY t1.a LIMIT 1;
 SELECT * FROM t1;
+-- @ignore}
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -194,13 +210,17 @@ CREATE TABLE t3 (a tinyint not null,b tinyint not null, primary key (a));
 insert into t1 values (1,1),(2,1),(4,3);
 insert into t2 values (1,1),(2,2),(3,3);
 insert into t3 values (1,1),(2,1),(4,3);
+-- @ignore{
 update t1 join t2 on t1.a=t2.a join t3 on t1.b=t3.b set t1.a=((t3.a*5) DIV 5) where t1.a=t2.a AND t2.b=t3.a and t1.b=t3.b;
 select * from t1;
+-- @ignore}
 drop table t1;
 create table t1(a tinyint not null);
 insert into t1 values (0);
+-- @ignore{
 update t1 set a=a+(a MOD 2) where a is null;
 select * from t1;
+-- @ignore}
 drop table if exists t1;
 drop table if exists t2;
 CREATE TABLE t1 (
@@ -211,8 +231,10 @@ a tinyint
 );
 insert into t1 values(1),(2),(3),(4),(5);
 insert into t2 values(1),(3),(5),(7),(9);
+-- @ignore{
 update t1 join t2 alias on t1.a=alias.a set alias.a=t1.a*3 WHERE t1.a = alias.a;
 select * from t1;
+-- @ignore}
 drop table if exists t1;
 drop table if exists t2;
 create table t1 (id tinyint,ti tinyint unsigned,si tinyint,bi tinyint unsigned,fl float,dl double,de decimal,ch char(20),vch varchar(20),dd date,dt datetime);
@@ -225,8 +247,10 @@ insert into t1 values(6,3,2,1,632.1,6321,632.11,'good night','maybe subquery','2
 insert into t1 values(7,4,4,3,7443.11,744311,7443.11,'yes','subquery','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values(8,7,5,8,8758.00,875800,8758.11,'nice to meet','just subquery','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values(9,8,4,9,9849.312,9849312,9849.312,'see you','subquery','2022-04-28','2022-04-28 22:40:11');
+-- @ignore{
 update t1 sub set sub.id=id-99 where id > 4;
 select count(*) from t1 where id>4;
+-- @ignore}
 drop table if exists t1;
 create table t1 (id tinyint,ti tinyint unsigned,si tinyint,bi tinyint unsigned,fl float,dl double,de decimal,ch char(20),vch varchar(20),dd date,dt datetime);
 insert into t1 values(1,1,4,3,1113.32,111332,1113.32,'hello','subquery','2022-04-28','2022-04-28 22:40:11');
@@ -238,16 +262,20 @@ insert into t1 values(6,3,2,1,632.1,6321,632.11,'good night','maybe subquery','2
 insert into t1 values(7,4,4,3,7443.11,744311,7443.11,'yes','subquery','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values(8,7,5,8,8758.00,875800,8758.11,'nice to meet','just subquery','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values(9,8,4,9,9849.312,9849312,9849.312,'see you','subquery','2022-04-28','2022-04-28 22:40:11');
+-- @ignore{
 update t1 sub set sub.id=sub.id%4+sub.id where id < 4 || id > 5;
 select * from t1 order by id+ti asc;
+-- @ignore}
 drop table if exists t1;
 create table t1 (id tinyint,ti tinyint unsigned,si tinyint,bi tinyint unsigned,fl float,dl double,de decimal,ch char(20),vch varchar(20),dd date,dt datetime);
 insert into t1 values(1,1,4,3,1113.32,111332,1113.32,'hello','subquery','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values(2,2,5,2,2252.05,225205,2252.05,'bye','sub query','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values(3,6,6,3,3663.21,366321,3663.21,'hi','subquery','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values(4,7,1,5,4715.22,471522,4715.22,'good morning','my subquery','2022-04-28','2022-04-28 22:40:11');
+-- @ignore{
 update t1,(select * from (select * from (select id,ti,si,de from (select * from t1 ) sub3 where fl <> 4.5 ) sub2 where ti > 1) sub1 where id >2 ) sub set t1.id=sub.id*10+t1.id where t1.id = 4;
 select max(id) from t1;
+-- @ignore}
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -260,9 +288,11 @@ insert into t1 values (2);
 insert into t2 values (1,7),(2,7);
 insert into t4 values (4,8),(3,8),(5,9);
 insert into t3 values (100),(8);
+-- @ignore{
 update t3,t2,t1 set t1.a=0 and t2.a=t2.a+t3.a where t3.a in (select b from t4 where b > 7);
 select * from t1;
 select * from t2;
+-- @ignore}
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -270,11 +300,13 @@ drop table if exists t11;
 drop table if exists t12;
 CREATE TABLE t1 (a tinyint(3), b tinyint(5) primary key);
 INSERT INTO t1 VALUES (1,1),(1,2);
+-- @ignore{
 delete from t1 where a=1 limit 1;
 select * from t1;
 INSERT INTO t1 VALUES (1,3);
 delete from t1 where a=1;
 select * from t1;
+-- @ignore}
 drop table t1;
 create table t1 (
 a tinyint not null,
@@ -289,6 +321,7 @@ i tinyint not null default 0,
 j tinyint not null default 0,
 primary key (a));
 insert into t1 (a) values (2),(4),(6),(8),(10),(12),(14),(16),(18),(20),(22),(24),(26),(23);
+-- @ignore{
 delete from t1 where a=2+2;
 select a,b from t1;
 delete from t1 where  a=24;
@@ -297,12 +330,15 @@ delete from t1 where  3 < 2;
 select a,b from t1;
 delete from t1 where  1 < 2;
 select a,b from t1;
+-- @ignore}
 drop table t1;
 create table t1 (a tinyint not null auto_increment primary key, b char(32));
 insert into t1 (b) values ('apple'), ('apple');
 select * from t1;
+-- @ignore{
 delete t1 from t1,t1 as t2 where t1.b = t2.b and t1.a > t2.a;
 select * from t1;
+-- @ignore}
 drop table t1;
 create table t11 (a tinyint NOT NULL, b int, primary key (a));
 create table t12 (a tinyint NOT NULL, b int, primary key (a));
@@ -310,20 +346,24 @@ create table t2 (a tinyint NOT NULL, b int, primary key (a));
 insert into t11 values (0, 10),(1, 11),(2, 12);
 insert into t12 values (33, 10),(0, 11),(2, 12);
 insert into t2 values (0, 21),(1, 12),(3, 23);
+-- @ignore{
 delete from t11 where t11.b <> (select b from t2 where t11.a = t2.a);
 select * from t11;
 delete t11,t12 from t11,t12 where t11.b <> (select b from t2 where t11.a = t2.a) or t12.a>1;
 select * from t11;
 select * from t12;
+-- @ignore}
 drop table if exists t1;
 drop table if exists t2;
 CREATE TABLE t1(a tinyint PRIMARY KEY);
 INSERT INTO t1 VALUES(10),(20);
 CREATE TABLE t2(b tinyint);
 INSERT INTO t2 VALUES(10),(20);
+-- @ignore{
 delete t1,t2 from t1 JOIN t2 on t1.a=t2.b WHERE t1.a = 10;
 select * from t1;
 select * from t2;
+-- @ignore}
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -333,13 +373,17 @@ CREATE TABLE t3 (a tinyint not null,b tinyint not null, primary key (a));
 insert into t1 values (1,1),(2,1),(4,3);
 insert into t2 values (1,1),(2,2),(3,3);
 insert into t3 values (1,1),(2,1),(4,3);
+-- @ignore{
 delete t1,t2,t3 from t1 join t2 on t1.a=t2.a join t3 on t1.b=t3.b where t1.a=t2.a AND t2.b=t3.a and t1.b=t3.b;
 select * from t1;
+-- @ignore}
 drop table t1;
 create table t1(a tinyint not null);
 insert into t1 values (0);
+-- @ignore{
 delete t1 from t1 where a is null;
 select * from t1;
+-- @ignore}
 drop table if exists t1;
 drop table if exists t2;
 CREATE TABLE t1 (
@@ -350,8 +394,10 @@ a tinyint
 );
 insert into t1 values(1),(2),(3),(4),(5);
 insert into t2 values(1),(3),(5),(7),(9);
+-- @ignore{
 delete alias from t1 join t2 alias on t1.a=alias.a+1 WHERE t1.a = alias.a;
 select * from t2;
+-- @ignore}
 drop table if exists t1;
 create table t1 (id tinyint,ti tinyint unsigned,si tinyint,bi tinyint unsigned,fl float,dl double,de decimal,ch char(20),vch varchar(20),dd date,dt datetime);
 insert into t1 values(1,1,4,3,1113.32,111332,1113.32,'hello','subquery','2022-04-28','2022-04-28 22:40:11');
@@ -363,16 +409,20 @@ insert into t1 values(6,3,2,1,632.1,6321,632.11,'good night','maybe subquery','2
 insert into t1 values(7,4,4,3,7443.11,744311,7443.11,'yes','subquery','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values(8,7,5,8,8758.00,875800,8758.11,'nice to meet','just subquery','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values(9,8,4,9,9849.312,9849312,9849.312,'see you','subquery','2022-04-28','2022-04-28 22:40:11');
+-- @ignore{
 delete from t1 where id < 4 || id > 5;
 select * from t1;
+-- @ignore}
 drop table if exists t1;
 create table t1 (id tinyint,ti tinyint unsigned,si tinyint,bi tinyint unsigned,fl float,dl double,de decimal,ch char(20),vch varchar(20),dd date,dt datetime);
 insert into t1 values(1,1,4,3,1113.32,111332,1113.32,'hello','subquery','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values(2,2,5,2,2252.05,225205,2252.05,'bye','sub query','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values(3,6,6,3,3663.21,366321,3663.21,'hi','subquery','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values(4,7,1,5,4715.22,471522,4715.22,'good morning','my subquery','2022-04-28','2022-04-28 22:40:11');
+-- @ignore{
 delete t1 from t1,((select * from (select * from (select id,ti,si,de from (select * from t1 ) sub3 where fl <> 4.5 ) sub2 where ti > 1) sub1 where id >2 )) sub2 where t1.id=sub2.id;
 select id from t1;
+-- @ignore}
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -385,5 +435,7 @@ insert into t1 values (2);
 insert into t2 values (1,7),(2,7);
 insert into t4 values (4,8),(3,8),(5,9);
 insert into t3 values (100),(8);
+-- @ignore{
 delete t3 from t3,t4 where t3.a in (select b from t4 where b > 7);
 select * from t3;
+-- @ignore}
