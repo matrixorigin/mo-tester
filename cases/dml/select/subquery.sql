@@ -67,7 +67,9 @@ select * from (select * from t1 where id > 100) sub ;
 
 -- @suite
 -- @setup
-drop table if exists t1,t2,t3;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 create table t1 (libname1 varchar(21) not null primary key, city varchar(20));
 create table t2 (isbn2 varchar(21) not null primary key, author varchar(20), title varchar(60));
 create table t3 (isbn3 varchar(21) not null, libname3 varchar(21) not null, quantity int);

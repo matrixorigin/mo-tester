@@ -202,10 +202,11 @@ create table t2 (a int, oref int);
 insert into t2 values (1, 1), (2,2), (NULL, 3), (NULL, 4);
 select oref, a, a in (select a from t1 where oref=t2.oref) Z from t2;
 select oref, a from t2 where a in (select a from t1 where oref=t2.oref);
+-- @ignore{
 delete from t2;
 insert into t2 values (NULL, 0),(NULL, 0), (NULL, 0), (NULL, 0);
 select oref, a, a in (select a from t1 where oref=t2.oref) Z from t2;
-
+-- @ignore}
 drop table if exists t1;
 drop table if exists t2;
 
@@ -233,10 +234,12 @@ insert into t1 values (1),(2),(3);
 select 1 IN (SELECT * from t1);
 select 10 IN (SELECT * from t1);
 select NULL IN (SELECT * from t1);
+-- @ignore{
 update t1 set a=NULL where a=2;
 select 1 IN (SELECT * from t1);
 select 3 IN (SELECT * from t1);
 select 10 IN (SELECT * from t1);
+-- @ignore}
 
 DROP TABLE IF EXISTS t1;
 create table t1 (a varchar(20));
@@ -244,10 +247,12 @@ insert into t1 values ('A'),('BC'),('DEF');
 select 'A' IN (SELECT * from t1);
 select 'XYZS' IN (SELECT * from t1);
 select NULL IN (SELECT * from t1);
+-- @ignore{
 update t1 set a=NULL where a='BC';
 select 'A' IN (SELECT * from t1);
 select 'DEF' IN (SELECT * from t1);
 select 'XYZS' IN (SELECT * from t1);
+-- @ignore}
 
 DROP TABLE IF EXISTS t1;
 create table t1 (a float);
@@ -255,10 +260,12 @@ insert into t1 values (1.5),(2.5),(3.5);
 select 1.5 IN (SELECT * from t1);
 select 10.5 IN (SELECT * from t1);
 select NULL IN (SELECT * from t1);
+-- @ignore{
 update t1 set a=NULL where a=2.5;
 select 1.5 IN (SELECT * from t1);
 select 3.5 IN (SELECT * from t1);
 select 10.5 IN (SELECT * from t1);
+-- @ignore}
 
 drop table if exists t1;
 drop table if exists t2;
@@ -650,10 +657,12 @@ CREATE TABLE t2 (
   name varchar(15) default NULL
 ) ;
 INSERT INTO t2 VALUES (4,'vita'), (1,'vita'), (2,'vita'), (1,'vita');
+-- @ignore{
 update t1, t2 set t2.name='lenka' where t2.id in (select id from t1);
 select * from t2;
 delete from t1 where t1.id in  (select id from t2);
 select * from t1;
+-- @ignore}
 DROP TABLE IF EXISTS t1;
 drop table if exists t2;
 
@@ -764,10 +773,12 @@ create table t1 (a int, b int);
 insert into t1 values (0,0),(1,1),(2,2),(3,3),(4,4),(5,5),(6,6),(7,7),(8,8),(9,9);
 create table t2 (a int, b int);
 insert into t2 values (0,0),(1,1),(2,2),(3,3),(4,4),(5,5),(6,6),(7,7),(8,8),(9,9);
+-- @ignore{
 update t2 set b=1;
 create table t3 (a int, oref int);
 insert into t3 values (1, 1), (NULL,1), (NULL,0);
 select a, oref,t3.a in (select t1.a from t1, t2 where t1.b=t2.a and t2.b=t3.oref) Z from t3;
+-- @ignore}
 
 DROP TABLE IF EXISTS t1;
 drop table if exists t2;
@@ -776,10 +787,12 @@ create table t1 (a int NOT NULL, b int NOT NULL);
 insert into t1 values (0,0),(1,1),(2,2),(3,3),(4,4),(5,5),(6,6),(7,7),(8,8),(9,9);
 create table t2 (a int, b int);
 insert into t2 values (0,0),(1,1),(2,2),(3,3),(4,4),(5,5),(6,6),(7,7),(8,8),(9,9);
+-- @ignore{
 update t2 set b=1;
 create table t3 (a int, oref int);
 insert into t3 values (1, 1), (NULL,1), (NULL,0);
 select a, oref,t3.a in (select t1.a from t1, t2 where t1.b=t2.a and t2.b=t3.oref) Z from t3;
+-- @ignore{
 
 DROP TABLE IF EXISTS t1;
 drop table if exists t2;
@@ -839,6 +852,7 @@ select oref, a from t2 where a not in (select ie from t1 where oref=t2.oref);
 select oref, a, a in (select min(ie) from t1 where oref=t2.oref group by grp) Z from t2;
 select oref, a from t2 where a in (select min(ie) from t1 where oref=t2.oref group by grp);
 select oref, a from t2 where a not in (select min(ie) from t1 where oref=t2.oref group by grp);
+-- @ignore{
 update t1 set ie=3 where oref='ff' and ie=1;
 select oref, a, a in (select min(ie) from t1 where oref=t2.oref group by grp) Z from t2;
 select oref, a from t2 where a in (select min(ie) from t1 where oref=t2.oref group by grp);
@@ -846,6 +860,7 @@ select oref, a from t2 where a not in (select min(ie) from t1 where oref=t2.oref
 select oref, a, a in (select min(ie) from t1 where oref=t2.oref group by grp having min(ie) > 1) Z from t2;
 select oref, a from t2 where a in (select min(ie) from t1 where oref=t2.oref group by grp having min(ie) > 1);
 select oref, a from t2 where a not in (select min(ie) from t1 where oref=t2.oref group by grp having min(ie) > 1);
+-- @ignore}
 
 DROP TABLE IF EXISTS t1;
 drop table if exists t2;
@@ -1099,6 +1114,7 @@ SELECT (NULL, 1) IN (SELECT 1,1 FROM t1);
 SELECT (NULL, NULL) IN (SELECT 1,1 FROM t1);
 SELECT (NULL OR 1) IN (SELECT 1 FROM t1);
 SELECT (NULL IS NULL) IN  (SELECT 1 FROM t1);
+-- @ignore{
 DELETE FROM t1;
 SELECT NULL IN (SELECT 1 FROM t1);
 SELECT (NULL AND 1) IN (SELECT 1 FROM t1);
@@ -1106,6 +1122,7 @@ SELECT (NULL, 1) IN (SELECT 1,1 FROM t1);
 SELECT (NULL, NULL) IN (SELECT 1,1 FROM t1);
 SELECT (NULL OR 1) IN (SELECT 1 FROM t1);
 SELECT (NULL IS NULL) IN  (SELECT 1 FROM t1);
+-- @ignore}
 
 DROP TABLE IF EXISTS t1;
 CREATE TABLE t1 (a INTEGER);

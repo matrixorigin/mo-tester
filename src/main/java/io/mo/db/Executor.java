@@ -35,7 +35,6 @@ public class Executor {
 
         //check whether the result file exists
         File rsf = new File(script.getFileName().replaceFirst(COMMON.CASES_PATH,COMMON.RESULT_PATH).replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX));
-        System.out.println(rsf.getPath());
         if(!rsf.exists()) {
             LOG.warn("The result of the test script file["+script.getFileName()+"] does not exists,please check....");
             //set the execution status of test script to  false

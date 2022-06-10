@@ -34,8 +34,10 @@ select * from t1;
 select * from t1 where a='2022-01-02';
 select * from t1 where a>20220102;
 select * from t1 where a!='2022-01-02';
+-- @ignore{
 update t1 set a=DATE_ADD(a ,INTERVAL 1 WEEK) where a>'20220102';
 select * from t1;
+-- @ignore}
 drop table t1;
 create table t1 ( a int not null default 1, big datetime(4) primary key);
 insert into t1 (big) values (20220103),('2022-01-01'),('2022-01-01 00:00:01'),('2022-01-02 00:00.00.000050');
@@ -111,17 +113,20 @@ drop table if exists t21;
 drop table if exists t12;
 CREATE TABLE t1 (a datetime, b int primary key);
 INSERT INTO t1 VALUES ('2022-01-01 00:00:00',1),('2022-01-01 00:00:00',2);
+-- @ignore{
 update t1 set a='2022-01-02' where a='2022-01-01 00:00:00' limit 1;
 select * from t1;
 INSERT INTO t1 VALUES ('2022-01-01 00:00:00',3);
 update t1 set a='2022-01-02' where a='2022-01-01 00:00:00';
 select * from t1;
+-- @ignore}
 drop table t1;
 create table t1 (
 a datetime primary key,
 b datetime(4) not null default '2000-01-01 00:00:00'
 );
 insert into t1 (a) values ('2022-01-02'),('2022-01-04'),('2022-01-06'),('2022-01-08'),('2022-01-10 01:01:01.000'),('2022-01-12');
+-- @ignore{
 update t1 set a=a+101;
 select a,b from t1;
 update t1 set a='2022-01-27 12:12:12.0001' where a='2022-01-08 00:01:01';
@@ -130,12 +135,15 @@ update t1 set a=a-1 where 1 > 2;
 select a,b from t1;
 update t1 set a=a-1 where 3 > 2;
 select a,b from t1;
+-- @ignore}
 drop table t1;
 create table t1 (a datetime primary key, b char(32));
 insert into t1 values (20220101,'apple'),('2022-01-02','apple');
 select * from t1;
+-- @ignore{
 update t1, t1 as t2 set t1.a=t1.a+1*5 where t1.b = t2.b and t1.a > t2.a;
 select * from t1;
+-- @ignore}
 
 #Test cases of update with multi tables
 drop table if exists t11;
@@ -149,22 +157,28 @@ insert into t12 values (20220303, 10),('2020-01-03 01:00:00.00000', 11),(2022010
 insert into t2 values ('2021-12-31', 21),('2022-01-01 00:00:00', 12),('2022-03-03', 23);
 select * from t11;
 select * from t12;
+-- @ignore{
 update t11,t12 set t11.a=t11.a+t12.b where t12.a <> (select a from t2 where t11.a = t2.a);
 select * from t11;
+-- @ignore}
 drop table if exists t1;
 drop table if exists t2;
 CREATE TABLE t1(a datetime PRIMARY KEY);
 INSERT INTO t1 VALUES('2022-10-01'),(20220220);
 CREATE TABLE t2(b datetime);
 INSERT INTO t2 VALUES('2022-10-01'),(20220220);
+-- @ignore{
 update t1 JOIN t2 on t1.a=t2.b set t1.a='2022-05-05 01:01:01' WHERE t1.a=20221001;
 select * from t1;
 select * from t2;
+-- @ignore}
 drop table t1;
 CREATE TABLE t1 ( a datetime PRIMARY KEY );
 INSERT INTO t1 VALUES ('2021-12-31'),('2022-01-03 01:00:00.00000'),(20220102);
+-- @ignore{
 update t1 set a=a*1/1+1 WHERE t1.a>20220102 ORDER BY t1.a LIMIT 1;
 SELECT * FROM t1;
+-- @ignore}
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -174,13 +188,17 @@ CREATE TABLE t3 (a datetime not null,b datetime(4) not null, primary key (a));
 insert into t1 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),(20220102,'2022-01-01 00:00:00'),(20220104,'2022-01-03 01:00:00.00000');
 insert into t2 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),(20220102,'2022-01-02'),(20220103,'2022-01-03 01:00:00.00000');
 insert into t3 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),(20220102,'2022-01-01 00:00:00'),(20220104,'2022-01-03 01:00:00.00000');
+-- @ignore{
 update t1 join t2 on t1.a=t2.a join t3 on t1.b=t3.b set t1.a=((t3.a*5) DIV 5) where t1.a=t2.a AND t2.b=t3.a and t1.b=t3.b;
 select * from t1;
+-- @ignore}
 drop table t1;
 create table t1(a datetime not null);
 insert into t1 values ('2021-12-31');
+-- @ignore{
 update t1 set a=a+(a MOD 2) where a is null;
 select * from t1;
+-- @ignore}
 drop table if exists t1;
 drop table if exists t2;
 CREATE TABLE t1 (
@@ -191,7 +209,9 @@ a datetime
 );
 insert into t1 values('2022-01-01 00:00:00'),(20220102),('2022-01-03 01:00:00.00000'),('2022-01-04'),(20220105);
 insert into t2 values('2022-01-01 00:00:00'),('2022-01-03 01:00:00.00000'),(20220105),('2022-01-07'),('2022-01-09 22:22:22');
+-- @ignore{
 update t1 join t2 alias on t1.a=alias.a set alias.a=t1.a*3 WHERE t1.a = alias.a;
+-- @ignore}
 drop table if exists t1;
 drop table if exists t2;
 create table t1 (id int,dd datetime,dt datetime);
@@ -200,8 +220,10 @@ insert into t1 values(2,'2022-04-28','2022-04-28 22:40:11');
 insert into t1 values(3,'2022-04-28','2022-04-28 22:40:11');
 insert into t1 values(4,'2022-04-28','2022-04-28 22:40:11');
 insert into t1 values(5,'2022-04-28','2022-04-28 22:40:11');
+-- @ignore{
 update t1 sub set sub.dd=sub.dd+1 where id > 4;
 select * from t1 where id>4;
+-- @ignore}
 drop table if exists t1;
 create table t1 (id int,dd datetime,dt datetime);
 insert into t1 values(1,'2022-04-28','2022-04-28 22:40:11');
@@ -209,8 +231,10 @@ insert into t1 values(2,'2022-04-28','2022-04-28 22:40:11');
 insert into t1 values(3,'2022-04-28','2022-04-28 22:40:11');
 insert into t1 values(4,'2022-04-28','2022-04-28 22:40:11');
 insert into t1 values(5,'2022-04-28','2022-04-28 22:40:11');
+-- @ignore{
 update t1 sub set sub.dt=sub.dt+sub.id where id < 2 || id > 4;
 select * from t1 order by dd-dt;
+-- @ignore}
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -223,9 +247,11 @@ insert into t1 values (20220102);
 insert into t2 values ('2022-01-01 00:00:00',7);
 insert into t4 values (20220104,8),('2022-01-03 01:00:00.00000',8),('2022-01-05',9);
 insert into t3 values ('2022-01-03 01:00:00.00000'),(20220105);
+-- @ignore{
 update t3,t2,t1 set t2.a=t3.a where t3.a in (select a from t4 where b > 8);
 select * from t1;
 select * from t2;
+-- @ignore}
 
 #Test cases of delete with single table
 drop table if exists t1;
@@ -235,28 +261,34 @@ drop table if exists t11;
 drop table if exists t12;
 CREATE TABLE t1 (a datetime, b int primary key);
 INSERT INTO t1 VALUES ('2022-01-01 00:00:00',1),('2022-01-01 00:00:00',2);
+-- @ignore{
 delete from t1 where a='2022-01-01 00:00:00' limit 1;
 select * from t1;
 INSERT INTO t1 VALUES ('2022-01-01 00:00:00',3);
 delete from t1 where a='2022-01-01';
 select * from t1;
+-- @ignore}
 drop table t1;
 create table t1 (
 a datetime primary key,
 b datetime(4) not null default '2000-01-01 00:00:00');
 insert into t1 (a) values ('2022-01-02'),('2022-01-04'),('2022-01-06'),('2022-01-08'),('2022-01-10 01:01:01.000'),('2022-01-12');
+-- @ignore{
 delete from t1 where a=20220101+3;
 select a,b from t1;
 delete from t1 where  3 < 2;
 select a,b from t1;
 delete from t1 where  1 < 2;
 select a,b from t1;
+-- @ignore}
 drop table t1;
 create table t1 (a datetime primary key, b char(32));
 insert into t1 values (20220101,'apple'),('2022-01-02 00:00:00','apple');
 select * from t1;
+-- @ignore{
 delete t1 from t1,t1 as t2 where t1.b = t2.b and t1.a > t2.a;
 select * from t1;
+-- @ignore}
 drop table t1;
 
 #Test cases of delete with multi tables
@@ -266,20 +298,24 @@ create table t2 (a datetime(6) NOT NULL, b int, primary key (a));
 insert into t11 values (20211231, 10),('2022-01-01 00:00:00', 11),('2022-01-02', 12);
 insert into t12 values (20220303, 10),('2021-12-31', 11),(20220102, 12);
 insert into t2 values ('2021-12-31', 21),('2022-01-01 00:00:00', 12),('2022-03-03', 23);
+-- @ignore{
 delete from t11 where t11.b <> (select b from t2 where t11.a = t2.a);
 select * from t11;
 delete t11,t12 from t11,t12 where t11.b <> (select b from t2 where t11.a = t2.a) or t12.a>20220101;
 select * from t11;
 select * from t12;
+-- @ignore{
 drop table if exists t1;
 drop table if exists t2;
 CREATE TABLE t1(a datetime PRIMARY KEY);
 INSERT INTO t1 VALUES('2022-10-01'),(20220220);
 CREATE TABLE t2(b datetime(4));
 INSERT INTO t2 VALUES('2022-10-01 00:00:00.0001'),(20220220);
+-- @ignore{
 delete t1,t2 from t1 JOIN t2 on t1.a=t2.b WHERE t1.a=20221001;
 select * from t1;
 select * from t2;
+-- @ignore}
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -289,13 +325,17 @@ CREATE TABLE t3 (a datetime not null,b datetime(4) not null, primary key (a));
 insert into t1 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),(20220102,'2022-01-01 00:00:00'),(20220104,'2022-01-03 01:00:00.00000');
 insert into t2 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),(20220102,'2022-01-02'),(20220103,'2022-01-03 01:00:00.00000');
 insert into t3 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),(20220102,'2022-01-01 00:00:00'),(20220104,'2022-01-03 01:00:00.00000');
+-- @ignore{
 delete t1,t2,t3 from t1 join t2 on t1.a=t2.a join t3 on t1.b=t3.b where t1.a=t2.a AND t2.b=t3.a and t1.b=t3.b;
 select * from t1;
+-- @ignore}
 drop table t1;
 create table t1(a datetime not null);
 insert into t1 values ('2021-12-31');
+-- @ignore{
 delete t1 from t1 where a is null;
 select * from t1;
+-- @ignore}
 drop table if exists t1;
 drop table if exists t2;
 CREATE TABLE t1 (
@@ -306,8 +346,10 @@ a datetime(6)
 );
 insert into t1 values('2022-01-01 00:00:00'),(20220102),('2022-01-03 01:00:00.00000'),('2022-01-04'),(20220105);
 insert into t2 values('2022-01-01 00:00:00'),('2022-01-03 01:00:00.00000'),(20220105),('2022-01-07'),('2022-01-09 22:22:22');
+-- @ignore{
 delete alias from t1 join t2 alias on t1.a=alias.a WHERE t1.a = alias.a;
 select * from t2;
+-- @ignore}
 drop table t1;
 create table t1 (id int,dd datetime,dt datetime);
 insert into t1 values(1,'2022-04-28','2022-04-28 22:40:11');
@@ -315,8 +357,10 @@ insert into t1 values(2,'2022-04-28','2022-04-28 22:40:11');
 insert into t1 values(3,'2022-04-28','2022-04-28 22:40:11');
 insert into t1 values(4,'2022-04-28','2022-04-28 22:40:11');
 insert into t1 values(5,'2022-04-28','2022-04-28 22:40:11');
+-- @ignore{
 delete from t1 where id < 4 || id > 5;
 select * from t1;
+-- @ignore}
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -329,5 +373,7 @@ insert into t1 values (20220102);
 insert into t2 values ('2022-01-01 00:00:00',7);
 insert into t4 values (20220104,8),('2022-01-03 01:00:00.00000',8),('2022-01-05',9);
 insert into t3 values ('2022-01-03 01:00:00.00000'),(20220105);
+-- @ignore{
 delete t3 from t3,t4  where t3.a in (select a from t4 where b > 8);
 select * from t3;
+-- @ignore}

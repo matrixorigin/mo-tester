@@ -55,14 +55,16 @@ select * from t1 where str is null;
 select * from t1 where str is not null;
 drop table if exists t1;
 
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
 create table t1 (dt datetime not null, t datetime not null);
 create table t2 (dt datetime not null);
 insert into t1 values ('2001-01-01 1:1:1', '2001-01-01 1:1:1'),
 ('2001-01-01 1:1:1', '2001-01-01 1:1:1');
 insert into t2 values ('2001-01-01 1:1:1'), ('2001-01-01 1:1:1');
 SELECT outr.dt FROM t1 AS outr WHERE outr.dt IN (SELECT innr.dt FROM t2 AS innr WHERE outr.dt IS NULL );
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
 
 create table t1 (id int not null, str char(10), index(str));
 insert into t1 values (1, null), (2, null), (3, "foo"), (4, "bar");
@@ -83,23 +85,33 @@ drop table if exists t1;
 drop table if exists t1;
 CREATE TABLE t1 (a INT);
 INSERT INTO t1 VALUES (1),(NULL);
+-- @ignore{
 UPDATE t1 SET a = 2 WHERE a IS NULL;
 select * from t1;
+-- @ignore}
 drop table if exists t1;
 
-drop table  if exists t1,t2,t3;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 create table t1 (a int, b int);
 create table t2 (a int, b int);
 insert into t1 values (1,1),(2,1),(3,1);
 insert into t2 values (1,1), (3,1);
+-- @ignore{
 update t1 left join t2  on t1.a=t2.a set t1.b=2, t2.b=2 where t1.b=1 and t2.b=1 or t2.a is NULL;
 select t1.a, t1.b,t2.a, t2.b from t1 left join t2  on t1.a=t2.a where t1.b=1 and t2.b=1 or t2.a is NULL;
-drop table  if exists t1,t2,t3;
+-- @ignore}
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 
 -- @case
 -- @desc:test for is operator in join
 -- @label:bvt
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (
   grp int(11) default NULL,
   a bigint(20) unsigned default NULL,
@@ -111,7 +123,9 @@ insert into t2 values (1,1,"a",1),(3,4,"A",4),(3,5,"B",5),(3,6,"C",6),(4,7,"D",7
 select t1.*,t2.* from t1 left join t2 on (t1.a=t2.a) where t2.id is null;
 select t1.*,t2.* from t1 left join t2 on (t1.a=t2.a and t2.id is null);
 
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (
   id smallint(5) unsigned NOT NULL,
   name char(60) DEFAULT '' NOT NULL,
@@ -135,7 +149,9 @@ select t1.name, t2.name, t2.id from t1 left join t2 on (t1.id = t2.owner) where 
 select t1.name, t2.name, t2.id from t2 right join t1 on (t1.id = t2.owner) where t2.id is null;
 select t1.name, t2.name, t2.id from t2 right join t1 on (t1.id = t2.owner) where t2.name is null;
 
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (id1 INT NOT NULL PRIMARY KEY, dat1 CHAR(1), id2 INT);
 INSERT INTO t1 VALUES (1,'a',1);
 INSERT INTO t1 VALUES (2,'b',1);
@@ -148,7 +164,9 @@ INSERT INTO t2 VALUES (3,'z');
 
 SELECT t2.id2 FROM t2 LEFT OUTER JOIN t1 ON t1.id2 = t2.id2 WHERE id1 IS NULL;
 SELECT t2.id2 FROM t2 NATURAL LEFT OUTER JOIN t1 WHERE id1 IS NULL;
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 
 CREATE TABLE t1 (
   id int(11),
@@ -161,7 +179,9 @@ select * from t1 LEFT JOIN t1 t2 ON (t1.id=t2.pid) AND t2.rep_del IS NULL;
 select * from t1 LEFT JOIN t1 t2 ON (t1.id=t2.pid) AND t2.rep_del IS NULL;
 drop table if exists t1;
 
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (a DATE NOT NULL, b INT);
 INSERT INTO t1 VALUES ('1999-05-100',1), ('1999-05-10',2);
 
@@ -174,7 +194,9 @@ SELECT * FROM t1 LEFT JOIN t1 AS t1_2 ON 1 WHERE t1_2.a IS NULL;
 SELECT * FROM t2 LEFT JOIN t2 AS t2_2 ON 1 WHERE t2_2.a IS not NULL;
 SELECT * FROM t1 JOIN t1 AS t1_2 ON 1 WHERE t1_2.a IS NULL;
 SELECT * FROM t2 JOIN t2 AS t2_2 ON 1 WHERE t2_2.a IS not NULL;
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 
 -- @case
 -- @desc:test for is operator in function
@@ -193,7 +215,9 @@ drop table if exists t1;
 -- @case
 -- @desc:test for is operator in subquery
 -- @label:bvt
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 create table t1 (id int(10) not null, cur_date datetime not null);
 create table t2 (id int(10) not null, cur_date date not null);
 insert into t1 (id, cur_date) values (1, '2007-04-25 18:30:22');
@@ -216,7 +240,9 @@ where id in (select id from t2 as x1 where (t2.cur_date is null));
 -- @case
 -- @desc:test for is operator in having
 -- @label:bvt
-DROP TABLE IF EXISTS t1,t2;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE `t1` (
   `numeropost` int(8) unsigned NOT NULL auto_increment,
   `maxnumrep` int(10) unsigned NOT NULL default '0',
@@ -242,7 +268,9 @@ SELECT * from t2 where topic NOT IN (SELECT topic FROM t2 GROUP BY topic HAVING 
 -- @case
 -- @desc:test for is operator in case-when
 -- @label:bvt
-DROP TABLE IF EXISTS t1,t2;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (a varchar(10), PRIMARY KEY (a));
 CREATE TABLE t2 (a varchar(10), b date, PRIMARY KEY(a));
 INSERT INTO t1 VALUES ('test1');

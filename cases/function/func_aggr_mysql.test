@@ -470,11 +470,13 @@ insert into t1 values (-5.00000000001);
 insert into t1 values (-5.00000000001);
 --sorted_result
 select col1,sum(col1),max(col1),min(col1) from t1 group by col1;
+-- @ignore{
 delete from t1;
 insert into t1 values (5.00000000001);
 insert into t1 values (5.00000000001);
 --sorted_result
 select col1,sum(col1),max(col1),min(col1) from t1 group by col1;
+-- @ignore}
 DROP TABLE t1;
 
 #
