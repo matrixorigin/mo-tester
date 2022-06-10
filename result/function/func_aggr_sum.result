@@ -92,19 +92,19 @@ DROP TABLE t1;
 CREATE TABLE t1(a TEXT, b INT, c INT UNSIGNED, d DECIMAL(12,2), e REAL);
 INSERT INTO t1 VALUES('iynfj', 1, 1, 1, 1);
 INSERT INTO t1 VALUES('innfj', 2, 2, 2, 2);
-SELECT SUM( DISTINCT a ) FROM t1 GROUP BY a HAVING a IN ( AVG( 1 ), 1 + a);
-SUM( DISTINCT a )
-SELECT SUM( DISTINCT b ) FROM t1 GROUP BY b HAVING b IN ( AVG( 1 ), 1 + b);
-SUM( DISTINCT b )
+SELECT DISTINCT SUM(  a ) FROM t1 GROUP BY a HAVING a IN ( AVG( 1 ), 1 + a);
+SUM(  a )
+SELECT DISTINCT SUM(  b ) FROM t1 GROUP BY b HAVING b IN ( AVG( 1 ), 1 + b);
+SUM(  b )
 1
-SELECT SUM( DISTINCT c ) FROM t1 GROUP BY c HAVING c IN ( AVG( 1 ), 1 + c);
-SUM( DISTINCT c )
+SELECT DISTINCT SUM(  c ) FROM t1 GROUP BY c HAVING c IN ( AVG( 1 ), 1 + c);
+SUM(  c )
 1
-SELECT SUM( DISTINCT d ) FROM t1 GROUP BY d HAVING d IN ( AVG( 1 ), 1 + d);
-SUM( DISTINCT d )
+SELECT DISTINCT SUM(  d ) FROM t1 GROUP BY d HAVING d IN ( AVG( 1 ), 1 + d);
+SUM(  d )
 1.00
-SELECT SUM( DISTINCT e ) FROM t1 GROUP BY e HAVING e IN ( AVG( 1 ), 1 + e);
-SUM( DISTINCT e )
+SELECT DISTINCT SUM(  e ) FROM t1 GROUP BY e HAVING e IN ( AVG( 1 ), 1 + e);
+SUM(  e )
 1.0
 DROP TABLE t1;
 SELECT SUM(NULL);
@@ -135,11 +135,11 @@ sum(num)
 drop table t1;
 create table t2 (ff double);
 insert into t2 values (2.2);
-select cast(sum(distinct ff) as decimal(5,2)) from t2;
-cast(sum(distinct ff) as decimal(5,2))
+select cast(sum( ff) as decimal(5,2)) from t2;
+cast(sum( ff) as decimal(5,2))
 2.20
-select cast(sum(distinct ff) as signed) from t2;
-cast(sum(distinct ff) as signed)
+select cast(sum( ff) as signed) from t2;
+cast(sum( ff) as signed)
 2
 select cast(variance(ff) as decimal(10,3)) from t2;
 cast(variance(ff) as decimal(10,3))
@@ -150,14 +150,14 @@ cast(min(ff) as decimal(5,2))
 create table t1 (df decimal(5,1));
 insert into t1 values(1.1);
 insert into t1 values(2.2);
-select cast(sum(distinct df) as signed) from t1;
-cast(sum(distinct df) as signed)
+select cast(sum( df) as signed) from t1;
+cast(sum( df) as signed)
 3
 select cast(min(df) as signed) from t1;
 cast(min(df) as signed)
 1
-select 1e8 * sum(distinct df) from t1;
-1e8 * sum(distinct df)
+select 1e8 * sum( df) from t1;
+1e8 * sum( df)
 3.3E8
 select 1e8 * min(df) from t1;
 1e8 * min(df)
