@@ -69,9 +69,14 @@ public class Tester {
                     includes = args[i].split("=")[1].split(",");
                 }
 
-                //ßget excludes
+                //get excludes
                 if(args[i].startsWith("exclude")){
                     excludes = args[i].split("=")[1].split(",");
+                }
+                
+                //get nometa info
+                if(args[i].equalsIgnoreCase("nometa")){
+                    COMMON.IS_COMPARE_META = false;
                 }
             }
         }

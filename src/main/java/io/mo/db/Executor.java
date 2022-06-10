@@ -14,6 +14,7 @@ import java.io.*;
 import java.sql.*;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Executor {
     private static PrintWriter logWriter;
@@ -133,7 +134,8 @@ public class Executor {
                     }
 
                     //if compare failed
-                    if(!act_res.equalsIgnoreCase(exp_res)){
+                    //if(!act_res.equalsIgnoreCase(exp_res)){
+                    if(!equals(command,exp_res,act_res)){
                         script.addErrorCmd(command);
                         command.getResult().setErrorCode(RESULT.ERROR_CHECK_FAILED_CODE);
                         command.getResult().setErrorDesc(RESULT.ERROR_CHECK_FAILED_DESC);
@@ -156,8 +158,6 @@ public class Executor {
                 if(null == command){
                     break;
                 }
-
-
 
                 act_res = e.getMessage();
                 if( j < commands.size() -1)
@@ -206,9 +206,11 @@ public class Executor {
                         continue;
                     }
                 }
-                //if compare failed
 
-                if(!act_res.equalsIgnoreCase(exp_res)){
+                command.setError(true);
+                //if compare failed
+                //if(!act_res.equalsIgnoreCase(exp_res)){
+                if(!equals(command,exp_res,act_res)){
                     script.addErrorCmd(command);
                     command.getResult().setErrorCode(RESULT.ERROR_CHECK_FAILED_CODE);
                     command.getResult().setErrorDesc(RESULT.ERROR_CHECK_FAILED_DESC);
@@ -661,4 +663,40 @@ public class Executor {
         }
 
     }
+
+    public static boolean equals(SqlCommand command,String exp,String act){
+        //if the sql command has already required the order for result,
+        // or if the result is expected error,compare directedly.
+        if(command.isSorted() || command.isError())
+            return exp.equalsIgnoreCase(act);
+
+        String[] exps = exp.split("\n");
+        String[] acts = act.split("\n");
+
+        //if the row numbers do not match,return false
+        if(exps.length != acts.length)
+            return false;
+
+        Arrays.sort(exps);
+        Arrays.sort(acts);
+        for(int i = 0 ; i < exps.length; i++){
+            if(!exps[i].equalsIgnoreCase(acts[i])) {
+                //LOG.error("["+command.getScriptFile()+"]["+command.getCommand().trim()+"] expect: "+exps[i]);
+                //LOG.error("["+command.getScriptFile()+"]["+command.getCommand().trim()+"] actual: "+acts[i]);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static void main(String args[]){
+        String[] test = new String[]{"a","b","c","1"};
+        String temp = test[0];
+        System.out.println(temp);
+        Arrays.sort(test);
+        System.out.println(temp);
+        System.out.println(test[0]);
+    }
+
+
 }

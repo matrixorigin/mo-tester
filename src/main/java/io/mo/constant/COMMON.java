@@ -6,7 +6,9 @@ public class COMMON {
 
     public static String T_FILE_SUFFIX = ".sql";
 
-    public static Boolean IGNORE_MODEL = false;
+    public static boolean IGNORE_MODEL = false;
+
+    public static boolean IS_COMPARE_META = true;
 
     public static String R_FILE_SUFFIX = ".result";
 
