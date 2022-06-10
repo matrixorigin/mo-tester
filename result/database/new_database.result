@@ -9,7 +9,9 @@ create database `测试数据库`;
 create database test03 default character set utf8 collate utf8_general_ci encryption 'Y';
 create database test04 character set=utf8 collate=utf8_general_ci encryption='N';
 show databases;
-Databases
+Database
+mo_catalog
+information_schema
 system_metrics
 new_database
 test01
@@ -28,7 +30,9 @@ create database `ABCDE`;
 create database `abcde`;
 create database db_with_no_tables_and_an_unrelated_file_in_data_directory;
 show databases;
-Databases
+Database
+mo_catalog
+information_schema
 system_metrics
 new_database
 ABCDE

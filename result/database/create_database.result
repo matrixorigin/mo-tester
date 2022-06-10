@@ -11,7 +11,9 @@ create database test03 default character set utf8 collate utf8_general_ci encryp
 create database test04 character set=utf8 collate=utf8_general_ci encryption='N';
 create database t01234567890123456789012345678901234567890123456789012345678901234567890123456789;
 show databases;
-Databases
+Database
+mo_catalog
+information_schema
 system_metrics
 create_database
 test01

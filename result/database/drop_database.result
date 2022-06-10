@@ -3,5 +3,7 @@ drop database if exists drop_database;
 create database test01;
 drop database test01;
 show databases;
-Databases
+Database
+mo_catalog
+information_schema
 system_metrics
