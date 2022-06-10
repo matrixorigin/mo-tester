@@ -1,6 +1,6 @@
 select now()-now(),weekday("2022-06-02")-weekday(now()),unix_timestamp()-unix_timestamp(now());
 now()-now()	weekday("2022-06-02")-weekday(now())	unix_timestamp()-unix_timestamp(now())
-0	1	0
+0	-1	0
 select now()-current_timestamp();
 now()-current_timestamp()
 0

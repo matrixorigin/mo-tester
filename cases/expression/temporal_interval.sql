@@ -228,9 +228,10 @@ select t1.i,t2.i,t1.c + INTERVAL 1 MINUTE,t2.b + INTERVAL 1 YEAR from t1 join t2
 
 select '2007-01-01' + interval i day from t2;
 select b + interval i day from t2;
-
+-- @ignore{
 update t1 set c = c + INTERVAL 1 DAY where i > 6;
 select * from t1 where i > 6;
+-- @ignore}
 drop table if exists t1;
 drop table if exists t2;
 

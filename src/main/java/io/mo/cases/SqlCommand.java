@@ -22,6 +22,13 @@ public class SqlCommand {
 
     private boolean ignore = false;
 
+
+    private boolean sorted = false;
+
+
+
+    private boolean error = false;
+
     private int conn_id = 0;
     private String conn_user = null;
     private String conn_pswd = null;
@@ -64,6 +71,9 @@ public class SqlCommand {
     public void append(String command){
         this.command.append(command);
         this.command.append(COMMON.LINE_SEPARATOR);
+        if(command.toLowerCase().indexOf("order by") != -1){
+            this.sorted = true;
+        }
         check();
     }
 
@@ -189,6 +199,16 @@ public class SqlCommand {
             System.out.println("----------command: id = "+id+"-------------");
     }
 
+    public boolean isSorted() {
+        return sorted;
+    }
 
+    public boolean isError() {
+        return error;
+    }
+
+    public void setError(boolean error) {
+        this.error = error;
+    }
 
 }

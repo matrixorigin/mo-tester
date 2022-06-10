@@ -41,7 +41,7 @@ public class Tester {
 
                 //get path
                 if(args[i].startsWith("path")){
-                    type = args[i].split("=")[1];
+                    path = args[i].split("=")[1];
                 }
 
                 //get method
@@ -69,9 +69,14 @@ public class Tester {
                     includes = args[i].split("=")[1].split(",");
                 }
 
-                //ßget excludes
+                //get excludes
                 if(args[i].startsWith("exclude")){
                     excludes = args[i].split("=")[1].split(",");
+                }
+                
+                //get nometa info
+                if(args[i].equalsIgnoreCase("nometa")){
+                    COMMON.IS_COMPARE_META = false;
                 }
             }
         }

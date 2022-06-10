@@ -4,7 +4,7 @@ if [[ $# -eq 0 ]];then
     echo "No parameters provided,the mo-tester will run with parameters defined in the run.yml file. "
 
 fi
-while getopts ":p:m:t:r:i:e:gh" opt
+while getopts ":p:m:t:r:i:e:gnh" opt
 do
     case $opt in
         p)
@@ -35,6 +35,10 @@ do
         IGNORE="ignore"
         echo -e "SQL commands which is marked with ignore-flag will not be executed"
         ;;
+        n)
+        NOMETA="nometa"
+        echo -e "The meta data of the resultset will be ignored when comparing the resut"
+        ;;
         h)
         echo -e "Usage:　bash run.sh [option] [param] ...\nExcute test cases task"
         echo -e "   -p  set the path of test cases needed to be executed by mo-tester"
@@ -43,6 +47,8 @@ do
         echo -e "   -r  set The success rate that test cases should reach"
         echo -e "   -i  set the including list, and only script files in the path which name contain one of the list will be excuted,if more than one,seperated by ,"
         echo -e "   -e  set the excluding list, and script files in the path which name contain one of the list will not be excuted,if more than one,seperated by ,"
+        echo -e "   -g  means SQL commands which is marked with ignore-flag will not be executed"
+        #echo -e "   -n  means the meta data of the resultset will be ignored when comparing the resut"
         echo -e "Examples:"
         echo "   bash run.sh -p case -m run -t script -r 100 -i select,subquery -e substring -g"
         echo "For more support,please email to dong.su@matrixorigin.io"
@@ -69,7 +75,7 @@ done
 java -Xms1024M -Xmx1024M -cp ${libJars} \
         -Dconf.yml=${MO_YAML} \
         -Drun.yml=${RUN_YAML} \
-        io.mo.Tester ${PATHC} ${METHOD} ${TYPE} ${RATE} ${INCLUDE} ${EXCLUDE} ${IGNORE}
+        io.mo.Tester ${PATHC} ${METHOD} ${TYPE} ${RATE} ${INCLUDE} ${EXCLUDE} ${IGNORE} ${NOMETA}
 }
 
 boot

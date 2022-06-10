@@ -284,23 +284,29 @@ SELECT a FROM t1 WHERE a <> ANY (SELECT a FROM t1 HAVING a = 2 UNION SELECT a FR
 DROP TABLE IF EXISTS t1;
 create table t1 (a int);
 insert into t1 values (1),(2),(3);
+-- @ignore{
 update t1 set a=NULL where a=2;
 select 1 > ANY (SELECT * from t1);
 select 10 > ANY (SELECT * from t1);
+-- @ignore}
 
 DROP TABLE IF EXISTS t1;
 create table t1 (a varchar(20));
 insert into t1 values ('A'),('BC'),('DEF');
+-- @ignore{
 update t1 set a=NULL where a='BC';
 select 'A' > ANY (SELECT * from t1);
 select 'XYZS' > ANY (SELECT * from t1);
+-- @ignore}
 
 DROP TABLE IF EXISTS t1;
 create table t1 (a float);
 insert into t1 values (1.5),(2.5),(3.5);
+-- @ignore{
 update t1 set a=NULL where a=2.5;
 select 1.5 > ANY (SELECT * from t1);
 select 10.5 > ANY (SELECT * from t1);
+-- @ignore}
 
 DROP TABLE IF EXISTS t1;
 create table t1 (s1 int);

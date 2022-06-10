@@ -61,7 +61,8 @@ drop table t2;
 #HAVING,DISTINCT
 CREATE TABLE t1 (Fld1 int(11) default NULL,Fld2 int(11) default NULL);
 INSERT INTO t1 VALUES (1,10),(1,20),(2,NULL),(2,NULL),(3,50);
-select Fld1, max(distinct Fld2) as q from t1 group by Fld1 having q is not null;
+#select Fld1, max(distinct Fld2) as q from t1 group by Fld1 having q is not null;
+select distinct Fld1,  max( Fld2) as q from t1 group by Fld1 having q is not null;
 select Fld1, max(Fld2) from t1 group by Fld1 having max(Fld2) is not null;
 select Fld1, max(Fld2) from t1 group by Fld1 having avg(Fld2) is not null;
 select Fld1, max(Fld2) from t1 group by Fld1 having std(Fld2) is not null;
@@ -228,10 +229,12 @@ create table t1 (col1 decimal(16,12));
 insert into t1 values (-5.00000000001);
 insert into t1 values (-5.00000000001);
 select col1,sum(col1),max(col1),min(col1) from t1 group by col1;
+-- @ignore{
 delete from t1;
 insert into t1 values (5.00000000001);
 insert into t1 values (5.00000000001);
 select col1,sum(col1),max(col1),min(col1) from t1 group by col1;
+-- @ignore}
 DROP TABLE t1;
 
 
