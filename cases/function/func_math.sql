@@ -17,6 +17,7 @@ select cot(d),cot(fl) from t1;
 select tan(d),tan(fl) from t1;
 select sin(d),sin(fl) from t1;
 
+
 -- @suite
 -- @setup
 drop table if exists abs;
@@ -57,3 +58,6 @@ insert into ceil values(2,-1,-99999999999999999.9,1.23,-1.23);
 -- @label:bvt
 select ceil(d),ceil(dl),ceil(fl) from ceil;
 
+drop table t1;
+drop table ceil;
+drop table abs;

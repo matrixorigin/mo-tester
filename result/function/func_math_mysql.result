@@ -19,19 +19,19 @@ abs(-10)	sign(-5)	sign(5)	sign(0)
 10	-1	1	0
 select log(exp(10)),exp(log(sqrt(10))*2),log(-1),log(NULL),log(1,1),log(3,9),log(-1,2),log(NULL,2);
 log(exp(10))	exp(log(sqrt(10))*2)	log(-1)	log(NULL)	log(1,1)	log(3,9)	log(-1,2)	log(NULL,2)
-10	10.000000000000002	NULL	NULL	NULL	2	NULL	NULL
+10.0	10.000000000000002	null	null	null	2.0	null	null
 select ln(exp(10)),exp(ln(sqrt(10))*2),ln(-1),ln(0),ln(NULL);
 ln(exp(10))	exp(ln(sqrt(10))*2)	ln(-1)	ln(0)	ln(NULL)
-10	10.000000000000002	NULL	NULL	NULL
+10.0	10.000000000000002	null	null	null
 select log2(8),log2(15),log2(-2),log2(0),log2(NULL);
 log2(8)	log2(15)	log2(-2)	log2(0)	log2(NULL)
-3	3.9068905956085187	NULL	NULL	NULL
+3.0	3.9068905956085187	null	null	null
 select log10(100),log10(18),log10(-4),log10(0),log10(NULL);
 log10(100)	log10(18)	log10(-4)	log10(0)	log10(NULL)
-2	1.255272505103306	NULL	NULL	NULL
+2.0	1.255272505103306	null	null	null
 select pow(10,log10(10)),power(2,4);
 pow(10,log10(10))	power(2,4)
-10	16
+10.0	16.0
 select rand(999999);
 rand(999999)
 0.014231365187309091
@@ -40,7 +40,7 @@ pi()	format(sin(pi()/2),6)	format(cos(pi()/2),6)	format(abs(tan(pi())),6)	format
 3.141593	1.000000	0.000000	0.000000	0.642093	1.570796	1.570796	0.785398
 select degrees(pi()),radians(360);
 degrees(pi())	radians(360)
-180	6.283185307179586
+180.0	6.283185307179586
 select format(atan(-2, 2), 6);
 format(atan(-2, 2), 6)
 -0.785398
@@ -55,16 +55,16 @@ format(atan2(pi(), 0), 6)
 1.570796
 SELECT ACOS(1.0);
 ACOS(1.0)
-0
+0.0
 SELECT ASIN(1.0);
 ASIN(1.0)
 1.5707963267948966
 SELECT ACOS(0.2*5.0);
 ACOS(0.2*5.0)
-0
+0.0
 SELECT ACOS(0.5*2.0);
 ACOS(0.5*2.0)
-0
+0.0
 SELECT ASIN(0.8+0.2);
 ASIN(0.8+0.2)
 1.5707963267948966
@@ -141,7 +141,7 @@ format(cast(-2 as unsigned), 2)	format(18446744073709551614, 2)	format(-2, 2)
 18,446,744,073,709,551,614.00	18,446,744,073,709,551,614.00	-2.00
 select sqrt(cast(-2 as unsigned)), sqrt(18446744073709551614), sqrt(-2);
 sqrt(cast(-2 as unsigned))	sqrt(18446744073709551614)	sqrt(-2)
-4294967296	4294967296	NULL
+4.294967296E9	4.294967296E9	null
 select round(cast(-2 as unsigned), 1), round(18446744073709551614, 1), round(-2, 1);
 round(cast(-2 as unsigned), 1)	round(18446744073709551614, 1)	round(-2, 1)
 18446744073709551614	18446744073709551614	-2
@@ -159,16 +159,16 @@ round(10000000000000000000, -19)	truncate(10000000000000000000, -19)
 10000000000000000000	10000000000000000000
 select round(1e0, -309), truncate(1e0, -309);
 round(1e0, -309)	truncate(1e0, -309)
-0	0
+0.0	0.0
 select round(1e1,308), truncate(1e1, 308);
 round(1e1,308)	truncate(1e1, 308)
-10	10
+10.0	10.0
 select round(1e1, 2147483648), truncate(1e1, 2147483648);
 round(1e1, 2147483648)	truncate(1e1, 2147483648)
-10	10
+10.0	10.0
 select round(1.1e1, 4294967295), truncate(1.1e1, 4294967295);
 round(1.1e1, 4294967295)	truncate(1.1e1, 4294967295)
-11	11
+11.0	11.0
 select round(1.12e1, 4294967296), truncate(1.12e1, 4294967296);
 round(1.12e1, 4294967296)	truncate(1.12e1, 4294967296)
 11.2	11.2
@@ -210,7 +210,7 @@ mod(5, cast(-2 as unsigned))	mod(5, 18446744073709551614)	mod(5, -2)
 5	5	1
 select pow(cast(-2 as unsigned), 5), pow(18446744073709551614, 5), pow(-2, 5);
 pow(cast(-2 as unsigned), 5)	pow(18446744073709551614, 5)	pow(-2, 5)
-2.13598703592091e96	2.13598703592091e96	-32
+2.13598703592091E96	2.13598703592091E96	-32.0
 CREATE TABLE t1 (a timestamp, b varchar(20), c bit(1));
 INSERT INTO t1 VALUES('1998-09-23', 'str1', 1), ('2003-03-25', 'str2', 0);
 SELECT a DIV 900 y FROM t1 GROUP BY y;
@@ -245,22 +245,22 @@ INSERT INTO t1 VALUES (-1.1), (1.1),
 (-1e16 - 1.5), (1e16 + 1.5);
 SELECT a, ROUND(a) FROM t1;
 a	ROUND(a)
--1.1	-1
-1.1	1
--1.5	-2
-1.5	2
--1.9	-2
-1.9	2
--2.1	-2
-2.1	2
--2.5	-2
-2.5	2
--2.9	-3
-2.9	3
--1e16	-1e16
-1e16	1e16
--1.0000000000000002e16	-1.0000000000000002e16
-1.0000000000000002e16	1.0000000000000002e16
+-1.1	-1.0
+1.1	1.0
+-1.5	-2.0
+1.5	2.0
+-1.9	-2.0
+1.9	2.0
+-2.1	-2.0
+2.1	2.0
+-2.5	-2.0
+2.5	2.0
+-2.9	-3.0
+2.9	3.0
+-1.0E16	-1.0E16
+1.0E16	1.0E16
+-1.0000000000000002E16	-1.0000000000000002E16
+1.0000000000000002E16	1.0000000000000002E16
 DROP TABLE t1;
 CREATE TABLE t1(f1 LONGTEXT);
 INSERT INTO t1 VALUES ('a');
@@ -285,10 +285,10 @@ ROUND(LEAST(15, -4939092, 0.2704), STDDEV('a'))
 -4939092.0000
 SELECT SUM(DISTINCT (TRUNCATE((.1), NULL)));
 SUM(DISTINCT (TRUNCATE((.1), NULL)))
-NULL
+null
 SELECT CRC32(NULL), CRC32(''), CRC32('MySQL'), CRC32('mysql');
 CRC32(NULL)	CRC32('')	CRC32('MySQL')	CRC32('mysql')
-NULL	0	3259397556	2501908538
+null	0	3259397556	2501908538
 SELECT CRC32('01234567'), CRC32('012345678');
 CRC32('01234567')	CRC32('012345678')
 763378421	939184570
@@ -578,4 +578,3 @@ FROM t1 WHERE JSON_EXTRACT(a, "$.name") = 'goodyear';
 CRC32(REPLACE(JSON_EXTRACT(a, "$.name"),'\"',''))
 3441724142
 DROP TABLE t1;
-

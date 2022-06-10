@@ -45,7 +45,6 @@ drop table t1;
 
 
 #DATA type
-drop table if exists t1,t2;
 create table t1 (name char(20) not null);
 create table t2 (name char(20) not null);
 insert into t1 values ("å");
@@ -70,7 +69,7 @@ select Fld1, max(Fld2) from t1 group by Fld1 having variance(Fld2) is not null;
 drop table t1;
 
 
-drop table if exists t1,t2;
+
 create table t1 (grp int, a bigint unsigned, c char(10) not null);
 insert into t1 values (1,1,"a");
 insert into t1 values (2,2,"b");
@@ -229,12 +228,10 @@ create table t1 (col1 decimal(16,12));
 insert into t1 values (-5.00000000001);
 insert into t1 values (-5.00000000001);
 select col1,sum(col1),max(col1),min(col1) from t1 group by col1;
--- @ignore{
 delete from t1;
 insert into t1 values (5.00000000001);
 insert into t1 values (5.00000000001);
 select col1,sum(col1),max(col1),min(col1) from t1 group by col1;
--- @ignore}
 DROP TABLE t1;
 
 

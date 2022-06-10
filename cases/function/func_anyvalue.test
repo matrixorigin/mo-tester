@@ -14,19 +14,21 @@ a int,
 b int,
 c int
 );
-create table t2 like t1;
+create table t2(
+a int,
+b int,
+c int
+);
 insert into t1 values(1,10,34),(2,20,14);
 insert into t2 values(1,-10,-45);
 select ANY_VALUE(t1.b) from t1 left join t2 on t1.c=t1.b and t1.a=t1.c group by t1.a;
 select 3+(5*ANY_VALUE(t1.b)) from t1 left join t2 on t1.c=t1.b and t1.a=t1.c group by t1.a;
--- @ignore{
 delete from t1;
 insert into t1 (a,b) values(1,10),(1,20),(2,30),(2,40);
 select any_value(a), sum(b) from t1;
 select any_value(a), sum(b) from (select * from t1 order by a desc) as d;
 select a,any_value(b),sum(c) from t1 group by a;
 select a,any_value(b),sum(c) from (select * from t1 order by a desc, b desc) as d group by a;
--- @ignore}
 drop table t1;
 drop table t2;
 
@@ -42,7 +44,7 @@ SELECT any_value(floor(0.5413))-any_value(ceiling(0.553));
 
 
 #DATATYPE
-create table t1(a tinyint, b SMALLINT, c MEDIUMINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, k datetime, l TIMESTAMP, m char(255), n varchar(255));
+create table t1(a tinyint, b SMALLINT, c BIGINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, k datetime, l TIMESTAMP, m char(255), n varchar(255));
 insert into t1 values(1, 1, 2, 43, 5, 35.5, 31.133, 14.314, "2012-03-10", "2012-03-12 10:03:12", "2022-03-12 13:03:12", "ab23c", "d5cf");
 insert into t1 values(71, 1, 2, 34, 5, 5.5, 341.13, 15.314, "2012-03-22", "2013-03-12 10:03:12", "2032-03-12 13:04:12", "abr23c", "3dcf");
 insert into t1 values(1, 1, 21, 4, 54, 53.5, 431.13, 14.394, "2011-03-12", "2015-03-12 10:03:12", "2002-03-12 13:03:12", "afbc", "dct5f");

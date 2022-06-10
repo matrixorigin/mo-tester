@@ -397,3 +397,5 @@ insert into t1 values('2022-06-30','2021-12-30 23:59:59');
 -- @desc:test for func date() select
 select date(a),date(b) from t1;
 select date(a),date(date(a)) as dda from t1;
+
+drop table t1;

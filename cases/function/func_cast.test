@@ -150,17 +150,17 @@ select cast(NULL as DATE);
 #
 # Bug #5228 ORDER BY CAST(enumcol) sorts incorrectly under certain conditions
 #
-CREATE TABLE t1 (a enum ('aac','aab','aaa') not null);
-INSERT INTO t1 VALUES ('aaa'),('aab'),('aac');
+#CREATE TABLE t1 (a enum ('aac','aab','aaa') not null);
+#INSERT INTO t1 VALUES ('aaa'),('aab'),('aac');
 # these two should be in enum order
-SELECT a, CAST(a AS CHAR) FROM t1 ORDER BY CAST(a AS UNSIGNED) ;
+# SELECT a, CAST(a AS CHAR) FROM t1 ORDER BY CAST(a AS UNSIGNED) ;
 # SELECT a, CAST(a AS CHAR charset binary) FROM t1 ORDER BY CAST(a AS UNSIGNED) ;
 # SELECT a, CAST(a AS CHAR(3) charset binary) FROM t1 ORDER BY CAST(a AS CHAR(2) charset binary), a;
 # these two should be in alphabetic order
-SELECT a, CAST(a AS UNSIGNED) FROM t1 ORDER BY CAST(a AS CHAR) ;
+# SELECT a, CAST(a AS UNSIGNED) FROM t1 ORDER BY CAST(a AS CHAR) ;
 # SELECT a, CAST(a AS UNSIGNED) FROM t1 ORDER BY CAST(a AS CHAR charset binary) ;
 # SELECT a, CAST(a AS CHAR(2) charset binary ) FROM t1 ORDER BY CAST(a AS CHAR(3) charset binary), a;
-DROP TABLE t1;
+#DROP TABLE t1;
 
 #
 # Test for bug #6914 "Problems using time()/date() output in expressions".
@@ -258,13 +258,13 @@ drop table t1;
 
 # Show that HH:MM:SS of a DATE are 0, and that it's the same for columns
 # and typecasts (NULL in, NULL out).
-CREATE TABLE t1 (f1 DATE);
-INSERT INTO t1 VALUES ('2007-07-19'), (NULL);
-SELECT HOUR(f1),MINUTE(f1),SECOND(f1) FROM t1;
-SELECT HOUR(CAST('2007-07-19' AS DATE)),MINUTE(CAST('2007-07-19' AS DATE)),SECOND(CAST('2007-07-19' AS DATE));
-SELECT HOUR(CAST(NULL AS DATE)),MINUTE(CAST(NULL AS DATE)),SECOND(CAST(NULL AS DATE));
-SELECT HOUR(NULL),MINUTE(NULL),SECOND(NULL);
-DROP TABLE t1;
+#CREATE TABLE t1 (f1 DATE);
+#INSERT INTO t1 VALUES ('2007-07-19'), (NULL);
+#SELECT HOUR(f1),MINUTE(f1),SECOND(f1) FROM t1;
+#SELECT HOUR(CAST('2007-07-19' AS DATE)),MINUTE(CAST('2007-07-19' AS DATE)),SECOND(CAST('2007-07-19' AS DATE));
+#SELECT HOUR(CAST(NULL AS DATE)),MINUTE(CAST(NULL AS DATE)),SECOND(CAST(NULL AS DATE));
+#SELECT HOUR(NULL),MINUTE(NULL),SECOND(NULL);
+#DROP TABLE t1;
 
 
 # #echo #
@@ -336,11 +336,11 @@ DROP TABLE t1;
 # #echo #
 # #echo # Bug#28547906 ENUM TYPE CASTING WORKS WRONG WITH SUBQUERIES
 # #echo #
-CREATE TABLE t (c1 ENUM('a','b','c'));
-INSERT INTO t VALUES ('a'), ('b'), ('c');
-SELECT CAST(c1 AS UNSIGNED) AS c5 FROM t;
-SELECT CAST(c1 AS UNSIGNED) AS c5 FROM (SELECT c1 FROM t) t;
-DROP TABLE t;
+#CREATE TABLE t (c1 ENUM('a','b','c'));
+#INSERT INTO t VALUES ('a'), ('b'), ('c');
+#SELECT CAST(c1 AS UNSIGNED) AS c5 FROM t;
+#SELECT CAST(c1 AS UNSIGNED) AS c5 FROM (SELECT c1 FROM t) t;
+#DROP TABLE t;
 
 # #echo #
 # #echo # CAST as DOUBLE/FLOAT/REAL

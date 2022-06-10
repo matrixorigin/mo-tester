@@ -5,7 +5,7 @@ SELECT RPAD('hi',5,'?');
 SELECT RPAD('hi',1,'?');
 
 #SELECT,嵌套
-CREATE TABLE t1 (title text);
+CREATE TABLE t1 (title varchar(255));
 INSERT INTO t1 VALUES ('Congress reconvenes in September to debate welfare and adult education');
 INSERT INTO t1 VALUES ('House passes the CAREERS bill');
 SELECT RPAD("",(55 - LENGTH(title)),".") from t1;
@@ -18,8 +18,8 @@ select lpad('a',4,'1'),lpad('a',4,'12'),lpad('abcd',3,'12'), lpad(11, 10 , 22);
 select rpad(741653838,17,'0'),lpad(741653838,17,'0');
 select rpad('abcd',7,'ab'),lpad('abcd',7,'ab');
 select rpad('abcd',1,'ab'),lpad('abcd',1,'ab');
-select rpad('STRING', 20, CONCAT('p','a','d') );
-select lpad('STRING', 20, CONCAT('p','a','d') );
+select rpad('STRING', 20, CONCAT_WS('p','a','d') );
+select lpad('STRING', 20, CONCAT_WS('p','a','d') );
 select rpad('hello', -1, '1');
 select rpad('hello', -4294967295, '1');
 select rpad('hello', 4294967295, '1');

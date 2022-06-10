@@ -43,16 +43,6 @@ SELECT sum(date(d1)) FROM t1;
 sum(date(d1))
 60212157
 drop table t1;
-CREATE TABLE t1 AS
-SELECT
-DATE_ADD('2007-08-03', INTERVAL 1 MINUTE) AS field_str1,
-DATE_ADD('2007-08-03 17:33:00', INTERVAL 1 MINUTE) AS field1_str2,
-DATE_ADD(DATE('2007-08-03'), INTERVAL 1 DAY) AS field_date,
-DATE_ADD(CAST('2007-08-03 17:33:00' AS DATETIME), INTERVAL 1 MINUTE) AS field_datetime;
-SELECT * FROM t1;
-field_str1	field1_str2	field_date	field_datetime
-2007-08-03 00:01:00	2007-08-03 17:34:00	2007-08-04	2007-08-03 17:34:00
-DROP TABLE t1;
 select date("1997-12-31 23:59:59.000001");
 date("1997-12-31 23:59:59.000001")
 1997-12-31
@@ -296,7 +286,7 @@ YEAR(c1)
 DROP TABLE t3;
 SELECT date(now()) = date(utc_timestamp());
 date(now()) = date(utc_timestamp())
-0
+true
 drop table if exists t1;
 create table t1(a date);
 insert into t1 values(DATE("2017-06-15 09:34:21")),(DATE("2019-06-25 10:12:21")),(DATE("2019-06-25 18:20:49"));

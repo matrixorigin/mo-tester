@@ -47,7 +47,7 @@ INSERT INTO t values(9223372036854775808);
 SELECT space(i) FROM t;
 DROP TABLE t;
 SELECT space(1073741824);
-SELECT STR_TO_DATE(SPACE(2),'1');
+SELECT TO_DATE(SPACE(2),'1');
 
 #HAVING & 算术运算
 drop table if exists t1;

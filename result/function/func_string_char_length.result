@@ -23,48 +23,48 @@ drop table t1;
 select char_length('\n\t\r\b\0\_\%\\');
 char_length('\n\t\r\b\0\_\%\\')
 10
-SELECT CHAR_LENGTH(CHAR(NULL,121,83,81,'76')) as my_column;
+SELECT CHAR_LENGTH(concat_ws(" ",121,83,81,'76')) as my_column;
 my_column
-4
+12
 create table t (c varchar(20)) charset utf8mb4;
 insert into t values ('\\');
 select char_length(c) from t;
 char_length(c)
 1
-insert into t values (X'0C');
-select sum(char_length(c)) from t;
-sum(char_length(c))
-2
-insert into t values ('"');
+insert into t values ('0C');
 select sum(char_length(c)) from t;
 sum(char_length(c))
 3
-insert into t values ('\a');
+insert into t values ('"');
 select sum(char_length(c)) from t;
 sum(char_length(c))
 4
-insert into t values ('\b');
+insert into t values ('\a');
 select sum(char_length(c)) from t;
 sum(char_length(c))
 5
-insert into t values ('\t');
+insert into t values ('\b');
 select sum(char_length(c)) from t;
 sum(char_length(c))
 6
-insert into t values ('\n');
+insert into t values ('\t');
 select sum(char_length(c)) from t;
 sum(char_length(c))
 7
-insert into t values ('\r');
+insert into t values ('\n');
 select sum(char_length(c)) from t;
 sum(char_length(c))
 8
-insert into t values (X'10');
+insert into t values ('\r');
 select sum(char_length(c)) from t;
 sum(char_length(c))
 9
+insert into t values ('10');
+select sum(char_length(c)) from t;
+sum(char_length(c))
+11
 drop table t;
-create table t1(a tinyint, b SMALLINT, c MEDIUMINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, k datetime, l TIMESTAMP, m char(255), n varchar(255));
+create table t1(a tinyint, b SMALLINT, c BIGINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, k datetime, l TIMESTAMP, m char(255), n varchar(255));
 insert into t1 values(1, 1, 2, 43, 5, 35.5, 31.133, 14.314, "2012-03-10",  "2012-03-12 10:03:12", "2022-03-12 13:03:12", "ab23c", "d5cf");
 insert into t1 values(71, 1, 2, 34, 5, 5.5, 341.13, 15.314, "2012-03-22",  "2013-03-12 10:03:12", "2032-03-12 13:04:12", "abr23c", "3dcf");
 insert into t1 values(1, 1, 21, 4, 54, 53.5, 431.13, 14.394, "2011-03-12",  "2015-03-12 10:03:12", "2002-03-12 13:03:12", "afbc", "dct5f");

@@ -69,4 +69,4 @@ select id,c,vc from t1 where month(d) > 2;
 select id,c,vc from t1 where month(d) < 3;
 select id,c,vc from t1 where month(d) <> 4;
 
-
+drop table t1;
