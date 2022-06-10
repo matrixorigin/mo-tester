@@ -1,0 +1,5 @@
+[SUMMARY] TOTAL : 51, SUCCESS : 50, ERROR :0, NOEXE :1, SUCCESS RATE : 98%
+[null] did not been executed because result file dose not exists.
+[cases/database/create_database.test] TOTAL : 19, SUCCESS : 19, ERROR :0, NOEXE :0, SUCCESS RATE : 100%
+[cases/database/drop_database.test] TOTAL : 5, SUCCESS : 5, ERROR :0, NOEXE :0, SUCCESS RATE : 100%
+[cases/database/new_database.test] TOTAL : 26, SUCCESS : 26, ERROR :0, NOEXE :0, SUCCESS RATE : 100%

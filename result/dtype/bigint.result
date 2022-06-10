@@ -26,19 +26,19 @@ create table t1 (a bigint unsigned not null, primary key(a));
 insert into t1 values (18446744073709551615), (0xFFFFFFFFFFFFFFFE), (18446744073709551613), (18446744073709551612);
 select * from t1;
 a
-18446744073709551612
-18446744073709551613
-18446744073709551614
 18446744073709551615
+18446744073709551614
+18446744073709551613
+18446744073709551612
 select * from t1 where a=18446744073709551615;
 a
 18446744073709551615
 delete from t1 where a=18446744073709551615;
 select * from t1;
 a
-18446744073709551612
-18446744073709551613
 18446744073709551614
+18446744073709551613
+18446744073709551612
 drop table t1;
 create table t1 ( a int not null default 1, big bigint primary key );
 insert into t1 (big) values (-1),(12345678901234567),(9223372036854775807);
@@ -48,21 +48,21 @@ a	big
 1	12345678901234567
 1	9223372036854775807
 select min(big),max(big),max(big)-1 from t1;
-min(big)	max(big)	max(big)-1
+min(big)        max(big)        max(big) - 1
 -1	9223372036854775807	9223372036854775806
 select min(big),max(big),max(big)-1 from t1 group by a;
-min(big)	max(big)	max(big)-1
+min(big)        max(big)        max(big) - 1
 -1	9223372036854775807	9223372036854775806
 drop table t1;
 create table t1 ( a int not null default 1, big bigint unsigned primary key);
 insert into t1 (big) values (0),(18446744073709551615), (0xFFFFFFFFFFFFFFFE), (18446744073709551613), (18446744073709551612);
 select * from t1;
-a	big
-1	0
-1	18446744073709551612
-1	18446744073709551613
-1	18446744073709551614
-1	18446744073709551615
+a       big
+1       0
+1       18446744073709551615
+1       18446744073709551614
+1       18446744073709551613
+1       18446744073709551612
 select * from t1 order by big limit 1,3;
 a	big
 1	18446744073709551612
@@ -74,10 +74,10 @@ a	big
 1	18446744073709551613
 1	18446744073709551614
 select min(big),max(big),max(big)-1 from t1;
-min(big)	max(big)	max(big)-1
+min(big)        max(big)        max(big) - 1
 0	18446744073709551615	18446744073709551614
 select min(big),max(big),max(big)-1 from t1 group by a;
-min(big)	max(big)	max(big)-1
+min(big)        max(big)        max(big) - 1
 0	18446744073709551615	18446744073709551614
 drop table t1;
 create table t1 (id bigint primary key, a int);
@@ -106,19 +106,19 @@ insert into t2 values(17156792991891826145, 3);
 insert into t2 values( 9223372036854775807, 4);
 select * from t1;
 value64	value32
-9223372036854775807	2
-17156792991891826145	1
+17156792991891826145    1
+9223372036854775807     2
 select * from t2;
-value64	value32
-9223372036854775807	4
-17156792991891826145	3
+value64 value32
+17156792991891826145    3
+9223372036854775807     4
 select * from t1 join t2 on t1.value64=t2.value64 order by t1.value64 asc, t2.value32 desc;
 value64	value32	value64	value32
 9223372036854775807	2	9223372036854775807	4
 17156792991891826145	1	17156792991891826145	3
 select * from t1 join t2 on t1.value64=t2.value64 where t1.value64=17156792991891826145;
-value64	value32	value64	value32
-17156792991891826145	1	17156792991891826145	3
+t1.value64      t1.value32      t2.value64      t2.value32
+17156792991891826145    1       17156792991891826145    3
 drop table if exists t1;
 drop table if exists t2;
 create table t1 (sint64 bigint not null);
@@ -161,20 +161,20 @@ CREATE TABLE t_bigint(id BIGINT);
 INSERT INTO t_bigint VALUES (1), (2);
 SELECT id, id >= 1.1 FROM t_bigint;
 id	id >= 1.1
-1	0
-2	1
+1	false	
+2	true	
 SELECT id, 1.1 <= id FROM t_bigint;
 id	1.1 <= id
-1	0
-2	1
+1	false	
+2	true	
 SELECT id, id = 1.1 FROM t_bigint;
 id	id = 1.1
-1	0
-2	0
+1	false	
+2	false	
 SELECT id, 1.1 = id FROM t_bigint;
 id	1.1 = id
-1	0
-2	0
+1	false	
+2	false	
 SELECT * from t_bigint WHERE id = 1.1;
 id
 SELECT * from t_bigint WHERE id = 1.1e0;
