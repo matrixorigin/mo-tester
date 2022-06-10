@@ -1,3 +1,9 @@
+-- @suite                                                                                                                                                                                
+-- @case
+-- @desc:test for date datatype
+-- @label:bvt
+
+#Test cases of query without table, cast and interval
 select cast('0000-01-01' as date),cast('0000-01-01' as date)-1;
 select cast('2000-1-1' as date);
 select cast('200-01-1' as date);
@@ -10,6 +16,8 @@ SELECT DATE_ADD("2017-06-15", INTERVAL 10 DAY);
 SELECT DATE_ADD("2017-06-15", INTERVAL -10 MONTH);
 SELECT DATE_ADD("2017-06-15", INTERVAL -2018 YEAR);
 SELECT DATE_ADD(20200215, INTERVAL 14 DAY);
+
+#Test cases of query with single table
 drop table if exists t1;
 create table t1 (a date not null, primary key(a));
 insert into t1 values ('2022-01-01'), ('20220102'),("2022-01-03"),(20220104);
@@ -34,6 +42,9 @@ drop table t1;
 create table t1 (id date not null default "2022-01-31", a int, primary key (a));
 insert into t1(a) values (1);
 select * from t1;
+
+
+#Test cases of query with multi tables
 drop table if exists t1;
 drop table if exists t2;
 create table t1 (
@@ -55,6 +66,8 @@ select * from t1;
 select * from t2;
 select * from t1 join t2 on t1.dvalue=t2.dvalue order by 1 desc,t2.value32 asc;
 select * from t1 join t2 on t1.dvalue=t2.dvalue where t1.dvalue>='2022-01-01' group by t1.dvalue order by t2.dvalue;
+
+#Test cases of operators
 drop table if exists t1;
 drop table if exists t2;
 CREATE TABLE t_date(id date);
@@ -85,6 +98,9 @@ SELECT CAST(20220101 AS date) BETWEEN 20220101 AND -1;
 SELECT CAST(00000501 AS date) NOT BETWEEN 100 AND -1;
 SELECT CAST(0 AS date) BETWEEN 0 AND -1;
 SELECT CAST(10000101 as date) BETWEEN '1000-01-01' and '1000-01-02';
+
+
+#Test cases of update with single table
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -123,6 +139,9 @@ select * from t1;
 update t1, t1 as t2 set t1.a=t1.a+1*5 where t1.b = t2.b and t1.a > t2.a;
 select * from t1;
 -- @ignore}
+
+
+#Test cases of update with multi tables
 drop table if exists t11;
 drop table if exists t12;
 drop table if exists t2;
@@ -229,6 +248,8 @@ update t3,t2,t1 set t2.a=t3.a where t3.a in (select a from t4 where b > 8);
 select * from t1;
 select * from t2;
 -- @ignore}
+
+#Test cases of delte with single table
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -265,6 +286,8 @@ delete t1 from t1,t1 as t2 where t1.b = t2.b and t1.a > t2.a;
 select * from t1;
 -- @ignore}
 drop table t1;
+
+#Test cases of delte with multi tables
 create table t11 (a date NOT NULL, b int, primary key (a));
 create table t12 (a date NOT NULL, b int, primary key (a));
 create table t2 (a date NOT NULL, b int, primary key (a));

@@ -1,8 +1,16 @@
+-- @suite                                                                                                                                                                                
+-- @case
+-- @desc:test for decimal datatype
+-- @label:bvt
+
+#Test cases of query without table
 select 0.00,1.11,1234567890.1234567890123456789;
 select 1123.2333+1233.3331;
 select cast(9223372.036854775808 as decimal)+1;
 select round(cast(2320310.66666612312 as decimal));
 select floor(cast(2231231.501231 as decimal));
+
+#Test cases of query with single table
 drop table if exists t1;
 create table t1 (a decimal(29,0) not null, primary key(a));
 insert into t1 values (18446744073709551615), (0xFFFFFFFFFFFFFE), (18446744073709551613.0000000), (18446744073709551612.0000000001);
@@ -24,6 +32,8 @@ select * from t1 order by big limit 1,2;
 select * from t1 order by big limit 2 offset 1;
 select min(big),max(big),max(big)-1 from t1;
 #select min(big),count(big),max(big)-1 from t1 group by a;
+
+#Test cases of query with multi tables
 drop table if exists t1;
 drop table if exists t2;
 create table t1 (
@@ -50,12 +60,14 @@ drop table if exists t2;
 create table t1 (decimal20 decimal(20,18) not null);
 insert into t1 values (1.4e-19),(1.4e-18);
 select * from t1;
-DROP TABLE t1;
+drop table t1;
 create table t1 (decimal_col decimal(29,0));
 insert into t1 values (-17666000000000000000);
 select * from t1 where decimal_col=-17666000000000000000 order by 1 asc;
 select * from t1 where decimal_col='-17666000000000000000' order by decimal_col desc;
 drop table t1;
+
+#Test cases of cast
 select cast(10000002383263201056 as decimal) mod 50 as result;
 select cast(cast(19999999999999999999 as decimal) as unsigned);
 CREATE TABLE t1 (id INT AUTO_INCREMENT PRIMARY KEY,
@@ -71,6 +83,8 @@ UPDATE t1 SET b = a;
 select distinct * from t1 where ((a = '2147483647') and (b = '2147483647'));
 select a,count(a) from t1 group by a having count(a)>=2;
 -- @ignore}
+
+#Test cases of operators
 CREATE TABLE t_decimal(id decimal(10,5));
 INSERT INTO t_decimal VALUES (1), (2),(1.099999999),(2.20000000001);
 select * from t_decimal;
@@ -90,7 +104,7 @@ SELECT * from t_decimal WHERE id BETWEEN 1.1 AND 1.9;
 SELECT * from t_decimal WHERE id BETWEEN 1.1e0 AND 1.9e0;
 SELECT * from t_decimal WHERE id BETWEEN '1.1' AND '1.9';
 SELECT * from t_decimal WHERE id BETWEEN '1.1e0' AND '1.9e0';
-DROP TABLE t1;
+drop table t1;
 CREATE TABLE t1 (a decimal(2,1));
 INSERT INTO t1 VALUES (1),(0.8999),(0.9);
 SELECT * FROM t1 WHERE coalesce(a) BETWEEN 0 and 0.9;
@@ -99,7 +113,7 @@ SELECT * FROM t1 WHERE coalesce(a) in (0.8,0.9);
 SELECT * FROM t1 WHERE a BETWEEN 0 AND 0.9;
 SELECT * FROM t1 WHERE a=0.9;
 SELECT * FROM t1 WHERE a IN (0.8,0.9);
-DROP TABLE t1;
+drop table t1;
 create table t (id decimal(23,3) unsigned, b int);
 insert into t values(889475494977969.3574,1);
 insert into t values(889475494977969.3579,2);
@@ -113,6 +127,8 @@ SELECT CAST(1.00 AS decimal) BETWEEN 1 AND -1;
 SELECT CAST(1.00 AS decimal) NOT BETWEEN 1 AND -1;
 SELECT CAST(-0 AS decimal) BETWEEN 0 AND -1;
 SELECT CAST(0 AS decimal) NOT BETWEEN 0 AND -1;
+
+#Test cases of update with single table
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -160,6 +176,8 @@ update t1, t1 as t2 set t1.a=t1.a*2 where t1.b = t2.b and t1.a > t2.a;
 select * from t1;
 -- @ignore}
 drop table t1;
+
+#Test cases of update with multi tables
 create table t11 (a decimal NOT NULL, b int, primary key (a));
 create table t12 (a decimal NOT NULL, b int, primary key (a));
 create table t2 (a decimal NOT NULL, b int, primary key (a));
@@ -211,7 +229,9 @@ insert into t1 values (0);
 update t1 set a=a+(a MOD 2) where a is null;
 select * from t1;
 -- @ignore}
-DROP TABLE if exists t1,t2;
+
+drop table if exists t1;
+drop table if exists t2;
 CREATE TABLE t1 (
 a decimal
 );
@@ -265,7 +285,11 @@ insert into t1 values(4,7,1,5,4715.22,471522,4715.22,'good morning','my subquery
 update t1,(select * from (select * from (select id,ti,si,de from (select * from t1 ) sub3 where fl <> 4.5 ) sub2 where ti > 1) sub1 where id >2 ) sub set t1.id=sub.id*10+t1.id where t1.id = 4;
 select max(id) from t1;
 -- @ignore}
-DROP TABLE IF EXISTS t1,t2,t3,t4;
+
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
+drop table if exists t4;
 create table t1 (a decimal);
 create table t2 (a decimal, b int);
 create table t3 (a decimal);
@@ -279,6 +303,8 @@ update t3,t2,t1 set t1.a=0 and t2.a=t2.a+t3.a where t3.a in (select b from t4 wh
 select * from t1;
 select * from t2;
 -- @ignore}
+
+#Test case of delete with single table
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -350,6 +376,8 @@ delete t1,t2 from t1 JOIN t2 on t1.a=t2.b WHERE t1.a = 10;
 select * from t1;
 select * from t2;
 -- @ignore}
+
+#Test cases of delete with multi tables
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -370,7 +398,10 @@ insert into t1 values (0.00000);
 delete t1 from t1 where a is null;
 select * from t1;
 -- @ignore}
-DROP TABLE if exists t1,t2;
+
+
+drop table if exists t1;
+drop table if exists t2;
 CREATE TABLE t1 (
 a decimal
 );
@@ -408,7 +439,11 @@ insert into t1 values(4,7,1,5,4715.22,471522,4715.22,'good morning','my subquery
 delete t1 from t1,((select * from (select * from (select id,ti,si,de from (select * from t1 ) sub3 where fl <> 4.5 ) sub2 where ti > 1) sub1 where id >2 )) sub2 where t1.id=sub2.id;
 select id from t1;
 -- @ignore}
-DROP TABLE IF EXISTS t1,t2,t3,t4;
+
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
+drop table if exists t4;
 create table t3 (a decimal);
 create table t4 (a decimal(10,5) not null, b decimal not null);
 insert into t4 values (4,8.0000),(3,8.00001),(5,9);

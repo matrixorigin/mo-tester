@@ -1,3 +1,9 @@
+-- @suite                                                                                                                                                                                
+-- @case
+-- @desc:test for char datatype
+-- @label:bvt
+
+#Test cases of  query without tables
 select 'test',"test";
 select 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 SELECT CONCAT(2,' test');
@@ -12,6 +18,8 @@ SELECT CONCAT('My', 'S', 'QL');
 SELECT CONCAT('My', NULL, 'QL');
 SELECT CONCAT(14,'.3');
 SELECT (CAST(0x7FFFFFFFFFFFFFFF AS varchar));
+
+#Test cases of query with single table and operators
 drop table if exists t1;
 create table t1 (a varchar(10));
 insert into t1 values('abcdef');
@@ -87,6 +95,8 @@ select * from employees where officeCode not in ('5','7','1');
 select avg(officeCode) from employees where jobTitle like 'Sales%' group by jobTitle order by 1; 
 select officeCode,sum(cast(officeCode as unsigned)) from employees group by officeCode;
 select employeeNumber,officeCode,reportsTo from employees where employeeNumber>1400 and reportsTo is not null order by officeCode+1,employeeNumber;
+
+#Test cases of query with multi tables
 create table job(
 jobid int primary key,
 jobTitle varvarchar(50)
@@ -104,6 +114,9 @@ select employeeNumber,e.jobTitle,j.jobid from employees e join job j on e.jobTit
 select distinct e.jobTitle,j.jobid from employees e join job j on e.jobTitle=j.jobTitle;
 select e.jobTitle,sum(jobid) from employees e join job j on e.jobTitle=j.jobTitle group by jobTitle having sum(jobid)>5;
 select e.jobTitle,sum(jobid) from employees e join job j on e.jobTitle=j.jobTitle group by jobTitle having sum(jobid)>5 order by 2 desc;
+
+
+#Test cases of update with single table
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -150,6 +163,8 @@ select * from t1;
 update t1, t1 as t2 set t1.a= COALESCE(t1.a,t2.b) where t1.b = t2.b;
 select * from t1;
 -- @ignore}
+
+#Test cases of update with multi tables
 drop table t1;
 create table t11 (a varchar(10) NOT NULL, b int, primary key (a));
 create table t12 (a varchar(10) NOT NULL, b int, primary key (a));
@@ -249,6 +264,8 @@ update t3,t2,t1 set t1.a=0 and t2.a=t2.a+t3.a where t3.a in (select b from t4 wh
 select * from t1;
 select * from t2;
 -- @ignore}
+
+#Test cases of delete with single table
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -295,6 +312,9 @@ select * from t1;
 delete t1 from t1,t1 as t2 where t1.b = t2.b and t1.a > t2.a;
 select * from t1;
 -- @ignore}
+
+
+#Test cases of multi tables
 drop table t1;
 create table t11 (a varchar(10) NOT NULL, b int, primary key (a));
 create table t12 (a varchar(10) NOT NULL, b int, primary key (a));

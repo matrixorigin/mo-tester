@@ -1,6 +1,14 @@
+-- @suite                                                                                                                                                                                
+-- @case
+-- @desc:test for float datatype
+-- @label:bvt
+
+#Test cases of query without table
 select -3.402823466E+38,-3.402823467E+38,-1.175494351E-38,-1.175494352E-38;
 select 1.175494351E-38,1.175494352E-38,3.402823467E+38,3.402823467E+38;
 select -3.402823466E+38*1,-1.175494351E-38-0.1E-38;
+
+#Test cases of query with single table
 drop table if exists t1;
 create table t1 (a float not null, primary key(a));
 insert into t1 values(-3.402823466E+38),(-1.175494351E-38),(0),(1.175494351E-38),(3.402823466E+38);
@@ -37,6 +45,8 @@ insert into t1 values (2.22,2);
 insert into t1 values (3.333,3);
 insert into t1 values (4.4444,4);
 select * from t1 order by id desc;
+
+#Test cases of query with multi tables
 drop table if exists t1;
 drop table if exists t2;
 create table t1 (
@@ -59,6 +69,8 @@ select * from t2;
 select * from t1 join t2 on t1.a=t2.a order by t1.a asc, t2.b desc;
 select * from t1 join t2 on t1.a=t2.a where t1.a>=0.123456;
 select * from t1 join t2 on t2.b=t1.a order by 1,2 desc;
+
+#Test cases of cast and operators
 drop table if exists t1;
 drop table if exists t2;
 create table t1 (a float);
@@ -131,6 +143,8 @@ SELECT CAST(0.00 AS UNSIGNED) NOT BETWEEN 0 AND -1;
 SELECT ( -1 BETWEEN 0 AND 1 );
 SELECT ( 0 BETWEEN  0.000000001 AND 1 );
 SELECT ( 1 BETWEEN 1.0000001 and 0);
+
+#Test cases of update with single table
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -178,6 +192,8 @@ update t1, t1 as t2 set t1.a=t1.a*2 where t1.b = t2.b and t1.a > t2.a;
 select * from t1;
 -- @ignore}
 drop table t1;
+
+#Test cases of update with multi tables
 create table t11 (a float(12) NOT NULL, b int, primary key (a));
 create table t12 (a float(12) NOT NULL, b int, primary key (a));
 create table t2 (a float(12) NOT NULL, b int, primary key (a));
@@ -301,6 +317,9 @@ update t3,t2,t1 set t1.a=0 and t2.a=t2.a+t3.a where t3.a in (select b from t4 wh
 select * from t1;
 select * from t2;
 -- @ignore}
+
+
+#Test cases of delete with single table
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -348,6 +367,8 @@ delete t1 from t1,t1 as t2 where t1.b = t2.b and t1.a > t2.a;
 select * from t1;
 -- @ignore}
 drop table t1;
+
+#Test cases of delete with multi tables
 create table t11 (a float(12) NOT NULL, b int, primary key (a));
 create table t12 (a float(12) NOT NULL, b int, primary key (a));
 create table t2 (a float(6) NOT NULL, b int, primary key (a));

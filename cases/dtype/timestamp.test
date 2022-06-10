@@ -1,3 +1,9 @@
+-- @suite                                                                                                                                                                                
+-- @case
+-- @desc:test for timestamp datatype
+-- @label:bvt
+
+#Test cases of query with single table
 drop table if exists t1;
 create table t1 (a timestamp  not null, primary key(a));
 insert into t1 values (20200101000000), ('2022-01-02'), ('2022-01-02 00:00:01'), ('2022-01-02 00:00:01.512345');
@@ -21,6 +27,8 @@ drop table t1;
 create table t1 (id timestamp(6) not null default "2022-01-31 00:00:00.0000006", a int, primary key (a));
 insert into t1(a) values(1);
 select * from t1;
+
+#Test cases of query with multi tables
 drop table if exists t1;
 drop table if exists t2;
 create table t1 (
@@ -42,6 +50,8 @@ select * from t1;
 select * from t2;
 select * from t1 join t2 on t1.dt=t2.dt order by 1 desc, t2.dt asc;
 select * from t1 join t2 on t1.dt=t2.dt where t1.value32<>t2.value32;
+
+#Test cases of operators
 drop table if exists t1;
 drop table if exists t2;
 CREATE TABLE t_timestamp(id timestamp(6));
@@ -67,6 +77,8 @@ SELECT * FROM t1 WHERE coalesce(a) not BETWEEN '2022-02-28' and '2022-03-01';
 SELECT * FROM t1 WHERE coalesce(a)!=20220301;
 SELECT * FROM t1 WHERE coalesce(a) in ('2022-03-01','2022-03-01 00:00:00.0001');
 drop table t1;
+
+#Test cases of update with single table
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -105,6 +117,9 @@ select * from t1;
 update t1, t1 as t2 set t1.a=t1.a+1*5 where t1.b = t2.b and t1.a > t2.a;
 select * from t1;
 -- @ignore}
+
+
+#Test cases of update with multi tables
 drop table if exists t11;
 drop table if exists t12;
 drop table if exists t2;
@@ -211,6 +226,9 @@ update t3,t2,t1 set t2.a=t3.a where t3.a in (select a from t4 where b > 8);
 select * from t1;
 select * from t2;
 -- @ignore}
+
+
+#Test cases of delete with single table
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -260,6 +278,9 @@ delete t11,t12 from t11,t12 where t11.b <> (select b from t2 where t11.a = t2.a)
 select * from t11;
 select * from t12;
 -- @ignore}
+
+
+#Test cases of delete with multi tables
 drop table if exists t1;
 drop table if exists t2;
 CREATE TABLE t1(a timestamp PRIMARY KEY);
