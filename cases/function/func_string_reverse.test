@@ -8,10 +8,10 @@ select reverse(NULL);
 
 #嵌套, 子查询
 #0.5暂不支持
-CREATE TABLE t1(id INT);
-INSERT INTO t1 VALUES (1),(2),(3),(4);
-SELECT REVERSE(EXISTS(SELECT * FROM t1));
-DROP TABLE t1;
+#CREATE TABLE t1(id INT);
+#INSERT INTO t1 VALUES (1),(2),(3),(4);
+#SELECT REVERSE(EXISTS(SELECT * FROM t1));
+#DROP TABLE t1;
 
 #WHERE
 create table t1 (a varchar(20));

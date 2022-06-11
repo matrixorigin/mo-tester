@@ -1,6 +1,6 @@
 SELECT MONTH(NOW()) AS Current_Month;
 Current_Month
-5
+6
 SELECT MONTH(date_add("2021-09-30", interval 200 day)) AS MONTH;
 MONTH
 4

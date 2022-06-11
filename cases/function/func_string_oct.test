@@ -27,7 +27,7 @@ drop table t1;
 
 
 #DATA TYPES
-create table t1(a tinyint, b SMALLINT, c MEDIUMINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, j time, k datetime, l TIMESTAMP, m char(255), n varchar(255));
+create table t1(a tinyint, b SMALLINT, c BIGINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, j time, k datetime, l TIMESTAMP, m char(255), n varchar(255));
 insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "10:03:12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
 insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "10:03:12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
 insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "10:03:12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");

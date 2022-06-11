@@ -80,16 +80,15 @@ b
 -4213.0
 drop table t1;
 select ceil(123.342, 1);
-Incorrect parameter count in the call to native function 'ceil'
+ceil(123.342, 1)
+123.4000
 select ceil(123.45, -1);
-Incorrect parameter count in the call to native function 'ceil'
+ceil(123.45, -1)
+130.0000
 select ceil(123.342124124214, 100);
-Incorrect parameter count in the call to native function 'ceil'
 select ceil(-123.342124124214, -100);
-Incorrect parameter count in the call to native function 'ceil'
 select ceil(123.342, null);
-Incorrect parameter count in the call to native function 'ceil'
+ceil(123.342, null)
+NULL
 select ceil(null, 1);
-Incorrect parameter count in the call to native function 'ceil'
 select ceil(null, null);
-Incorrect parameter count in the call to native function 'ceil'

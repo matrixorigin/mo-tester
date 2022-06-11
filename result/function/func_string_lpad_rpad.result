@@ -10,7 +10,7 @@ hi???
 SELECT RPAD('hi',1,'?');
 RPAD('hi',1,'?')
 h
-CREATE TABLE t1 (title text);
+CREATE TABLE t1 (title varchar(255));
 INSERT INTO t1 VALUES ('Congress reconvenes in September to debate welfare and adult education');
 INSERT INTO t1 VALUES ('House passes the CAREERS bill');
 SELECT RPAD("",(55 - LENGTH(title)),".") from t1;
@@ -33,12 +33,12 @@ abcdaba	abaabcd
 select rpad('abcd',1,'ab'),lpad('abcd',1,'ab');
 rpad('abcd',1,'ab')	lpad('abcd',1,'ab')
 a	a
-select rpad('STRING', 20, CONCAT('p','a','d') );
-rpad('STRING', 20, CONCAT('p','a','d') )
-STRINGpadpadpadpadpa
-select lpad('STRING', 20, CONCAT('p','a','d') );
-lpad('STRING', 20, CONCAT('p','a','d') )
-padpadpadpadpaSTRING
+select rpad('STRING', 20, CONCAT_WS('p','a','d') );
+rpad('STRING', 20, CONCAT_WS('p','a','d') )
+STRINGapdapdapdapdap
+select lpad('STRING', 20, CONCAT_WS('p','a','d') );
+lpad('STRING', 20, CONCAT_WS('p','a','d') )
+apdapdapdapdapSTRING
 select rpad('hello', -1, '1');
 rpad('hello', -1, '1')
 null

@@ -5,6 +5,11 @@ select id, stddev_pop(value1)  from t1 group by id;
 id	stddev_pop(value1)
 1	0.816496580927726
 2	1.118033988749895
+select id, variance(value1)  from t1 group by id;
+id	variance(value1)
+1	0.6666666666666666
+2	1.25
+drop table t1;
 drop table if exists t;
 CREATE TABLE t(txt char(1), i INT);
 INSERT INTO t VALUES ('a', 2), ('b', 8), ('b', 0), ('c', 2);
@@ -13,3 +18,4 @@ txt	s
 a	0.0
 c	0.0
 b	4.0
+drop table t;

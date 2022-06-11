@@ -3,11 +3,14 @@ create table t1(a varchar(255),b char(255));
 insert into t1 values('', 'abcd');
 insert into t1 values('1111', '');
 select empty(a),empty(b) from t1;
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'empty(a),empty(b) from t1' at line 1
+empty(a)	empty(b)
+1	0
+0	1
 drop table t1;
 drop table if exists t1;
 create table t1(a varchar(255),b char(255));
 insert into t1 values(NULL, NULL);
 select empty(a),empty(b) from t1;
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'empty(a),empty(b) from t1' at line 1
+empty(a)	empty(b)
+null	null
 drop table t1;

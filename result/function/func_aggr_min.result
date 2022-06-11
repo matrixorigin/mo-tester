@@ -95,4 +95,4 @@ Fld1	min(Fld2)
 drop table t1;
 SELECT min(1)<min(2);
 min(1)<min(2)
-1
+true

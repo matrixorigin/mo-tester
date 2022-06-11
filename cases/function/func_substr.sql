@@ -142,3 +142,6 @@ create table t1 ( d int);
 insert into t1 values(0),(-1),(2),(10);
 select space(d) from t1 where d <> -1;
 select space(d) from t1;
+
+
+drop table t1;

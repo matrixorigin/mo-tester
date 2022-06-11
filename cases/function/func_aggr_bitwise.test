@@ -75,9 +75,6 @@ insert into t1 (big) values (184467440737615);
 select * from t1;
 select distinct BIT_AND(big),BIT_OR(big), BIT_XOR(big),BIT_AND(big)-1, BIT_OR(big)-1, BIT_XOR(big)-1  from t1;
 select BIT_AND(big),BIT_OR(big), BIT_XOR(big),BIT_AND(big)-1, BIT_OR(big)-1, BIT_XOR(big)-1 from t1 group by a;
-alter table t1 add key (big);
-select distinct BIT_AND(big),BIT_OR(big), BIT_XOR(big),BIT_AND(big)-1, BIT_OR(big)-1, BIT_XOR(big)-1  from t1;
-select BIT_AND(big),BIT_OR(big), BIT_XOR(big),BIT_AND(big)-1, BIT_OR(big)-1, BIT_XOR(big)-1 from t1 group by a;
 drop table t1;
 
 
