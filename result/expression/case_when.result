@@ -7,9 +7,6 @@ null
 select CASE "c" when "a" then 1 when "b" then 2 ELSE 3 END;
 CASE "c" when "a" then 1 when "b" then 2 ELSE 3 END
 3
-select CASE concat("a","b") when concat("ab","") then "a" when "b" then "b" end;
-CASE concat("a","b") when concat("ab","") then "a" when "b" then "b" end
-a
 select CASE when 1=0 then "true" else "false" END;
 CASE when 1=0 then "true" else "false" END
 false

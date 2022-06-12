@@ -676,7 +676,10 @@ public class Executor {
         //if the row numbers do not match,return false
         if(exps.length != acts.length)
             return false;
-
+        if(!COMMON.IS_COMPARE_META){
+            exps[0] = COMMON.THIS_IS_MO;
+            acts[0] = COMMON.THIS_IS_MO;
+        }
         Arrays.sort(exps);
         Arrays.sort(acts);
         for(int i = 0 ; i < exps.length; i++){

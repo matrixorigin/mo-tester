@@ -45,6 +45,8 @@ public class COMMON {
 
     public static int MAX_ROW_COUNT_IN_RS = 100;//the max row count in the resultset
 
+    public static String THIS_IS_MO = "THIS IS MO";
+
     //事务相关
     public static String START_TRX = "begin";
     public static String COMMIT_TRX = "commit";
