@@ -53,7 +53,7 @@ insert into t1 values(5,-32768);
 insert into t2 values(5,-32768);
 select * from t1;
 select * from t2;
-select * from t1 join t2 on t1.valueu16=t2.valueu16  order by 1 asc, t2.value16 desc;;
+select * from t1 join t2 on t1.valueu16=t2.valueu16  order by 1 asc, t2.value16 desc;
 select * from t1 join t2 on t1.valueu16=t2.valueu16 where t1.valueu16=65535;
 select * from t1 join t2 on t1.value16=t2.value16 order by 2;
 drop table if exists t1;
