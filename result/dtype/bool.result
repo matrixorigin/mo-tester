@@ -8,17 +8,17 @@ true	false
 true	true
 false	false
 false    true
-NULL	NULL
+null	null
 SELECT * FROM t1 WHERE IF(a AND 1, 0, 1);
 a	b
 false	true
 false	false
-NULL	NULL
+null	null
 SELECT * FROM t1 WHERE IF(1 AND a, 0, 1);
 a	b
 false	true
 false	false
-NULL	NULL
+null	null
 SELECT * FROM t1 where NOT(a AND 1);
 a	b
 false	true
@@ -41,28 +41,28 @@ true	false
 true	true
 SELECT * FROM t1 where (1 AND a) IS NULL;
 a	b
-NULL	NULL
+null	null
 select not a,a and b,a or b,a xor b from t1;
 not a	a and b	a or b	a xor b
 true	false	true	true
 false	false	true	true
 false	true	true	false
 true	false	false	false
-NULL	NULL	NULL	NULL
+null	null	null	null
 select not a and not b from t1;
 not a and not b
 false
 false
 false
 true
-NULL
+null
 select not a or b xor b from t1;
 not a or b xor b
 true
 false
 false
 true
-NULL
+null
 drop table if exists t2;
 create table t2(a int,b int);
 insert into t2 values(1,2),(3,4);
@@ -82,7 +82,7 @@ select a,count(a) from t1 group by a;
 a	count(a)
 false	2
 true	2
-NULL	0
+null	0
 select max(b) from t1;
 max(b)
 true
@@ -97,7 +97,7 @@ a
 true
 select * from t1 where a IS NULL;
 a	b
-NULL	NULL
+null	null
 select * from t1 where b is NOT NULL;
 a	b
 false	true
@@ -130,7 +130,7 @@ false	2
 true	2
 select a,any_value(b) from t1 group by a order by a asc;
 a	any_value(b)
-NULL	NULL
+null	null
 false	true
 true	false
 select a,b from t1 where a in (0,1);
@@ -153,7 +153,7 @@ false
 true
 false
 false
-NULL
+null
 update t1 set a=false where b is null;
 update t1,t2 set t1.b=1 where t1.a=t2.a;
 delete from t1 where a=false;
