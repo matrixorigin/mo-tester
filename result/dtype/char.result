@@ -82,7 +82,6 @@ INSERT INTO Demochar VALUES('Rapier', 'Abigail','F',	'Human Resources',38);
 INSERT INTO Demochar VALUES('Martin', 'Kelly','F','Information Services',54);
 INSERT INTO Demochar VALUES('Poland', 'Carole','F','Production Control',29);
 SELECT * FROM Demochar;
-SELECT * FROM Demochar;
 LastName	FirstName	Gender	DepartmentName	Age
 Gilbert	Kevin	M	Tool Design	33
 Johnson	David	M	Engineering	66

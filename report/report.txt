@@ -1,0 +1,15 @@
+[SUMMARY] TOTAL : 2931, SUCCESS : 2257, ERROR :674, NOEXE :0, SUCCESS RATE : 77%
+[cases/dtype/bigint.test] TOTAL : 272, SUCCESS : 211, ERROR :61, NOEXE :0, SUCCESS RATE : 77%
+[cases/dtype/bool.test] TOTAL : 40, SUCCESS : 16, ERROR :24, NOEXE :0, SUCCESS RATE : 40%
+[cases/dtype/char.test] TOTAL : 186, SUCCESS : 147, ERROR :39, NOEXE :0, SUCCESS RATE : 79%
+[cases/dtype/datatype.test] TOTAL : 50, SUCCESS : 44, ERROR :6, NOEXE :0, SUCCESS RATE : 88%
+[cases/dtype/date.test] TOTAL : 216, SUCCESS : 168, ERROR :48, NOEXE :0, SUCCESS RATE : 77%
+[cases/dtype/datetime.test] TOTAL : 219, SUCCESS : 156, ERROR :63, NOEXE :0, SUCCESS RATE : 71%
+[cases/dtype/decimal.test] TOTAL : 249, SUCCESS : 194, ERROR :55, NOEXE :0, SUCCESS RATE : 77%
+[cases/dtype/double.test] TOTAL : 257, SUCCESS : 202, ERROR :55, NOEXE :0, SUCCESS RATE : 78%
+[cases/dtype/float.test] TOTAL : 269, SUCCESS : 208, ERROR :61, NOEXE :0, SUCCESS RATE : 77%
+[cases/dtype/int.test] TOTAL : 265, SUCCESS : 216, ERROR :49, NOEXE :0, SUCCESS RATE : 81%
+[cases/dtype/smallint.test] TOTAL : 267, SUCCESS : 216, ERROR :51, NOEXE :0, SUCCESS RATE : 80%
+[cases/dtype/timestamp.test] TOTAL : 200, SUCCESS : 134, ERROR :66, NOEXE :0, SUCCESS RATE : 67%
+[cases/dtype/tinyint.test] TOTAL : 264, SUCCESS : 201, ERROR :63, NOEXE :0, SUCCESS RATE : 76%
+[cases/dtype/varchar.test] TOTAL : 177, SUCCESS : 144, ERROR :33, NOEXE :0, SUCCESS RATE : 81%
