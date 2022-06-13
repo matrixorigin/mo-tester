@@ -247,7 +247,8 @@ select a from t1 group by a having COALESCE(a)<"2002-01-01";
 a
 2001-01-01 00:00:00
 drop table t1;
-drop table if exists t1, t2;
+drop table if exists t1;
+drop table if exists t2;
 create table t1(a INT,  b varchar(255));
 create table t2(a INT,  b varchar(255));
 insert into t1 values(1, "你好"), (3, "再见");

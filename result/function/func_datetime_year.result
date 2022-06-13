@@ -111,7 +111,8 @@ a	b
 1	2012-10-12
 4	2012-03-23
 drop table t1;
-drop table if exists t1, t2;
+drop table if exists t1;
+drop table if exists t2;
 create table t1(a INT,  b date);
 create table t2(a INT,  b date);
 insert into t1 values(1, "2012-10-12"),(2, "2004-04-24"),(3, "2008-12-04"),(4, "2012-03-23");

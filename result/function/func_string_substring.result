@@ -255,7 +255,8 @@ abc
 abcd
 abcde
 drop table t1;
-drop table if exists t1, t2;
+drop table if exists t1;
+drop table if exists t2;
 create table t1(a varchar(5));
 create table t2(a varchar(20));
 insert into t1 values('ab'), ('abc'), ('abcd'), ('abcde');

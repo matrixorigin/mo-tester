@@ -65,7 +65,8 @@ drop table t1;
 
 
 #ON CONDITION
-drop table if exists t1, t2;
+drop table if exists t1;
+drop table if exists t2;
 create table t1(a INT,  b float);
 create table t2(a INT,  b float);
 insert into t1 values(ceiling(12124.413), ceiling(-4213.413)), (ceiling(12124.123), ceiling(-42413.409));

@@ -80,7 +80,8 @@ select a from t1 group by a having reverse(a)=reverse(a);
 drop table t1;
 
 #DISTINCT,ON CONDITION
-drop table if exists t1, t2;
+drop table if exists t1;
+drop table if exists t2;
 create table t1(a INT,  b varchar(255));
 create table t2(a INT,  b varchar(255));
 insert into t1 values(1, "abc"),(1, "bbb"),(3, "aaa"),(4, "2012");

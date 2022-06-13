@@ -61,7 +61,8 @@ select min(big),max(big),max(big)-1 from t1 group by a;
 min(big)	max(big)	max(big)-1
 -1	18446744073709515	18446744073709514
 drop table t1;
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
 create table t1 (name char(20) not null);
 create table t2 (name char(20) not null);
 insert into t1 values ("å");
@@ -106,7 +107,8 @@ Fld1	max(Fld2)
 1	20
 3	50
 drop table t1;
-drop table if exists t1,t2;
+drop table if exists t1;
+drop table if exists t2;
 create table t1 (grp int, a bigint unsigned, c char(10) not null);
 insert into t1 values (1,1,"a");
 insert into t1 values (2,2,"b");

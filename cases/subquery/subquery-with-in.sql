@@ -616,7 +616,8 @@ FROM t1
 WHERE (i1, i2)
       NOT IN (SELECT i1, i2 FROM t2);
 
-DROP TABLE IF EXISTS t1,t2;
+drop table if exists t1;
+drop table if exists t2;
 CREATE TABLE t1 (a INT);
 INSERT INTO t1 VALUES(1);
 CREATE TABLE t2(a INT);
@@ -928,7 +929,8 @@ WHERE NULL NOT IN (
 
 DROP TABLE IF EXISTS t1;
 
-DROP TABLE IF EXISTS t1,t2;
+drop table if exists t1;
+drop table if exists t2;
 CREATE TABLE t1(i INT);
 INSERT INTO t1 VALUES (1), (2), (3);
 CREATE TABLE t1s(i INT);
