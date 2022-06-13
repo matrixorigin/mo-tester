@@ -97,7 +97,8 @@ a	b
 12124	-4213.41
 12124	-42413.4
 drop table t1;
-drop table if exists t1, t2;
+drop table if exists t1;
+drop table if exists t2;
 create table t1(a INT,  b float);
 create table t2(a INT,  b float);
 insert into t1 values(12124, -4213.413), (1212, -42413.409);

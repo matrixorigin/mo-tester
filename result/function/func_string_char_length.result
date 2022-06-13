@@ -90,7 +90,8 @@ a	b
 2	你好
 2	再见
 drop table t1;
-drop table if exists t1, t2;
+drop table if exists t1;
+drop table if exists t2;
 create table t1(a INT,  b varchar(255));
 create table t2(a INT,  b varchar(255));
 insert into t1 values(char_length("你好"), "你好"), (char_length("再见"), "再见");
