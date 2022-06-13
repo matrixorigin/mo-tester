@@ -6,7 +6,7 @@
 #Test cases of  query without tables
 select 'test',"test";
 select 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
-SELECT CONCAT(2,' test');
+SELECT CONCAT_WS(2,' test');
 SELECT 38.8, CAST(38.8 AS CHAR);
 SELECT '9223372036854775807' = 9223372036854775807;
 SELECT '9223372036854775807' = "9223372036854775807";
@@ -14,14 +14,14 @@ SELECT CAST('9223372036854775807' AS UNSIGNED) = 9223372036854775806;
 SELECT CAST("2017-08-29" AS DATE);
 SELECT CAST(150 AS CHAR);
 SELECT CAST(5-10 AS CHAR);
-SELECT CONCAT('My', 'S', 'QL');
-SELECT CONCAT('My', NULL, 'QL');
-SELECT CONCAT(14,'.3');
+SELECT CONCAT_WS('My', 'S', 'QL');
+SELECT CONCAT_WS('My', NULL, 'QL');
+SELECT CONCAT_WS(14,'.3');
 SELECT (CAST(0x7FFFFFFFFFFFFFFF AS char));
 
 #Test cases of query with single table and operators
 drop table if exists t1;
-create table t1 (a varchar(10));
+create table t1 (a char(10));
 insert into t1 values('abcdef');
 insert into t1 values('_bcdef');
 insert into t1 values('a_cdef');
@@ -33,36 +33,36 @@ select * from t1 where a like 'ab\_def';
 select * from t1 where a not like 'a%';
 select * from t1 where a like "\__cdef";
 select * from t1 where a not like "%d_\_";
-CREATE TABLE Demovarvarchar
+CREATE TABLE Demochar
 (
-LastName varvarchar(10) primary key,
-FirstName varvarchar(10),
-Gender varvarchar(1),
-DepartmentName varvarchar(20),
+LastName char(10) primary key,
+FirstName char(10),
+Gender char(1),
+DepartmentName char(20),
 Age int
 );
-INSERT INTO Demovarvarchar VALUES('Gilbert', 'Kevin','M','Tool Design',33);
-INSERT INTO Demovarvarchar VALUES('Tamburello', 'Andrea','F','Marketing',45);
-INSERT INTO Demovarvarchar VALUES('Johnson', 'David','M','Engineering',66);
-INSERT INTO Demovarvarchar VALUES('Sharma', 'Bradley','M','Production',27);
-INSERT INTO Demovarvarchar VALUES('Rapier', 'Abigail','F',	'Human Resources',38);
-INSERT INTO Demovarvarchar VALUES('Martin', 'Kelly','F','Information Services',54);
-INSERT INTO Demovarvarchar VALUES('Poland', 'Carole','F','Production Control',29);
-SELECT * FROM Demovarvarchar;
-select concat(LastName,FirstName) from Demovarvarchar where Age > 40 order by 1 asc;
-select concat(LastName,FirstName) as fullname from Demovarvarchar where Age > 40 order by fullname desc;
-select concat(LastName,FirstName),Gender,Age from Demovarvarchar where Gender='F' order by Age asc;
-select cast(Age as varchar) as cAge from Demovarvarchar where cast(Age as varchar) like '2_';
-select cast(Age as varchar) and Age as cAge from Demovarvarchar where Age>=50 order by cAge;
+INSERT INTO Demochar VALUES('Gilbert', 'Kevin','M','Tool Design',33);
+INSERT INTO Demochar VALUES('Tamburello', 'Andrea','F','Marketing',45);
+INSERT INTO Demochar VALUES('Johnson', 'David','M','Engineering',66);
+INSERT INTO Demochar VALUES('Sharma', 'Bradley','M','Production',27);
+INSERT INTO Demochar VALUES('Rapier', 'Abigail','F',	'Human Resources',38);
+INSERT INTO Demochar VALUES('Martin', 'Kelly','F','Information Services',54);
+INSERT INTO Demochar VALUES('Poland', 'Carole','F','Production Control',29);
+SELECT * FROM Demochar;
+select concat(LastName,FirstName) from Demochar where Age > 40 order by 1 asc;
+select concat(LastName,FirstName) as fullname from Demochar where Age > 40 order by fullname desc;
+select concat(LastName,FirstName),Gender,Age from Demochar where Gender='F' order by Age asc;
+select cast(Age as char) as cAge from Demochar where cast(Age as char) like '2_';
+select cast(Age as char) and Age as cAge from Demochar where Age>=50 order by cAge;
 CREATE TABLE employees (
   employeeNumber int(11) NOT NULL,
-  lastName varvarchar(50) NOT NULL,
-  firstName varvarchar(50) NOT NULL,
-  extension varvarchar(10) NOT NULL,
-  email varvarchar(100) NOT NULL,
-  officeCode varvarchar(10) NOT NULL,
+  lastName char(50) NOT NULL,
+  firstName char(50) NOT NULL,
+  extension char(10) NOT NULL,
+  email char(100) NOT NULL,
+  officeCode char(10) NOT NULL,
   reportsTo int(11) DEFAULT NULL,
-  jobTitle varvarchar(50) NOT NULL,
+  jobTitle char(50) NOT NULL,
   PRIMARY KEY (employeeNumber)
   );
 insert  into employees(employeeNumber,lastName,firstName,extension,email,officeCode,reportsTo,jobTitle) values 
@@ -99,7 +99,7 @@ select employeeNumber,officeCode,reportsTo from employees where employeeNumber>1
 #Test cases of query with multi tables
 create table job(
 jobid int primary key,
-jobTitle varvarchar(50)
+jobTitle char(50)
 );
 insert into job values
 (1,'President'),
@@ -122,7 +122,7 @@ drop table if exists t2;
 drop table if exists t3;
 drop table if exists t11;
 drop table if exists t12;
-CREATE TABLE t1 (a varchar(3), b int primary key);
+CREATE TABLE t1 (a char(3), b int primary key);
 INSERT INTO t1 VALUES ('1',1),('1',2);
 -- @ignore{
 update t1 set a=2 where a='1' limit 1;
@@ -133,16 +133,16 @@ select * from t1;
 -- @ignore}
 drop table t1;
 create table t1 (
-a varchar(10) not null,
-b varchar(10) not null default '0',
-c varchar(10) not null default '0',
-d varchar(10) not null default '0',
-e varchar(10) not null default '0',
-f varchar(10) not null default '0',
-g varchar(10) not null default '0',
-h varchar(10) not null default '0',
-i varchar(10) not null default '0',
-j varchar(10) not null default '0',
+a char(10) not null,
+b char(10) not null default '0',
+c char(10) not null default '0',
+d char(10) not null default '0',
+e char(10) not null default '0',
+f char(10) not null default '0',
+g char(10) not null default '0',
+h char(10) not null default '0',
+i char(10) not null default '0',
+j char(10) not null default '0',
 primary key (a));
 insert into t1 (a) values ('2'),('4'),('6'),('8'),('10'),('12'),('14'),('16'),('18'),('20'),('22'),('24'),('26'),('23');
 -- @ignore{
@@ -156,7 +156,7 @@ update t1 set a=a+a where 3 > 2;
 select a,b from t1;
 -- @ignore}
 drop table t1;
-create table t1 (a varchar(10) primary key, b varchar(32));
+create table t1 (a char(10) primary key, b char(32));
 insert into t1 values ('abc','apple'), ('ab','apple');
 select * from t1;
 -- @ignore{
@@ -166,9 +166,9 @@ select * from t1;
 
 #Test cases of update with multi tables
 drop table t1;
-create table t11 (a varchar(10) NOT NULL, b int, primary key (a));
-create table t12 (a varchar(10) NOT NULL, b int, primary key (a));
-create table t2 (a varchar(10) NOT NULL, b int, primary key (a));
+create table t11 (a char(10) NOT NULL, b int, primary key (a));
+create table t12 (a char(10) NOT NULL, b int, primary key (a));
+create table t2 (a char(10) NOT NULL, b int, primary key (a));
 insert into t11 values ('0', 10),('1', 11),('2', 12);
 insert into t12 values ('33', 10),('0', 11),('2', 12);
 insert into t2 values ('0', 21),('1', 12),('3', 23);
@@ -181,9 +181,9 @@ select * from t11;
 -- @ignore}
 drop table if exists t1;
 drop table if exists t2;
-CREATE TABLE t1(a varchar(10) PRIMARY KEY);
+CREATE TABLE t1(a char(10) PRIMARY KEY);
 INSERT INTO t1 VALUES('10'),('20');
-CREATE TABLE t2(b varchar(3));
+CREATE TABLE t2(b char(3));
 INSERT INTO t2 VALUES('10'),('20');
 -- @ignore{
 update t1 JOIN t2 on t1.a=t2.b set t1.a='5' WHERE t1.a = '10';
@@ -191,7 +191,7 @@ select * from t1;
 select * from t2;
 -- @ignore}
 drop table t1;
-CREATE TABLE t1 ( a varchar(10) PRIMARY KEY );
+CREATE TABLE t1 ( a char(10) PRIMARY KEY );
 INSERT INTO t1 VALUES ('0'),('1'),('2');
 -- @ignore{
 update t1 set a=a*10%3 WHERE t1.a > 0 ORDER BY t1.a LIMIT 1;
@@ -200,9 +200,9 @@ SELECT * FROM t1;
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
-CREATE TABLE t1 (a varchar(10) not null,b varchar(10) not null, primary key (a));
-CREATE TABLE t2 (a varchar(10) not null,b varchar(10) not null, primary key (a));
-CREATE TABLE t3 (a varchar(10) not null,b varchar(10) not null, primary key (a));
+CREATE TABLE t1 (a char(10) not null,b char(10) not null, primary key (a));
+CREATE TABLE t2 (a char(10) not null,b char(10) not null, primary key (a));
+CREATE TABLE t3 (a char(10) not null,b char(10) not null, primary key (a));
 insert into t1 values ('1','1'),('2','1'),('4','3');
 insert into t2 values ('1','1'),('2','2'),('3','3');
 insert into t3 values ('1','1'),('2','1'),('4','3');
@@ -213,10 +213,10 @@ select * from t1;
 drop table if exists t1;
 drop table if exists t2;
 CREATE TABLE t1 (
-a varchar(3)
+a char(3)
 );
 CREATE TABLE t2 (
-a varchar(3)
+a char(3)
 );
 insert into t1 values('1'),('2'),('3'),('4'),('5');
 insert into t2 values('1'),('3'),('5'),('7'),('9');
@@ -225,7 +225,7 @@ update t1 join t2 alias on t1.a=alias.a set alias.a=t1.a*3 WHERE t1.a = alias.a;
 -- @ignore}
 drop table if exists t1;
 drop table if exists t2;
-create table t1 (id varchar(20),dd date,dt datetime);
+create table t1 (id char(20),dd date,dt datetime);
 insert into t1 values('subquery','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values('bye','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values('hi','2022-04-28','2022-04-28 22:40:11');
@@ -237,7 +237,7 @@ select count(*) from t1 where id>4;
 -- @ignore}
 drop table if exists t1;
 drop table if exists t2;
-create table t1 (id varchar(20),dd date,dt datetime);
+create table t1 (id char(20),dd date,dt datetime);
 insert into t1 values('subquery','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values('bye','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values('hi','2022-04-28','2022-04-28 22:40:11');
@@ -251,10 +251,10 @@ drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
 drop table if exists t4;
-create table t1 (a varchar(3));
-create table t2 (a varchar(3), b int);
-create table t3 (a varchar(3));
-create table t4 (a varchar(10) not null, b int not null);
+create table t1 (a char(3));
+create table t2 (a char(3), b int);
+create table t3 (a char(3));
+create table t4 (a char(10) not null, b int not null);
 insert into t1 values (2);
 insert into t2 values ('1',7),('2',7);
 insert into t4 values ('4',8),('3',8),('5',9);
@@ -271,7 +271,7 @@ drop table if exists t2;
 drop table if exists t3;
 drop table if exists t11;
 drop table if exists t12;
-CREATE TABLE t1 (a varchar(3), b varchar(5) primary key);
+CREATE TABLE t1 (a char(3), b char(5) primary key);
 INSERT INTO t1 VALUES ('1','1'),('1','2');
 -- @ignore{
 delete from t1 where a=1 limit 1;
@@ -282,16 +282,16 @@ select * from t1;
 -- @ignore}
 drop table t1;
 create table t1 (
-a varchar(10) not null,
-b varchar(10) not null default '0',
-c varchar(10) not null default '0',
-d varchar(10) not null default '0',
-e varchar(10) not null default '0',
-f varchar(10) not null default '0',
-g varchar(10) not null default '0',
-h varchar(10) not null default '0',
-i varchar(10) not null default '0',
-j varchar(10) not null default '0',
+a char(10) not null,
+b char(10) not null default '0',
+c char(10) not null default '0',
+d char(10) not null default '0',
+e char(10) not null default '0',
+f char(10) not null default '0',
+g char(10) not null default '0',
+h char(10) not null default '0',
+i char(10) not null default '0',
+j char(10) not null default '0',
 primary key (a));
 insert into t1 (a) values ('2'),('4'),('6'),('8'),('10'),('12'),('14'),('16'),('18'),('20'),('22'),('24'),('26'),('23');
 -- @ignore{
@@ -305,7 +305,7 @@ delete from t1 where  1 < 2;
 select a,b from t1;
 -- @ignore}
 drop table t1;
-create table t1 (a varchar(10) primary key, b varchar(32));
+create table t1 (a char(10) primary key, b char(32));
 insert into t1 values ('abc','apple'), ('ab','apple');
 select * from t1;
 -- @ignore{
@@ -316,9 +316,9 @@ select * from t1;
 
 #Test cases of multi tables
 drop table t1;
-create table t11 (a varchar(10) NOT NULL, b int, primary key (a));
-create table t12 (a varchar(10) NOT NULL, b int, primary key (a));
-create table t2 (a varchar(10) NOT NULL, b int, primary key (a));
+create table t11 (a char(10) NOT NULL, b int, primary key (a));
+create table t12 (a char(10) NOT NULL, b int, primary key (a));
+create table t2 (a char(10) NOT NULL, b int, primary key (a));
 insert into t11 values ('0', 10),('1', 11),('2', 12);
 insert into t12 values ('33', 10),('0', 11),('2', 12);
 insert into t2 values ('0', 21),('1', 12),('3', 23);
@@ -331,9 +331,9 @@ select * from t12;
 -- @ignore}
 drop table if exists t1;
 drop table if exists t2;
-CREATE TABLE t1(a varchar(10) PRIMARY KEY);
+CREATE TABLE t1(a char(10) PRIMARY KEY);
 INSERT INTO t1 VALUES('10'),('20');
-CREATE TABLE t2(b varchar(3));
+CREATE TABLE t2(b char(3));
 INSERT INTO t2 VALUES('10'),('20');
 -- @ignore{
 delete t1,t2 from t1 JOIN t2 on t1.a=t2.b WHERE t1.a = 10;
@@ -343,9 +343,9 @@ select * from t2;
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
-CREATE TABLE t1 (a varchar(10) not null,b varchar(10) not null, primary key (a));
-CREATE TABLE t2 (a varchar(10) not null,b varchar(10) not null, primary key (a));
-CREATE TABLE t3 (a varchar(10) not null,b varchar(10) not null, primary key (a));
+CREATE TABLE t1 (a char(10) not null,b char(10) not null, primary key (a));
+CREATE TABLE t2 (a char(10) not null,b char(10) not null, primary key (a));
+CREATE TABLE t3 (a char(10) not null,b char(10) not null, primary key (a));
 insert into t1 values ('1','1'),('2','1'),('4','3');
 insert into t2 values ('1','1'),('2','2'),('3','3');
 insert into t3 values ('1','1'),('2','1'),('4','3');
@@ -354,7 +354,7 @@ delete t1,t2,t3 from t1 join t2 on t1.a=t2.a join t3 on t1.b=t3.b where t1.a=t2.
 select * from t1;
 -- @ignore}
 drop table t1;
-create table t1(a varchar(10) not null);
+create table t1(a char(10) not null);
 insert into t1 values (0);
 -- @ignore{
 delete t1 from t1 where a is null;
@@ -363,10 +363,10 @@ select * from t1;
 drop table if exists t1;
 drop table if exists t2;
 CREATE TABLE t1 (
-a varchar
+a char
 );
 CREATE TABLE t2 (
-a varchar
+a char
 );
 insert into t1 values('1'),('2'),('3'),('4'),('5');
 insert into t2 values('1'),('3'),('5'),('7'),('9');
@@ -376,7 +376,7 @@ select * from t2;
 -- @ignore}
 drop table if exists t1;
 drop table if exists t2;
-create table t1 (id varchar(20),dd date,dt datetime);
+create table t1 (id char(20),dd date,dt datetime);
 insert into t1 values('subquery','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values('bye','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values('hi','2022-04-28','2022-04-28 22:40:11');

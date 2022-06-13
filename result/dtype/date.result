@@ -130,20 +130,20 @@ CREATE TABLE t_date(id date);
 INSERT INTO t_date VALUES ('2020-01-01'), ('2022-01-02');
 SELECT id, id >= 20200102 FROM t_date;
 id	id >= 20200102
-2020-01-01	0
-2022-01-02	1
+2020-01-01	false	
+2022-01-02	true	
 SELECT id, 1.1 <= '2020-01-01' FROM t_date;
 id	1.1 <= '2020-01-01'
-2020-01-01	1
-2022-01-02	1
+2020-01-01	true	
+2022-01-02	true	
 SELECT id, id = 202020101 FROM t_date;
 id	id = 202020101
-2020-01-01	0
-2022-01-02	0
+2020-01-01	false	
+2022-01-02	false	
 SELECT id, 20200101 = id FROM t_date;
 id	20200101 = id
-2020-01-01	1
-2022-01-02	0
+2020-01-01	true	
+2022-01-02	false	
 SELECT * from t_date WHERE id = 20200101;
 id
 2020-01-01
