@@ -16,7 +16,7 @@ drop table t1;
 SELECT PI() AS DefaultPiValue;
 SELECT PI()+0.000000000000000000 AS PiValue;
 
-CREATE TABLE Circle(Circle_id INT AUTO_INCREMENT,  Radius DECIMAL(10, 3) NOT NULL,PRIMARY KEY(Circle_id ));
+CREATE TABLE Circle(Circle_id INT,  Radius DECIMAL(10, 3) NOT NULL,PRIMARY KEY(Circle_id ));
 INSERT INTO Circle(Radius )
 VALUES
 (2 ),(3),(10 ),(12.5 ),(6.80),

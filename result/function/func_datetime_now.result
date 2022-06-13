@@ -1,6 +1,6 @@
 select now()-now(),weekday("2022-06-02")-weekday(now()),unix_timestamp()-unix_timestamp(now());
 now()-now()	weekday("2022-06-02")-weekday(now())	unix_timestamp()-unix_timestamp(now())
-0	-1	0
+0	3	0
 select now()-current_timestamp();
 now()-current_timestamp()
 0
@@ -12,13 +12,13 @@ SELECT 1 FROM t1 ORDER BY 1;
 1
 DROP TABLE t1;
 DROP TABLE if exists t1;
-create table t1 (a int primary key auto_increment, b int, c int, d timestamp default current_timestamp);
+create table t1 (a int primary key, b int, c int, d timestamp default current_timestamp);
 insert into t1 values(null,1,1,now());
+Column 'a' cannot be null
 insert into t1 values(null,0,0,null);
+Column 'a' cannot be null
 select a,b,c,year(d) from t1;
 a	b	c	year(d)
-1	1	1	2022
-2	0	0	null
 DROP TABLE t1;
 CREATE TABLE t1 (a TIMESTAMP);
 INSERT INTO t1 VALUES (NOW()),(NOW()),(NOW());
@@ -44,19 +44,19 @@ no_default_newer_than_alter	alter_default_newer_than_alter
 DROP TABLE t2;
 DROP TABLE t1;
 DROP TABLE if exists t1;
-create table t1 (a int primary key auto_increment, b int, c int, d timestamp default current_timestamp);
+create table t1 (a int primary key, b int, c int, d timestamp default current_timestamp);
 insert into t1 values(null,1,1,now());
+Column 'a' cannot be null
 insert into t1 values(null,0,0,null);
+Column 'a' cannot be null
 select a, b, c, year(d) from t1;
 a	b	c	year(d)
-1	1	1	2019
-2	0	0	null
 drop table t1;
-create table t1 (a int primary key auto_increment, b int, c int, e int, d timestamp default current_timestamp);
+create table t1 (a int primary key, b int, c int, e int, d timestamp default current_timestamp);
 insert into t1 values(null,1,1,1,now());
+Column 'a' cannot be null
 insert into t1 values(null,0,0,0,null);
+Column 'a' cannot be null
 select a, b, c, year(d) from t1;
 a	b	c	year(d)
-1	1	1	2019
-2	0	0	null
 drop table t1;

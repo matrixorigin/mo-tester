@@ -206,18 +206,13 @@ SELECT 1 FROM t1 GROUP BY SUBSTRING('',1,'');
 drop table t1;
 create table t1 (email varchar(50));
 insert into t1 values ('sasha@mysql.com'),('monty@mysql.com'),('foo@hotmail.com'),('foo@aol.com'),('bar@aol.com');
-create table t2(id int not null auto_increment primary key, t2 varchar(50));
+create table t2(id int not null primary key, t2 varchar(50));
 insert into t2 (t2) select distinct substring(email, locate('@', email)+1) from t1;
+Field 'id' doesn't have a default value
 select id from t2;
 id
-1
-2
-3
 select t2 from t2;
 t2
-mysql.com
-hotmail.com
-aol.com
 drop table t1;
 drop table t2;
 create table t1 (a varchar(50));
