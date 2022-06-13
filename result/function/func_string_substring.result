@@ -193,7 +193,8 @@ abcd	abcd	d	cd	bcd	abcd
 abcde	abcde	e	de	cde	bcde	abcde
 drop table t1;
 CREATE TABLE t1 (a varchar(2000), b varchar(10));
-INSERT INTO t1 VALUES (space(1300),'one'), (space(1300),'two');
+INSERT INTO t1 select space(1300),'one';
+INSERT INTO t1 select space(1300),'two';
 SELECT SUBSTRING(a,1,10), LENGTH(a) FROM t1 GROUP BY a;
 SUBSTRING(a,1,10)	LENGTH(a)
           	1300

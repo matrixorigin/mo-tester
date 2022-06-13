@@ -109,7 +109,10 @@ drop table t2;
 #INSERT, DISTINCT
 drop table if exists t1;
 create table t1(a varchar(255));
-insert into t1 values(rpad('a',4,'1')),(rpad('a',4,'1')),(rpad('a',4,'1')),(lpad('a',4,'1'));
+insert into t1 select (rpad('a',4,'1'));
+insert into t1 select (rpad('a',4,'1'));
+insert into t1 select (rpad('a',4,'1'));
+insert into t1 select (lpad('a',4,'1'));
 select distinct * from t1;
 drop table t1;
 

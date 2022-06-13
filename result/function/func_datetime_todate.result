@@ -329,16 +329,16 @@ to_date('09:22', '%H:%i')
 SELECT to_date('09:22:23.33', '%H:%i:%s.%f');
 to_date('09:22:23.33', '%H:%i:%s.%f')
 09:22:23.330000000
-INSERT INTO t1 VALUES( to_date('09:22', '%H:%i') );
-INSERT INTO t1 VALUES( to_date('09:22:23.33', '%H:%i:%s.%f') );
+INSERT INTO t1 select( to_date('09:22', '%H:%i') );
+INSERT INTO t1 select( to_date('09:22:23.33', '%H:%i:%s.%f') );
 select * from t1;
 a
 2022-06-10 09:22:00
 2022-06-10 09:22:23.330000000
 DELETE FROM t1;
-INSERT INTO t1 VALUES( to_date('2019-12-31', '%Y-%m-%d') );
-INSERT INTO t2 VALUES( to_date('09:22', '%H:%i') );
-INSERT INTO t2 VALUES( to_date('09:22:23.33', '%H:%i:%s.%f') );
+INSERT INTO t1 select( to_date('2019-12-31', '%Y-%m-%d') );
+INSERT INTO t2 select( to_date('09:22', '%H:%i') );
+INSERT INTO t2 select( to_date('09:22:23.33', '%H:%i:%s.%f') );
 select * from t1;
 a
 2019-12-31 00:00:00

@@ -39,8 +39,8 @@ drop table t1;
 
 #INSERT,distinct
 CREATE TABLE t1(a char(255), b varchar(255));
-INSERT INTO t1 values (oct(56), oct(234));
-INSERT INTO t1 VALUES (oct(100), oct(234));
+INSERT INTO t1 select oct(56), oct(234);
+INSERT INTO t1 select oct(100), oct(234);
 SELECT distinct oct(a), oct(b) FROM t1 ORDER BY oct(a);
 drop table t1;
 

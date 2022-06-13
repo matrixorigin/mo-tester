@@ -47,7 +47,12 @@ select SINH(a), SINH(b), SINH(c), SINH(d), SINH(e), SINH(f), SINH(g), SINH(h), S
 FUNCTION func_math_sinh.SINH does not exist
 drop table t1;
 Create table t1(a float);
-insert into t1 values(SINH(1)), (SINH(0)), (SINH(1)),(SINH(0)),(acos(1)),(atan(1));
+insert into t1 select (SINH(1));
+insert into t1 select (SINH(0));
+insert into t1 select (SINH(1));
+insert into t1 select (SINH(0));
+insert into t1 select (acos(1));
+insert into t1 select (atan(1));
 FUNCTION func_math_sinh.SINH does not exist
 select distinct a from t1;
 a

@@ -44,8 +44,8 @@ drop table t1;
 
 #INSERT,distinct
 CREATE TABLE t1(a char(255), b varchar(255));
-INSERT INTO t1 values (bin(56), bin(234));
-INSERT INTO t1 VALUES (bin(100), bin(234));
+INSERT INTO t1 select bin(56), bin(234);
+INSERT INTO t1 select bin(100), bin(234);
 SELECT distinct bin(a), bin(b) FROM t1 ORDER BY bin(a);
 drop table t1;
 

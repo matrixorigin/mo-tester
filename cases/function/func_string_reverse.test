@@ -75,7 +75,11 @@ SELECT REVERSE("再 见");
 #HAVING & 算术运算, INSERT INTO
 drop table if exists t1;
 create table t1(a varchar(255));
-insert into t1 values(reverse("abc")), (reverse("bcd")), (reverse("def")), (reverse("xyz")), (reverse("1a1"));
+insert into t1 select (reverse("abc"));
+insert into t1 select (reverse("bcd"));
+insert into t1 select (reverse("def"));
+insert into t1 select (reverse("xyz"));
+insert into t1 select (reverse("1a1"));
 select a from t1 group by a having reverse(a)=reverse(a);
 drop table t1;
 

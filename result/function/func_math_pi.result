@@ -1,6 +1,6 @@
 create table t1 (a double, b double, c double );
-insert into t1 values (-2,2,0.6);
-insert into t1 values (PI(),6,0);
+insert into t1 select -2,2,0.6;
+insert into t1 select PI(),6,0;
 select * from t1;
 a	b	c
 -2.0	2.0	0.6

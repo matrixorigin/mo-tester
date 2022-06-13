@@ -26,8 +26,8 @@ select ln(null);
 ln(null)
 null
 CREATE TABLE t1(a DOUBLE);
-INSERT INTO t1 values (ln(56));
-INSERT INTO t1 VALUES (ln(100));
+INSERT INTO t1 select (ln(56));
+INSERT INTO t1 select (ln(100));
 SELECT * FROM t1 ORDER BY a;
 a
 4.02535169073515

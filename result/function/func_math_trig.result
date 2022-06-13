@@ -241,8 +241,18 @@ sin(l)	cos(l)	tan(l)	cot(l)	acos(l)	atan(l)
 -0.604309316197871	0.7967498041144796	-0.7584681076508202	-1.3184469985129224	null	1.570796326794847
 drop table t1;
 Create table t1(a float);
-insert into t1 values(sin(1)), (cos(1)), (tan(1)),(cot(1)),(acos(1)),(atan(1));
-insert into t1 values(sin(1)), (cos(1)), (tan(1)),(cot(1)),(acos(1)),(atan(1));
+insert into t1 select (sin(1));
+insert into t1 select (cos(1));
+insert into t1 select (tan(1));
+insert into t1 select (cot(1));
+insert into t1 select (acos(1));
+insert into t1 select (atan(1));
+insert into t1 select (sin(1));
+insert into t1 select (cos(1));
+insert into t1 select (tan(1));
+insert into t1 select (cot(1));
+insert into t1 select (acos(1));
+insert into t1 select (atan(1));
 select distinct sin(a) from t1;
 sin(a)
 0.7456241230036048
