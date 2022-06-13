@@ -39,7 +39,7 @@ CONCAT_WS(14,'.3')
 14.3
 SELECT (CAST(0x7FFFFFFFFFFFFFFF AS char));
 (CAST(0x7FFFFFFFFFFFFFFF AS char))
-null
+9223372036854775807
 drop table if exists t1;
 create table t1 (a char(10));
 insert into t1 values('abcdef');
@@ -74,36 +74,47 @@ Gender char(1),
 DepartmentName char(20),
 Age int
 );
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'char(10) primary key,
-FirstName char(10),
-Gender char(1),
-Depa' at line 3
 INSERT INTO Demochar VALUES('Gilbert', 'Kevin','M','Tool Design',33);
-Table 'char.demochar' doesn't exist
 INSERT INTO Demochar VALUES('Tamburello', 'Andrea','F','Marketing',45);
-Table 'char.demochar' doesn't exist
 INSERT INTO Demochar VALUES('Johnson', 'David','M','Engineering',66);
-Table 'char.demochar' doesn't exist
 INSERT INTO Demochar VALUES('Sharma', 'Bradley','M','Production',27);
-Table 'char.demochar' doesn't exist
 INSERT INTO Demochar VALUES('Rapier', 'Abigail','F',	'Human Resources',38);
-Table 'char.demochar' doesn't exist
 INSERT INTO Demochar VALUES('Martin', 'Kelly','F','Information Services',54);
-Table 'char.demochar' doesn't exist
 INSERT INTO Demochar VALUES('Poland', 'Carole','F','Production Control',29);
-Table 'char.demochar' doesn't exist
 SELECT * FROM Demochar;
-Table 'char.demochar' doesn't exist
-select concat(LastName,FirstName) from Demochar where Age > 40 order by 1 asc;
-Table 'char.demochar' doesn't exist
-select concat(LastName,FirstName) as fullname from Demochar where Age > 40 order by fullname desc;
-Table 'char.demochar' doesn't exist
-select concat(LastName,FirstName),Gender,Age from Demochar where Gender='F' order by Age asc;
-Table 'char.demochar' doesn't exist
+SELECT * FROM Demochar;
+LastName	FirstName	Gender	DepartmentName	Age
+Gilbert	Kevin	M	Tool Design	33
+Johnson	David	M	Engineering	66
+Martin	Kelly	F	Information Services	54
+Poland	Carole	F	Production Control	29
+Rapier	Abigail	F	Human Resources	38
+Sharma	Bradley	M	Production	27
+Tamburello	Andrea	F	Marketing	45
+select concat_ws(LastName,FirstName) from Demochar where Age > 40;
+concat_ws(LastName,FirstName)
+JohnsonDavid
+MartinKelly
+TamburelloAndrea
+select concat_ws(LastName,FirstName) as fullname from Demochar where Age > 40 order by fullname desc;
+fullname
+TamburelloAndrea
+MartinKelly
+JohnsonDavid
+select concat_ws(LastName,FirstName),Gender,Age from Demochar where Gender='F' order by Age asc;
+concat_ws(LastName,FirstName)	Gender	Age
+PolandCarole	F	29
+RapierAbigail	F	38
+TamburelloAndrea	F	45
+MartinKelly	F	54
 select cast(Age as char) as cAge from Demochar where cast(Age as char) like '2_';
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'char) as cAge from Demochar where cast(Age as char) like '2_'' at line 1
-select cast(Age as char) and Age as cAge from Demochar where Age>=50 order by cAge;
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'char) and Age as cAge from Demochar where Age>=50 order by cAge' at line 1
+cAge
+29
+27
+select cast(Age as char) and Age as cAge from Demochar where Age>=50;
+cAge
+1
+1
 CREATE TABLE employees (
 employeeNumber int(11) NOT NULL,
 lastName char(50) NOT NULL,
@@ -115,9 +126,6 @@ reportsTo int(11) DEFAULT NULL,
 jobTitle char(50) NOT NULL,
 PRIMARY KEY (employeeNumber)
 );
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'char(50) NOT NULL,
-firstName char(50) NOT NULL,
-extension char' at line 3
 insert  into employees(employeeNumber,lastName,firstName,extension,email,officeCode,reportsTo,jobTitle) values
 (1002,'Murphy','Diane','x5800','dmurphy@classicmodelcars.com','1',NULL,'President'),
 (1056,'Patterson','Mary','x4611','mpatterso@classicmodelcars.com','1',1002,'VP Sales'),
@@ -137,35 +145,84 @@ insert  into employees(employeeNumber,lastName,firstName,extension,email,officeC
 (1501,'Bott','Larry','x2311','lbott@classicmodelcars.com','7',1102,'Sales Rep'),
 (1504,'Jones','Barry','x102','bjones@classicmodelcars.com','7',1102,'Sales Rep'),
 (1611,'Fixter','Andy','x101','afixter@classicmodelcars.com','6',1088,'Sales Rep');
-Table 'char.employees' doesn't exist
 select officeCode,count(officeCode) from employees group by officeCode having count(officeCode)>2;
-Table 'char.employees' doesn't exist
-select lastName,firstName from employees where cast(officeCode as unsigned)>5 limit 2;
-Table 'char.employees' doesn't exist
+officeCode      count(officeCode)
+1       6
+4       4
+select lastName,firstName from employees where cast(officeCode as unsigned)>5 limit 2 offset 1;
+lastName        firstName
+Bott    Larry
+Jones   Barry
 select max(lastName),min(lastName) from employees;
-Table 'char.employees' doesn't exist
+max(lastName)   min(lastName)
+Vanauf  Bondur
 select max(lastName),min(lastName),JobTitle from employees group by JobTitle;
-Table 'char.employees' doesn't exist
+max(lastName)   min(lastName)   JobTitle
+Murphy  Murphy  President
+Patterson       Patterson       VP Sales
+Firrelli        Firrelli        VP Marketing
+Patterson       Patterson       Sales Manager (APAC)
+Bondur  Bondur  Sale Manager (EMEA)
+Bow     Bow     Sales Manager (NA)
+Vanauf  Bondur  Sales Rep
 select lastName,firstName from employees where lastName>=firstName;
-Table 'char.employees' doesn't exist
+lastName        firstName
+Murphy  Diane
+Patterson       Mary
+Bow     Anthony
+Thompson        Leslie
+Tseng   Foon Yue
+Vanauf  George
+Hernandez       Gerard
+Jones   Barry
+Fixter  Andy
 select lastName,firstName from employees where lastName between firstName and JobTitle;
-Table 'char.employees' doesn't exist
-select * from employees where officeCode in ('2','3','4') order by 1 limit 1,2;
-Table 'char.employees' doesn't exist
+lastName        firstName
+Murphy  Diane
+Patterson       Mary
+Bow     Anthony
+Hernandez       Gerard
+Jones   Barry
+Fixter  Andy
+select * from employees where officeCode in ('2','3','4') order by 1 asc,3 desc limit 1,2;
+employeeNumber  lastName        firstName       extension       email   officeCode      reportsTo       jobTitle
+1188    Firrelli        Julie   x2173   jfirrelli@classicmodelcars.com  2       1143    Sales Rep
+1216    Patterson       Steve   x4334   spatterson@classicmodelcars.com 2       1143    Sales Rep
 select * from employees where officeCode not in ('5','7','1');
-Table 'char.employees' doesn't exist
-select avg(officeCode) from employees where jobTitle like 'Sales%' group by jobTitle order by 1;
-Table 'char.employees' doesn't exist
+employeeNumber  lastName        firstName       extension       email   officeCode      reportsTo       jobTitle
+1088    Patterson       William x4871   wpatterson@classicmodelcars.com 6       1056    Sales Manager (APAC)
+1102    Bondur  Gerard  x5408   gbondur@classicmodelcars.com    4       1056    Sale Manager (EMEA)
+1188    Firrelli        Julie   x2173   jfirrelli@classicmodelcars.com  2       1143    Sales Rep
+1216    Patterson       Steve   x4334   spatterson@classicmodelcars.com 2       1143    Sales Rep
+1286    Tseng   Foon Yue        x2248   ftseng@classicmodelcars.com     3       1143    Sales Rep
+1323    Vanauf  George  x4102   gvanauf@classicmodelcars.com    3       1143    Sales Rep
+1337    Bondur  Loui    x6493   lbondur@classicmodelcars.com    4       1102    Sales Rep
+1370    Hernandez       Gerard  x2028   ghernande@classicmodelcars.com  4       1102    Sales Rep
+1401    Castillo        Pamela  x2759   pcastillo@classicmodelcars.com  4       1102    Sales Rep
+1611    Fixter  Andy    x101    afixter@classicmodelcars.com    6       1088    Sales Rep
+select avg(officeCode) from employees where jobTitle like 'Sales%' group by jobTitle;
+avg(officeCode)
+6
+1
+3.6666666666666665
 select officeCode,sum(cast(officeCode as unsigned)) from employees group by officeCode;
-Table 'char.employees' doesn't exist
+officeCode      sum(cast(officeCode as unsigned))
+1       6
+6       12
+4       16
+2       4
+3       6
+7       14
 select employeeNumber,officeCode,reportsTo from employees where employeeNumber>1400 and reportsTo is not null order by officeCode+1,employeeNumber;
-Table 'char.employees' doesn't exist
+employeeNumber  officeCode      reportsTo
+1401    4       1102
+1611    6       1088
+1501    7       1102
+1504    7       1102
 create table job(
 jobid int primary key,
 jobTitle char(50)
 );
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'char(50)
-)' at line 3
 insert into job values
 (1,'President'),
 (2,'VP Sales'),
@@ -175,15 +232,43 @@ insert into job values
 (6,'Sales Manager (NA)'),
 (7,'Sales Rep'),
 (8,'Marketing');
-Table 'char.job' doesn't exist
 select employeeNumber,e.jobTitle,j.jobid from employees e join job j on e.jobTitle=j.jobTitle;
-Table 'char.employees' doesn't exist
+employeeNumber  jobTitle        jobid
+1002    President       1
+1056    VP Sales        2
+1076    VP Marketing    3
+1088    Sales Manager (APAC)    4
+1102    Sale Manager (EMEA)     5
+1143    Sales Manager (NA)      6
+1165    Sales Rep       7
+1166    Sales Rep       7
+1188    Sales Rep       7
+1216    Sales Rep       7
+1286    Sales Rep       7
+1323    Sales Rep       7
+1337    Sales Rep       7
+1370    Sales Rep       7
+1401    Sales Rep       7
+1501    Sales Rep       7
+1504    Sales Rep       7
+1611    Sales Rep       7
 select distinct e.jobTitle,j.jobid from employees e join job j on e.jobTitle=j.jobTitle;
-Table 'char.employees' doesn't exist
+jobTitle        jobid
+President       1
+VP Sales        2
+VP Marketing    3
+Sales Manager (APAC)    4
+Sale Manager (EMEA)     5
+Sales Manager (NA)      6
+Sales Rep       7
 select e.jobTitle,sum(jobid) from employees e join job j on e.jobTitle=j.jobTitle group by jobTitle having sum(jobid)>5;
-Table 'char.employees' doesn't exist
+jobTitle        sum(jobid)
+Sales Manager (NA)      6
+Sales Rep       84
 select e.jobTitle,sum(jobid) from employees e join job j on e.jobTitle=j.jobTitle group by jobTitle having sum(jobid)>5 order by 2 desc;
-Table 'char.employees' doesn't exist
+jobTitle        sum(jobid)
+Sales Rep       84
+Sales Manager (NA)      6
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -407,7 +492,7 @@ create table t1 (a char(3));
 create table t2 (a char(3), b int);
 create table t3 (a char(3));
 create table t4 (a char(10) not null, b int not null);
-insert into t1 values (2);
+insert into t1 values ('2');
 insert into t2 values ('1',7),('2',7);
 insert into t4 values ('4',8),('3',8),('5',9);
 insert into t3 values ('100'),('8');
@@ -561,21 +646,21 @@ a
 drop table if exists t1;
 drop table if exists t2;
 CREATE TABLE t1 (
-a char
+a char(1)
 );
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3
 CREATE TABLE t2 (
-a char
+a char(1)
 );
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3
 insert into t1 values('1'),('2'),('3'),('4'),('5');
-Table 'char.t1' doesn't exist
 insert into t2 values('1'),('3'),('5'),('7'),('9');
-Table 'char.t2' doesn't exist
 delete alias from t1 join t2 alias on t1.a=alias.a+1 WHERE t1.a = alias.a;
-Table 'char.t1' doesn't exist
 select * from t2;
-Table 'char.t2' doesn't exist
+a
+1
+3
+5
+7
+9
 drop table if exists t1;
 drop table if exists t2;
 create table t1 (id char(20),dd date,dt datetime);
