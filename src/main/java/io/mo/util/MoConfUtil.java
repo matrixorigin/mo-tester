@@ -71,7 +71,7 @@ public class MoConfUtil {
         if(conf == null) init();
 
         Map user = (Map)conf.get("user");
-        String pwd = user.get("passwrod").toString();
+        String pwd = user.get("password").toString();
         return pwd;
     }
 

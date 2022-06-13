@@ -2,11 +2,11 @@
 jdbc:
   driver: "com.mysql.cj.jdbc.Driver"
   server:
-  - addr: "127.0.0.1:6001"
+  - addr: "127.0.0.1:3306"
   #- addr: "127.0.0.1:3306"
   #- addr: "127.0.0.1:3306"
   database:
-    default: "test"
+    default: ""
   paremeter:
     characterSetResults: "utf8"
     continueBatchOnError: "false"
@@ -16,8 +16,8 @@ jdbc:
     zeroDateTimeBehavior: "CONVERT_TO_NULL"
     failoverReadOnly: "false"
     serverTimezone: "Asia/Shanghai"
-
+    socketTimeout: 30000
 #users
 user:
-  name: "dump"
-  passwrod: "111"
+  name: "root"
+  password: "1qaz!QAZ"
