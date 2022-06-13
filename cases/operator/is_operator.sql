@@ -244,7 +244,7 @@ drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
 CREATE TABLE `t1` (
-  `numeropost` int(8) unsigned NOT NULL auto_increment,
+  `numeropost` int(8) unsigned NOT NULL,
   `maxnumrep` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`numeropost`)
 ) ;

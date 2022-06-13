@@ -45,7 +45,7 @@ drop table if exists t5;
 drop table if exists t6;
 drop table if exists t7;
 CREATE TABLE `t1` (
-`numeropost` int(8) unsigned NOT NULL auto_increment,
+`numeropost` int(8) unsigned NOT NULL,
 `maxnumrep` int(10) unsigned NOT NULL default '0',
 PRIMARY KEY  (`numeropost`)
 );
@@ -77,7 +77,7 @@ CREATE TABLE `t2` (
 `pseudo` varchar(35) character set latin1 NOT NULL default ''
 ) ;
 CREATE TABLE `t3` (
-`numeropost` int(8) unsigned NOT NULL auto_increment,
+`numeropost` int(8) unsigned NOT NULL,
 `maxnumrep` int(10) unsigned NOT NULL default 0,
 PRIMARY KEY  (`numeropost`)
 );

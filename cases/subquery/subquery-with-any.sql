@@ -153,7 +153,7 @@ select 1 from dual where 2 > any (select 1);
 -- @desc:test for [any] subquery with group by and having
 -- @label:bvt
 CREATE TABLE `t1` (
-  `numeropost` int(8) unsigned NOT NULL auto_increment,
+  `numeropost` int(8) unsigned NOT NULL,
   `maxnumrep` int(10) unsigned NOT NULL default 0,
   PRIMARY KEY  (`numeropost`)
 )
