@@ -12,36 +12,19 @@ DefaultPiValue
 SELECT PI()+0.000000000000000000 AS PiValue;
 PiValue
 3.141592653589793
-CREATE TABLE Circle(Circle_id INT AUTO_INCREMENT,  Radius DECIMAL(10, 3) NOT NULL,PRIMARY KEY(Circle_id ));
+CREATE TABLE Circle(Circle_id INT,  Radius DECIMAL(10, 3) NOT NULL,PRIMARY KEY(Circle_id ));
 INSERT INTO Circle(Radius )
 VALUES
 (2 ),(3),(10 ),(12.5 ),(6.80),
 (4.60 ),(6),(20),(25) ;
+Field 'Circle_id' doesn't have a default value
 SELECT * FROM Circle;
 Circle_id	Radius
-1	2.000
-2	3.000
-3	10.000
-4	12.500
-5	6.800
-6	4.600
-7	6.000
-8	20.000
-9	25.000
 SELECT Circle_id, Radius,
 PI() * Radius * Radius  AS Area,
 2 * PI() * Radius AS Perimeter
 FROM Circle;
 Circle_id	Radius	Area	Perimeter
-1	2.000	12.566371	12.566371
-2	3.000	28.274334	18.849556
-3	10.000	314.159265	62.831853
-4	12.500	490.873852	78.539816
-5	6.800	145.267244	42.72566
-6	4.600	66.476101	28.902652
-7	6.000	113.097336	37.699112
-8	20.000	1256.637061	125.663706
-9	25.000	1963.495408	157.079633
 drop table Circle;
 SELECT distinct PI();
 PI()

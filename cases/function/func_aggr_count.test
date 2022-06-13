@@ -110,7 +110,7 @@ select a,count(b), sum(b), avg(b), std(b), min(b), max(b), bit_and(b), bit_or(b)
 drop table t1;
 
 
-CREATE TABLE t1 (id int(10) unsigned NOT NULL auto_increment,val enum('one','two','three') NOT NULL default 'one',PRIMARY KEY  (id));
+CREATE TABLE t1 (id int(10) unsigned NOT NULL,val enum('one','two','three') NOT NULL default 'one',PRIMARY KEY  (id));
 INSERT INTO t1 VALUES
 (1,'one'),(2,'two'),(3,'three'),(4,'one'),(5,'two');
 select val, count(*) from t1 group by val;
