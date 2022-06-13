@@ -27,9 +27,9 @@ select log(null,null);
 
 #INSERT
 CREATE TABLE t1(a DOUBLE);
-INSERT INTO t1 values (log(56));
-INSERT INTO t1 VALUES (log(10,100));
-INSERT INTO t1 VALUES (log(2,4));
+INSERT INTO t1 select (log(56));
+INSERT INTO t1 select (log(10,100));
+INSERT INTO t1 select (log(2,4));
 SELECT * FROM t1 ORDER BY a;
 drop table t1;
 

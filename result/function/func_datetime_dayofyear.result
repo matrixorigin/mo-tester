@@ -105,7 +105,9 @@ dayofyear	Product_Sold
 DROP TABLE Product;
 drop table if exists t1;
 create table t1(a INT,  b date);
-insert into t1 values(dayofyear("2012-10-12"), "2012-10-12"),(dayofyear("2004-04-24"), "2004-04-24"),(dayofyear("2008-12-04"), "2008-12-04");
+insert into t1 select dayofyear("2012-10-12"), "2012-10-12";
+insert into t1 select dayofyear("2004-04-24"), "2004-04-24";
+insert into t1 select dayofyear("2008-12-04"), "2008-12-04";
 select * from t1;
 a	b
 286	2012-10-12
@@ -169,11 +171,6 @@ dayofyear(b)
 115
 339
 83
-drop table t1;
-create table t1 select if(1,'1','0'), dayofyear("2002-08-02");
-select * from t1;
-if(1,'1','0')	dayofyear("2002-08-02")
-1	214
 drop table t1;
 CREATE TABLE t3(c1 DATE NOT NULL);
 INSERT INTO t3 VALUES('2000-01-01');

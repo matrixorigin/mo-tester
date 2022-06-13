@@ -50,7 +50,9 @@ DROP TABLE Product;
 #INSERT
 drop table if exists t1;
 create table t1(a INT,  b date);
-insert into t1 values(year("2012-10-12"), "2012-10-12"),(year("2004-04-24"), "2004-04-24"),(year("2008-12-04"), "2008-12-04");
+insert into t1 select year("2012-10-12"), "2012-10-12";
+insert into t1 select year("2004-04-24"), "2004-04-24";
+insert into t1 select year("2008-12-04"), "2008-12-04";
 select * from t1;
 drop table t1;
 

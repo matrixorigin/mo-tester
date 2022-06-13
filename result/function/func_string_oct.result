@@ -56,8 +56,8 @@ oct(a)	oct(b)	oct(c)	oct(d)	oct(e)	oct(f)	oct(g)	oct(h)	oct(i)	oct(j)	oct(k)	oct
 1	1	2	4	5	5	37	16	3734	12	3734	3734	0	0
 drop table t1;
 CREATE TABLE t1(a char(255), b varchar(255));
-INSERT INTO t1 values (oct(56), oct(234));
-INSERT INTO t1 VALUES (oct(100), oct(234));
+INSERT INTO t1 select oct(56), oct(234);
+INSERT INTO t1 select oct(100), oct(234);
 SELECT distinct oct(a), oct(b) FROM t1 ORDER BY oct(a);
 oct(a)	oct(b)
 106	540

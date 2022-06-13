@@ -123,8 +123,18 @@ drop table t1;
 
 #INSERT, DISTINCT
 Create table t1(a float);
-insert into t1 values(sin(1)), (cos(1)), (tan(1)),(cot(1)),(acos(1)),(atan(1));
-insert into t1 values(sin(1)), (cos(1)), (tan(1)),(cot(1)),(acos(1)),(atan(1));
+insert into t1 select (sin(1));
+insert into t1 select (cos(1));
+insert into t1 select (tan(1));
+insert into t1 select (cot(1));
+insert into t1 select (acos(1));
+insert into t1 select (atan(1));
+insert into t1 select (sin(1));
+insert into t1 select (cos(1));
+insert into t1 select (tan(1));
+insert into t1 select (cot(1));
+insert into t1 select (acos(1));
+insert into t1 select (atan(1));
 #insert into t1 values(asin(1)), (asin(1));
 #insert into t1 values (atan2(1,1)), (atan2(1,1));
 select distinct sin(a) from t1;

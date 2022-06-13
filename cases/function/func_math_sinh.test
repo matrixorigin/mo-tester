@@ -48,7 +48,12 @@ drop table t1;
 
 #INSERT, DISTINCT
 Create table t1(a float);
-insert into t1 values(SINH(1)), (SINH(0)), (SINH(1)),(SINH(0)),(acos(1)),(atan(1));
+insert into t1 select (SINH(1));
+insert into t1 select (SINH(0));
+insert into t1 select (SINH(1));
+insert into t1 select (SINH(0));
+insert into t1 select (acos(1));
+insert into t1 select (atan(1));
 select distinct a from t1;
 drop table t1;
 

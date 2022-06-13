@@ -302,7 +302,8 @@ date_add(b, interval 1 day)
 null
 drop table t1;
 create table t1 (a date);
-insert into t1 values(DATE_ADD('20071108', INTERVAL 1 DAY)),(date_add('1998-01-30',Interval 1 month));
+insert into t1 select (DATE_ADD('20071108', INTERVAL 1 DAY));
+insert into t1 select (date_add('1998-01-30',Interval 1 month));
 select distinct a from t1;
 a
 2007-11-09

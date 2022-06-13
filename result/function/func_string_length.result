@@ -19,13 +19,13 @@ DROP TABLE t1;
 CREATE TABLE t1 (t1_fld1 int, b varchar(255));
 CREATE TABLE t2 (t2_fld1 int, b varchar(255));
 CREATE TABLE t3 (t3_fld1 int, b varchar(255));
-INSERT INTO t1 VALUES (LENGTH(space(300)), "abcdefg");
-INSERT INTO t1 VALUES (LENGTH(space(300)), "123124141");
-INSERT INTO t2 VALUES (LENGTH(space(65680)), "abcdefg");
-INSERT INTO t2 VALUES (LENGTH(space(65680)), "1238193");
-INSERT INTO t3 VALUES (LENGTH(space(65680)), "1238193");
-INSERT INTO t3 VALUES (LENGTH(space(16777300)),"123124141");
-INSERT INTO t3 VALUES (LENGTH(space(16777300)),"123asdq");
+INSERT INTO t1 select LENGTH(space(300)), "abcdefg";
+INSERT INTO t1 select LENGTH(space(300)), "123124141";
+INSERT INTO t2 select LENGTH(space(65680)), "abcdefg";
+INSERT INTO t2 select LENGTH(space(65680)), "1238193";
+INSERT INTO t3 select LENGTH(space(65680)), "1238193";
+INSERT INTO t3 select LENGTH(space(16777300)),"123124141";
+INSERT INTO t3 select LENGTH(space(16777300)),"123asdq";
 SELECT DISTINCT * from t1;
 t1_fld1	b
 300	abcdefg

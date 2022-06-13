@@ -50,10 +50,9 @@ DROP TABLE t1;
 
 # INSERT Clause, DATE TYPE
 create table t1 (a bigint unsigned);
-insert into t1 values
-(if(1, 9223372036854775808, 1)),
-(case when 1 then 9223372036854775808 else 1 end),
-(coalesce(9223372036854775808, 1));
+insert into t1 select (if(1, 9223372036854775808, 1));
+insert into t1 select (case when 1 then 9223372036854775808 else 1 end);
+insert into t1 select (coalesce(9223372036854775808, 1));
 select * from t1;
 drop table t1;
 

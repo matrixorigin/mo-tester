@@ -41,9 +41,9 @@ select power(null,null);
 power(null,null)
 null
 CREATE TABLE t1(a DOUBLE);
-INSERT INTO t1 values (power(56,124));
-INSERT INTO t1 VALUES (power(10,100));
-INSERT INTO t1 VALUES (power(2,234));
+INSERT INTO t1 select (power(56,124));
+INSERT INTO t1 select (power(10,100));
+INSERT INTO t1 select (power(2,234));
 SELECT * FROM t1 ORDER BY a;
 a
 2.7606985387162255E70

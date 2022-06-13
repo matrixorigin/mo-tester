@@ -26,8 +26,8 @@ select exp(null);
 exp(null)
 null
 CREATE TABLE t1(a DOUBLE);
-INSERT INTO t1 values (exp(56));
-INSERT INTO t1 VALUES (exp(100));
+INSERT INTO t1 select (exp(56));
+INSERT INTO t1 select (exp(100));
 SELECT * FROM t1 ORDER BY a;
 a
 2.091659496012996E24

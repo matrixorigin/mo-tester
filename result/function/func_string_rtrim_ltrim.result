@@ -224,7 +224,10 @@ LTRIM("  你好")
 你好
 drop table if exists t1;
 create table t1(a varchar(255));
-insert into t1 values(RTRIM("2017-06-15   ")),(LTRIM("  2019-06-25")),(RTRIM("2017-06-15        ")),("2017-06-15   ");
+insert into t1 select (RTRIM("2017-06-15   "));
+insert into t1 select (LTRIM("  2019-06-25"));
+insert into t1 select (RTRIM("2017-06-15        "));
+insert into t1 select ("2017-06-15   ");
 select distinct RTRIM(ltrim(a)),LTRIM(rtrim(a)) from t1;
 RTRIM(ltrim(a))	LTRIM(rtrim(a))
 2017-06-15	2017-06-15

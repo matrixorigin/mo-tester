@@ -45,8 +45,8 @@ DROP TABLE t;
 #INSERT, HAVING, ON
 CREATE TABLE t1(c0 INTEGER, c1 INTEGER, c2 INTEGER);
 CREATE TABLE t2(c0 INTEGER, c1 INTEGER, c2 INTEGER);
-INSERT INTO t1 values(abs(-341.741), abs(-234141113), abs(-141241));
-INSERT INTO t2 values(abs(-341.5612), abs(-23413), abs(-14141));
+INSERT INTO t1 select abs(-341.741), abs(-234141113), abs(-141241);
+INSERT INTO t2 select abs(-341.5612), abs(-23413), abs(-14141);
 select * from t1;
 select * from t2;
 SELECT t1.c0, t2.c0 from t1 join t2 on abs(t1.c0) = abs(t2.c0) having abs(t1.c0)>100;

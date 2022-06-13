@@ -56,8 +56,8 @@ bin(a)	bin(b)	bin(c)	bin(d)	bin(e)	bin(f)	bin(g)	bin(h)	bin(i)	bin(k)	bin(l)	bin
 1	1	10	100	101	101	11111	1110	11111011100	11111011100	11111011100	0	0
 drop table t1;
 CREATE TABLE t1(a char(255), b varchar(255));
-INSERT INTO t1 values (bin(56), bin(234));
-INSERT INTO t1 VALUES (bin(100), bin(234));
+INSERT INTO t1 select bin(56), bin(234);
+INSERT INTO t1 select bin(100), bin(234);
 SELECT distinct bin(a), bin(b) FROM t1 ORDER BY bin(a);
 bin(a)	bin(b)
 100001100100101000100	101010010110001101010010

@@ -87,7 +87,7 @@ drop table t1;
 CREATE TABLE t1
 (`date` date,
 `extracted_week` int);
-INSERT INTO t1 VALUES ('2000-01-01', EXTRACT(WEEK FROM '2000-01-01'));
+INSERT INTO t1 select '2000-01-01', EXTRACT(WEEK FROM '2000-01-01');
 SELECT * FROM t1;
 SELECT distinct extracted_week from t1;
 select date from t1 having extract(day FROM date)=1;
