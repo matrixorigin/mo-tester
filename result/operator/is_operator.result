@@ -186,6 +186,7 @@ drop table if exists t2;
 drop table if exists t3;
 drop table if exists t1;
 drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (
 grp int(11) default NULL,
 a bigint(20) unsigned default NULL,
@@ -210,6 +211,7 @@ grp	a	c	id	a	c	d
 null	null		null	null	null	null
 drop table if exists t1;
 drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (
 id smallint(5) unsigned NOT NULL,
 name char(60) DEFAULT '' NOT NULL,
@@ -241,6 +243,7 @@ name	name	id
 Lilliana Angelovska	null	null
 drop table if exists t1;
 drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (id1 INT NOT NULL PRIMARY KEY, dat1 CHAR(1), id2 INT);
 INSERT INTO t1 VALUES (1,'a',1);
 INSERT INTO t1 VALUES (2,'b',1);
@@ -257,6 +260,7 @@ id2
 3
 drop table if exists t1;
 drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (
 id int(11),
 pid int(11),
@@ -275,6 +279,7 @@ id	pid	rep_del	id	pid	rep_del
 drop table if exists t1;
 drop table if exists t1;
 drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (a DATE NOT NULL, b INT);
 INSERT INTO t1 VALUES ('1999-05-100',1), ('1999-05-10',2);
 Data truncation: Incorrect date value: '1999-05-100' for column 'a' at row 1
@@ -302,6 +307,7 @@ a	b	a	b
 1999-05-10 00:01:01	1	1999-05-10 00:00:00	2
 drop table if exists t1;
 drop table if exists t2;
+drop table if exists t3;
 drop table if exists t1;
 create table t1 (col1 datetime);
 insert into t1 values(STR_TO_DATE('31.10.2004 15.30','%d.%m.%Y %H.%i'));
@@ -320,6 +326,7 @@ count(*)
 drop table if exists t1;
 drop table if exists t1;
 drop table if exists t2;
+drop table if exists t3;
 create table t1 (id int(10) not null, cur_date datetime not null);
 create table t2 (id int(10) not null, cur_date date not null);
 insert into t1 (id, cur_date) values (1, '2007-04-25 18:30:22');
@@ -340,6 +347,7 @@ where id in (select id from t2 as x1 where (t2.cur_date is null));
 id	cur_date
 drop table if exists t1;
 drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE `t1` (
 `numeropost` int(8) unsigned NOT NULL auto_increment,
 `maxnumrep` int(10) unsigned NOT NULL default '0',
@@ -368,6 +376,7 @@ joce	40143	2002-10-22	joce
 joce	43506	2002-10-22	joce
 drop table if exists t1;
 drop table if exists t2;
+drop table if exists t3;
 CREATE TABLE t1 (a varchar(10), PRIMARY KEY (a));
 CREATE TABLE t2 (a varchar(10), b date, PRIMARY KEY(a));
 INSERT INTO t1 VALUES ('test1');
