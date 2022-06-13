@@ -33,10 +33,6 @@ select t1.id, count(t2.id) from t1,t2 where t2.id = t1.id group by t1.id;
 id	count(t2.id)
 75	1
 107	1
-select t1.id, count(t2.id) from t1,t2 where t2.id = t1.id group by t2.id;
-id	count(t2.id)
-75	1
-107	1
 select t1.id,t2.id from t2 join t1 on t1.id=t2.id where t2.id=75;
 id	id
 75	75
