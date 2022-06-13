@@ -82,14 +82,14 @@ select cast(a as unsigned) mod 50 as result from t1;
 select cast(a+a as signed) from t1;
 select cast(0-a as signed) from t1;
 drop table t1;
-CREATE TABLE t1 (id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE t1 (id INT PRIMARY KEY,
 a float(20),
 b VARCHAR(20));
-INSERT INTO t1 (a) VALUES
-(0),
-(CAST(0x7FFFFFFFFFFFFFFF AS UNSIGNED)),
-(CAST(0x8000000000000000 AS UNSIGNED)),
-(CAST(0xFFFFFFFFFFFFFFFF AS UNSIGNED));
+INSERT INTO t1 (id,a) VALUES
+(1,0),
+(2,CAST(0x7FFFFFFFFFFFFFFF AS UNSIGNED)),
+(3,CAST(0x8000000000000000 AS UNSIGNED)),
+(4,CAST(0xFFFFFFFFFFFFFFFF AS UNSIGNED));
 select * from t1;
 -- @ignore{
 UPDATE t1 SET b = a;

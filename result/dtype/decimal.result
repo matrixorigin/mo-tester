@@ -126,14 +126,14 @@ result
 select cast(cast(19999999999999999999 as decimal) as unsigned);
 cast(cast(19999999999999999999 as decimal) as unsigned)
 9999999999
-CREATE TABLE t1 (id INT AUTO_INCREMENT PRIMARY KEY,
-a decimal(20,0) UNSIGNED,
+CREATE TABLE t1 (id INT PRIMARY KEY,
+a decimal(20),
 b VARCHAR(20));
-INSERT INTO t1 (a) VALUES
-(0.5000000000),(0.0000000001),
-(CAST(0x7FFFFFFF AS decimal)),
-(CAST(0x80000000 AS UNSIGNED)),
-(CAST(0x7FFFFFFF AS UNSIGNED));
+INSERT INTO t1 (id,a) VALUES
+(1,0),
+(2,CAST(0x7FFFFFFFFFFFFFFF AS UNSIGNED)),
+(3,CAST(0x8000000000000000 AS UNSIGNED)),
+(4,CAST(0xFFFFFFFFFFFFFFFF AS UNSIGNED));
 UPDATE t1 SET b = a;
 select distinct * from t1 where ((a = '2147483647') and (b = '2147483647'));
 id	a	b
@@ -152,28 +152,28 @@ id
 2.20000
 SELECT id, id >= 1.1 FROM t_decimal;
 id	id >= 1.1
-1.00000	0
-2.00000	1
-1.10000	1
-2.20000	1
+1.00000	false	
+2.00000	true	
+1.10000	true	
+2.20000	true	
 SELECT id, 1.1 <= id FROM t_decimal;
 id	1.1 <= id
-1.00000	0
-2.00000	1
-1.10000	1
-2.20000	1
+1.00000	false	
+2.00000	true	
+1.10000	true	
+2.20000	true	
 SELECT id, id = 1.1 FROM t_decimal;
 id	id = 1.1
-1.00000	0
-2.00000	0
-1.10000	1
-2.20000	0
+1.00000	false	
+2.00000	false	
+1.10000	true	
+2.20000	false	
 SELECT id, 1.1 = id FROM t_decimal;
 id	1.1 = id
-1.00000	0
-2.00000	0
-1.10000	1
-2.20000	0
+1.00000	false	
+2.00000	false	
+1.10000	true	
+2.20000	false	
 SELECT * from t_decimal WHERE id = 1.1;
 id
 1.10000

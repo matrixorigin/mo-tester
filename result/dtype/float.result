@@ -144,14 +144,14 @@ select cast(0-a as signed) from t1;
 cast(0-a as signed)
 -18
 drop table t1;
-CREATE TABLE t1 (id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE t1 (id INT PRIMARY KEY,
 a float(20),
 b VARCHAR(20));
-INSERT INTO t1 (a) VALUES
-(0),
-(CAST(0x7FFFFFFFFFFFFFFF AS UNSIGNED)),
-(CAST(0x8000000000000000 AS UNSIGNED)),
-(CAST(0xFFFFFFFFFFFFFFFF AS UNSIGNED));
+INSERT INTO t1 (id,a) VALUES
+(1,0),
+(2,CAST(0x7FFFFFFFFFFFFFFF AS UNSIGNED)),
+(3,CAST(0x8000000000000000 AS UNSIGNED)),
+(4,CAST(0xFFFFFFFFFFFFFFFF AS UNSIGNED));
 select * from t1;
 id	a	b
 1	0	NULL
@@ -169,24 +169,24 @@ CREATE TABLE t_float(id float(2,1));
 INSERT INTO t_float VALUES (1),(1.1), (2);
 SELECT id, id >= 1.1 FROM t_float;
 id	id >= 1.1
-1.0	0
-1.1	1
-2.0	1
+1.0	false	
+1.1	true	
+2.0	true	
 SELECT id, 1.1 <= id FROM t_float;
 id	1.1 <= id
-1.0	0
-1.1	1
-2.0	1
+1.0	false	
+1.1	true	
+2.0	true	
 SELECT id, id = 1.1 FROM t_float;
 id	id = 1.1
-1.0	0
-1.1	1
-2.0	0
+1.0	false	
+1.1	true	
+2.0	false	
 SELECT id, 1.1 = id FROM t_float;
 id	1.1 = id
-1.0	0
-1.1	1
-2.0	0
+1.0	false	
+1.1	true	
+2.0	false	
 SELECT * from t_float WHERE id = 1.1;
 id
 1.1

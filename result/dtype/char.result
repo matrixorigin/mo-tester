@@ -4,8 +4,8 @@ test	test
 select 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-SELECT CONCAT(2,' test');
-CONCAT(2,' test')
+SELECT CONCAT_WS(2,' test');
+CONCAT_WS(2,' test')
 2 test
 SELECT 38.8, CAST(38.8 AS CHAR);
 38.8	CAST(38.8 AS CHAR)
@@ -28,20 +28,20 @@ CAST(150 AS CHAR)
 SELECT CAST(5-10 AS CHAR);
 CAST(5-10 AS CHAR)
 -5
-SELECT CONCAT('My', 'S', 'QL');
-CONCAT('My', 'S', 'QL')
+SELECT CONCAT_WS('My', 'S', 'QL');
+CONCAT_WS('My', 'S', 'QL')
 MySQL
-SELECT CONCAT('My', NULL, 'QL');
-CONCAT('My', NULL, 'QL')
+SELECT CONCAT_WS('My', NULL, 'QL');
+CONCAT_WS('My', NULL, 'QL')
 null
-SELECT CONCAT(14,'.3');
-CONCAT(14,'.3')
+SELECT CONCAT_WS(14,'.3');
+CONCAT_WS(14,'.3')
 14.3
 SELECT (CAST(0x7FFFFFFFFFFFFFFF AS char));
 (CAST(0x7FFFFFFFFFFFFFFF AS char))
 null
 drop table if exists t1;
-create table t1 (a varchar(10));
+create table t1 (a char(10));
 insert into t1 values('abcdef');
 insert into t1 values('_bcdef');
 insert into t1 values('a_cdef');
@@ -66,58 +66,58 @@ a_cdef
 ab_def
 abc_ef
 abcd_f
-CREATE TABLE Demovarvarchar
+CREATE TABLE Demochar
 (
-LastName varvarchar(10) primary key,
-FirstName varvarchar(10),
-Gender varvarchar(1),
-DepartmentName varvarchar(20),
+LastName char(10) primary key,
+FirstName char(10),
+Gender char(1),
+DepartmentName char(20),
 Age int
 );
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'varvarchar(10) primary key,
-FirstName varvarchar(10),
-Gender varvarchar(1),
+You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'char(10) primary key,
+FirstName char(10),
+Gender char(1),
 Depa' at line 3
-INSERT INTO Demovarvarchar VALUES('Gilbert', 'Kevin','M','Tool Design',33);
-Table 'char.demovarvarchar' doesn't exist
-INSERT INTO Demovarvarchar VALUES('Tamburello', 'Andrea','F','Marketing',45);
-Table 'char.demovarvarchar' doesn't exist
-INSERT INTO Demovarvarchar VALUES('Johnson', 'David','M','Engineering',66);
-Table 'char.demovarvarchar' doesn't exist
-INSERT INTO Demovarvarchar VALUES('Sharma', 'Bradley','M','Production',27);
-Table 'char.demovarvarchar' doesn't exist
-INSERT INTO Demovarvarchar VALUES('Rapier', 'Abigail','F',	'Human Resources',38);
-Table 'char.demovarvarchar' doesn't exist
-INSERT INTO Demovarvarchar VALUES('Martin', 'Kelly','F','Information Services',54);
-Table 'char.demovarvarchar' doesn't exist
-INSERT INTO Demovarvarchar VALUES('Poland', 'Carole','F','Production Control',29);
-Table 'char.demovarvarchar' doesn't exist
-SELECT * FROM Demovarvarchar;
-Table 'char.demovarvarchar' doesn't exist
-select concat(LastName,FirstName) from Demovarvarchar where Age > 40 order by 1 asc;
-Table 'char.demovarvarchar' doesn't exist
-select concat(LastName,FirstName) as fullname from Demovarvarchar where Age > 40 order by fullname desc;
-Table 'char.demovarvarchar' doesn't exist
-select concat(LastName,FirstName),Gender,Age from Demovarvarchar where Gender='F' order by Age asc;
-Table 'char.demovarvarchar' doesn't exist
-select cast(Age as varchar) as cAge from Demovarvarchar where cast(Age as varchar) like '2_';
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'varchar) as cAge from Demovarvarchar where cast(Age as varchar) like '2_'' at line 1
-select cast(Age as varchar) and Age as cAge from Demovarvarchar where Age>=50 order by cAge;
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'varchar) and Age as cAge from Demovarvarchar where Age>=50 order by cAge' at line 1
+INSERT INTO Demochar VALUES('Gilbert', 'Kevin','M','Tool Design',33);
+Table 'char.demochar' doesn't exist
+INSERT INTO Demochar VALUES('Tamburello', 'Andrea','F','Marketing',45);
+Table 'char.demochar' doesn't exist
+INSERT INTO Demochar VALUES('Johnson', 'David','M','Engineering',66);
+Table 'char.demochar' doesn't exist
+INSERT INTO Demochar VALUES('Sharma', 'Bradley','M','Production',27);
+Table 'char.demochar' doesn't exist
+INSERT INTO Demochar VALUES('Rapier', 'Abigail','F',	'Human Resources',38);
+Table 'char.demochar' doesn't exist
+INSERT INTO Demochar VALUES('Martin', 'Kelly','F','Information Services',54);
+Table 'char.demochar' doesn't exist
+INSERT INTO Demochar VALUES('Poland', 'Carole','F','Production Control',29);
+Table 'char.demochar' doesn't exist
+SELECT * FROM Demochar;
+Table 'char.demochar' doesn't exist
+select concat(LastName,FirstName) from Demochar where Age > 40 order by 1 asc;
+Table 'char.demochar' doesn't exist
+select concat(LastName,FirstName) as fullname from Demochar where Age > 40 order by fullname desc;
+Table 'char.demochar' doesn't exist
+select concat(LastName,FirstName),Gender,Age from Demochar where Gender='F' order by Age asc;
+Table 'char.demochar' doesn't exist
+select cast(Age as char) as cAge from Demochar where cast(Age as char) like '2_';
+You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'char) as cAge from Demochar where cast(Age as char) like '2_'' at line 1
+select cast(Age as char) and Age as cAge from Demochar where Age>=50 order by cAge;
+You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'char) and Age as cAge from Demochar where Age>=50 order by cAge' at line 1
 CREATE TABLE employees (
 employeeNumber int(11) NOT NULL,
-lastName varvarchar(50) NOT NULL,
-firstName varvarchar(50) NOT NULL,
-extension varvarchar(10) NOT NULL,
-email varvarchar(100) NOT NULL,
-officeCode varvarchar(10) NOT NULL,
+lastName char(50) NOT NULL,
+firstName char(50) NOT NULL,
+extension char(10) NOT NULL,
+email char(100) NOT NULL,
+officeCode char(10) NOT NULL,
 reportsTo int(11) DEFAULT NULL,
-jobTitle varvarchar(50) NOT NULL,
+jobTitle char(50) NOT NULL,
 PRIMARY KEY (employeeNumber)
 );
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'varvarchar(50) NOT NULL,
-firstName varvarchar(50) NOT NULL,
-extension varvarchar' at line 3
+You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'char(50) NOT NULL,
+firstName char(50) NOT NULL,
+extension char' at line 3
 insert  into employees(employeeNumber,lastName,firstName,extension,email,officeCode,reportsTo,jobTitle) values
 (1002,'Murphy','Diane','x5800','dmurphy@classicmodelcars.com','1',NULL,'President'),
 (1056,'Patterson','Mary','x4611','mpatterso@classicmodelcars.com','1',1002,'VP Sales'),
@@ -162,9 +162,9 @@ select employeeNumber,officeCode,reportsTo from employees where employeeNumber>1
 Table 'char.employees' doesn't exist
 create table job(
 jobid int primary key,
-jobTitle varvarchar(50)
+jobTitle char(50)
 );
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'varvarchar(50)
+You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'char(50)
 )' at line 3
 insert into job values
 (1,'President'),
@@ -189,7 +189,7 @@ drop table if exists t2;
 drop table if exists t3;
 drop table if exists t11;
 drop table if exists t12;
-CREATE TABLE t1 (a varchar(3), b int primary key);
+CREATE TABLE t1 (a char(3), b int primary key);
 INSERT INTO t1 VALUES ('1',1),('1',2);
 update t1 set a=2 where a='1' limit 1;
 select * from t1;
@@ -205,16 +205,16 @@ a	2
 a	3
 drop table t1;
 create table t1 (
-a varchar(10) not null,
-b varchar(10) not null default '0',
-c varchar(10) not null default '0',
-d varchar(10) not null default '0',
-e varchar(10) not null default '0',
-f varchar(10) not null default '0',
-g varchar(10) not null default '0',
-h varchar(10) not null default '0',
-i varchar(10) not null default '0',
-j varchar(10) not null default '0',
+a char(10) not null,
+b char(10) not null default '0',
+c char(10) not null default '0',
+d char(10) not null default '0',
+e char(10) not null default '0',
+f char(10) not null default '0',
+g char(10) not null default '0',
+h char(10) not null default '0',
+i char(10) not null default '0',
+j char(10) not null default '0',
 primary key (a));
 insert into t1 (a) values ('2'),('4'),('6'),('8'),('10'),('12'),('14'),('16'),('18'),('20'),('22'),('24'),('26'),('23');
 update t1 set a=a+'101';
@@ -286,7 +286,7 @@ a	b
 250	0
 254	0
 drop table t1;
-create table t1 (a varchar(10) primary key, b varchar(32));
+create table t1 (a char(10) primary key, b char(32));
 insert into t1 values ('abc','apple'), ('ab','apple');
 select * from t1;
 a	b
@@ -298,9 +298,9 @@ a	b
 ab	apple
 abc	apple
 drop table t1;
-create table t11 (a varchar(10) NOT NULL, b int, primary key (a));
-create table t12 (a varchar(10) NOT NULL, b int, primary key (a));
-create table t2 (a varchar(10) NOT NULL, b int, primary key (a));
+create table t11 (a char(10) NOT NULL, b int, primary key (a));
+create table t12 (a char(10) NOT NULL, b int, primary key (a));
+create table t2 (a char(10) NOT NULL, b int, primary key (a));
 insert into t11 values ('0', 10),('1', 11),('2', 12);
 insert into t12 values ('33', 10),('0', 11),('2', 12);
 insert into t2 values ('0', 21),('1', 12),('3', 23);
@@ -323,9 +323,9 @@ a	b
 2	12
 drop table if exists t1;
 drop table if exists t2;
-CREATE TABLE t1(a varchar(10) PRIMARY KEY);
+CREATE TABLE t1(a char(10) PRIMARY KEY);
 INSERT INTO t1 VALUES('10'),('20');
-CREATE TABLE t2(b varchar(3));
+CREATE TABLE t2(b char(3));
 INSERT INTO t2 VALUES('10'),('20');
 update t1 JOIN t2 on t1.a=t2.b set t1.a='5' WHERE t1.a = '10';
 select * from t1;
@@ -337,7 +337,7 @@ b
 10
 20
 drop table t1;
-CREATE TABLE t1 ( a varchar(10) PRIMARY KEY );
+CREATE TABLE t1 ( a char(10) PRIMARY KEY );
 INSERT INTO t1 VALUES ('0'),('1'),('2');
 update t1 set a=a*10%3 WHERE t1.a > 0 ORDER BY t1.a LIMIT 1;
 SELECT * FROM t1;
@@ -348,9 +348,9 @@ a
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
-CREATE TABLE t1 (a varchar(10) not null,b varchar(10) not null, primary key (a));
-CREATE TABLE t2 (a varchar(10) not null,b varchar(10) not null, primary key (a));
-CREATE TABLE t3 (a varchar(10) not null,b varchar(10) not null, primary key (a));
+CREATE TABLE t1 (a char(10) not null,b char(10) not null, primary key (a));
+CREATE TABLE t2 (a char(10) not null,b char(10) not null, primary key (a));
+CREATE TABLE t3 (a char(10) not null,b char(10) not null, primary key (a));
 insert into t1 values ('1','1'),('2','1'),('4','3');
 insert into t2 values ('1','1'),('2','2'),('3','3');
 insert into t3 values ('1','1'),('2','1'),('4','3');
@@ -363,17 +363,17 @@ a	b
 drop table if exists t1;
 drop table if exists t2;
 CREATE TABLE t1 (
-a varchar(3)
+a char(3)
 );
 CREATE TABLE t2 (
-a varchar(3)
+a char(3)
 );
 insert into t1 values('1'),('2'),('3'),('4'),('5');
 insert into t2 values('1'),('3'),('5'),('7'),('9');
 update t1 join t2 alias on t1.a=alias.a set alias.a=t1.a*3 WHERE t1.a = alias.a;
 drop table if exists t1;
 drop table if exists t2;
-create table t1 (id varchar(20),dd date,dt datetime);
+create table t1 (id char(20),dd date,dt datetime);
 insert into t1 values('subquery','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values('bye','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values('hi','2022-04-28','2022-04-28 22:40:11');
@@ -385,7 +385,7 @@ count(*)
 4
 drop table if exists t1;
 drop table if exists t2;
-create table t1 (id varchar(20),dd date,dt datetime);
+create table t1 (id char(20),dd date,dt datetime);
 insert into t1 values('subquery','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values('bye','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values('hi','2022-04-28','2022-04-28 22:40:11');
@@ -403,10 +403,10 @@ drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
 drop table if exists t4;
-create table t1 (a varchar(3));
-create table t2 (a varchar(3), b int);
-create table t3 (a varchar(3));
-create table t4 (a varchar(10) not null, b int not null);
+create table t1 (a char(3));
+create table t2 (a char(3), b int);
+create table t3 (a char(3));
+create table t4 (a char(10) not null, b int not null);
 insert into t1 values (2);
 insert into t2 values ('1',7),('2',7);
 insert into t4 values ('4',8),('3',8),('5',9);
@@ -424,7 +424,7 @@ drop table if exists t2;
 drop table if exists t3;
 drop table if exists t11;
 drop table if exists t12;
-CREATE TABLE t1 (a varchar(3), b varchar(5) primary key);
+CREATE TABLE t1 (a char(3), b char(5) primary key);
 INSERT INTO t1 VALUES ('1','1'),('1','2');
 delete from t1 where a=1 limit 1;
 select * from t1;
@@ -436,16 +436,16 @@ select * from t1;
 a	b
 drop table t1;
 create table t1 (
-a varchar(10) not null,
-b varchar(10) not null default '0',
-c varchar(10) not null default '0',
-d varchar(10) not null default '0',
-e varchar(10) not null default '0',
-f varchar(10) not null default '0',
-g varchar(10) not null default '0',
-h varchar(10) not null default '0',
-i varchar(10) not null default '0',
-j varchar(10) not null default '0',
+a char(10) not null,
+b char(10) not null default '0',
+c char(10) not null default '0',
+d char(10) not null default '0',
+e char(10) not null default '0',
+f char(10) not null default '0',
+g char(10) not null default '0',
+h char(10) not null default '0',
+i char(10) not null default '0',
+j char(10) not null default '0',
 primary key (a));
 insert into t1 (a) values ('2'),('4'),('6'),('8'),('10'),('12'),('14'),('16'),('18'),('20'),('22'),('24'),('26'),('23');
 delete from t1 where a=2+2;
@@ -498,7 +498,7 @@ delete from t1 where  1 < 2;
 select a,b from t1;
 a	b
 drop table t1;
-create table t1 (a varchar(10) primary key, b varchar(32));
+create table t1 (a char(10) primary key, b char(32));
 insert into t1 values ('abc','apple'), ('ab','apple');
 select * from t1;
 a	b
@@ -509,9 +509,9 @@ select * from t1;
 a	b
 ab	apple
 drop table t1;
-create table t11 (a varchar(10) NOT NULL, b int, primary key (a));
-create table t12 (a varchar(10) NOT NULL, b int, primary key (a));
-create table t2 (a varchar(10) NOT NULL, b int, primary key (a));
+create table t11 (a char(10) NOT NULL, b int, primary key (a));
+create table t12 (a char(10) NOT NULL, b int, primary key (a));
+create table t2 (a char(10) NOT NULL, b int, primary key (a));
 insert into t11 values ('0', 10),('1', 11),('2', 12);
 insert into t12 values ('33', 10),('0', 11),('2', 12);
 insert into t2 values ('0', 21),('1', 12),('3', 23);
@@ -527,9 +527,9 @@ a	b
 0	11
 drop table if exists t1;
 drop table if exists t2;
-CREATE TABLE t1(a varchar(10) PRIMARY KEY);
+CREATE TABLE t1(a char(10) PRIMARY KEY);
 INSERT INTO t1 VALUES('10'),('20');
-CREATE TABLE t2(b varchar(3));
+CREATE TABLE t2(b char(3));
 INSERT INTO t2 VALUES('10'),('20');
 delete t1,t2 from t1 JOIN t2 on t1.a=t2.b WHERE t1.a = 10;
 select * from t1;
@@ -541,9 +541,9 @@ b
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
-CREATE TABLE t1 (a varchar(10) not null,b varchar(10) not null, primary key (a));
-CREATE TABLE t2 (a varchar(10) not null,b varchar(10) not null, primary key (a));
-CREATE TABLE t3 (a varchar(10) not null,b varchar(10) not null, primary key (a));
+CREATE TABLE t1 (a char(10) not null,b char(10) not null, primary key (a));
+CREATE TABLE t2 (a char(10) not null,b char(10) not null, primary key (a));
+CREATE TABLE t3 (a char(10) not null,b char(10) not null, primary key (a));
 insert into t1 values ('1','1'),('2','1'),('4','3');
 insert into t2 values ('1','1'),('2','2'),('3','3');
 insert into t3 values ('1','1'),('2','1'),('4','3');
@@ -552,7 +552,7 @@ select * from t1;
 a	b
 4	3
 drop table t1;
-create table t1(a varchar(10) not null);
+create table t1(a char(10) not null);
 insert into t1 values (0);
 delete t1 from t1 where a is null;
 select * from t1;
@@ -561,11 +561,11 @@ a
 drop table if exists t1;
 drop table if exists t2;
 CREATE TABLE t1 (
-a varchar
+a char
 );
 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3
 CREATE TABLE t2 (
-a varchar
+a char
 );
 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3
 insert into t1 values('1'),('2'),('3'),('4'),('5');
@@ -578,7 +578,7 @@ select * from t2;
 Table 'char.t2' doesn't exist
 drop table if exists t1;
 drop table if exists t2;
-create table t1 (id varchar(20),dd date,dt datetime);
+create table t1 (id char(20),dd date,dt datetime);
 insert into t1 values('subquery','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values('bye','2022-04-28','2022-04-28 22:40:11');
 insert into t1 values('hi','2022-04-28','2022-04-28 22:40:11');
