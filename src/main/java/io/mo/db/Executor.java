@@ -676,7 +676,14 @@ public class Executor {
         //if the row numbers do not match,return false
         if(exps.length != acts.length)
             return false;
-        if(!COMMON.IS_COMPARE_META){
+
+        //if the row meta does not contain special chars,compare directedly.
+        //if(!containSpecialChar(exps[0]))
+        //    return exp.equalsIgnoreCase(act);
+
+
+        if(!COMMON.IS_COMPARE_META && containSpecialChar(exps[0])){
+            //LOG.error("["+command.getScriptFile()+"]["+command.getCommand().trim()+"] IS_COMPARE_META: "+COMMON.IS_COMPARE_META);
             exps[0] = COMMON.THIS_IS_MO;
             acts[0] = COMMON.THIS_IS_MO;
         }
@@ -690,6 +697,19 @@ public class Executor {
             }
         }
         return true;
+    }
+
+    public static boolean containSpecialChar(String str){
+        if(str == null)
+            return false;
+
+        for(int i = 0; i < COMMON.SPECIAL_CHARS.length;i++){
+            if(str.indexOf(COMMON.SPECIAL_CHARS[i]) != -1){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static void main(String args[]){

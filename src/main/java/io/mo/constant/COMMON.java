@@ -52,7 +52,7 @@ public class COMMON {
     public static String COMMIT_TRX = "commit";
     public static String ROLLBACK_TRX = "rollback";
 
-
+    public static String[] SPECIAL_CHARS = new String[]{"+","-","*","/","%","&",">","<","(",")","!","="};
 
 
 
