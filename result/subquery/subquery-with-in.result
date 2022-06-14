@@ -177,13 +177,13 @@ drop table if exists t3;
 drop table if exists t4;
 CREATE TABLE `t1` (
 `numeropost` int(8) unsigned NOT NULL,
-`maxnumrep` int(10) unsigned NOT NULL default '0',
+`maxnumrep` int(10) unsigned NOT NULL default 0,
 PRIMARY KEY  (`numeropost`)
 ) ;
 INSERT INTO t1 (numeropost,maxnumrep) VALUES (40143,1),(43506,2);
 CREATE TABLE `t2` (
 `mot` varchar(30) NOT NULL default '',
-`topic` int(8) unsigned NOT NULL default '0',
+`topic` int(8) unsigned NOT NULL default 0,
 `dt` date,
 `pseudo` varchar(35) NOT NULL default '',
 PRIMARY KEY  (`topic`)
@@ -369,9 +369,9 @@ select 10.5 IN (SELECT * from t1);
 null
 drop table if exists t1;
 drop table if exists t2;
-CREATE TABLE t1 (a int(11) NOT NULL default '0', PRIMARY KEY  (a));
-CREATE TABLE t2 (a int(11) default '0', INDEX (a));
-CREATE TABLE t3 (a int(11) default '0');
+CREATE TABLE t1 (a int(11) NOT NULL default 0, PRIMARY KEY  (a));
+CREATE TABLE t2 (a int(11) default 0, INDEX (a));
+CREATE TABLE t3 (a int(11) default 0);
 INSERT INTO t3 VALUES (1),(2),(3);
 INSERT INTO t1 VALUES (1),(2),(3),(4);
 INSERT INTO t2 VALUES (1),(2),(3);
@@ -870,9 +870,9 @@ drop table if exists t2;
 DROP TABLE IF EXISTS t1;
 drop table if exists t2;
 DROP TABLE IF EXISTS t3;
-CREATE TABLE t1 (a int(11) NOT NULL default '0', PRIMARY KEY  (a));
-CREATE TABLE t2 (a int(11) default '0');
-CREATE TABLE t3 (a int(11) default '0');
+CREATE TABLE t1 (a int(11) NOT NULL default 0, PRIMARY KEY  (a));
+CREATE TABLE t2 (a int(11) default 0);
+CREATE TABLE t3 (a int(11) default 0);
 INSERT INTO t3 VALUES (1),(2),(3);
 INSERT INTO t1 VALUES (1),(2),(3),(4);
 INSERT INTO t2 VALUES (1),(2),(3);

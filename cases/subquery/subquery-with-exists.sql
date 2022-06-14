@@ -42,7 +42,7 @@ drop table if exists t6;
 drop table if exists t7;
 CREATE TABLE `t1` (
   `numeropost` int(8) unsigned NOT NULL,
-  `maxnumrep` int(10) unsigned NOT NULL default '0',
+  `maxnumrep` int(10) unsigned NOT NULL default 0,
   PRIMARY KEY  (`numeropost`)
 );
 
@@ -69,7 +69,7 @@ CREATE TABLE `t1` (
 );
 CREATE TABLE `t2` (
   `mot` varchar(30) character set latin1 NOT NULL default '',
-  `topic` int(8) unsigned NOT NULL default '0',
+  `topic` int(8) unsigned NOT NULL default 0,
   `dt` date,
   `pseudo` varchar(35) character set latin1 NOT NULL default ''
 ) ;
