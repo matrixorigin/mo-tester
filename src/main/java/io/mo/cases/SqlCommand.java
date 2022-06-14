@@ -38,6 +38,8 @@ public class SqlCommand {
 
     private String scriptFile;
 
+    private int position = 0;
+
     public SqlCommand getNext() {
         return next;
     }
@@ -209,6 +211,14 @@ public class SqlCommand {
 
     public void setError(boolean error) {
         this.error = error;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
 }

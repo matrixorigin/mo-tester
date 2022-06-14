@@ -64,7 +64,7 @@ public class Executor {
                 //if the the command is marked to ignore flag and the IGNORE_MODEL = true
                 //skip the command directly
                 if(COMMON.IGNORE_MODEL && command.isIgnore()){
-                    LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] is ignored");
+                    LOG.info("["+script.getFileName()+"][row:"+command.getPosition()+"]["+command.getCommand().trim()+"] is ignored");
                     //to skip the read pos in the expected result
                     ResultParser.skip(command.getCommand());
                     /*command.getResult().setErrorCode(RESULT.ERROR_CASE_IGNORE_CODE);
@@ -88,7 +88,7 @@ public class Executor {
                     command.getResult().setRemark(command.getCommand()+"\n"+
                             "[EXPECT RESULT]:\n"+exp_res+"\n"+
                             "[ACTUAL RESULT]:\n"+RESULT.ERROR_CONNECTION_LOST_DESC+"\n");
-                    LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] was executed failed");
+                    LOG.error("["+script.getFileName()+"][row:"+command.getPosition()+"]["+command.getCommand().trim()+"] was executed failed");
                     LOG.error("[EXPECT RESULT]:\n"+exp_res);
                     LOG.error("[ACTUAL RESULT]:\n"+RESULT.ERROR_CONNECTION_LOST_DESC);
                     continue;
@@ -101,7 +101,7 @@ public class Executor {
                     //LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"]: row affect: "+num);
                     //but need to get the expected result,to skip the read pos
                     ResultParser.skip(command.getCommand());
-                    LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] was executed successfully,row affect: "+num);
+                    LOG.info("["+script.getFileName()+"][row:"+command.getPosition()+"]["+command.getCommand().trim()+"] was executed successfully,row affect: "+num);
                 } else {
                     //if query-type statment is executed successfully,need compare the expected result and the actual result
                     hasResults = statement.execute(command.getCommand());
@@ -114,7 +114,7 @@ public class Executor {
 
                     if(act_res == null){
                         if(exp_res == null || exp_res.equalsIgnoreCase("")){
-                            LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] was executed successfully");
+                            LOG.info("["+script.getFileName()+"][row:"+command.getPosition()+"]["+command.getCommand().trim()+"] was executed successfully");
                             continue;
                         }else {
                             script.addErrorCmd(command);
@@ -126,7 +126,7 @@ public class Executor {
                             command.getResult().setRemark(command.getCommand()+"\n"+
                                     "[EXPECT RESULT]:\n"+exp_res+"\n"+
                                     "[ACTUAL RESULT]:\n"+act_res+"\n");
-                            LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] was executed failed");
+                            LOG.error("["+script.getFileName()+"][row:"+command.getPosition()+"]["+command.getCommand().trim()+"] was executed failed");
                             LOG.error("[EXPECT RESULT]:\n"+exp_res);
                             LOG.error("[ACTUAL RESULT]:\n"+act_res);
                             continue;
@@ -145,12 +145,12 @@ public class Executor {
                         command.getResult().setRemark(command.getCommand()+"\n"+
                                 "[EXPECT RESULT]:\n"+exp_res+"\n"+
                                 "[ACTUAL RESULT]:\n"+act_res+"\n");
-                        LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] was executed failed");
+                        LOG.error("["+script.getFileName()+"][row:"+command.getPosition()+"]["+command.getCommand().trim()+"] was executed failed");
                         LOG.error("[EXPECT RESULT]:\n"+exp_res);
                         LOG.error("[ACTUAL RESULT]:\n"+act_res);
                     }else {
                         //compare successfully
-                        LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] was executed successfully");
+                        LOG.info("["+script.getFileName()+"][row:"+command.getPosition()+"]["+command.getCommand().trim()+"] was executed successfully");
                     }
                 }
                 statement.close();
@@ -177,7 +177,7 @@ public class Executor {
                         command.getResult().setRemark(command.getCommand()+"\n"+
                                 "[EXPECT RESULT]:\n"+exp_res+"\n"+
                                 "[ACTUAL RESULT]:\n"+RESULT.ERROR_CONNECTION_LOST_DESC+"\n");
-                        LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] was executed failed");
+                        LOG.error("["+script.getFileName()+"][row:"+command.getPosition()+"]["+command.getCommand().trim()+"] was executed failed");
                         LOG.error("[EXPECT RESULT]:\n"+exp_res);
                         LOG.error("[ACTUAL RESULT]:\n"+RESULT.ERROR_CONNECTION_LOST_DESC);
                         continue;
@@ -200,7 +200,7 @@ public class Executor {
                         command.getResult().setRemark(command.getCommand()+"\n"+
                                 "[EXPECT RESULT]:\n"+exp_res+"\n"+
                                 "[ACTUAL RESULT]:\n"+act_res+"\n");
-                        LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] was executed failed");
+                        LOG.error("["+script.getFileName()+"][row:"+command.getPosition()+"]["+command.getCommand().trim()+"] was executed failed");
                         LOG.error("[EXPECT RESULT]:\n"+exp_res);
                         LOG.error("[ACTUAL RESULT]:\n"+act_res);
                         continue;
@@ -220,12 +220,12 @@ public class Executor {
                     command.getResult().setRemark(command.getCommand()+"\n"+
                             "[EXPECT RESULT]:\n"+exp_res+"\n"+
                             "[ACTUAL RESULT]:\n"+act_res+"\n");
-                    LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] was executed failed");
+                    LOG.error("["+script.getFileName()+"][row:"+command.getPosition()+"]["+command.getCommand().trim()+"] was executed failed");
                     LOG.error("[EXPECT RESULT]:\n"+exp_res);
                     LOG.error("[ACTUAL RESULT]:\n"+act_res);
                 }else {
                     //compare successfully
-                    LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] was executed successfully");
+                    LOG.info("["+script.getFileName()+"][row:"+command.getPosition()+"]["+command.getCommand().trim()+"] was executed successfully");
                 }
             }
         }

@@ -30,7 +30,7 @@ public class ScriptParser {
     public static void parseScript(String path){
         testScript = new TestScript();
         testScript.setFileName(path);
-
+        int rowNum = 1;
         try {
             lineReader = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
             SqlCommand command = new SqlCommand();
@@ -50,6 +50,7 @@ public class ScriptParser {
                     if(trimmedLine.startsWith(COMMON.IGNORE_END_FLAG))
                         ignore = false;
                     line = lineReader.readLine();
+                    rowNum++;
                     continue;
                 }
 
@@ -57,12 +58,14 @@ public class ScriptParser {
                     command.append(trimmedLine);
                     command.setConn_id(COMMON.CONNECTION_ID);
                     command.setIgnore(ignore);
+                    command.setPosition(rowNum);
                     testScript.addCommand(command);
                     command = new SqlCommand();
                 }else {
                     command.append(trimmedLine);
                 }
                 line = lineReader.readLine();
+                rowNum++;
             }
         }catch (FileNotFoundException e) {
             e.printStackTrace();

@@ -62,7 +62,7 @@ And you can also specify some parameters when executing the command `run.sh`,par
 -i  set the including list, and only script files in the path which name contain one of the list will be excuted,if more than one,seperated by `,`,if not specified,refers to all cases included
 -e  set the excluding list, and script files in the path which name contain one of the list will not be excuted,if more than one,seperated by `,`,if not specified,refers to none of cases excluded
 -g  means SQL commands which is marked with ignore-flag will not be executed
--n  means the meta data of the resultset will be ignored when comparing the resut
+-n  means the meta data of the resultset will be ignored when comparing the result
 Examples:
 bash run.sh -p case -m run -t script -r 100 -i select,subquery -e substring -g
 ```

@@ -237,7 +237,6 @@ public class TestReport {
                 if(e_commands.size() > 0){
                     LOG.info("[ERROR SQL LIST]");
                     for(int i = 0; i < e_commands.size(); i++){
-
                         LOG.info("["+e_commands.get(i).getScriptFile()+"] SQL: "+e_commands.get(i).getCommand().trim());
                     }
                 }
@@ -399,7 +398,8 @@ public class TestReport {
         StringBuffer buffer = new StringBuffer();
         buffer.append("[ERROR]\n");
         buffer.append("[SCRIPT   FILE]: "+command.getScriptFile()+"\n");
-        buffer.append("[SQL STATEMENT]: "+command.getCommand()+"\n");
+        buffer.append("[ROW    NUMBER]: "+command.getPosition()+"\n");
+        buffer.append("[SQL STATEMENT]: "+command.getCommand());
         buffer.append("[EXPECT RESULT]:\n"+command.getResult().getExpResult()+"\n");
         buffer.append("[ACTUAL RESULT]:\n"+command.getResult().getActResult()+"\n");
         return buffer.toString();
