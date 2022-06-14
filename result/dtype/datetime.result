@@ -124,12 +124,12 @@ drop table if exists t2;
 create table t1 (
 dt  datetime(6) not null,
 value32  integer not null,
-primary key(dt)
+primary key(value32)
 );
 create table t2 (
 dt  datetime(3) not null,
 value32  integer not null,
-primary key(dt)
+primary key(value32)
 );
 insert into t1 values('2022-01-01 00:00:00.000050', 1);
 insert into t1 values('2022-01-01 00:00:00.000500', 2);
