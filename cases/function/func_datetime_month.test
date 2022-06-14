@@ -1,5 +1,5 @@
 # 嵌套
-SELECT MONTH(NOW()) AS Current_Month;
+#SELECT MONTH(NOW()) AS Current_Month;
 SELECT MONTH(date_add("2021-09-30", interval 200 day)) AS MONTH;
 
 # EXTREME VALUE

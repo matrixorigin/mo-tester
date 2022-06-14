@@ -70,7 +70,7 @@ drop table t1;
 
 
 #WHERE， EXTREME VALUES，嵌套
-SET timestamp=UNIX_TIMESTAMP('2011-07-31 10:00:00');
+#SET timestamp=UNIX_TIMESTAMP('2011-07-31 10:00:00');
 CREATE TABLE t1 (
 col_datetime_2_not_null_key datetime(2) NOT NULL,
 col_datetime_5 datetime(5) DEFAULT NULL,
@@ -92,10 +92,10 @@ FROM t1
 WHERE
 pk <> CONCAT_WS( ':','%I','%m' )+CONCAT_WS('-','%y','%H','%V','%k','%k' )
 OR
-year(col_datetime_5) < year(current_timestamp())
+year(col_datetime_5) < year(utc_timestamp())
 ORDER BY 1;
 DROP TABLE t1;
-SET timestamp=DEFAULT;
+#SET timestamp=DEFAULT;
 
 #EXTREME VALUES, 多语言
 SELECT CONCAT_WS(1471290948102948112341241204312904-23412412-4141, "a", "b");

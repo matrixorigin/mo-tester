@@ -1,5 +1,5 @@
 # 嵌套
-SELECT YEAR(NOW()) AS Current_Year;
+# SELECT YEAR(NOW()) AS Current_Year;
 SELECT YEAR(date_add("2021-09-30", interval 200 day)) AS year;
 
 

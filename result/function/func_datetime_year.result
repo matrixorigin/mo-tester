@@ -1,6 +1,3 @@
-SELECT YEAR(NOW()) AS Current_Year;
-Current_Year
-2022
 SELECT YEAR(date_add("2021-09-30", interval 200 day)) AS year;
 year
 2022

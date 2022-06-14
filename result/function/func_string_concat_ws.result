@@ -76,7 +76,6 @@ a	MAX(b)	CONCAT_WS(MAX(b), '43', '4', '5')
 1	4	434445
 10	43	43434435
 drop table t1;
-SET timestamp=UNIX_TIMESTAMP('2011-07-31 10:00:00');
 CREATE TABLE t1 (
 col_datetime_2_not_null_key datetime(2) NOT NULL,
 col_datetime_5 datetime(5) DEFAULT NULL,
@@ -98,7 +97,7 @@ FROM t1
 WHERE
 pk <> CONCAT_WS( ':','%I','%m' )+CONCAT_WS('-','%y','%H','%V','%k','%k' )
 OR
-year(col_datetime_5) < year(current_timestamp())
+year(col_datetime_5) < year(utc_timestamp())
 ORDER BY 1;
 c1	c2
 0001-01-01 00:00:00	0001-01-01 00:00:00
@@ -112,7 +111,6 @@ c1	c2
 2001-10-20 00:00:00	2001-09-20 11:18:18.036300000
 2006-12-27 07:25:14.040000000	null
 DROP TABLE t1;
-SET timestamp=DEFAULT;
 SELECT CONCAT_WS(1471290948102948112341241204312904-23412412-4141, "a", "b");
 CONCAT_WS(1471290948102948112341241204312904-23412412-4141, "a", "b")
 a1471290948102948112341241180896351b
