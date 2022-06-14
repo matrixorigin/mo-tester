@@ -26,19 +26,19 @@ create table t1 (a bigint unsigned not null, primary key(a));
 insert into t1 values (18446744073709551615), (0xFFFFFFFFFFFFFFFE), (18446744073709551613), (18446744073709551612);
 select * from t1;
 a
-18446744073709551615
-18446744073709551614
-18446744073709551613
 18446744073709551612
+18446744073709551613
+18446744073709551614
+18446744073709551615
 select * from t1 where a=18446744073709551615;
 a
 18446744073709551615
 delete from t1 where a=18446744073709551615;
 select * from t1;
 a
-18446744073709551614
-18446744073709551613
 18446744073709551612
+18446744073709551613
+18446744073709551614
 drop table t1;
 create table t1 ( a int not null default 1, big bigint primary key );
 insert into t1 (big) values (-1),(12345678901234567),(9223372036854775807);
@@ -48,21 +48,21 @@ a	big
 1	12345678901234567
 1	9223372036854775807
 select min(big),max(big),max(big)-1 from t1;
-min(big)        max(big)        max(big) - 1
+min(big)	max(big)	max(big)-1
 -1	9223372036854775807	9223372036854775806
 select min(big),max(big),max(big)-1 from t1 group by a;
-min(big)        max(big)        max(big) - 1
+min(big)	max(big)	max(big)-1
 -1	9223372036854775807	9223372036854775806
 drop table t1;
 create table t1 ( a int not null default 1, big bigint unsigned primary key);
 insert into t1 (big) values (0),(18446744073709551615), (0xFFFFFFFFFFFFFFFE), (18446744073709551613), (18446744073709551612);
 select * from t1;
-a       big
-1       0
-1       18446744073709551615
-1       18446744073709551614
-1       18446744073709551613
-1       18446744073709551612
+a	big
+1	0
+1	18446744073709551612
+1	18446744073709551613
+1	18446744073709551614
+1	18446744073709551615
 select * from t1 order by big limit 1,3;
 a	big
 1	18446744073709551612
@@ -74,10 +74,10 @@ a	big
 1	18446744073709551613
 1	18446744073709551614
 select min(big),max(big),max(big)-1 from t1;
-min(big)        max(big)        max(big) - 1
+min(big)	max(big)	max(big)-1
 0	18446744073709551615	18446744073709551614
 select min(big),max(big),max(big)-1 from t1 group by a;
-min(big)        max(big)        max(big) - 1
+min(big)	max(big)	max(big)-1
 0	18446744073709551615	18446744073709551614
 drop table t1;
 create table t1 (id bigint primary key, a int);
@@ -106,19 +106,19 @@ insert into t2 values(17156792991891826145, 3);
 insert into t2 values( 9223372036854775807, 4);
 select * from t1;
 value64	value32
-17156792991891826145    1
-9223372036854775807     2
+9223372036854775807	2
+17156792991891826145	1
 select * from t2;
-value64 value32
-17156792991891826145    3
-9223372036854775807     4
+value64	value32
+9223372036854775807	4
+17156792991891826145	3
 select * from t1 join t2 on t1.value64=t2.value64 order by t1.value64 asc, t2.value32 desc;
 value64	value32	value64	value32
 9223372036854775807	2	9223372036854775807	4
 17156792991891826145	1	17156792991891826145	3
 select * from t1 join t2 on t1.value64=t2.value64 where t1.value64=17156792991891826145;
-t1.value64      t1.value32      t2.value64      t2.value32
-17156792991891826145    1       17156792991891826145    3
+value64	value32	value64	value32
+17156792991891826145	1	17156792991891826145	3
 drop table if exists t1;
 drop table if exists t2;
 create table t1 (sint64 bigint not null);
@@ -161,20 +161,20 @@ CREATE TABLE t_bigint(id BIGINT);
 INSERT INTO t_bigint VALUES (1), (2);
 SELECT id, id >= 1.1 FROM t_bigint;
 id	id >= 1.1
-1	false	
-2	true	
+1	false
+2	true
 SELECT id, 1.1 <= id FROM t_bigint;
 id	1.1 <= id
-1	false	
-2	true	
+1	false
+2	true
 SELECT id, id = 1.1 FROM t_bigint;
 id	id = 1.1
-1	false	
-2	false	
+1	false
+2	false
 SELECT id, 1.1 = id FROM t_bigint;
 id	1.1 = id
-1	false	
-2	false	
+1	false
+2	false
 SELECT * from t_bigint WHERE id = 1.1;
 id
 SELECT * from t_bigint WHERE id = 1.1e0;
@@ -220,9 +220,9 @@ insert into t values(8894754949779693574,1);
 insert into t values(8894754949779693579,2);
 insert into t values(17790886498483827171,3);
 select count(*) from t
-where id>=8894754949779693574 and id <=17790886498483827171 order by 1 asc;
+where id>=8894754949779693574 and id =17790886498483827171 order by 1 asc;
 count(*)
-3
+1
 select count(*) from t
 where id between 8894754949779693574 and 17790886498483827171;
 count(*)
@@ -485,15 +485,15 @@ insert into t1 values(9,8,4,9,9849.312,9849312,9849.312,'see you','subquery','20
 update t1 sub set sub.id=sub.id%4+sub.id where id < 4 || id > 5;
 select * from t1;
 id	ti	si	bi	fl	dl	de	ch	vch	dd	dt
-2	1	4	3	1113.32	111332	1113	hello	subquery	2022-04-28	2022-04-28 22:40:11
-4	2	5	2	2252.05	225205	2252	bye	sub query	2022-04-28	2022-04-28 22:40:11
-6	6	6	3	3663.21	366321	3663	hi	subquery	2022-04-28	2022-04-28 22:40:11
-4	7	1	5	4715.22	471522	4715	good morning	my subquery	2022-04-28	2022-04-28 22:40:11
-5	1	2	6	51.26	5126	51	byebye	 is subquery?	2022-04-28	2022-04-28 22:40:11
-8	3	2	1	632.1	6321	632	good night	maybe subquery	2022-04-28	2022-04-28 22:40:11
-10	4	4	3	7443.11	744311	7443	yes	subquery	2022-04-28	2022-04-28 22:40:11
-8	7	5	8	8758	875800	8758	nice to meet	just subquery	2022-04-28	2022-04-28 22:40:11
-10	8	4	9	9849.31	9849312	9849	see you	subquery	2022-04-28	2022-04-28 22:40:11
+2	1	4	3	1113.32	111332.0	1113	hello	subquery	2022-04-28	2022-04-28 22:40:11
+4	2	5	2	2252.05	225205.0	2252	bye	sub query	2022-04-28	2022-04-28 22:40:11
+6	6	6	3	3663.21	366321.0	3663	hi	subquery	2022-04-28	2022-04-28 22:40:11
+4	7	1	5	4715.22	471522.0	4715	good morning	my subquery	2022-04-28	2022-04-28 22:40:11
+5	1	2	6	51.26	5126.0	51	byebye	 is subquery?	2022-04-28	2022-04-28 22:40:11
+8	3	2	1	632.1	6321.0	632	good night	maybe subquery	2022-04-28	2022-04-28 22:40:11
+10	4	4	3	7443.11	744311.0	7443	yes	subquery	2022-04-28	2022-04-28 22:40:11
+8	7	5	8	8758.0	875800.0	8758	nice to meet	just subquery	2022-04-28	2022-04-28 22:40:11
+10	8	4	9	9849.31	9849312.0	9849	see you	subquery	2022-04-28	2022-04-28 22:40:11
 drop table if exists t1;
 create table t1 (id bigint,ti bigint unsigned,si bigint,bi bigint unsigned,fl float,dl double,de decimal,ch char(20),vch varchar(20),dd date,dt datetime);
 insert into t1 values(1,1,4,3,1113.32,111332,1113.32,'hello','subquery','2022-04-28','2022-04-28 22:40:11');
@@ -695,8 +695,8 @@ insert into t1 values(9,8,4,9,9849.312,9849312,9849.312,'see you','subquery','20
 delete from t1 where id < 4 || id > 5;
 select * from t1 order by id+ti asc;
 id	ti	si	bi	fl	dl	de	ch	vch	dd	dt
-5	1	2	6	51.26	5126	51	byebye	 is subquery?	2022-04-28	2022-04-28 22:40:11
-4	7	1	5	4715.22	471522	4715	good morning	my subquery	2022-04-28	2022-04-28 22:40:11
+5	1	2	6	51.26	5126.0	51	byebye	 is subquery?	2022-04-28	2022-04-28 22:40:11
+4	7	1	5	4715.22	471522.0	4715	good morning	my subquery	2022-04-28	2022-04-28 22:40:11
 drop table if exists t1;
 create table t1 (id bigint,ti bigint unsigned,si bigint,bi bigint unsigned,fl float,dl double,de decimal,ch char(20),vch varchar(20),dd date,dt datetime);
 insert into t1 values(1,1,4,3,1113.32,111332,1113.32,'hello','subquery','2022-04-28','2022-04-28 22:40:11');

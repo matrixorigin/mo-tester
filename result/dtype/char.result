@@ -15,10 +15,10 @@ SELECT '9223372036854775807' = 9223372036854775807;
 1
 SELECT '9223372036854775807' = "9223372036854775807";
 '9223372036854775807' = "9223372036854775807"
-1
+true
 SELECT CAST('9223372036854775807' AS UNSIGNED) = 9223372036854775806;
 CAST('9223372036854775807' AS UNSIGNED) = 9223372036854775806
-0
+false
 SELECT CAST("2017-08-29" AS DATE);
 CAST("2017-08-29" AS DATE)
 2017-08-29
@@ -90,7 +90,7 @@ Poland	Carole	F	Production Control	29
 Rapier	Abigail	F	Human Resources	38
 Sharma	Bradley	M	Production	27
 Tamburello	Andrea	F	Marketing	45
-select concat_ws(LastName,FirstName) from Demochar where Age > 40;
+select concat_ws(LastName,FirstName) from Demochar where Age > 40 order by 1 asc;
 concat_ws(LastName,FirstName)
 JohnsonDavid
 MartinKelly
