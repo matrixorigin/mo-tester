@@ -24,8 +24,6 @@ public class TestReport {
     Map<String,ArrayList<TestCase>> script_cases = new HashMap<String,ArrayList<TestCase>>();
     private ArrayList<TestCase> _cases = new ArrayList<TestCase>();
     private ArrayList<TestScript> scripts = new ArrayList<TestScript>();
-
-
     private int total_cmd = 0;
     private int error_cmd = 0;
     private int noexec_cmd = 0;

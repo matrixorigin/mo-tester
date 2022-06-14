@@ -54,8 +54,5 @@ public class COMMON {
 
     public static String[] SPECIAL_CHARS = new String[]{"+","-","*","/","%","&",">","<","(",")","!","="};
 
-
-
-
-
+    public static double TOLERABLE_ERROR = 0.0000009;
 }

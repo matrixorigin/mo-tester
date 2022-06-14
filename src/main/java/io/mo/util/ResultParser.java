@@ -23,7 +23,6 @@ public class ResultParser {
         String line = null;
         StringBuffer buffer = new StringBuffer();
         boolean cmd_deleted = false;
-
         try {
             while((line = lineReader.readLine()) != null) {
                 line = new String(line.getBytes(), "utf-8");

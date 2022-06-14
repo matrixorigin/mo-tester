@@ -88,7 +88,7 @@ public class Executor {
                     command.getResult().setRemark(command.getCommand()+"\n"+
                             "[EXPECT RESULT]:\n"+exp_res+"\n"+
                             "[ACTUAL RESULT]:\n"+RESULT.ERROR_CONNECTION_LOST_DESC+"\n");
-                    LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed failed");
+                    LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] was executed failed");
                     LOG.error("[EXPECT RESULT]:\n"+exp_res);
                     LOG.error("[ACTUAL RESULT]:\n"+RESULT.ERROR_CONNECTION_LOST_DESC);
                     continue;
@@ -98,10 +98,10 @@ public class Executor {
                 if (command.isUpdate()) {
                     //if no-query-type statement is executed successfully,do not need check
                     int num = statement.executeUpdate(command.getCommand());
-                    LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"]: row affect: "+num);
+                    //LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"]: row affect: "+num);
                     //but need to get the expected result,to skip the read pos
                     ResultParser.skip(command.getCommand());
-                    LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed successfully");
+                    LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] was executed successfully,row affect: "+num);
                 } else {
                     //if query-type statment is executed successfully,need compare the expected result and the actual result
                     hasResults = statement.execute(command.getCommand());
@@ -114,7 +114,7 @@ public class Executor {
 
                     if(act_res == null){
                         if(exp_res == null || exp_res.equalsIgnoreCase("")){
-                            LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed successfully");
+                            LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] was executed successfully");
                             continue;
                         }else {
                             script.addErrorCmd(command);
@@ -126,7 +126,7 @@ public class Executor {
                             command.getResult().setRemark(command.getCommand()+"\n"+
                                     "[EXPECT RESULT]:\n"+exp_res+"\n"+
                                     "[ACTUAL RESULT]:\n"+act_res+"\n");
-                            LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed failed");
+                            LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] was executed failed");
                             LOG.error("[EXPECT RESULT]:\n"+exp_res);
                             LOG.error("[ACTUAL RESULT]:\n"+act_res);
                             continue;
@@ -145,12 +145,12 @@ public class Executor {
                         command.getResult().setRemark(command.getCommand()+"\n"+
                                 "[EXPECT RESULT]:\n"+exp_res+"\n"+
                                 "[ACTUAL RESULT]:\n"+act_res+"\n");
-                        LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed failed");
+                        LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] was executed failed");
                         LOG.error("[EXPECT RESULT]:\n"+exp_res);
                         LOG.error("[ACTUAL RESULT]:\n"+act_res);
                     }else {
                         //compare successfully
-                        LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed successfully");
+                        LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] was executed successfully");
                     }
                 }
                 statement.close();
@@ -177,7 +177,7 @@ public class Executor {
                         command.getResult().setRemark(command.getCommand()+"\n"+
                                 "[EXPECT RESULT]:\n"+exp_res+"\n"+
                                 "[ACTUAL RESULT]:\n"+RESULT.ERROR_CONNECTION_LOST_DESC+"\n");
-                        LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed failed");
+                        LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] was executed failed");
                         LOG.error("[EXPECT RESULT]:\n"+exp_res);
                         LOG.error("[ACTUAL RESULT]:\n"+RESULT.ERROR_CONNECTION_LOST_DESC);
                         continue;
@@ -188,7 +188,7 @@ public class Executor {
 
                 if(act_res == null){
                     if(exp_res == null || exp_res.equalsIgnoreCase("")){
-                        LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed successfully");
+                        LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] was executed successfully");
                         continue;
                     }else {
                         script.addErrorCmd(command);
@@ -200,7 +200,7 @@ public class Executor {
                         command.getResult().setRemark(command.getCommand()+"\n"+
                                 "[EXPECT RESULT]:\n"+exp_res+"\n"+
                                 "[ACTUAL RESULT]:\n"+act_res+"\n");
-                        LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed failed");
+                        LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] was executed failed");
                         LOG.error("[EXPECT RESULT]:\n"+exp_res);
                         LOG.error("[ACTUAL RESULT]:\n"+act_res);
                         continue;
@@ -220,12 +220,12 @@ public class Executor {
                     command.getResult().setRemark(command.getCommand()+"\n"+
                             "[EXPECT RESULT]:\n"+exp_res+"\n"+
                             "[ACTUAL RESULT]:\n"+act_res+"\n");
-                    LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed failed");
+                    LOG.error("["+script.getFileName()+"]["+command.getCommand().trim()+"] was executed failed");
                     LOG.error("[EXPECT RESULT]:\n"+exp_res);
                     LOG.error("[ACTUAL RESULT]:\n"+act_res);
                 }else {
                     //compare successfully
-                    LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] is executed successfully");
+                    LOG.info("["+script.getFileName()+"]["+command.getCommand().trim()+"] was executed successfully");
                 }
             }
         }
@@ -293,11 +293,11 @@ public class Executor {
                         int num = statement.executeUpdate(command.getCommand());
                         //but need to get the expected result,to skip the read pos
                         ResultParser.skip(command.getCommand());
-                        LOG.info("["+path+"][suite]["+i+"][setup]"+command.getCommand().trim()+"] is executed successfully");
+                        LOG.info("["+path+"][suite]["+i+"][setup]"+command.getCommand().trim()+"] was executed successfully");
                     }
                     statement.close();
                 }catch (SQLException e) {
-                    LOG.error("["+path+"][suite]["+i+"][setup]"+command.getCommand().trim()+"] is executed failed,maybe will cause the following cases error");
+                    LOG.error("["+path+"][suite]["+i+"][setup]"+command.getCommand().trim()+"] was executed failed,maybe will cause the following cases error");
                     ResultParser.skip(command.getCommand());
                 }
             }
@@ -317,7 +317,7 @@ public class Executor {
                             int num = statement.executeUpdate(command.getCommand());
                             //but need to get the expected result,to skip the read pos
                             ResultParser.skip(command.getCommand());
-                            LOG.info("["+path+"]["+command.getCommand().trim()+"] is executed successfully");
+                            LOG.info("["+path+"]["+command.getCommand().trim()+"] was executed successfully");
                         } else {
                             //if query-type statment is executed successfully,need compare the expected result and the actual result
                             hasResults = statement.execute(command.getCommand());
@@ -330,7 +330,7 @@ public class Executor {
 
                             if(act_res == null){
                                 if(exp_res == null || exp_res.equalsIgnoreCase("")){
-                                    LOG.info("["+path+"]["+command.getCommand().trim()+"] is executed successfully");
+                                    LOG.info("["+path+"]["+command.getCommand().trim()+"] was executed successfully");
                                     continue;
                                 }else {
                                     command.getResult().setErrorCode(RESULT.ERROR_CHECK_FAILED_CODE);
@@ -343,7 +343,7 @@ public class Executor {
                                                     "#excpect#:\n"+exp_res+"\n"+
                                                     "#actual #:\n"+act_res+"\n");
                                     testCase.setResult(command.getResult());
-                                    LOG.error("["+path+"]["+command.getCommand().trim()+"] is executed failed");
+                                    LOG.error("["+path+"]["+command.getCommand().trim()+"] was executed failed");
                                     LOG.error("[EXPECT RESULT]:\n"+exp_res);
                                     LOG.error("[ACTUAL RESULT]:\n"+act_res);
                                 }
@@ -365,12 +365,12 @@ public class Executor {
                                 testCase.setResult(command.getResult());
                                 testCase.addRemark(command.getResult().getRemark());
 
-                                LOG.error("["+path+"]["+command.getCommand().trim()+"] is executed failed");
+                                LOG.error("["+path+"]["+command.getCommand().trim()+"] was executed failed");
                                 LOG.error("[EXPECT RESULT]:\n"+exp_res);
                                 LOG.error("[ACTUAL RESULT]:\n"+act_res);
                             }else {
                                 //compare successfully
-                                LOG.info("["+path+"]["+command.getCommand().trim()+"] is executed successfully");
+                                LOG.info("["+path+"]["+command.getCommand().trim()+"] was executed successfully");
                             }
                         }
                         statement.close();
@@ -411,7 +411,7 @@ public class Executor {
 
                         if(act_res == null){
                             if(exp_res == null || exp_res.equalsIgnoreCase("")){
-                                LOG.info("["+path+"]["+command.getCommand().trim()+"] is executed successfully");
+                                LOG.info("["+path+"]["+command.getCommand().trim()+"] was executed successfully");
                                 continue;
                             }else {
                                 command.getResult().setErrorCode(RESULT.ERROR_CHECK_FAILED_CODE);
@@ -424,7 +424,7 @@ public class Executor {
                                                 "#excpect#:\n"+exp_res+"\n"+
                                                 "#actual #:\n"+act_res+"\n");
                                 testCase.setResult(command.getResult());
-                                LOG.error("["+path+"]["+command.getCommand().trim()+"] is executed failed");
+                                LOG.error("["+path+"]["+command.getCommand().trim()+"] was executed failed");
                                 LOG.error("[EXPECT RESULT]:\n"+exp_res);
                                 LOG.error("[ACTUAL RESULT]:\n"+act_res);
                             }
@@ -442,12 +442,12 @@ public class Executor {
                                             "#excpect#:\n"+exp_res+"\n"+
                                             "#actual #:\n"+act_res+"\n");
                             testCase.setResult(command.getResult());
-                            LOG.error("["+path+"]["+command.getCommand().trim()+"] is executed failed");
+                            LOG.error("["+path+"]["+command.getCommand().trim()+"] was executed failed");
                             LOG.error("[EXPECT RESULT]:\n"+exp_res);
                             LOG.error("[ACTUAL RESULT]:\n"+act_res);
                         }else {
                             //compare successfully
-                            LOG.info("["+path+"]["+command.getCommand().trim()+"] is executed successfully");
+                            LOG.info("["+path+"]["+command.getCommand().trim()+"] was executed successfully");
                         }
                     }
                 }
@@ -665,9 +665,8 @@ public class Executor {
     }
 
     public static boolean equals(SqlCommand command,String exp,String act){
-        //if the sql command has already required the order for result,
         // or if the result is expected error,compare directedly.
-        if(command.isSorted() || command.isError())
+        if( command.isError())
             return exp.equalsIgnoreCase(act);
 
         String[] exps = exp.split("\n");
@@ -677,23 +676,55 @@ public class Executor {
         if(exps.length != acts.length)
             return false;
 
-        //if the row meta does not contain special chars,compare directedly.
-        //if(!containSpecialChar(exps[0]))
-        //    return exp.equalsIgnoreCase(act);
-
-
+        //if the metainfo of the rs is not required to be compared,the meta info will be replaced by the constant string
         if(!COMMON.IS_COMPARE_META && containSpecialChar(exps[0])){
             //LOG.error("["+command.getScriptFile()+"]["+command.getCommand().trim()+"] IS_COMPARE_META: "+COMMON.IS_COMPARE_META);
             exps[0] = COMMON.THIS_IS_MO;
             acts[0] = COMMON.THIS_IS_MO;
         }
-        Arrays.sort(exps);
-        Arrays.sort(acts);
+
+        //if the resultset is not sorted by the "order by",it will be sorted
+        if(!command.isSorted()){
+            Arrays.sort(exps);
+            Arrays.sort(acts);
+        }
+
+        //begin to compare
         for(int i = 0 ; i < exps.length; i++){
+            //if not equal
             if(!exps[i].equalsIgnoreCase(acts[i])) {
                 //LOG.error("["+command.getScriptFile()+"]["+command.getCommand().trim()+"] expect: "+exps[i]);
                 //LOG.error("["+command.getScriptFile()+"]["+command.getCommand().trim()+"] actual: "+acts[i]);
-                return false;
+                //begin to deal with the precision
+                String[] exp_values = exps[i].split("\t");
+                String[] act_values = acts[i].split("\t");
+                if(exp_values.length != act_values.length)
+                    return false;
+
+                for(int j = 0; j < exp_values.length; j++){
+                    if(!isNumeric(exp_values[j])){
+                        if(!exp_values[j].equalsIgnoreCase(act_values[j]))
+                            return false;
+                    }else {
+
+                        if(!isNumeric(act_values[j]))
+                            return false;
+                        if(exp_values[j].length() > act_values[j].length())
+                            exp_values[j] = exp_values[j].substring(0,act_values[j].length());
+                        if(exp_values[j].length() < act_values[j].length())
+                            act_values[j] = act_values[j].substring(0,exp_values[j].length());
+                        int scale = exp_values[j].length() - exp_values[j].indexOf(".") - 1;
+                        double tolerable_error = 2.0/Math.pow(10.0,scale);
+                        LOG.info("tolerable_error = "+tolerable_error);
+                        double n_exp = Double.parseDouble(exp_values[j]);
+                        LOG.info("n_exp = "+ n_exp);
+                        double n_act = Double.parseDouble(act_values[j]);
+                        LOG.info("n_act = "+ n_act);
+                        LOG.info("Math.abs(n_exp - n_act) = "+Math.abs(n_exp - n_act));
+                        if(Math.abs(n_exp - n_act) > tolerable_error)
+                            return false;
+                    }
+                }
             }
         }
         return true;
@@ -712,13 +743,25 @@ public class Executor {
         return false;
     }
 
+    public static boolean isNumeric(String str){
+        if(str == null || str == ""){
+            return false;
+        }
+
+        return str.matches("^[+\\-]?\\d*[.]?\\d+$");
+    }
     public static void main(String args[]){
-        String[] test = new String[]{"a","b","c","1"};
-        String temp = test[0];
-        System.out.println(temp);
-        Arrays.sort(test);
-        System.out.println(temp);
-        System.out.println(test[0]);
+        System.out.println(isNumeric("6663667662744783"));
+        /*String e = "1113.32";
+        String a = "1113.3199462890625";
+        System.out.println(e);
+        System.out.println(a.substring(0,e.length()));
+        System.out.println(e.length() - e.indexOf(".") -1);
+        double tolerable_error = 1.0/Math.pow(10.0,16);
+        System.out.println(tolerable_error);
+        double ex = 0.6663667662744784;
+        double ac = 0.6663667662744783;
+        System.out.println(ex -ac);*/
     }
 
 
