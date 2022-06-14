@@ -118,7 +118,7 @@ t1	CREATE TABLE `t1` (
   `o` char(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 drop table t1;
-create table t1(str varchar(10) default 'def',strnull varchar(10),intg int default '10',rel double default '3.14');
+create table t1(str varchar(10) default 'def',strnull varchar(10),intg int default 10,rel double default 3.14);
 insert into t1 values ('','',0,0.0);
 select * from t1;
 str	strnull	intg	rel

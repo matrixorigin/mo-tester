@@ -66,7 +66,7 @@ drop table t1;
 create table t1 (a tinyint, b smallint, d int, e bigint, f float(3,2), g double(4,3), h decimal(5,4), i year, j date, k timestamp, l datetime, o char(10));
 show create table t1;
 drop table t1;
-create table t1(str varchar(10) default 'def',strnull varchar(10),intg int default '10',rel double default '3.14');
+create table t1(str varchar(10) default 'def',strnull varchar(10),intg int default 10,rel double default 3.14);
 insert into t1 values ('','',0,0.0);
 select * from t1;
 drop table t1;
