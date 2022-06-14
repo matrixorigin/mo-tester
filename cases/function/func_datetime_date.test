@@ -482,8 +482,8 @@ DROP TABLE t3;
 # DROP TABLE t3; */
 
 #逻辑操作
-SELECT date(now()) = date(utc_timestamp());
-
+#SELECT date(now()) = date(utc_timestamp());
+SELECT date("2022-12-22 02:34:23") = date("2022-12-22 03:34:23");
 
 
 #insert & distinct

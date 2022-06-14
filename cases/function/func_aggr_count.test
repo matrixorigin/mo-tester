@@ -90,7 +90,8 @@ drop table t1;
 
 CREATE TABLE t1 (d DATETIME, i INT);
 #INSERT INTO t1 VALUES (NOW(), 1);
-INSERT INTO t1 SELECT NOW(), 1;
+#INSERT INTO t1 SELECT NOW(), 1;
+INSERT INTO t1 SELECT "2021-10-23 10:01:01", 1;
 SELECT COUNT(i), i, COUNT(i)*i FROM t1 GROUP BY i;
 SELECT COUNT(i), (i+0), COUNT(i)*(i+0) FROM t1 GROUP BY i; 
 DROP TABLE t1;
@@ -138,7 +139,6 @@ CREATE TABLE t1 (a VARCHAR(400)) charset utf8;
 INSERT INTO t1 (a) VALUES ("A"), ("a"), ("a "), ("a   "),("B"), ("b"), ("b "), ("b   ");
 SELECT COUNT(DISTINCT a) FROM t1;
 DROP TABLE t1;
-
 
 
 
