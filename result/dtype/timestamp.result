@@ -1,5 +1,5 @@
 drop table if exists t1;
-create table t1 (a timestamp  not null, primary key(a));
+create table t1 (a timestamp(6) not null, primary key(a));
 insert into t1 values (20200101000000), ('2022-01-02'), ('2022-01-02 00:00:01'), ('2022-01-02 00:00:01.512345');
 select * from t1;
 a
@@ -61,12 +61,12 @@ drop table if exists t2;
 create table t1 (
 dt  timestamp(6) not null,
 value32  integer not null,
-primary key(dt)
+primary key(value32)
 );
 create table t2 (
 dt  timestamp(3) not null,
 value32  integer not null,
-primary key(dt)
+primary key(value32)
 );
 insert into t1 values('2022-01-01 00:00:00.000050', 1);
 insert into t1 values('2022-01-01 00:00:00.000500', 2);
