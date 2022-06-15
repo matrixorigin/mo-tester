@@ -6,9 +6,9 @@ create table table10 (a int primary key, b varchar(10));
 create table `测试表` (`测试1` int);
 create table `table11 ` (a int);
 create table table12 (`a ` int);
+create table `a/a` (a int);
 create table `aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa` (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa int);
 create table table14 (`aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa` int);
-create table `a/a` (a int);
 create table table16 (1a20 int,1e int);
 create table $table18 (a$1 int, $b int, c$ int);
 create table table19$ (a int);
@@ -21,11 +21,11 @@ table05
 table06
 table10
 测试表
-table11
+table11 
 table12
+a/a
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 table14
-a/a
 table16
 $table18
 table19$
