@@ -110,7 +110,7 @@ select cast(Age as char) as cAge from Demochar where cast(Age as char) like '2_'
 cAge
 29
 27
-select cast(Age as char) and Age as cAge from Demochar where Age>=50;
+select cast(Age as char) and Age as cAge from Demochar where Age>=50 order by cAge;
 cAge
 1
 1
@@ -199,11 +199,6 @@ employeeNumber  lastName        firstName       extension       email   officeCo
 1370    Hernandez       Gerard  x2028   ghernande@classicmodelcars.com  4       1102    Sales Rep
 1401    Castillo        Pamela  x2759   pcastillo@classicmodelcars.com  4       1102    Sales Rep
 1611    Fixter  Andy    x101    afixter@classicmodelcars.com    6       1088    Sales Rep
-select avg(officeCode) from employees where jobTitle like 'Sales%' group by jobTitle;
-avg(officeCode)
-6
-1
-3.6666666666666665
 select officeCode,sum(cast(officeCode as unsigned)) from employees group by officeCode;
 officeCode      sum(cast(officeCode as unsigned))
 1       6

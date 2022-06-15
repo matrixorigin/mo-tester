@@ -53,7 +53,7 @@ insert into t1 values(5,-128);
 insert into t2 values(5,-128);
 select * from t1;
 select * from t2;
-select * from t1 join t2 on t1.valueu8=t2.valueu8  order by 1 asc, t2.value8 desc;;
+select * from t1 join t2 on t1.valueu8=t2.valueu8  order by 1 asc, t2.value8 desc;
 select * from t1 join t2 on t1.valueu8=t2.valueu8 where t1.valueu8=255;
 select * from t1 join t2 on t1.value8=t2.value8 order by 2;
 drop table if exists t1;
