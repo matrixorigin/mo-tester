@@ -1,7 +1,7 @@
 #version
 
 #sql scritps path,only support relative path from "cases/..."
-path: "cases/table"
+path: "cases/"
 
 #method
 #run: means execute test scripts configured by para[path] completely,and generate the test reprot,execution logs
