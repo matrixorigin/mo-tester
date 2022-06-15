@@ -350,8 +350,8 @@ a	b
 124	0
 126	0
 drop table t1;
-create table t1 (a int not null auto_increment primary key, b char(32));
-insert into t1 (b) values ('apple'), ('apple');
+create table t1 (a int primary key, b char(32));
+insert into t1 values (1,'apple'), (2,'apple');
 select * from t1;
 a	b
 1	apple
@@ -597,8 +597,8 @@ delete from t1 where  1 < 2;
 select a,b from t1;
 a	b
 drop table t1;
-create table t1 (a int not null auto_increment primary key, b char(32));
-insert into t1 (b) values ('apple'), ('apple');
+create table t1 (a int primary key, b char(32));
+insert into t1 values (1,'apple'), (2,'apple');
 select * from t1;
 a	b
 1	apple
@@ -820,8 +820,8 @@ a	b
 124	0
 126	0
 drop table t1;
-create table t1 (a int not null auto_increment primary key, b char(32));
-insert into t1 (b) values ('apple'), ('apple');
+create table t1 (a int primary key, b char(32));
+insert into t1 values (1,'apple'), (2,'apple');
 select * from t1;
 a	b
 1	apple
@@ -1060,8 +1060,8 @@ delete from t1 where  1 < 2;
 select a,b from t1;
 a	b
 drop table t1;
-create table t1 (a int not null auto_increment primary key, b char(32));
-insert into t1 (b) values ('apple'), ('apple');
+create table t1 (a int primary key, b char(32));
+insert into t1 values (1,'apple'), (2,'apple');
 select * from t1;
 a	b
 1	apple

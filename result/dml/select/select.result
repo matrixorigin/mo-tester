@@ -55,7 +55,12 @@ userID	count(score)
 select userID,count(score) from t1 where userID>2 group by userID having count(score)>1 order by userID;
 userID	count(score)
 select distinct userID, count(score) from t1 group by userID order by userID;
-[42000]distinct with group by is unsupported
+userID	count(score)
+1	3
+2	1
+3	1
+6	1
+11	1
 select distinct spID,userID from t1;
 spID	userID
 1	1
@@ -84,9 +89,17 @@ spID	userID
 4	6
 3	3
 select distinct sum(spID) as sum from t1 group by userID order by sum asc;
-[42000]distinct with group by is unsupported
+sum(spID)
+2
+3
+4
+5
 select distinct sum(spID) as sum from t1 where score>1 group by userID order by sum asc;
-[42000]distinct with group by is unsupported
+sum(spID)
+2
+3
+4
+5
 select userID,MAX(score) from t1 where userID between 2 and 3 group by userID order by userID;
 userID	MAX(score)
 2	2

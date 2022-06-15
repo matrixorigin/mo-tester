@@ -1,6 +1,6 @@
 drop table if exists t1;
 create table t1 (a timestamp(0) not null, primary key(a));
-insert into t1 values (20200101000000), ('2022-01-02'), ('2022-01-02 00:00:01'), ('2022-01-02 00:00:01.512345');
+insert into t1 values ('20200101000000'), ('2022-01-02'), ('2022-01-02 00:00:01'), ('2022-01-02 00:00:01.512345');
 select * from t1;
 a
 2020-01-01 00:00:00
@@ -28,7 +28,7 @@ a
 2022-01-09 00:00:02
 drop table t1;
 create table t1 ( a int not null default 1, big timestamp(4) primary key);
-insert into t1 (big) values (20220103),('2022-01-01'),('2022-01-01 00:00:01'),('2022-01-02 00:00.00.000050');
+insert into t1 (big) values ('20220103'),('2022-01-01'),('2022-01-01 00:00:01'),('2022-01-02 00:00.00.000050');
 select * from t1;
 a	big
 1	2022-01-01 00:00:00.0000
@@ -115,7 +115,7 @@ id
 2022-01-02 00:00:00.000000
 SELECT * from t_timestamp WHERE id IN (2.0200101e7,2.0200102e7 );
 id
-SELECT * from t_timestamp WHERE id IN (20220101, 20220102);
+SELECT * from t_timestamp WHERE id IN ('20220101', 20220102);
 id
 2022-01-02 00:00:00.000000
 SELECT * from t_timestamp WHERE id IN ('2.0200101e7','2.0200102e7');
@@ -206,7 +206,7 @@ a	b
 2022-01-27 12:12:11	2000-01-01 00:00:00.0000
 drop table t1;
 create table t1 (a timestamp primary key, b char(32));
-insert into t1 values (20220101,'apple'),('2022-01-02','apple');
+insert into t1 values ('20220101','apple'),('2022-01-02','apple');
 select * from t1;
 a	b
 2022-01-01 00:00:00	apple
@@ -222,8 +222,8 @@ drop table if exists t2;
 create table t11 (a timestamp(6) NOT NULL, b int, primary key (a));
 create table t12 (a timestamp(6) NOT NULL, b int, primary key (a));
 create table t2 (a timestamp(6) NOT NULL, b int, primary key (a));
-insert into t11 values (20220103, 10),('2022-01-01 00:00:00', 11),('2022-01-02', 12);
-insert into t12 values (20220303, 10),('2020-01-03 01:00:00.00000', 11),(20220102, 12);
+insert into t11 values ('20220103', 10),('2022-01-01 00:00:00', 11),('2022-01-02', 12);
+insert into t12 values ('20220303', 10),('2020-01-03 01:00:00.00000', 11),('20220102', 12);
 insert into t2 values ('2021-12-31', 21),('2022-01-01 00:00:00', 12),('2022-03-03', 23);
 select * from t11;
 a	b
@@ -244,9 +244,9 @@ a	b
 drop table if exists t1;
 drop table if exists t2;
 CREATE TABLE t1(a timestamp PRIMARY KEY);
-INSERT INTO t1 VALUES('2022-10-01'),(20220220);
+INSERT INTO t1 VALUES('2022-10-01'),('20220220');
 CREATE TABLE t2(b timestamp);
-INSERT INTO t2 VALUES('2022-10-01'),(20220220);
+INSERT INTO t2 VALUES('2022-10-01'),('20220220');
 update t1 JOIN t2 on t1.a=t2.b set t1.a='2022-05-05 01:01:01' WHERE t1.a=20221001;
 select * from t1;
 a
@@ -258,7 +258,7 @@ b
 2022-02-20 00:00:00
 drop table t1;
 CREATE TABLE t1 ( a timestamp PRIMARY KEY );
-INSERT INTO t1 VALUES ('2021-12-31'),('2022-01-03 01:00:00.00000'),(20220102);
+INSERT INTO t1 VALUES ('2021-12-31'),('2022-01-03 01:00:00.00000'),('20220102');
 update t1 set a=a*1/1+1 WHERE t1.a>20220102 ORDER BY t1.a LIMIT 1;
 SELECT * FROM t1;
 a
@@ -271,9 +271,9 @@ drop table if exists t3;
 CREATE TABLE t1 (a timestamp not null,b timestamp(4) not null, primary key (a));
 CREATE TABLE t2 (a timestamp not null,b timestamp(4) not null, primary key (a));
 CREATE TABLE t3 (a timestamp not null,b timestamp(4) not null, primary key (a));
-insert into t1 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),(20220102,'2022-01-01 00:00:00'),(20220104,'2022-01-03 01:00:00.00000');
-insert into t2 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),(20220102,'2022-01-02'),(20220103,'2022-01-03 01:00:00.00000');
-insert into t3 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),(20220102,'2022-01-01 00:00:00'),(20220104,'2022-01-03 01:00:00.00000');
+insert into t1 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),('20220102','2022-01-01 00:00:00'),('20220104','2022-01-03 01:00:00.00000');
+insert into t2 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),('20220102','2022-01-02'),('20220103','2022-01-03 01:00:00.00000');
+insert into t3 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),('20220102','2022-01-01 00:00:00'),('20220104','2022-01-03 01:00:00.00000');
 update t1 join t2 on t1.a=t2.a join t3 on t1.b=t3.b set t1.a=((t3.a*5) DIV 5) where t1.a=t2.a AND t2.b=t3.a and t1.b=t3.b;
 select * from t1;
 a	b
@@ -295,8 +295,8 @@ a timestamp
 CREATE TABLE t2 (
 a timestamp
 );
-insert into t1 values('2022-01-01 00:00:00'),(20220102),('2022-01-03 01:00:00.00000'),('2022-01-04'),(20220105);
-insert into t2 values('2022-01-01 00:00:00'),('2022-01-03 01:00:00.00000'),(20220105),('2022-01-07'),('2022-01-09 22:22:22');
+insert into t1 values('2022-01-01 00:00:00'),('20220102'),('2022-01-03 01:00:00.00000'),('2022-01-04'),('20220105');
+insert into t2 values('2022-01-01 00:00:00'),('2022-01-03 01:00:00.00000'),('20220105'),('2022-01-07'),('2022-01-09 22:22:22');
 update t1 join t2 alias on t1.a=alias.a set alias.a=t1.a+3 WHERE t1.a = alias.a;
 drop table if exists t1;
 drop table if exists t2;
@@ -333,10 +333,10 @@ create table t1 (a timestamp);
 create table t2 (a timestamp, b int);
 create table t3 (a timestamp);
 create table t4 (a timestamp primary key, b int not null);
-insert into t1 values (20220102);
+insert into t1 values ('20220102');
 insert into t2 values ('2022-01-01 00:00:00',7);
-insert into t4 values (20220104,8),('2022-01-03 01:00:00.00000',8),('2022-01-05',9);
-insert into t3 values ('2022-01-03 01:00:00.00000'),(20220105);
+insert into t4 values ('20220104',8),('2022-01-03 01:00:00.00000',8),('2022-01-05',9);
+insert into t3 values ('2022-01-03 01:00:00.00000'),('20220105');
 update t3,t2,t1 set t2.a=t3.a where t3.a in (select a from t4 where b > 8);
 select * from t1;
 a
@@ -385,7 +385,7 @@ select a,b from t1;
 a	b
 drop table t1;
 create table t1 (a timestamp primary key, b char(32));
-insert into t1 values (20220101,'apple'),('2022-01-02 00:00:00','apple');
+insert into t1 values ('20220101','apple'),('2022-01-02 00:00:00','apple');
 select * from t1;
 a	b
 2022-01-01 00:00:00	apple
@@ -398,8 +398,8 @@ drop table t1;
 create table t11 (a timestamp(6) NOT NULL, b int, primary key (a));
 create table t12 (a timestamp(6) NOT NULL, b int, primary key (a));
 create table t2 (a timestamp(6) NOT NULL, b int, primary key (a));
-insert into t11 values (20211231, 10),('2022-01-01 00:00:00', 11),('2022-01-02', 12);
-insert into t12 values (20220303, 10),('2021-12-31', 11),(20220102, 12);
+insert into t11 values ('20211231', 10),('2022-01-01 00:00:00', 11),('2022-01-02', 12);
+insert into t12 values ('20220303', 10),('2021-12-31', 11),('20220102', 12);
 insert into t2 values ('2021-12-31', 21),('2022-01-01 00:00:00', 12),('2022-03-03', 23);
 delete from t11 where t11.b <> (select b from t2 where t11.a = t2.a);
 select * from t11;
@@ -414,9 +414,9 @@ a	b
 drop table if exists t1;
 drop table if exists t2;
 CREATE TABLE t1(a timestamp PRIMARY KEY);
-INSERT INTO t1 VALUES('2022-10-01'),(20220220);
+INSERT INTO t1 VALUES('2022-10-01'),('20220220');
 CREATE TABLE t2(b timestamp(4));
-INSERT INTO t2 VALUES('2022-10-01 00:00:00.0001'),(20220220);
+INSERT INTO t2 VALUES('2022-10-01 00:00:00.0001'),('20220220');
 delete t1,t2 from t1 JOIN t2 on t1.a=t2.b WHERE t1.a=20221001;
 select * from t1;
 a
@@ -432,9 +432,9 @@ drop table if exists t3;
 CREATE TABLE t1 (a timestamp not null,b timestamp(4) not null, primary key (a));
 CREATE TABLE t2 (a timestamp not null,b timestamp(4) not null, primary key (a));
 CREATE TABLE t3 (a timestamp not null,b timestamp(4) not null, primary key (a));
-insert into t1 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),(20220102,'2022-01-01 00:00:00'),(20220104,'2022-01-03 01:00:00.00000');
-insert into t2 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),(20220102,'2022-01-02'),(20220103,'2022-01-03 01:00:00.00000');
-insert into t3 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),(20220102,'2022-01-01 00:00:00'),(20220104,'2022-01-03 01:00:00.00000');
+insert into t1 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),('20220102','2022-01-01 00:00:00'),('20220104','2022-01-03 01:00:00.00000');
+insert into t2 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),('20220102','2022-01-02'),('20220103','2022-01-03 01:00:00.00000');
+insert into t3 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),('20220102','2022-01-01 00:00:00'),('20220104','2022-01-03 01:00:00.00000');
 delete t1,t2,t3 from t1 join t2 on t1.a=t2.a join t3 on t1.b=t3.b where t1.a=t2.a AND t2.b=t3.a and t1.b=t3.b;
 select * from t1;
 a	b
@@ -454,8 +454,8 @@ a timestamp
 CREATE TABLE t2 (
 a timestamp(6)
 );
-insert into t1 values('2022-01-01 00:00:00'),(20220102),('2022-01-03 01:00:00.00000'),('2022-01-04'),(20220105);
-insert into t2 values('2022-01-01 00:00:00'),('2022-01-03 01:00:00.00000'),(20220105),('2022-01-07'),('2022-01-09 22:22:22');
+insert into t1 values('2022-01-01 00:00:00'),('20220102'),('2022-01-03 01:00:00.00000'),('2022-01-04'),('20220105');
+insert into t2 values('2022-01-01 00:00:00'),('2022-01-03 01:00:00.00000'),('20220105'),('2022-01-07'),('2022-01-09 22:22:22');
 delete alias from t1 join t2 alias on t1.a=alias.a WHERE t1.a = alias.a;
 select * from t2;
 a
@@ -481,10 +481,10 @@ create table t1 (a timestamp);
 create table t2 (a timestamp, b int);
 create table t3 (a timestamp);
 create table t4 (a timestamp primary key, b int not null);
-insert into t1 values (20220102);
+insert into t1 values ('20220102');
 insert into t2 values ('2022-01-01 00:00:00',7);
-insert into t4 values (20220104,8),('2022-01-03 01:00:00.00000',8),('2022-01-05',9);
-insert into t3 values ('2022-01-03 01:00:00.00000'),(20220105);
+insert into t4 values ('20220104',8),('2022-01-03 01:00:00.00000',8),('2022-01-05',9);
+insert into t3 values ('2022-01-03 01:00:00.00000'),('20220105');
 delete t3 from t3,t4  where t3.a in (select a from t4 where b > 8);
 select * from t3;
 a
@@ -552,7 +552,7 @@ a	b
 2022-01-12 00:01:00	2000-01-01 00:00:00.0000
 drop table t1;
 create table t1 (a timestamp primary key, b char(32));
-insert into t1 values (20220101,'apple'),('2022-01-02','apple');
+insert into t1 values ('20220101','apple'),('2022-01-02','apple');
 select * from t1;
 a	b
 2022-01-01 00:00:00	apple
@@ -568,8 +568,8 @@ drop table if exists t2;
 create table t11 (a timestamp(6) NOT NULL, b int, primary key (a));
 create table t12 (a timestamp(6) NOT NULL, b int, primary key (a));
 create table t2 (a timestamp(6) NOT NULL, b int, primary key (a));
-insert into t11 values (20220103, 10),('2022-01-01 00:00:00', 11),('2022-01-02', 12);
-insert into t12 values (20220303, 10),('2020-01-03 01:00:00.00000', 11),(20220102, 12);
+insert into t11 values ('20220103', 10),('2022-01-01 00:00:00', 11),('2022-01-02', 12);
+insert into t12 values ('20220303', 10),('2020-01-03 01:00:00.00000', 11),('20220102', 12);
 insert into t2 values ('2021-12-31', 21),('2022-01-01 00:00:00', 12),('2022-03-03', 23);
 select * from t11;
 a	b
@@ -590,9 +590,9 @@ a	b
 drop table if exists t1;
 drop table if exists t2;
 CREATE TABLE t1(a timestamp PRIMARY KEY);
-INSERT INTO t1 VALUES('2022-10-01'),(20220220);
+INSERT INTO t1 VALUES('2022-10-01'),('20220220');
 CREATE TABLE t2(b timestamp);
-INSERT INTO t2 VALUES('2022-10-01'),(20220220);
+INSERT INTO t2 VALUES('2022-10-01'),('20220220');
 update t1 JOIN t2 on t1.a=t2.b set t1.a='2022-05-05 01:01:01' WHERE t1.a=20221001;
 select * from t1;
 a
@@ -604,7 +604,7 @@ b
 2022-02-20 00:00:00
 drop table t1;
 CREATE TABLE t1 ( a timestamp PRIMARY KEY );
-INSERT INTO t1 VALUES ('2021-12-31'),('2022-01-03 01:00:00.00000'),(20220102);
+INSERT INTO t1 VALUES ('2021-12-31'),('2022-01-03 01:00:00.00000'),('20220102');
 update t1 set a=a*1/1+1 WHERE t1.a>20220102 ORDER BY t1.a LIMIT 1;
 SELECT * FROM t1;
 a
@@ -617,9 +617,9 @@ drop table if exists t3;
 CREATE TABLE t1 (a timestamp not null,b timestamp(4) not null, primary key (a));
 CREATE TABLE t2 (a timestamp not null,b timestamp(4) not null, primary key (a));
 CREATE TABLE t3 (a timestamp not null,b timestamp(4) not null, primary key (a));
-insert into t1 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),(20220102,'2022-01-01 00:00:00'),(20220104,'2022-01-03 01:00:00.00000');
-insert into t2 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),(20220102,'2022-01-02'),(20220103,'2022-01-03 01:00:00.00000');
-insert into t3 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),(20220102,'2022-01-01 00:00:00'),(20220104,'2022-01-03 01:00:00.00000');
+insert into t1 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),('20220102','2022-01-01 00:00:00'),('20220104','2022-01-03 01:00:00.00000');
+insert into t2 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),('20220102','2022-01-02'),('20220103','2022-01-03 01:00:00.00000');
+insert into t3 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),('20220102','2022-01-01 00:00:00'),('20220104','2022-01-03 01:00:00.00000');
 update t1 join t2 on t1.a=t2.a join t3 on t1.b=t3.b set t1.a=((t3.a*5) DIV 5) where t1.a=t2.a AND t2.b=t3.a and t1.b=t3.b;
 select * from t1;
 a	b
@@ -641,8 +641,8 @@ a timestamp
 CREATE TABLE t2 (
 a timestamp
 );
-insert into t1 values('2022-01-01 00:00:00'),(20220102),('2022-01-03 01:00:00.00000'),('2022-01-04'),(20220105);
-insert into t2 values('2022-01-01 00:00:00'),('2022-01-03 01:00:00.00000'),(20220105),('2022-01-07'),('2022-01-09 22:22:22');
+insert into t1 values('2022-01-01 00:00:00'),('20220102'),('2022-01-03 01:00:00.00000'),('2022-01-04'),('20220105');
+insert into t2 values('2022-01-01 00:00:00'),('2022-01-03 01:00:00.00000'),('20220105'),('2022-01-07'),('2022-01-09 22:22:22');
 update t1 join t2 alias on t1.a=alias.a set alias.a=t1.a*3 WHERE t1.a = alias.a;
 drop table if exists t1;
 drop table if exists t2;
@@ -679,10 +679,10 @@ create table t1 (a timestamp);
 create table t2 (a timestamp, b int);
 create table t3 (a timestamp);
 create table t4 (a timestamp primary key, b int not null);
-insert into t1 values (20220102);
+insert into t1 values ('20220102');
 insert into t2 values ('2022-01-01 00:00:00',7);
-insert into t4 values (20220104,8),('2022-01-03 01:00:00.00000',8),('2022-01-05',9);
-insert into t3 values ('2022-01-03 01:00:00.00000'),(20220105);
+insert into t4 values ('20220104',8),('2022-01-03 01:00:00.00000',8),('2022-01-05',9);
+insert into t3 values ('2022-01-03 01:00:00.00000'),('20220105');
 update t3,t2,t1 set t2.a=t3.a where t3.a in (select a from t4 where b > 8);
 select * from t1;
 a
@@ -731,7 +731,7 @@ select a,b from t1;
 a	b
 drop table t1;
 create table t1 (a timestamp primary key, b char(32));
-insert into t1 values (20220101,'apple'),('2022-01-02 00:00:00','apple');
+insert into t1 values ('20220101','apple'),('2022-01-02 00:00:00','apple');
 select * from t1;
 a	b
 2022-01-01 00:00:00	apple
@@ -744,8 +744,8 @@ drop table t1;
 create table t11 (a timestamp(6) NOT NULL, b int, primary key (a));
 create table t12 (a timestamp(6) NOT NULL, b int, primary key (a));
 create table t2 (a timestamp(6) NOT NULL, b int, primary key (a));
-insert into t11 values (20211231, 10),('2022-01-01 00:00:00', 11),('2022-01-02', 12);
-insert into t12 values (20220303, 10),('2021-12-31', 11),(20220102, 12);
+insert into t11 values ('20211231', 10),('2022-01-01 00:00:00', 11),('2022-01-02', 12);
+insert into t12 values ('20220303', 10),('2021-12-31', 11),('20220102', 12);
 insert into t2 values ('2021-12-31', 21),('2022-01-01 00:00:00', 12),('2022-03-03', 23);
 delete from t11 where t11.b <> (select b from t2 where t11.a = t2.a);
 select * from t11;
@@ -760,9 +760,9 @@ a	b
 drop table if exists t1;
 drop table if exists t2;
 CREATE TABLE t1(a timestamp PRIMARY KEY);
-INSERT INTO t1 VALUES('2022-10-01'),(20220220);
+INSERT INTO t1 VALUES('2022-10-01'),('20220220');
 CREATE TABLE t2(b timestamp(4));
-INSERT INTO t2 VALUES('2022-10-01 00:00:00.0001'),(20220220);
+INSERT INTO t2 VALUES('2022-10-01 00:00:00.0001'),('20220220');
 delete t1,t2 from t1 JOIN t2 on t1.a=t2.b WHERE t1.a=20221001;
 select * from t1;
 a
@@ -778,9 +778,9 @@ drop table if exists t3;
 CREATE TABLE t1 (a timestamp not null,b timestamp(4) not null, primary key (a));
 CREATE TABLE t2 (a timestamp not null,b timestamp(4) not null, primary key (a));
 CREATE TABLE t3 (a timestamp not null,b timestamp(4) not null, primary key (a));
-insert into t1 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),(20220102,'2022-01-01 00:00:00'),(20220104,'2022-01-03 01:00:00.00000');
-insert into t2 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),(20220102,'2022-01-02'),(20220103,'2022-01-03 01:00:00.00000');
-insert into t3 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),(20220102,'2022-01-01 00:00:00'),(20220104,'2022-01-03 01:00:00.00000');
+insert into t1 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),('20220102','2022-01-01 00:00:00'),('20220104','2022-01-03 01:00:00.00000');
+insert into t2 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),('20220102','2022-01-02'),('20220103','2022-01-03 01:00:00.00000');
+insert into t3 values ('2022-01-01 00:00:00','2022-01-01 00:00:00'),('20220102','2022-01-01 00:00:00'),('20220104','2022-01-03 01:00:00.00000');
 delete t1,t2,t3 from t1 join t2 on t1.a=t2.a join t3 on t1.b=t3.b where t1.a=t2.a AND t2.b=t3.a and t1.b=t3.b;
 select * from t1;
 a	b
@@ -800,8 +800,8 @@ a timestamp
 CREATE TABLE t2 (
 a timestamp(6)
 );
-insert into t1 values('2022-01-01 00:00:00'),(20220102),('2022-01-03 01:00:00.00000'),('2022-01-04'),(20220105);
-insert into t2 values('2022-01-01 00:00:00'),('2022-01-03 01:00:00.00000'),(20220105),('2022-01-07'),('2022-01-09 22:22:22');
+insert into t1 values('2022-01-01 00:00:00'),('20220102'),('2022-01-03 01:00:00.00000'),('2022-01-04'),('20220105');
+insert into t2 values('2022-01-01 00:00:00'),('2022-01-03 01:00:00.00000'),('20220105'),('2022-01-07'),('2022-01-09 22:22:22');
 delete alias from t1 join t2 alias on t1.a=alias.a WHERE t1.a = alias.a;
 select * from t2;
 a
@@ -827,10 +827,10 @@ create table t1 (a timestamp);
 create table t2 (a timestamp, b int);
 create table t3 (a timestamp);
 create table t4 (a timestamp primary key, b int not null);
-insert into t1 values (20220102);
+insert into t1 values ('20220102');
 insert into t2 values ('2022-01-01 00:00:00',7);
-insert into t4 values (20220104,8),('2022-01-03 01:00:00.00000',8),('2022-01-05',9);
-insert into t3 values ('2022-01-03 01:00:00.00000'),(20220105);
+insert into t4 values ('20220104',8),('2022-01-03 01:00:00.00000',8),('2022-01-05',9);
+insert into t3 values ('2022-01-03 01:00:00.00000'),('20220105');
 delete t3 from t3,t4  where t3.a in (select a from t4 where b > 8);
 select * from t3;
 a
