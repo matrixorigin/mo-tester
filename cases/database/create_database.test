@@ -19,8 +19,8 @@ create database `测试数据库`;
 -- @case
 -- @desc:test for create database with utf-8 charset
 -- @label:bvt
-create database test03 default character set utf8 collate utf8_general_ci encryption 'Y';
-create database test04 character set=utf8 collate=utf8_general_ci encryption='N';
+#create database test03 default character set utf8 collate utf8_general_ci encryption 'Y';
+#create database test04 character set=utf8 collate=utf8_general_ci encryption='N';
 -- @case
 -- @desc:test for create database with too long name
 -- @label:bvt

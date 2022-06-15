@@ -358,8 +358,8 @@ a	b
 123.00000	12346
 126.00000	12346
 drop table t1;
-create table t1 (a double(10,5) not null auto_increment primary key, b char(32));
-insert into t1 (b) values ('apple'), ('apple');
+create table t1 (a double(10,5) primary key, b char(32));
+insert into t1 values (1,'apple'), (2,'apple');
 select * from t1;
 a	b
 1.00000	apple
@@ -578,8 +578,8 @@ delete from t1 where  1 < 2;
 select a,b from t1;
 a	b
 drop table t1;
-create table t1 (a double(10,5) not null auto_increment primary key, b char(32));
-insert into t1 (b) values ('apple'), ('apple');
+create table t1 (a double(10,5) primary key, b char(32));
+insert into t1 values (1,'apple'), (2,'apple');
 select * from t1;
 a	b
 1.00000	apple

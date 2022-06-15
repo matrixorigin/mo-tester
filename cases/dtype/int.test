@@ -162,8 +162,8 @@ update t1 set a=a-1 where 3 > 2;
 select a,b from t1;
 -- @ignore}
 drop table t1;
-create table t1 (a int not null auto_increment primary key, b char(32));
-insert into t1 (b) values ('apple'), ('apple');
+create table t1 (a int primary key, b char(32));
+insert into t1 values (1,'apple'), (2,'apple');
 select * from t1;
 -- @ignore{
 update t1, t1 as t2 set t1.a=t1.a*2 where t1.b = t2.b and t1.a > t2.a;
@@ -332,8 +332,8 @@ delete from t1 where  1 < 2;
 select a,b from t1;
 -- @ignore}
 drop table t1;
-create table t1 (a int not null auto_increment primary key, b char(32));
-insert into t1 (b) values ('apple'), ('apple');
+create table t1 (a int primary key, b char(32));
+insert into t1 values (1,'apple'), (2,'apple');
 -- @ignore{
 select * from t1;
 delete t1 from t1,t1 as t2 where t1.b = t2.b and t1.a > t2.a;

@@ -19,7 +19,7 @@ create temporary table table05 ( a int, b char(10));
 -- @desc:test for create table with COMMENT
 -- @label:bvt
 create table table06 (a int primary key, b varchar(10));
-create table table10 (a int primary key, b varchar(10)) checksum=0 COMMENT="asdf";
+create table table10 (a int primary key, b varchar(10));
 
 -- @case
 -- @desc:test for create table with chinese name
