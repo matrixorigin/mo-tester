@@ -10,6 +10,7 @@ import io.mo.result.TestResult;
 import io.mo.util.ResultParser;
 import org.apache.log4j.Logger;
 
+import javax.smartcardio.CommandAPDU;
 import java.io.*;
 import java.sql.*;
 import java.sql.Connection;
@@ -458,6 +459,56 @@ public class Executor {
         dropTestDB(connection,def_db);
     }
 
+    public static void check(TestScript script){
+        //LOG.info("Now start to check the file["+script.getFileName()+"]....................................................");
+        File rsf = new File(script.getFileName().replaceFirst(COMMON.CASES_PATH,COMMON.RESULT_PATH).replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX));
+        if(!rsf.exists()) {
+            LOG.warn("The result of the test script file["+script.getFileName()+"] does not exists,please check....");
+            //set the execution status of test script to  false
+            script.setExecStatus(false);
+            return;
+        }
+
+        StringBuffer result = new StringBuffer();
+
+        try {
+            BufferedReader lineReader = new BufferedReader(new InputStreamReader(new FileInputStream(rsf.getPath())));
+            while(true){
+                String line = lineReader.readLine();
+                if(line == null)
+                    break;
+                result.append(new String(line.getBytes(), "utf-8"));
+                result.append("\n");
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        if(script.getSize() == 0)
+            return;
+
+        String firstcmd = script.getCommand(0);
+        if(result.indexOf(firstcmd) != 0){
+           LOG.error("["+script.getFileName()+"]:The first command in case file and result file does not match.Check failed,please check the files");
+           LOG.error("["+script.getFileName()+"]:The first command is <"+firstcmd+">");
+           return;
+        }
+
+        for(int i = 0; i < script.getSize();i++){
+            SqlCommand cmd = script.getCommands().get(i);
+            int pos = result.indexOf(cmd.getCommand());
+            if(pos == -1){
+                //LOG.error("["+script.getFileName()+"]["+cmd.trim()+"] does not exist in the result file.Check failed,please check the files");
+                LOG.error("[Exceptional command]["+script.getFileName()+"]["+cmd.getPosition()+"]:"+cmd.getCommand().trim());
+                return;
+            }
+            result.delete(0,pos+cmd.getCommand().length());
+        }
+
+        //LOG.info("Succeed to check the file["+script.getFileName()+"]....................................................");
+    }
     public static void genRS(TestScript script){
         ConnectionManager.reset();
         Connection connection = ConnectionManager.getConnection();

@@ -56,7 +56,7 @@ public class TestScript {
     }
 
     public String getCommand(int i){
-        return commands.get(i).toString();
+        return commands.get(i).getCommand();
     }
 
     public String getScript(){

@@ -78,6 +78,11 @@ public class Tester {
                 if(args[i].equalsIgnoreCase("nometa")){
                     COMMON.IS_COMPARE_META = false;
                 }
+
+                //get check info
+                if(args[i].equalsIgnoreCase("check")){
+                    method = "check";
+                }
             }
         }
 
@@ -124,13 +129,20 @@ public class Tester {
             debug(file,type);
         }
 
+        if(method.equalsIgnoreCase("check")){
+            check(file);
+        }
+
         if(method.equalsIgnoreCase("genrs")){
             LOG.info("The method is [genrs],now start to generate the checkpoints in the path["+path+"].");
             generateRs(file);
             //LOG.info("ALL the results in the path["+path+"] have been generated or updated.");
         }
 
-        if(!method.equalsIgnoreCase("genrs")&&!method.equalsIgnoreCase("debug")&&!method.equalsIgnoreCase("run")){
+        if(!method.equalsIgnoreCase("genrs")
+                &&!method.equalsIgnoreCase("debug")
+                &&!method.equalsIgnoreCase("run")
+                &&!method.equalsIgnoreCase("check")){
             LOG.info("The method is ["+method+"] can not been supported.Only[run,debug,genrs] can be supported.");
             return;
         }
@@ -195,6 +207,21 @@ public class Tester {
         File[] fs = file.listFiles();
         for(int i = 0;i < fs.length;i++){
             debug(fs[i],type);
+        }
+    }
+
+    public static void check(File file){
+        if(file.isFile()){
+            if(isInclude(file.getName())) {
+                ScriptParser.parseScript(file.getPath());
+                TestScript script = ScriptParser.getTestScript();
+                Executor.check(script);
+            }
+            return;
+        }
+        File[] fs = file.listFiles();
+        for(int i = 0;i < fs.length;i++){
+            check(fs[i]);
         }
     }
 
