@@ -61,8 +61,6 @@ select min(big),max(big),max(big)-1 from t1 group by a;
 min(big)	max(big)	max(big)-1
 -1	18446744073709515	18446744073709514
 drop table t1;
-drop table if exists t1;
-drop table if exists t2;
 create table t1 (name char(20) not null);
 create table t2 (name char(20) not null);
 insert into t1 values ("å");
@@ -79,9 +77,9 @@ concat_ws(",","*",name,"*")
 *,å,*
 *,ä,*
 *,ö,*
-select min(name),min(concat_ws(",","*",name,"*")),max(name),max(concat("*",name,"*")) from t1;
-min(name)	min(concat_ws(",","*",name,"*"))	max(name)	max(concat("*",name,"*"))
-å	*,å,*	ö	*ö*
+select min(name),min(concat_ws(",","*",name,"*")),max(name),max(concat_ws("*",name,"*")) from t1;
+min(name)	min(concat_ws(",","*",name,"*"))	max(name)	max(concat_ws("*",name,"*"))
+å	*,å,*	ö	ö**
 drop table t1;
 drop table t2;
 CREATE TABLE t1 (Fld1 int(11) default NULL,Fld2 int(11) default NULL);
@@ -107,8 +105,6 @@ Fld1	max(Fld2)
 1	20
 3	50
 drop table t1;
-drop table if exists t1;
-drop table if exists t2;
 create table t1 (grp int, a bigint unsigned, c char(10) not null);
 insert into t1 values (1,1,"a");
 insert into t1 values (2,2,"b");
@@ -421,14 +417,14 @@ select col1,sum(col1),max(col1),min(col1) from t1 group by col1;
 col1	sum(col1)	max(col1)	min(col1)
 5.000000000010	10.000000000020	5.000000000010	5.000000000010
 DROP TABLE t1;
-create table t1 (f1 year, f2 year, f3 date, f4 datetime);
+create table t1 (f1 int, f2 int, f3 date, f4 datetime);
 insert into t1 values(98,1998,19980101,"1998-01-01 00:00:00"),('00',2000,20000101,"2000-01-01 00:00:01"),(02,2002,20020101,"2002-01-01 23:59:59"),(60,2060,20600101,"2060-01-01 11:11:11"),(70,1970,19700101,"1970-11-11 22:22:22"),(NULL,NULL,NULL,NULL);
 select min(f1),max(f1) from t1;
 min(f1)	max(f1)
-1970-01-01	2060-01-01
+0	98
 select min(f2),max(f2) from t1;
 min(f2)	max(f2)
-1970-01-01	2060-01-01
+1970	2060
 select min(f3),max(f3) from t1;
 min(f3)	max(f3)
 1970-01-01	2060-01-01

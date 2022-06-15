@@ -53,7 +53,7 @@ insert into t1 values ("ö");
 insert into t2 select * from t1;
 select * from t1 order by name;
 select concat_ws(",","*",name,"*") from t1 order by 1;
-select min(name),min(concat_ws(",","*",name,"*")),max(name),max(concat("*",name,"*")) from t1;
+select min(name),min(concat_ws(",","*",name,"*")),max(name),max(concat_ws("*",name,"*")) from t1;
 drop table t1;
 drop table t2;
 
@@ -236,7 +236,7 @@ DROP TABLE t1;
 
 
 
-create table t1 (f1 year, f2 year, f3 date, f4 datetime);
+create table t1 (f1 int, f2 int, f3 date, f4 datetime);
 insert into t1 values(98,1998,19980101,"1998-01-01 00:00:00"),('00',2000,20000101,"2000-01-01 00:00:01"),(02,2002,20020101,"2002-01-01 23:59:59"),(60,2060,20600101,"2060-01-01 11:11:11"),(70,1970,19700101,"1970-11-11 22:22:22"),(NULL,NULL,NULL,NULL);
 select min(f1),max(f1) from t1;
 select min(f2),max(f2) from t1;

@@ -13,7 +13,7 @@ CHAR_LENGTH("Español")
 SELECT CHAR_LENGTH(NULL);
 CHAR_LENGTH(NULL)
 null
-create table t1 (a char(20) character set utf8);
+create table t1 (a char(20));
 insert into t1 values ('123456'),('андрей');
 select char_length(a), length(a), a from t1 order by a;
 char_length(a)	length(a)	a
@@ -26,7 +26,7 @@ char_length('\n\t\r\b\0\_\%\\')
 SELECT CHAR_LENGTH(concat_ws(" ",121,83,81,'76')) as my_column;
 my_column
 12
-create table t (c varchar(20)) charset utf8mb4;
+create table t (c varchar(20));
 insert into t values ('\\');
 select char_length(c) from t;
 char_length(c)
