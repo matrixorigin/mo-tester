@@ -453,7 +453,7 @@ drop table t1;
 create table t11 (a date NOT NULL, b int, primary key (a));
 create table t12 (a date NOT NULL, b int, primary key (a));
 create table t2 (a date NOT NULL, b int, primary key (a));
-insert into t11 values (20211231, 10),('2022-01-01', 11),('2022-01-02', 12);
+insert into t11 values ('20211231', 10),('2022-01-01', 11),('2022-01-02', 12);
 insert into t12 values ('20220303', 10),('2021-12-31', 11),('20220102', 12);
 insert into t2 values ('2021-12-31', 21),('2022-01-01', 12),('2022-03-03', 23);
 delete from t11 where t11.b <> (select b from t2 where t11.a = t2.a);

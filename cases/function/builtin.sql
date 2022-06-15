@@ -179,16 +179,16 @@ drop table if exists t1;
 create table t1(a date, b datetime,c varchar(30));
 insert into t1 values('2022-01-01','2022-01-01 01:01:01','2022-01-01 01:01:01');
 insert into t1 values('2022-01-01','2022-01-01 01:01:01','2022-01-01 01:01:01');
-insert into t1 values(20220101,'2022-01-01 01:01:01','2022-13-13 01:01:01');
+insert into t1 values('20220101','2022-01-01 01:01:01','2022-13-13 01:01:01');
 insert into t1 values('2022-01-02','2022-01-02 23:01:01','2022-01-01 23:01:01');
 insert into t1 values('2021-12-31','2021-12-30 23:59:59','2021-12-30 23:59:59');
 insert into t1 values('2022-06-30','2021-12-30 23:59:59','2021-12-30 23:59:59');
 
 -- @case
 -- @desc:test for func dayofyear() select
-select distinct dayofyear(a) as dya from t1;
-select * from t1 where dayofyear(a)>120;
-select * from t1 where dayofyear(a) between 1 and 184;
+#select distinct dayofyear(a) as dya from t1;
+#select * from t1 where dayofyear(a)>120;
+#select * from t1 where dayofyear(a) between 1 and 184;
 
 -- @suite
 -- @setup
@@ -388,14 +388,14 @@ drop table if exists t1;
 create table t1(a date, b datetime);
 insert into t1 values('2022-01-01','2022-01-01 01:01:01');
 insert into t1 values('2022-01-01','2022-01-01 01:01:01');
-insert into t1 values(20220101,'2022-01-01 01:01:01');
+insert into t1 values('20220101','2022-01-01 01:01:01');
 insert into t1 values('2022-01-02','2022-01-02 23:01:01');
 insert into t1 values('2021-12-31','2021-12-30 23:59:59');
 insert into t1 values('2022-06-30','2021-12-30 23:59:59');
 
 -- @case
 -- @desc:test for func date() select
-select date(a),date(b) from t1;
-select date(a),date(date(a)) as dda from t1;
+#select date(a),date(b) from t1;
+#select date(a),date(date(a)) as dda from t1;
 
 drop table t1;
