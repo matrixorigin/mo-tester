@@ -407,3 +407,4 @@ select space(d) from t1 where d <> -1;
 space(d)
 select space(d) from t1;
 space(d)
+drop table t1;
