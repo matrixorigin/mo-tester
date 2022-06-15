@@ -58,7 +58,7 @@ select count(distinct if(f1,3,f2)) from t1;
 drop table t1;
 
 CREATE TABLE `t2` (
-  `CONCAT(a)` varchar(9) DEFAULT NULL,
+  `CONCAT_WS(' ',a)` varchar(9) DEFAULT NULL,
   `IF(a,a,'')` varchar(9) DEFAULT NULL,
   `CASE WHEN a THEN a ELSE '' END` varchar(9) DEFAULT NULL,
   `COALESCE(a,'')` varchar(9) NOT NULL DEFAULT ''
