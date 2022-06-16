@@ -161,8 +161,9 @@ public class Executor {
                 }
 
                 act_res = e.getMessage();
-                if( j < commands.size() -1)
-                    exp_res = ResultParser.getRS(command.getCommand(),commands.get(j + 1).getCommand());
+                if( j < commands.size() -1) {
+                    exp_res = ResultParser.getRS(command.getCommand(), commands.get(j + 1).getCommand());
+                }
                 else
                     exp_res = ResultParser.getRS(command.getCommand(),null);
 
@@ -492,7 +493,7 @@ public class Executor {
         String firstcmd = script.getCommand(0);
         if(result.indexOf(firstcmd) != 0){
            LOG.error("["+script.getFileName()+"]:The first command in case file and result file does not match.Check failed,please check the files");
-           LOG.error("["+script.getFileName()+"]:The first command is <"+firstcmd+">");
+           LOG.error("[Exceptional command]["+script.getFileName()+"]["+script.getCommands().get(0).getPosition()+"]:"+firstcmd.trim()+"");
            return;
         }
 
@@ -505,6 +506,16 @@ public class Executor {
                 return;
             }
             result.delete(0,pos+cmd.getCommand().length());
+        }
+
+        if(result.length() != 0){
+            if(result.indexOf(COMMON.DEFAUT_DELIMITER) != -1){
+                SqlCommand last = script.getCommands().get(script.getSize() - 1);
+                LOG.error("["+rsf.getPath()+"]:There are some sqls and resutls which are not in the case file");
+                LOG.error("The last sql in the ["+script.getFileName()+"][row:"+last.getPosition()+"]: "+last.getCommand().trim());
+                LOG.error("["+rsf.getPath()+"]Exceptional content:\n"+ result.toString().substring(0,result.indexOf(COMMON.DEFAUT_DELIMITER)+1)+".............");
+                return;
+            }
         }
 
         //LOG.info("Succeed to check the file["+script.getFileName()+"]....................................................");
@@ -649,6 +660,7 @@ public class Executor {
     }
 
 
+
     public static Connection getConnection(SqlCommand command){
         Connection connection = null;
         if(command.getConn_id() != 0){
@@ -766,6 +778,8 @@ public class Executor {
                             act_values[j] = act_values[j].substring(0,exp_values[j].length());
                         int scale = exp_values[j].length() - exp_values[j].indexOf(".") - 1;
                         double tolerable_error = 2.0/Math.pow(10.0,scale);
+                        if(tolerable_error < COMMON.TOLERABLE_ERROR)
+                            tolerable_error = COMMON.TOLERABLE_ERROR;
                         LOG.info("tolerable_error = "+tolerable_error);
                         double n_exp = Double.parseDouble(exp_values[j]);
                         LOG.info("n_exp = "+ n_exp);
