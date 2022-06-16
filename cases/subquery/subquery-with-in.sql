@@ -1009,7 +1009,8 @@ WHERE     c.parent_id IN (
               WHERE  parent_id = 3
           ) IS FALSE;
 
-DROP TABLE IF EXISTS parent, child;
+DROP TABLE IF EXISTS parent;
+DROP TABLE IF EXISTS child;
 
 DROP TABLE IF EXISTS cc, bb,c,b;
 CREATE TABLE cc (

@@ -1374,8 +1374,8 @@ WHERE  parent_id = 3
 id	parent_id
 1	1
 2	null
-DROP TABLE IF EXISTS parent, child;
-DROP TABLE IF EXISTS cc, bb,c,b;
+DROP TABLE IF EXISTS parent;
+DROP TABLE IF EXISTS child;
 CREATE TABLE cc (
 pk INT,
 col_int_key INT,
