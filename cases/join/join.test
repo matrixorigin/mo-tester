@@ -74,7 +74,7 @@ t3_id int default NULL,
 item_id int default NULL
 );
 CREATE TABLE t2 (
-id int  NOT NULL auto_increment,
+id int  NOT NULL,
 name varchar(255) default NULL,
 PRIMARY KEY  (id)
 );

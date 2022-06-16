@@ -68,10 +68,10 @@ CREATE TABLE `t1` (
   `pseudo` varchar(35) NOT NULL default ''
 );
 CREATE TABLE `t2` (
-  `mot` varchar(30) character set latin1 NOT NULL default '',
+  `mot` varchar(30) NOT NULL default '',
   `topic` int(8) unsigned NOT NULL default 0,
   `dt` date,
-  `pseudo` varchar(35) character set latin1 NOT NULL default ''
+  `pseudo` varchar(35) NOT NULL default ''
 ) ;
 CREATE TABLE `t3` (
   `numeropost` int(8) unsigned NOT NULL,
@@ -228,9 +228,9 @@ SELECT t1.a FROM t1 GROUP BY t1.a
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
-CREATE TABLE t1 (id int NOT NULL, st CHAR(2), UNIQUE INDEX idx(id));
+CREATE TABLE t1 (id int NOT NULL, st CHAR(2));
 INSERT INTO t1 VALUES (3,'FL'), (2,'GA'), (4,'FL'), (1,'GA'), (5,'NY'), (7,'FL'), (6,'NY');
-CREATE TABLE t2 (id int NOT NULL, INDEX idx(id));
+CREATE TABLE t2 (id int NOT NULL);
 INSERT INTO t2 VALUES (7), (5), (1), (3);
 SELECT id, st FROM t1  WHERE st IN ('GA','FL') AND EXISTS(SELECT 1 FROM t2 WHERE t2.id=t1.id);
 SELECT id, st FROM t1  WHERE st IN ('GA','FL') AND EXISTS(SELECT 1 FROM t2 WHERE t2.id=t1.id) GROUP BY id;
