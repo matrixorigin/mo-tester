@@ -81,7 +81,7 @@ select * from t1;
 select * from t1 where not a between 2 and 3;
 drop table if exists t3;
 CREATE TABLE t3(
-cont_nr int(11) NOT NULL auto_increment primary key,
+cont_nr int(11) NOT NULL primary key,
 ver_nr int(11) NOT NULL default 0,
 aufnr int(11) NOT NULL default 0,
 username varchar(50) NOT NULL default ''
