@@ -246,7 +246,7 @@ CREATE TABLE `t1` (
 `numeropost` int(8) unsigned NOT NULL,
 `maxnumrep` int(10) unsigned NOT NULL default 0,
 PRIMARY KEY  (`numeropost`)
-)
+);
 INSERT INTO t1 (numeropost,maxnumrep) VALUES (40143,1),(43506,2);
 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INSERT INTO t1 (numeropost,maxnumrep) VALUES (40143,1),(43506,2)' at line 6
 CREATE TABLE `t2` (

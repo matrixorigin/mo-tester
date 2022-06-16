@@ -159,11 +159,6 @@ drop table if exists t1;
 drop table if exists t2;
 create table t1(a int, b int, c int);
 insert into t1 values(null,null,null),(2,3,4),(4,5,6);
-CREATE TABLE t2
-WITH qn AS (SELECT 10*a as a FROM t1),
-      qn2 AS (SELECT 3*a AS b FROM qn)
-      SELECT * from qn2;
-SELECT * FROM t2;
 INSERT INTO t2
 WITH qn AS (SELECT 10*a as a FROM t1),
       qn2 AS (SELECT 3*a AS b FROM qn)
