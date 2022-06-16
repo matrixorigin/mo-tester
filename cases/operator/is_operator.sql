@@ -17,15 +17,6 @@ SELECT * FROM tbl_double WHERE col1 IS NULL;
 SELECT * FROM tbl_double WHERE col1 IS NOT NULL;
 drop table if exists tbl_double;
 
-drop table if exists tbl_time;
-CREATE TABLE tbl_time (col1 TIME);
-INSERT INTO tbl_time VALUES
-  ("-01:00:00"), ("00:00:00"), ("00:00:01"), ("00:01:00"), ("01:00:00"),
-  ("01:01:00"), ("02:00:00"), ("03:00:00"), (NULL), (NULL);
-SELECT * FROM tbl_time WHERE col1 IS NULL;
-SELECT * FROM tbl_time WHERE col1 IS NOT NULL;
-drop table if exists tbl_time;
-
 drop table if exists tbl_datetime;
 CREATE TABLE tbl_datetime (col1 DATETIME(6));
 INSERT INTO tbl_datetime VALUES
@@ -39,13 +30,6 @@ drop table if exists tbl_datetime;
 
 drop table if exists tbl_decimal;
 CREATE TABLE tbl_decimal (col1 DECIMAL(65, 30));
-INSERT INTO tbl_decimal VALUES
-  (00000000000000000000000000000000000.000000000000000000000000000000),
-  (99999999999999999999999999999999999.999999999999999999999999999998),
-  (-99999999999999999999999999999999999.999999999999999999999999999998),
-  (1), (2), (3), (4), (-1), (NULL), (NULL);
-SELECT * FROM tbl_decimal WHERE col1 IS NULL;
-SELECT * FROM tbl_decimal WHERE col1 IS NOT NULL;
 drop table if exists tbl_decimal;
 
 drop table if exists t1;
