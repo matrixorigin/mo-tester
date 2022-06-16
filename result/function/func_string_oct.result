@@ -43,17 +43,17 @@ select oct(a) from t1;
 oct(a)
 null
 drop table t1;
-create table t1(a tinyint, b SMALLINT, c BIGINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, j time, k datetime, l TIMESTAMP, m char(255), n varchar(255));
-insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "10:03:12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
-insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "10:03:12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
-insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "10:03:12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
-insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "10:03:12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
-select oct(a),oct(b),oct(c),oct(d),oct(e),oct(f),oct(g),oct(h),oct(i),oct(j),oct(k),oct(l),oct(m),oct(n) from t1;
-oct(a)	oct(b)	oct(c)	oct(d)	oct(e)	oct(f)	oct(g)	oct(h)	oct(i)	oct(j)	oct(k)	oct(l)	oct(m)	oct(n)
-1	1	2	4	5	5	37	16	3734	12	3734	3734	0	0
-1	1	2	4	5	5	37	16	3734	12	3734	3734	0	0
-1	1	2	4	5	5	37	16	3734	12	3734	3734	0	0
-1	1	2	4	5	5	37	16	3734	12	3734	3734	0	0
+create table t1(a tinyint, b SMALLINT, c BIGINT, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, k datetime, l TIMESTAMP, m char(255), n varchar(255));
+insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
+insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
+insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
+insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
+select oct(a),oct(b),oct(c),oct(d),oct(e),oct(f),oct(g),oct(h),oct(i),oct(k),oct(l),oct(m),oct(n) from t1;
+oct(a)	oct(b)	oct(c)	oct(d)	oct(e)	oct(f)	oct(g)	oct(h)	oct(i)	oct(k)	oct(l)	oct(m)	oct(n)
+1	1	2	4	5	5	37	16	3734	3734	3734	0	0
+1	1	2	4	5	5	37	16	3734	3734	3734	0	0
+1	1	2	4	5	5	37	16	3734	3734	3734	0	0
+1	1	2	4	5	5	37	16	3734	3734	3734	0	0
 drop table t1;
 CREATE TABLE t1(a char(255), b varchar(255));
 INSERT INTO t1 select oct(56), oct(234);

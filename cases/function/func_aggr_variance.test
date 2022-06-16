@@ -60,7 +60,7 @@ SELECT variance(1)<variance(2);
 #DISTINCT, 算式操作
 CREATE TABLE t1(i INT);
 INSERT INTO t1 VALUES (NULL),(1);
-SELECT DISTINCT variance(i)+0 as splus0, i+0 as plain FROM t1 GROUP BY i ;
+SELECT variance(i)+0 as splus0, i+0 as plain FROM t1 GROUP BY i ;
 DROP TABLE t1;
 
 
