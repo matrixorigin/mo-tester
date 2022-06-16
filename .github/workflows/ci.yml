@@ -34,7 +34,7 @@ jobs:
         id: case_format_check
         run: |
           cd $GITHUB_WORKSPACE
-          ./run.sh -c 2>&1 &>result.log
+          ./run.sh -c 2>&1 | tee result.log
           if [ "$(cat ./result.log | grep -i -E 'WARN|ERROR' | grep -v "grep" | wc -l)" -gt 0 ]; then echo 'case format check failed.'; exit 1; fi
 
 
@@ -44,5 +44,5 @@ jobs:
         with:
           name: log
           path: |
-            $GITHUB_WORKSPACE
+            $GITHUB_WORKSPACE/
           retention-days: 7
