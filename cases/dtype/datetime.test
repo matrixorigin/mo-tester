@@ -347,7 +347,7 @@ a datetime(6)
 insert into t1 values('2022-01-01 00:00:00'),('20220102'),('2022-01-03 01:00:00.00000'),('2022-01-04'),('20220105');
 insert into t2 values('2022-01-01 00:00:00'),('2022-01-03 01:00:00.00000'),('20220105'),('2022-01-07'),('2022-01-09 22:22:22');
 -- @ignore{
-delete1 alias from t1 join t2 alias on t1.a=alias.a WHERE t1.a = alias.a;
+delete alias from t1 join t2 alias on t1.a=alias.a WHERE t1.a = alias.a;
 select * from t2;
 -- @ignore}
 drop table t1;
