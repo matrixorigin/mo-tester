@@ -4,10 +4,10 @@ select CAST('10 ' as unsigned integer);
 select CAST('10x' as unsigned integer);
 select cast(-5 as unsigned) | 1, cast(-5 as unsigned) & -1;
 select cast(-5 as unsigned) -1, cast(-5 as unsigned) + 1;
-select ~5, cast(~5 as signed);
+#select ~5, cast(~5 as signed);
 select cast(5 as unsigned) -6.0;
 select cast(NULL as signed);
-select cast(1/0 as signed);
+select cast(1/2 as signed);
 #select cast("A" as binary) = "a", cast(BINARY "a" as CHAR) = "A";
 select cast("2001-1-1" as DATE), cast("2001-1-1" as DATETIME);
 #select cast("1:2:3" as TIME);
@@ -441,7 +441,7 @@ SELECT CAST(col_char AS DATE) FROM t;
 #skip_if_hypergraph  # Different warnings.
 SELECT col_char <> col_date FROM t;
 
-SELECT CAST(col_char as TIME) FROM t;
+#SELECT CAST(col_char as TIME) FROM t;
 
 DROP TABLE t;
 
@@ -625,21 +625,21 @@ drop table t1;
 
 select if(1, cast(1111111111111111111 as unsigned), 1) i, case when 1 then cast(1111111111111111111 as unsigned) else 1 end c, coalesce(cast(1111111111111111111 as unsigned), 1) co;
 
-CREATE TABLE t1 (f1 int,
-gc_int int AS (f1 + 1) ,
-gc_date DATE AS (f1 + 1));
-INSERT INTO t1(f1) VALUES
-(030303),(040404),
-(050505),(060606),
-(010101),(020202),
-(030303),(040404),
-(050505),(060606),
-(010101),(020202),
-(090909),(101010),
-(010101),(020202),
-(070707),(080808);
-SELECT * FROM t1 WHERE f1 + 1 > 070707;
-SELECT * FROM t1 WHERE f1 + 1 > CAST(070707 AS DATE);
-DROP TABLE t1;
+#CREATE TABLE t1 (f1 int,
+#gc_int int AS (f1 + 1) ,
+#gc_date DATE AS (f1 + 1));
+#INSERT INTO t1(f1) VALUES
+#(030303),(040404),
+#(050505),(060606),
+#(010101),(020202),
+#(030303),(040404),
+#(050505),(060606),
+#(010101),(020202),
+#(090909),(101010),
+#(010101),(020202),
+#(070707),(080808);
+#SELECT * FROM t1 WHERE f1 + 1 > 070707;
+#SELECT * FROM t1 WHERE f1 + 1 > CAST(070707 AS DATE);
+#DROP TABLE t1;
 
 

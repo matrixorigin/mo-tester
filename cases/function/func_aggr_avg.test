@@ -34,8 +34,8 @@ drop table t1;
 #HAVING, 比较运算
 CREATE TABLE t1 (
 bug_id bigint(9) NOT NULL,
-groupset bigint(20) DEFAULT '0' NOT NULL,
-assigned_to bigint(9) DEFAULT '0' NOT NULL,
+groupset bigint(20) DEFAULT 0 NOT NULL,
+assigned_to bigint(9) DEFAULT 0 NOT NULL,
 bug_file_loc varchar(255)
 );
 CREATE TABLE t2 (
