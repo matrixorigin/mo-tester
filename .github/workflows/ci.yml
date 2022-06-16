@@ -44,5 +44,5 @@ jobs:
         with:
           name: log
           path: |
-            $GITHUB_WORKSPACE/
+            ${{ github.workspace }}
           retention-days: 7
