@@ -155,14 +155,12 @@ false
 false
 null
 update t1 set a=false where b is null;
-update t1,t2 set t1.b=1 where t1.a=t2.a;
 delete from t1 where a=false;
 select * from t1;
 a	b
+true	false	
 true	true
-true	true
-delete from t1 where b=1;
+delete from t1 where b=true;
 select * from t1;
 a	b
-true	true
-true	true
+true	false
