@@ -1,0 +1,1 @@
+2022-06-17 10:33:24 ERROR Executor:505 - [Exceptional command][cases/dtype/char.test][168]:create table t11 (a char(10) NOT NULL, b int, primary key (a));
