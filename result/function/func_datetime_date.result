@@ -1,9 +1,7 @@
 SELECT DATE(0.0124);
-DATE(0.0124)
-null
+[42883]unsupported parameter types [DOUBLE DATE] for operator 'cast'
 SELECT DATE("2112123");
-DATE("2112123")
-2021-12-12
+[22000]Incorrect date value
 SELECT DATE(1231241.4513);
 DATE(1231241.4513)
 null

@@ -32,14 +32,23 @@ CREATE TABLE `Ｔ７` (`Ｃ１` char(5), INDEX(`Ｃ１`));
 CREATE TABLE `Ｔ８` (`Ｃ１` char(5), INDEX(`Ｃ１`));
 CREATE TABLE `Ｔ９` (`Ｃ１` char(5), INDEX(`Ｃ１`));
 INSERT INTO `Ｔ１` VALUES ('ｱｲｳｴｵ');
+[22000]Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ２` VALUES ('あいうえお');
+[22000]Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ３` VALUES ('龔龖龗龞龡');
+[22000]Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ４` VALUES ('ｱｲｳｴｵ');
+[22000]Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ５` VALUES ('あいうえお');
+[22000]Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ６` VALUES ('龔龖龗龞龡');
+[22000]Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ７` VALUES ('ｱｲｳｴｵ');
+[22000]Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ８` VALUES ('あいうえお');
+[22000]Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ９` VALUES ('龔龖龗龞龡');
+[22000]Data too long for column 'Ｃ１' at row 1
 SELECT REVERSE(`Ｃ１`) FROM `Ｔ１`;
 REVERSE(`Ｃ１`)
 ｵｴｳｲｱ
