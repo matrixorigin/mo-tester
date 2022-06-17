@@ -28,8 +28,8 @@ avg(a)
 drop table t1;
 CREATE TABLE t1 (
 bug_id bigint(9) NOT NULL,
-groupset bigint(20) DEFAULT '0' NOT NULL,
-assigned_to bigint(9) DEFAULT '0' NOT NULL,
+groupset bigint(20) DEFAULT 0 NOT NULL,
+assigned_to bigint(9) DEFAULT 0 NOT NULL,
 bug_file_loc varchar(255)
 );
 CREATE TABLE t2 (
@@ -54,7 +54,7 @@ TestComponent		1.0000
 TestComponent2		3.5000
 SELECT avg(t1.bug_id) >= avg(t2.id) from t1 join t2 on t1.bug_file_loc = t2.value;
 avg(t1.bug_id) >= avg(t2.id)
-1
+true
 drop table t1;
 drop table t2;
 create table t1 (a int);

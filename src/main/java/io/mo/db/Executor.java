@@ -744,6 +744,9 @@ public class Executor {
             //LOG.error("["+command.getScriptFile()+"]["+command.getCommand().trim()+"] IS_COMPARE_META: "+COMMON.IS_COMPARE_META);
             exps[0] = COMMON.THIS_IS_MO;
             acts[0] = COMMON.THIS_IS_MO;
+        }else{
+            exps[0] = exps[0].toLowerCase();
+            acts[0] = acts[0].toLowerCase();
         }
 
         //if the resultset is not sorted by the "order by",it will be sorted

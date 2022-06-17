@@ -686,8 +686,8 @@ SELECT t1.a FROM t1 where t1.a in (select t2.a from t2 order by t2.a desc) ;
 -- @label:bvt
 DROP TABLE IF EXISTS t1;
 drop table if exists t2;
-CREATE TABLE `t1` ( `aid` int(11) NOT NULL default 0, `bid` int(11) NOT NULL default 0, PRIMARY KEY  (`aid`,`bid`));
-CREATE TABLE `t2` ( `aid` int(11) NOT NULL default 0, `bid` int(11) NOT NULL default 0, PRIMARY KEY  (`aid`,`bid`));
+CREATE TABLE `t1` ( `aid` int(11) NOT NULL default 0, `bid` int(11) NOT NULL default 0, PRIMARY KEY  (`aid`));
+CREATE TABLE `t2` ( `aid` int(11) NOT NULL default 0, `bid` int(11) NOT NULL default 0, PRIMARY KEY  (`aid`));
 insert into t1 values (1,1),(1,2),(2,1),(2,2);
 insert into t2 values (1,2),(2,2);
 select * from t1 where t1.aid not in (select aid from t2 where bid=t1.bid);
@@ -701,8 +701,7 @@ DROP TABLE IF EXISTS t1;
 drop table if exists t2;
 CREATE TABLE t1(select_id BIGINT, values_id BIGINT);
 INSERT INTO t1 VALUES (1, 1);
-CREATE TABLE t2 (select_id BIGINT, values_id BIGINT,
-                 PRIMARY KEY(select_id,values_id));
+CREATE TABLE t2 (select_id BIGINT, values_id BIGINT);
 INSERT INTO t2 VALUES (0, 1), (0, 2), (0, 3), (1, 5);
 SELECT values_id FROM t1
 WHERE values_id IN (SELECT values_id FROM t2  WHERE select_id IN (1, 0));
@@ -731,8 +730,8 @@ DROP TABLE IF EXISTS t1;
 drop table if exists t2;
 CREATE TABLE t1 (a INT);
 INSERT INTO t1 VALUES (1),(2),(3);
-CREATE TABLE t2 SELECT * FROM t1;
-
+CREATE TABLE t2 (a INT);
+INSERT INTO t1 VALUES (1),(2),(3);
 SELECT 1 FROM t1 WHERE t1.a NOT IN (SELECT 1 FROM t1, t2 WHERE 0);
 
 DROP TABLE IF EXISTS t1;
@@ -1010,9 +1009,13 @@ WHERE     c.parent_id IN (
               WHERE  parent_id = 3
           ) IS FALSE;
 
-DROP TABLE IF EXISTS parent, child;
+DROP TABLE IF EXISTS parent;
+DROP TABLE IF EXISTS child;
 
-DROP TABLE IF EXISTS cc, bb,c,b;
+DROP TABLE IF EXISTS cc;
+DROP TABLE IF EXISTS bb;
+DROP TABLE IF EXISTS c;
+DROP TABLE IF EXISTS b;
 CREATE TABLE cc (
   pk INT,
   col_int_key INT,
