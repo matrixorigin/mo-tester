@@ -238,16 +238,16 @@ SELECT ( 65535 BETWEEN 65535 AND 65535 );
 true
 SELECT ( 32767 BETWEEN 65535 AND 1 );
 ( 32767 BETWEEN 65535 AND 1 )
-0
+false
 SELECT ( -1 BETWEEN 65535 AND 1 );
 ( -1 BETWEEN 65535 AND 1 )
-0
+false
 SELECT ( 0 BETWEEN 65535 AND 1 );
 ( 0 BETWEEN 65535 AND 1 )
-0
+false
 SELECT ( 1 BETWEEN 65535 AND 1 );
 ( 1 BETWEEN 65535 AND 1 )
-0
+false
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
