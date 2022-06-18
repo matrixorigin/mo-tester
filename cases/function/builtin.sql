@@ -176,7 +176,7 @@ select b from t1 where cot(a*pi()/180)<=cot(b*pi()/180)  order by a;
 
 drop table if exists t1;
 create table t1(a date, b datetime,c varchar(30));
-insert into t1 values(20220101,'2022-01-01 01:01:01','2022-13-13 01:01:01');
+insert into t1 values('20220101','2022-01-01 01:01:01','2022-13-13 01:01:01');
 select * from t1;
 
 

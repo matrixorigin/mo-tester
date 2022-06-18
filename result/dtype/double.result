@@ -41,10 +41,13 @@ a
 drop table t1;
 create table t1(a float(34));
 show create table t1;
-Table	Create Table
-t1	CREATE TABLE `t1` (
-  `a` double DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+att_database	att_relname	attname	atttyp	attnum	att_length	attnotnull	atthasdef	att_default	attisdropped	att_constraint_type	att_is_unsigned	att_is_auto_increment	att_comment	att_is_hidden
+test01	t1	id	22	1	4	0	0		0	n	0	0		0
+test01	t1	str	61	2	24	0	0		0	n	0	0		0
+test01	t1	name	61	3	24	0	0		0	n	0	0		0
+test01	t1	PADDR	33	4	16	0	0		0	n	0	0	Physical address	1
+double	t1	a	31	1	8	0	0		0	n	0	0		0
+double	t1	PADDR	33	2	16	0	0		0	n	0	0	Physical address	1
 drop table t1;
 create table t1 ( a double not null default 1, big double(30,5) );
 insert into t1 (big) values (-1),(12345678.901234567),(92233720368547.75807);
@@ -54,33 +57,33 @@ a	big
 1	12345678.90123
 1	92233720368547.77000
 select min(big),max(big),max(big)-1 from t1;
-min(big)	max(big)	max(big)-1
--1.00000	92233720368547.77000	92233720368546.77000
+min(big)	max(big)	max(big) - 1
+-1.0	9.223372036854777E13	9.223372036854677E13
 select min(big),max(big),max(big)-1 from t1 group by a;
-min(big)	max(big)	max(big)-1
--1.00000	92233720368547.77000	92233720368546.77000
+min(big)	max(big)	max(big) - 1
+-1.0	9.223372036854777E13	9.223372036854677E13
 drop table t1;
 create table t1 ( a double not null default 1, big double);
 insert into t1 (big) values (-1),(12345678.901234567),(92233720368547.75807);
 select * from t1;
 a	big
-1	-1
-1	12345678.901234567
-1	92233720368547.77
+1.0	-1.0
+1.0	1.2345678901234567E7
+1.0	9.223372036854777E13
 select * from t1 order by big limit 1,2;
 a	big
-1	12345678.901234567
-1	92233720368547.77
+1.0	1.2345678901234567E7
+1.0	9.223372036854777E13
 select * from t1 order by big limit 2 offset 1;
 a	big
-1	12345678.901234567
-1	92233720368547.77
+1.0	1.2345678901234567E7
+1.0	9.223372036854777E13
 select min(big),max(big),max(big)-1 from t1;
-min(big)	max(big)	max(big)-1
--1	92233720368547.77	92233720368546.77
+min(big)	max(big)	max(big) - 1
+-1.0	9.223372036854777E13	9.223372036854677E13
 select min(big),max(big),max(big)+1 from t1 group by a;
-min(big)	max(big)	max(big)+1
--1	92233720368547.77	92233720368548.77
+min(big)	max(big)	max(big) + 1
+-1.0	9.223372036854777E13	9.223372036854877E13
 drop table t1;
 create table t1 (id double primary key, a int);
 insert into t1 values (1.1,1);
@@ -267,15 +270,15 @@ INSERT INTO t1 VALUES (1.00,1.0000),(1.00,2.0000);
 update t1 set a=2.00 where a=1 limit 1;
 select * from t1;
 a	b
-2.00	1.00
-1.00	2.00
+2.0	1.0
+1.0	2.0
 INSERT INTO t1 VALUES (1,3);
 update t1 set a=2 where a=1.00;
 select * from t1;
 a	b
-2.00	1.00
-2.00	2.00
-2.00	3.00
+2.0	1.0
+2.0	2.0
+2.0	3.0
 drop table t1;
 create table t1 (
 a double(10,5) not null,
@@ -293,83 +296,83 @@ insert into t1 (a) values (2),(4),(6),(8),(10),(12),(14),(16),(18),(20),(22),(24
 update t1 set a=a+101;
 select a,b from t1;
 a	b
-103.00000	12346
-105.00000	12346
-107.00000	12346
-109.00000	12346
-111.00000	12346
-113.00000	12346
-115.00000	12346
-117.00000	12346
-119.00000	12346
-121.00000	12346
-123.00000	12346
-124.00000	12346
-125.00000	12346
-127.00000	12346
+103.0	12346
+105.0	12346
+107.0	12346
+109.0	12346
+111.0	12346
+113.0	12346
+115.0	12346
+117.0	12346
+119.0	12346
+121.0	12346
+123.0	12346
+124.0	12346
+125.0	12346
+127.0	12346
 update t1 set a=27 where a=125;
 select a,b from t1;
 a	b
-27.00000	12346
-103.00000	12346
-105.00000	12346
-107.00000	12346
-109.00000	12346
-111.00000	12346
-113.00000	12346
-115.00000	12346
-117.00000	12346
-119.00000	12346
-121.00000	12346
-123.00000	12346
-124.00000	12346
-127.00000	12346
+27.0	12346
+103.0	12346
+105.0	12346
+107.0	12346
+109.0	12346
+111.0	12346
+113.0	12346
+115.0	12346
+117.0	12346
+119.0	12346
+121.0	12346
+123.0	12346
+124.0	12346
+127.0	12346
 update t1 set a=a-1 where 1 > 2;
 select a,b from t1;
 a	b
-27.00000	12346
-103.00000	12346
-105.00000	12346
-107.00000	12346
-109.00000	12346
-111.00000	12346
-113.00000	12346
-115.00000	12346
-117.00000	12346
-119.00000	12346
-121.00000	12346
-123.00000	12346
-124.00000	12346
-127.00000	12346
+27.0	12346
+103.0	12346
+105.0	12346
+107.0	12346
+109.0	12346
+111.0	12346
+113.0	12346
+115.0	12346
+117.0	12346
+119.0	12346
+121.0	12346
+123.0	12346
+124.0	12346
+127.0	12346
 update t1 set a=a-1 where 3 > 2;
 select a,b from t1;
 a	b
-26.00000	12346
-102.00000	12346
-104.00000	12346
-106.00000	12346
-108.00000	12346
-110.00000	12346
-112.00000	12346
-114.00000	12346
-116.00000	12346
-118.00000	12346
-120.00000	12346
-122.00000	12346
-123.00000	12346
-126.00000	12346
+26.0	12346
+102.0	12346
+104.0	12346
+106.0	12346
+108.0	12346
+110.0	12346
+112.0	12346
+114.0	12346
+116.0	12346
+118.0	12346
+120.0	12346
+122.0	12346
+123.0	12346
+126.0	12346
 drop table t1;
 create table t1 (a double(10,5) primary key, b char(32));
 insert into t1 values (1,'apple'), (2,'apple');
 select * from t1;
 a	b
-1.00000	apple
-2.00000	apple
+1.0	apple
+2.0	apple
 update t1, t1 as t2 set t1.a=t1.a*2 where t1.b = t2.b and t1.a > t2.a;
 select * from t1;
 a	b
-1.00000	apple
-4.00000	apple
+1.0	apple
+4.0	apple
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -426,9 +429,9 @@ create table t1 (a double(10,5) primary key, b char(32));
 insert into t1 values (1,'apple'), (2,'apple');
 select * from t1;
 a	b
-1.00000	apple
-2.00000	apple
+1.0	apple
+2.0	apple
 delete t1 from t1,t1 as t2 where t1.b = t2.b and t1.a > t2.a;
 select * from t1;
 a	b
-1.00000	apple
+1.0	apple
