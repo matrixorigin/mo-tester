@@ -1,5 +1,3 @@
-create database if not exists datedb;
-use datedb;
 drop table if exists t1;
 create table t1 (id int,d date, dt datetime,c char(10),vc varchar(20));
 insert into t1 values (1,"2021-01-13", "2021-01-13 13:00:00", "2021-12-15", "2021-12-16");

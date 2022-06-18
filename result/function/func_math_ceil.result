@@ -97,9 +97,17 @@ select ceil(123.45, -1);
 ceil(123.45, -1)
 130.0000
 select ceil(123.342124124214, 100);
+ceil(123.342124124214, 100)
+123.342124124214
 select ceil(-123.342124124214, -100);
+ceil(-123.342124124214, -100)
+-0.0
 select ceil(123.342, null);
 ceil(123.342, null)
-NULL
+null
 select ceil(null, 1);
+ceil(null, 1)
+null
 select ceil(null, null);
+ceil(null, null)
+null

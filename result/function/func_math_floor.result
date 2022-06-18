@@ -79,8 +79,7 @@ FROM t1 ORDER BY a LIMIT 5;
 a	a
 DROP TABLE t1;
 SELECT DATE(FLOOR(20110512154559.616));
-DATE(FLOOR(20110512154559.616))
-2011-05-12
+[42883]unsupported parameter types [DOUBLE DATE] for operator 'cast'
 CREATE table t1(a int, b float);
 insert into t1 select floor(12124.413), floor(-4213.413);
 insert into t1 select floor(12124.123), floor(-42413.409);
@@ -129,7 +128,17 @@ select floor(123.45, -1);
 floor(123.45, -1)
 120.0000
 select floor(123.342124124214, 100);
+floor(123.342124124214, 100)
+123.342124124214
 select floor(-123.342124124214, -100);
+floor(-123.342124124214, -100)
+-1.0E100
 select floor(123.342, null);
+floor(123.342, null)
+null
 select floor(null, 1);
+floor(null, 1)
+null
 select floor(null, null);
+floor(null, null)
+null

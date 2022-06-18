@@ -17,3 +17,4 @@ id	22	0
 str	61	0			
 name	61	0			
 PADDR	33	0			Physical address
+drop database if exists test01;
