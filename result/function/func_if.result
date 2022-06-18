@@ -4,13 +4,9 @@ IF(NULL AND 1, 1, 2)	IF(1 AND NULL, 1, 2)
 create table t1 (a int);
 insert into t1 values (0),(1),(NULL);
 SELECT * FROM t1 WHERE IF(a AND 1, 0, 1);
-a
-0
-null
+[42883]unsupported parameter types [INT BOOL] for operator 'and'
 SELECT * FROM t1 WHERE IF(1 AND a, 0, 1);
-a
-0
-null
+[42883]unsupported parameter types [BOOL INT] for operator 'and'
 drop table t1;
 CREATE TABLE t (i1 INT,
 d1 DOUBLE,
@@ -122,10 +118,8 @@ BBB
 select if(u=1,st,st) s from t1 where st like "%a%" order by s;
 s
 a
-A
 a
 aa
-AA
 aaa
 drop table t1;
 create table t1 (num  double(12,2));
@@ -143,7 +137,7 @@ drop table t1;
 create table t1 (a int);
 insert t1 values (1),(2);
 select if(1>2,a,avg(a)) from t1;
-In aggregated query without GROUP BY, expression #1 of SELECT list contains nonaggregated column 'func_if.t1.a'; this is incompatible with sql_mode=only_full_group_by
+[42803]column "t1.a" must appear in the GROUP BY clause or be used in an aggregate function
 drop table t1;
 CREATE TABLE `t1` (
 `id` int(11) NOT NULL ,

@@ -26,8 +26,8 @@ select cast(NULL as signed);
 cast(NULL as signed)
 null
 select cast(1/2 as signed);
-cast(1/2 as signed)
-1
+cast(1 / 2 as signed)
+0
 select cast("2001-1-1" as DATE), cast("2001-1-1" as DATETIME);
 cast("2001-1-1" as DATE)	cast("2001-1-1" as DATETIME)
 2001-01-01	2001-01-01 00:00:00
@@ -133,11 +133,9 @@ double_val	cast_val
 1.0E30	9223372036854775807
 DROP TABLE t1;
 SELECT CAST(cast('01-01-01' as date) AS UNSIGNED);
-CAST(cast('01-01-01' as date) AS UNSIGNED)
-20010101
+[42883]unsupported parameter types [DATE BIGINT UNSIGNED] for operator 'cast'
 SELECT CAST(cast('01-01-01' as date) AS SIGNED);
-CAST(cast('01-01-01' as date) AS SIGNED)
-20010101
+[42883]unsupported parameter types [DATE BIGINT] for operator 'cast'
 select cast('1.2' as decimal(3,2));
 cast('1.2' as decimal(3,2))
 1.20
@@ -244,7 +242,7 @@ select f1 from t1 where cast("2006-1-1" as date) between date(f1) and date(f3);
 f1
 2006-01-01
 select f1 from t1 where cast("2006-1-1" as date) between f1 and cast('zzz' as date);
-f1
+[22000]Incorrect date value
 drop table t1;
 create table t1 (field DATE);
 insert into t1 values ('2006-11-06');
@@ -271,10 +269,10 @@ a-b
 1
 4294967294
 select a-b , (a-b < 0)  from t1 order by 1;
-a-b	(a-b < 0)
-0	0
-1	0
-4294967294	0
+a - b	a - b < 0
+0	false
+1	false
+4294967294	false
 select any_value(a)-b as d, (any_value(a)-b >= 0), b from t1 group by b having d >= 0;
 d	(any_value(a)-b >= 0)	b
 1	1	0

@@ -10,36 +10,23 @@ insert into t1 values(71, 1, 2, 34, 5, 5.5, 341.13, 15.314, "2012-03-22", "2013-
 insert into t1 values(1, 1, 21, 4, 54, 53.5, 431.13, 14.394, "2011-03-12", "2015-03-12 10:03:12", "2002-03-12 13:03:12", "afbc", "dct5f");
 insert into t1 values(1, 71, 2, 34, 5, 5.5, 31.313, 124.314, "2012-01-12", "2019-03-12 10:03:12", "2013-03-12 13:03:12", "3abd1c", "dcvf");
 select weekday(a),weekday(b),weekday(c),weekday(d),weekday(e),weekday(f) from t1;
-weekday(a)	weekday(b)	weekday(c)	weekday(d)	weekday(e)	weekday(f)
-null	null	null	null	null	null
-null	null	null	null	null	null
-null	null	null	null	null	null
-null	null	null	null	null	null
+[42883]unsupported parameter types [TINYINT] for function 'weekday'
 select weekday(g),weekday(h),weekday(i),weekday(k),weekday(l),weekday(m),weekday(n) from t1;
-weekday(g)	weekday(h)	weekday(i)	weekday(k)	weekday(l)	weekday(m)	weekday(n)
-null	null	5	0	5	null	null
-null	null	3	1	4	null	null
-null	null	5	3	1	null	null
-null	0	3	1	1	null	null
+[42883]unsupported parameter types [DOUBLE] for function 'weekday'
 drop table t1;
 SELECT weekday("2015-09-03") as weekday;
 weekday
 3
 SELECT weekday(20150904) as weekday;
-weekday
-4
+[42883]unsupported parameter types [BIGINT] for function 'weekday'
 SELECT weekday(1340124) as weekday;
-weekday
-null
+[42883]unsupported parameter types [BIGINT] for function 'weekday'
 SELECT weekday(0.45133) as weekday;
-weekday
-null
+[42883]unsupported parameter types [DOUBLE] for function 'weekday'
 SELECT weekday(10) as weekday;
-weekday
-null
+[42883]unsupported parameter types [BIGINT] for function 'weekday'
 SELECT weekday(1=1) as weekday;
-weekday
-null
+[42883]unsupported parameter types [BOOL] for function 'weekday'
 SELECT weekday('2015-09.30') as weekday;
 weekday
 2
@@ -99,7 +86,7 @@ weekday("2015-09-10")!=weekday("2016-04-24")
 1
 CREATE TABLE Product(Product_id INT,  Product_name VARCHAR(100) NOT NULL,Buying_price DECIMAL(13, 2) NOT NULL,Selling_price DECIMAL(13, 2) NOT NULL,Selling_Date Date NOT NULL,PRIMARY KEY(Product_id));
 INSERT INTO  Product(Product_name, Buying_price, Selling_price, Selling_Date) VALUES ('Audi Q8', 10000000.00, 15000000.00, '2018-01-26' ),('Volvo XC40', 2000000.00, 3000000.00, '2018-04-20' ),('Audi A6', 4000000.00, 5000000.00, '2018-07-25' ),('BMW X5', 5000500.00, 7006500.00, '2018-10-18'  ),('Jaguar XF', 5000000, 7507000.00, '2019-01-27'  ),('Mercedes-Benz C-Class', 4000000.00, 6000000.00, '2019-04-01'  ),('Jaguar F-PACE', 5000000.00, 7000000.00, '2019-12-26'  ),('Porsche Macan', 6500000.00, 8000000.00, '2020-04-16' ) ;
-Field 'Product_id' doesn't have a default value
+[42611]Field 'product_id' doesn't have a default value
 SELECT  weekday (Selling_Date) weekday,  COUNT(Product_id) Product_Sold FROM Product GROUP BY weekday (Selling_Date) ORDER BY weekday (Selling_Date);
 weekday	Product_Sold
 DROP TABLE Product;
