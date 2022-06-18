@@ -12,16 +12,25 @@ import org.apache.log4j.Logger;
 
 import javax.smartcardio.CommandAPDU;
 import java.io.*;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.sql.Connection;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 public class Executor {
     private static PrintWriter logWriter;
     //private static SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd-HHmmss.SSS");
 
     private static Logger LOG = Logger.getLogger(Executor.class.getName());
+
+    private static NumberFormat nf = NumberFormat.getNumberInstance();
+    static {
+        nf.setGroupingUsed(false);
+        nf.setMaximumFractionDigits(50);
+    }
 
     public static void run(TestScript script){
         LOG.info("Now start to run the file["+script.getFileName()+"]....................................................");
@@ -768,17 +777,55 @@ public class Executor {
                     return false;
 
                 for(int j = 0; j < exp_values.length; j++){
+                    LOG.info("exp value = "+ exp_values[j]);
+                    LOG.info("act value = "+ act_values[j]);
+                    //if the expected value is not a numeric
                     if(!isNumeric(exp_values[j])){
+                        // and the expected value does not equals with the actual value,return false
                         if(!exp_values[j].equalsIgnoreCase(act_values[j]))
                             return false;
                     }else {
-
+                        //if the expected value is  a numeric
+                        // and the actual value is not a numeric,return false
                         if(!isNumeric(act_values[j]))
                             return false;
+
+                        //if both of the expected and actual values are numeric
+
+                        //if values is the format of scientific notation,transfer them to the noraml format
+                        if(exp_values[j].indexOf("E") != -1 || exp_values[j].indexOf("e") != -1){
+                            exp_values[j] = nf.format(Double.parseDouble(exp_values[j]));
+                        }
+
+                        if(act_values[j].indexOf("E") != -1 || act_values[j].indexOf("e") != -1){
+                            act_values[j] = nf.format(Double.parseDouble(act_values[j]));
+                        }
+
+                        LOG.info("transfer exp value = "+ exp_values[j]);
+                        LOG.info("transfer act value = "+ act_values[j]);
+
+                        //First, check whether the integer parts are equal
+                        String exp_int_part = null;
+                        String act_int_part = null;
+                        if(exp_values[j].indexOf(".") == -1)
+                            exp_int_part = exp_values[j];
+                        else
+                            exp_int_part = exp_values[j].substring(0,exp_values[j].indexOf("."));
+
+                        if(act_values[j].indexOf(".") == -1)
+                            act_int_part = act_values[j];
+                        else
+                            act_int_part = act_values[j].substring(0,act_values[j].indexOf("."));
+
+                        if(!exp_int_part.equalsIgnoreCase(act_int_part))
+                            return false;
+
+                        // round the number with large scale to the scale the same as the number with short scale
                         if(exp_values[j].length() > act_values[j].length())
                             exp_values[j] = exp_values[j].substring(0,act_values[j].length());
                         if(exp_values[j].length() < act_values[j].length())
                             act_values[j] = act_values[j].substring(0,exp_values[j].length());
+
                         int scale = exp_values[j].length() - exp_values[j].indexOf(".") - 1;
                         double tolerable_error = 2.0/Math.pow(10.0,scale);
                         if(tolerable_error < COMMON.TOLERABLE_ERROR)
@@ -786,9 +833,11 @@ public class Executor {
                         LOG.info("tolerable_error = "+tolerable_error);
                         double n_exp = Double.parseDouble(exp_values[j]);
                         LOG.info("n_exp = "+ n_exp);
+                        //LOG.info("act_values["+j+"] = "+act_values[j]);
                         double n_act = Double.parseDouble(act_values[j]);
                         LOG.info("n_act = "+ n_act);
                         LOG.info("Math.abs(n_exp - n_act) = "+Math.abs(n_exp - n_act));
+                        LOG.info(Math.abs(n_exp - n_act) + " > "+tolerable_error + " = "+(Math.abs(n_exp - n_act) > tolerable_error));
                         if(Math.abs(n_exp - n_act) > tolerable_error)
                             return false;
                     }
@@ -815,11 +864,32 @@ public class Executor {
         if(str == null || str == ""){
             return false;
         }
-
-        return str.matches("^[+\\-]?\\d*[.]?\\d+$");
+        if (null == str || "".equals(str)) {
+            return false;
+        }
+        String regx = "[+-]*\\d+\\.?\\d*[Ee]*[+-]*\\d+";
+        Pattern pattern = Pattern.compile(regx);
+        boolean isNumber = pattern.matcher(str).matches();
+        if (isNumber) {
+            return isNumber;
+        }
+        regx = "^[-\\+]?[.\\d]*$";
+        pattern = Pattern.compile(regx);
+        return pattern.matcher(str).matches();
+        //return str.matches("^[+\\-]?\\d*[.]?\\d+$");
     }
     public static void main(String args[]){
-        System.out.println(isNumeric("6663667662744783"));
+        System.out.println(isNumeric("-2.4492935982947064E-16"));
+        double d = Double.parseDouble("-2.4492935982947064E-16");
+        NumberFormat nf = NumberFormat.getNumberInstance();
+        nf.setGroupingUsed(false);
+        nf.setMaximumFractionDigits(50);
+        String p = nf.format(d);
+        System.out.println(p);
+        System.out.println(d);
+        BigDecimal bd = new BigDecimal(d);
+        System.out.println(bd);
+        //System.out.println("33334444".substring(0,"33334444".indexOf(".")));
         /*String e = "1113.32";
         String a = "1113.3199462890625";
         System.out.println(e);
