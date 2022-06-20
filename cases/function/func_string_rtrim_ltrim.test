@@ -6,7 +6,7 @@ LTRIM ('    geeksforgeeks')  AS LeftTrimmedString;
 SELECT '    MySQL' AS String, RTRIM ('MySQL')  AS Tstring;
 
 #SELECT 嵌套
-select ltrim("a"),rtrim("a"),trim(BOTH "" from "a"),trim(BOTH " " from "a");
+#select ltrim("a"),rtrim("a"),trim(BOTH "" from "a"),trim(BOTH " " from "a");
 select cast(rtrim('  20.06 ') as decimal(19,2));
 select cast(rtrim(ltrim('  20.06 ')) as decimal(19,2));
 select concat_ws(':',ltrim('  left  '),':',rtrim('  right  '),':');

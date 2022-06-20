@@ -214,13 +214,19 @@ INSERT INTO t1 SELECT a, b+8192    FROM t1;
 INSERT INTO t1 SELECT a, b+16384   FROM t1;
 INSERT INTO t1 SELECT a, b+32768   FROM t1;
 SELECT a,COUNT(DISTINCT b) AS cnt FROM t1 GROUP BY a HAVING cnt > 50;
-a	cnt
-1	65536
+column "cnt" must appear in the GROUP BY clause or be used in an aggregate function
 SELECT DISTINCT a, SUM( b) AS sumation FROM t1 GROUP BY a HAVING sumation > 50;
-a	sumation
-1	2147516416
+column "sumation" must appear in the GROUP BY clause or be used in an aggregate function
 SELECT DISTINCT a, AVG( b) AS average FROM t1 GROUP BY a HAVING average > 50;
-a	average
+column "average" must appear in the GROUP BY clause or be used in an aggregate function
+SELECT a,COUNT(DISTINCT b) FROM t1 GROUP BY a HAVING COUNT(DISTINCT b) > 50;
+a	COUNT(DISTINCT b)
+1	65536
+SELECT DISTINCT a, SUM( b) FROM t1 GROUP BY a HAVING SUM( b) > 50;
+a	SUM( b)
+1	2147516416
+SELECT DISTINCT a, AVG( b) FROM t1 GROUP BY a HAVING AVG( b) > 50;
+a	AVG( b)
 1	32768.5000
 DROP TABLE t1;
 CREATE TABLE t1(a DOUBLE);
@@ -261,13 +267,13 @@ drop table t2;
 CREATE TABLE t1(a DOUBLE);
 INSERT INTO t1 VALUES (10), (20);
 SELECT AVG(min(a)) FROM t1 group by a;
-Invalid use of group function
+aggregate function calls cannot be nested
 DROP TABLE t1;
 CREATE TABLE t1 (id int(11),value1 float(10,2));
 INSERT INTO t1 VALUES (1,0.00),(1,1.00), (1,2.00), (2,10.00), (2,11.00), (2,12.00);
 CREATE TABLE t2 (id int(11),name char(20));
 INSERT INTO t2 VALUES (1,'Set One'),(2,'Set Two');
 select name, avg(value1), std(value1), variance(value1) from t1, t2 where t1.id = t2.id group by t1.id;
-[42803]column "t2.name" must appear in the GROUP BY clause or be used in an aggregate function
+column "t2.name" must appear in the GROUP BY clause or be used in an aggregate function
 drop table t1;
 drop table t2;

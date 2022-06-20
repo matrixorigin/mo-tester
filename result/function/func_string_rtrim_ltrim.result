@@ -11,9 +11,6 @@ OriginalString	LeftTrimmedString
 SELECT '    MySQL' AS String, RTRIM ('MySQL')  AS Tstring;
 String	Tstring
     MySQL	MySQL
-select ltrim("a"),rtrim("a"),trim(BOTH "" from "a"),trim(BOTH " " from "a");
-ltrim("a")	rtrim("a")	trim(BOTH "" from "a")	trim(BOTH " " from "a")
-a	a	a	a
 select cast(rtrim('  20.06 ') as decimal(19,2));
 cast(rtrim('  20.06 ') as decimal(19,2))
 20.06
@@ -175,86 +172,23 @@ INSERT INTO `Ｔ９` VALUES ('龔龖龗龞龡　　');
 INSERT INTO `Ｔ９` VALUES ('龔龖龗龞龡　　　');
 [22000]Data too long for column 'Ｃ１' at row 1
 SELECT RTRIM(`Ｃ１`) from `Ｔ１`;
-RTRIM(`Ｃ１`)
-ｱｲｳｴｵ
-ｱｲｳｴｵ
-ｱｲｳｴｵ
-ｱｲｳｴｵ
-ｱｲｳｴｵ　
-ｱｲｳｴｵ　　
-ｱｲｳｴｵ　　　
+RTRIM(`Ｃ１`)　　
 SELECT RTRIM(`Ｃ１`) from `Ｔ２`;
-RTRIM(`Ｃ１`)
-あいうえお
-あいうえお
-あいうえお
-あいうえお
-あいうえお　
-あいうえお　　
-あいうえお　　　
+RTRIM(`Ｃ１`)　　
 SELECT RTRIM(`Ｃ１`) from `Ｔ３`;
 RTRIM(`Ｃ１`)
-龔龖龗龞龡
-龔龖龗龞龡
-龔龖龗龞龡
-龔龖龗龞龡
-龔龖龗龞龡　
-龔龖龗龞龡　　
-龔龖龗龞龡　　　
 SELECT RTRIM(`Ｃ１`) from `Ｔ４`;
 RTRIM(`Ｃ１`)
-ｱｲｳｴｵ
-ｱｲｳｴｵ
-ｱｲｳｴｵ
-ｱｲｳｴｵ
-ｱｲｳｴｵ　
-ｱｲｳｴｵ　　
-ｱｲｳｴｵ　　　
 SELECT RTRIM(`Ｃ１`) from `Ｔ５`;
 RTRIM(`Ｃ１`)
-あいうえお
-あいうえお
-あいうえお
-あいうえお
-あいうえお　
-あいうえお　　
-あいうえお　　　
 SELECT RTRIM(`Ｃ１`) from `Ｔ６`;
 RTRIM(`Ｃ１`)
-龔龖龗龞龡
-龔龖龗龞龡
-龔龖龗龞龡
-龔龖龗龞龡
-龔龖龗龞龡　
-龔龖龗龞龡　　
-龔龖龗龞龡　　　
 SELECT RTRIM(`Ｃ１`) from `Ｔ７`;
 RTRIM(`Ｃ１`)
-ｱｲｳｴｵ
-ｱｲｳｴｵ
-ｱｲｳｴｵ
-ｱｲｳｴｵ
-ｱｲｳｴｵ　
-ｱｲｳｴｵ　　
-ｱｲｳｴｵ　　　
 SELECT RTRIM(`Ｃ１`) from `Ｔ８`;
 RTRIM(`Ｃ１`)
-あいうえお
-あいうえお
-あいうえお
-あいうえお
-あいうえお　
-あいうえお　　
-あいうえお　　　
 SELECT RTRIM(`Ｃ１`) from `Ｔ９`;
 RTRIM(`Ｃ１`)
-龔龖龗龞龡
-龔龖龗龞龡
-龔龖龗龞龡
-龔龖龗龞龡
-龔龖龗龞龡　
-龔龖龗龞龡　　
-龔龖龗龞龡　　　
 DROP TABLE `Ｔ１`;
 DROP TABLE `Ｔ２`;
 DROP TABLE `Ｔ３`;
