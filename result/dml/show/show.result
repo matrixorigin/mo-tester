@@ -13,8 +13,7 @@ t1
 t2
 show columns from t1;
 Field	Type	Null	Key	Default	Comment
-id	22	0			
-str	61	0			
-name	61	0			
-PADDR	33	0			Physical address
+id	INT	NO		NULL		
+str	CHAR	NO		NULL	
+name	VARCHAR	NO		NULL		
 drop database if exists test01;
