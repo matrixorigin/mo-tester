@@ -211,11 +211,6 @@ select * from t1;
 a	b
 2022-01-01 00:00:00	apple
 2022-01-02 00:00:00	apple
-update t1, t1 as t2 set t1.a=t1.a+1*5 where t1.b = t2.b and t1.a > t2.a;
-select * from t1;
-a	b
-2022-01-01 00:00:00	apple
-2022-01-02 00:00:05	apple
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -262,7 +257,3 @@ select * from t1;
 a	b
 2022-01-01 00:00:00	apple
 2022-01-02 00:00:00	apple
-delete t1 from t1,t1 as t2 where t1.b = t2.b and t1.a > t2.a;
-select * from t1;
-a	b
-2022-01-01 00:00:00	apple

@@ -390,11 +390,6 @@ select * from t1;
 a	b
 1.0	apple
 2.0	apple
-update t1, t1 as t2 set t1.a=t1.a*2 where t1.b = t2.b and t1.a > t2.a;
-select * from t1;
-a	b
-1.0	apple
-4.0	apple
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -453,7 +448,3 @@ select * from t1;
 a	b
 1.00000	apple
 2.00000	apple
-delete t1 from t1,t1 as t2 where t1.b = t2.b and t1.a > t2.a;
-select * from t1;
-a	b
-1.00000	apple

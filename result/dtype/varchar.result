@@ -334,11 +334,6 @@ select * from t1;
 a	b
 ab	apple
 abc	apple
-update t1, t1 as t2 set t1.a= COALESCE(t1.a,t2.b) where t1.b = t2.b;
-select * from t1;
-a	b
-ab	apple
-abc	apple
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -424,7 +419,3 @@ select * from t1;
 a	b
 ab	apple
 abc	apple
-delete t1 from t1,t1 as t2 where t1.b = t2.b and t1.a > t2.a;
-select * from t1;
-a	b
-ab	apple
