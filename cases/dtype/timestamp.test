@@ -114,8 +114,6 @@ create table t1 (a timestamp primary key, b char(32));
 insert into t1 values ('20220101','apple'),('2022-01-02','apple');
 select * from t1;
 -- @ignore{
-update t1, t1 as t2 set t1.a=t1.a+1*5 where t1.b = t2.b and t1.a > t2.a;
-select * from t1;
 -- @ignore}
 
 #Test cases of delete with single table
@@ -151,6 +149,4 @@ create table t1 (a timestamp primary key, b char(32));
 insert into t1 values ('20220101','apple'),('2022-01-02 00:00:00','apple');
 select * from t1;
 -- @ignore{
-delete t1 from t1,t1 as t2 where t1.b = t2.b and t1.a > t2.a;
-select * from t1;
 -- @ignore}
