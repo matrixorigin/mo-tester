@@ -218,9 +218,7 @@ a
 1
 2
 select a from t2 having a in (select a from t1);
-a
-1
-2
+column "a" must appear in the GROUP BY clause or be used in an aggregate function
 drop table if exists t1;
 drop table if exists t2;
 create table t1 (oref int, grp int, ie int) ;
@@ -243,12 +241,7 @@ select a, oref, a in (
 select max(ie) from t1 where oref=t2.oref group by grp union
 select max(ie) from t1 where oref=t2.oref group by grp
 ) Z from t2;
-a	oref	Z
-1	1	1
-2	2	0
-3	3	null
-null	4	0
-null	2	null
+'union' will be supported in future version.
 select a in (select max(ie) from t1 where oref=4 group by grp) from t3;
 a in (select max(ie) from t1 where oref=4 group by grp)
 0
@@ -287,19 +280,16 @@ SELECT * FROM t2 WHERE id IN (SELECT 1);
 id
 1
 SELECT * FROM t2 WHERE id IN (SELECT 1 UNION SELECT 3);
-id
-1
+'union' will be supported in future version.
 SELECT * FROM t2 WHERE id IN (SELECT 1+(select 1));
 id
 2
 SELECT * FROM t2 WHERE id IN (SELECT 5 UNION SELECT 3);
-id
+'union' will be supported in future version.
 SELECT * FROM t2 WHERE id IN (SELECT 5 UNION SELECT 2);
-id
-2
+'union' will be supported in future version.
 SELECT * FROM t2 WHERE id NOT IN (SELECT 5 UNION SELECT 2);
-id
-1
+'union' will be supported in future version.
 drop table if exists t1;
 drop table if exists t2;
 create table t1 (a int);
@@ -400,9 +390,9 @@ create table t1 (a float);
 select 10.5 IN (SELECT * from t1 LIMIT 1);
 This version of MySQL doesn't yet support 'LIMIT & IN/ALL/ANY/SOME subquery'
 select 10.5 IN (SELECT * from t1 LIMIT 1 UNION SELECT 1.5);
-You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'UNION SELECT 1.5)' at line 1
+You have an error in your SQL syntax; check the manual that corresponds to your MatrixOne server version for the right syntax to use. syntax error at position 47 near 'union';
 select 10.5 IN (SELECT * from t1 UNION SELECT 1.5 LIMIT 1);
-This version of MySQL doesn't yet support 'LIMIT & IN/ALL/ANY/SOME subquery'
+'union' will be supported in future version.
 DROP TABLE IF EXISTS t1;
 create table t1 (a int, b real, c varchar(10));
 insert into t1 values (1, 1, 'a'), (2,2,'b'), (NULL, 2, 'b');
@@ -750,13 +740,11 @@ CREATE TABLE t2( a INT, b INT );
 SELECT * FROM t2 WHERE (a, b) IN (SELECT a, b FROM t2);
 a	b
 SELECT * FROM t1 WHERE a IN    ( SELECT 1 UNION ( SELECT 1 UNION SELECT 1 ) );
-This version of MySQL doesn't yet support 'nesting of unions at the right-hand side'
+'union' will be supported in future version.
 SELECT * FROM t1 WHERE a IN    ( ( SELECT 1 UNION SELECT 1 )  UNION SELECT 1 );
-a
-1
+'union' will be supported in future version.
 SELECT * FROM t1 WHERE a IN    ( SELECT 1 UNION SELECT 1 UNION SELECT 1 );
-a
-1
+'union' will be supported in future version.
 DROP TABLE IF EXISTS t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -854,7 +842,7 @@ id int(11) default NULL,
 name varchar(15) default NULL
 ) ;
 INSERT INTO t2 VALUES (4,'vita'), (1,'vita'), (2,'vita'), (1,'vita');
-update t1, t2 set t2.name='lenka' where t2.id in (select id from t1);
+update t2 set t2.name='lenka' where t2.id in (select id from t1);
 select * from t2;
 id	name
 4	vita
@@ -883,8 +871,8 @@ a
 3
 DROP TABLE IF EXISTS t1;
 drop table if exists t2;
-CREATE TABLE `t1` ( `aid` int(11) NOT NULL default 0, `bid` int(11) NOT NULL default 0, PRIMARY KEY  (`aid`));
-CREATE TABLE `t2` ( `aid` int(11) NOT NULL default 0, `bid` int(11) NOT NULL default 0, PRIMARY KEY  (`aid`));
+CREATE TABLE `t1` ( `aid` int(11) NOT NULL default 0, `bid` int(11) NOT NULL default 0);
+CREATE TABLE `t2` ( `aid` int(11) NOT NULL default 0, `bid` int(11) NOT NULL default 0);
 insert into t1 values (1,1),(1,2),(2,1),(2,2);
 insert into t2 values (1,2),(2,2);
 select * from t1 where t1.aid not in (select aid from t2 where bid=t1.bid);
@@ -1027,9 +1015,7 @@ insert into t1 (oref, grp) values(1, 1),(1, 1);
 create table t2 (oref int, a int);
 insert into t2 values(1, NULL),(2, NULL);
 select a, oref, a in (select count(*) from t1 group by grp having grp=t2.oref) Z from t2;
-a	oref	Z
-null	1	null
-null	2	0
+column "t2.oref" must appear in the GROUP BY clause or be used in an aggregate function
 DROP TABLE IF EXISTS t1;
 drop table if exists t2;
 create table t1 (a int, b int, primary key (a));
@@ -1037,11 +1023,7 @@ insert into t1 values (1,1), (3,1),(100,1);
 create table t2 (a int, b int);
 insert into t2 values (1,1),(2,1),(NULL,1),(NULL,0);
 select a,b, a in (select a from t1 where t1.b = t2.b union select a from t1 where t1.b = t2.b) Z from t2 ;
-a	b	Z
-1	1	1
-2	1	0
-null	1	null
-null	0	0
+'union' will be supported in future version.
 select a,b, a in (select a from t1 where t1.b = t2.b) Z from t2 ;
 a	b	Z
 1	1	1
@@ -1237,7 +1219,6 @@ CREATE TABLE t1 (a int);
 CREATE TABLE t2 (b int, PRIMARY KEY(b));
 INSERT INTO t1 VALUES (1), (NULL), (4);
 INSERT INTO t2 VALUES (3), (1),(2), (5), (4), (7), (6);
-ANALYZE TABLE t1, t2;
 SELECT a FROM t1, t2 WHERE a=b AND (b NOT IN (SELECT a FROM t1));
 a
 SELECT a FROM t1, t2 WHERE a=b AND (b NOT IN (SELECT a FROM t1 WHERE a > 4));
@@ -1293,7 +1274,7 @@ INSERT INTO t2s VALUES (100), (200), (300);
 SELECT * FROM t1
 WHERE t1.i NOT IN
 (
-SELECT STRAIGHT_JOIN t2s.i
+SELECT t2s.i
 FROM
 t1s LEFT OUTER JOIN t2s ON t2s.i = t1s.i
 HAVING t2s.i = 999
@@ -1305,16 +1286,16 @@ i
 SELECT * FROM t1
 WHERE t1.I IN
 (
-SELECT STRAIGHT_JOIN t2s.i
+SELECT t2s.i
 FROM
 t1s LEFT OUTER JOIN t2s ON t2s.i = t1s.i
 HAVING t2s.i = 999
-) IS UNKNOWN;
+);
 i
 SELECT * FROM t1
 WHERE NOT t1.I = ANY
 (
-SELECT STRAIGHT_JOIN t2s.i
+SELECT t2s.i
 FROM
 t1s LEFT OUTER JOIN t2s ON t2s.i = t1s.i
 HAVING t2s.i = 999
@@ -1325,11 +1306,11 @@ i
 3
 SELECT * FROM t1
 WHERE t1.i = ANY (
-SELECT STRAIGHT_JOIN t2s.i
+SELECT t2s.i
 FROM
 t1s LEFT OUTER JOIN t2s ON t2s.i = t1s.i
 HAVING t2s.i = 999
-) IS UNKNOWN;
+);
 i
 DROP TABLE IF EXISTS t1;
 drop table if exists t2;
@@ -1358,7 +1339,7 @@ WHERE     c.parent_id IN (
 SELECT parent_id
 FROM   child
 WHERE  parent_id = 3
-) IS NOT TRUE;
+);
 id	parent_id
 1	1
 2	null
@@ -1370,7 +1351,7 @@ WHERE     c.parent_id IN (
 SELECT parent_id
 FROM   child
 WHERE  parent_id = 3
-) IS FALSE;
+);
 id	parent_id
 1	1
 2	null
@@ -1528,8 +1509,7 @@ SELECT NULL IN (SELECT 1 FROM t1);
 NULL IN (SELECT 1 FROM t1)
 null
 SELECT (NULL AND 1) IN (SELECT 1 FROM t1);
-(NULL AND 1) IN (SELECT 1 FROM t1)
-null
+Operator '=' with parameters [BOOL BIGINT] will be implemented in future version.
 SELECT (NULL, 1) IN (SELECT 1,1 FROM t1);
 (NULL, 1) IN (SELECT 1,1 FROM t1)
 null
@@ -1537,18 +1517,15 @@ SELECT (NULL, NULL) IN (SELECT 1,1 FROM t1);
 (NULL, NULL) IN (SELECT 1,1 FROM t1)
 null
 SELECT (NULL OR 1) IN (SELECT 1 FROM t1);
-(NULL OR 1) IN (SELECT 1 FROM t1)
-1
+Operator '=' with parameters [BOOL BIGINT] will be implemented in future version.
 SELECT (NULL IS NULL) IN  (SELECT 1 FROM t1);
-(NULL IS NULL) IN  (SELECT 1 FROM t1)
-1
+Operator '=' with parameters [BOOL BIGINT] will be implemented in future version.
 DELETE FROM t1;
 SELECT NULL IN (SELECT 1 FROM t1);
 NULL IN (SELECT 1 FROM t1)
 0
 SELECT (NULL AND 1) IN (SELECT 1 FROM t1);
-(NULL AND 1) IN (SELECT 1 FROM t1)
-0
+Operator '=' with parameters [BOOL BIGINT] will be implemented in future version.
 SELECT (NULL, 1) IN (SELECT 1,1 FROM t1);
 (NULL, 1) IN (SELECT 1,1 FROM t1)
 0
@@ -1556,8 +1533,7 @@ SELECT (NULL, NULL) IN (SELECT 1,1 FROM t1);
 (NULL, NULL) IN (SELECT 1,1 FROM t1)
 0
 SELECT (NULL OR 1) IN (SELECT 1 FROM t1);
-(NULL OR 1) IN (SELECT 1 FROM t1)
-0
+Operator '=' with parameters [BOOL BIGINT] will be implemented in future version.
 SELECT (NULL IS NULL) IN  (SELECT 1 FROM t1);
 (NULL IS NULL) IN  (SELECT 1 FROM t1)
 0
@@ -1566,7 +1542,5 @@ CREATE TABLE t1 (a INTEGER);
 INSERT INTO t1 VALUES (1), (2), (3);
 SELECT 2 IN ( SELECT 5 UNION SELECT NULL ) FROM t1;
 2 IN ( SELECT 5 UNION SELECT NULL )
-null
-null
-null
+'union' will be supported in future version.
 DROP TABLE IF EXISTS t1;
