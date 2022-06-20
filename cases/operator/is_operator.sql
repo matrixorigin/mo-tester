@@ -83,7 +83,6 @@ create table t2 (a int, b int);
 insert into t1 values (1,1),(2,1),(3,1);
 insert into t2 values (1,1), (3,1);
 -- @ignore{
-update t1 left join t2  on t1.a=t2.a set t1.b=2, t2.b=2 where t1.b=1 and t2.b=1 or t2.a is NULL;
 select t1.a, t1.b,t2.a, t2.b from t1 left join t2  on t1.a=t2.a where t1.b=1 and t2.b=1 or t2.a is NULL;
 -- @ignore}
 drop table if exists t1;
@@ -187,9 +186,9 @@ drop table if exists t3;
 -- @label:bvt
 drop table if exists t1;
 create table t1 (col1 datetime);
-insert into t1 values(STR_TO_DATE('31.10.2004 15.30','%d.%m.%Y %H.%i'));
-insert into t1 values(STR_TO_DATE('2004.12.12 11:22:33 AM','%Y.%m.%d %r'));
-insert into t1 values(STR_TO_DATE('2004.12.12 10:22:59','%Y.%m.%d %T'));
+insert into t1 values("2004-10-31 15:30:00");
+insert into t1 values("2004-12-12 11:22:33");
+insert into t1 values("2004-12-12 10:22:59");
 insert into t1 values(null);
 select count(*) from t1 where STR_TO_DATE('2004.12.12 10:22:61','%Y.%m.%d %T') IS NULL;
 select count(*) from t1 where YEAR(col1) IS NULL;
