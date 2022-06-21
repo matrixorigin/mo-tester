@@ -11,7 +11,7 @@ concat_ws("abc", name,space(level))	concat_ws("abc",name, space(level))
 stringabc 	stringabc
 drop table t1;
 create table t1 (a varchar(16383));
-insert t1 values (space(50000));
+insert into t1 select space(50000);
 select length(a) from t1;
 length(a)
 16383

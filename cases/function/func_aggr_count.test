@@ -7,7 +7,19 @@ insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-
 insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
 insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
 insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
-select count(a),count(b),count(c),count(d),count(e),count(f),count(g),count(h),count(i),count(k),count(l),count(m),count(n) from t1;
+select count(a) from t1;
+select count(b) from t1;
+select count(c) from t1;
+select count(d) from t1;
+select count(e) from t1;
+select count(f) from t1;
+select count(g) from t1;
+select count(h) from t1;
+select count(i) from t1;
+select count(k) from t1;
+select count(l) from t1;
+select count(m) from t1;
+select count(n) from t1;
 drop table t1;
 
 
