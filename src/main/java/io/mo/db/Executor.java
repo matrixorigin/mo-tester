@@ -807,7 +807,7 @@ public class Executor {
                         String exp_int_part = null;
                         String act_int_part = null;
 
-                        if(exp_values[j].indexOf(".") == -1){
+                        if(exp_values[j].indexOf(".") == -1 || act_values[j].indexOf(".") == -1){
                             if(exp_values[j].length() != act_values[j].length())
                                 return false;
                             else{
@@ -826,8 +826,8 @@ public class Executor {
                             }
                         }
 
-                        //LOG.info("exp value = "+ exp_values[j]);
-                        //LOG.info("act value = "+ act_values[j]);
+                       // LOG.info("exp value = "+ exp_values[j]);
+                       // LOG.info("act value = "+ act_values[j]);
 
                         exp_int_part = exp_values[j].substring(0,exp_values[j].indexOf("."));
                         act_int_part = act_values[j].substring(0,act_values[j].indexOf("."));
