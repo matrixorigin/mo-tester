@@ -1,0 +1,5045 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<testsuite name="test" errors="14" failures="0" tests="14" time="6.0309997">
+    <testcase name="cases/dtype/bigint.test" time="0.268">
+        <failure type="0002" message="The actual result is not in accordance with the expectation.More,See the detail."><![CDATA[select 0,256,00000000000000065536,2147483647,-2147483648,2147483648,+4294967296;
+
+[EXPECT RESULT]:
+0	256	00000000000000065536	2147483647	-2147483648	2147483648	4294967296
+0	256	65536	2147483647	-2147483648	2147483648	4294967296
+[ACTUAL RESULT]:
+0	256	00000000000000065536	2147483647	-2147483648	2147483648	+4294967296
+0	256	65536	2147483647	-2147483648	2147483648	4294967296
+
+select +9999999999999999999,-9999999999999999999;
+
+[EXPECT RESULT]:
+9999999999999999999	-9999999999999999999
+9999999999999999999	-9999999999999999999
+[ACTUAL RESULT]:
++9999999999999999999	-9999999999999999999
+-8446744073709551617	8446744073709551617
+
+select cast(9223372036854775808 as unsigned)+1;
+
+[EXPECT RESULT]:
+cast(9223372036854775808 as unsigned)+1
+9223372036854775809
+[ACTUAL RESULT]:
+cast(9223372036854775808 as unsigned unsigned) + 1
+9.223372036854776E18
+
+select 9223372036854775808+1;
+
+[EXPECT RESULT]:
+9223372036854775808 + 1
+9223372036854775809
+[ACTUAL RESULT]:
+9223372036854775808 + 1
+-9223372036854775807
+
+select -(0-3),round(-(0-3)), round(9999999999999999999);
+
+[EXPECT RESULT]:
+-(0 - 3)	round(-(0 - 3))	round(9999999999999999999)
+3	3	9999999999999999999
+[ACTUAL RESULT]:
+-(0 - 3)	round(-(0 - 3))	round(9999999999999999999)
+3	3	-8446744073709551617
+
+select 1,11,101,1001,10001,100001,1000001,10000001,100000001,1000000001,10000000001,100000000001,1000000000001,10000000000001,100000000000001,1000000000000001,10000000000000001,100000000000000001,1000000000000000001,10000000000000000001;
+
+[EXPECT RESULT]:
+1	11	101	1001	10001	100001	1000001	10000001	100000001	1000000001	10000000001	100000000001	1000000000001	10000000000001	100000000000001	1000000000000001	10000000000000001	100000000000000001	1000000000000000001	10000000000000000001
+1	11	101	1001	10001	100001	1000001	10000001	100000001	1000000001	10000000001	100000000001	1000000000001	10000000000001	100000000000001	1000000000000001	10000000000000001	100000000000000001	1000000000000000001	10000000000000000001
+[ACTUAL RESULT]:
+1	11	101	1001	10001	100001	1000001	10000001	100000001	1000000001	10000000001	100000000001	1000000000001	10000000000001	100000000000001	1000000000000001	10000000000000001	100000000000000001	1000000000000000001	10000000000000000001
+1	11	101	1001	10001	100001	1000001	10000001	100000001	1000000001	10000000001	100000000001	1000000000001	10000000000001	100000000000001	1000000000000001	10000000000000001	100000000000000001	1000000000000000001	-8446744073709551615
+
+select -1,-11,-101,-1001,-10001,-100001,-1000001,-10000001,-100000001,-1000000001,-10000000001,-100000000001,-1000000000001,-10000000000001,-100000000000001,-1000000000000001,-10000000000000001,-100000000000000001,-1000000000000000001,-10000000000000000001;
+
+[EXPECT RESULT]:
+-1	-11	-101	-1001	-10001	-100001	-1000001	-10000001	-100000001	-1000000001	-10000000001	-100000000001	-1000000000001	-10000000000001	-100000000000001	-1000000000000001	-10000000000000001	-100000000000000001	-1000000000000000001	-10000000000000000001
+-1	-11	-101	-1001	-10001	-100001	-1000001	-10000001	-100000001	-1000000001	-10000000001	-100000000001	-1000000000001	-10000000000001	-100000000000001	-1000000000000001	-10000000000000001	-100000000000000001	-1000000000000000001	-10000000000000000001
+[ACTUAL RESULT]:
+-1	-11	-101	-1001	-10001	-100001	-1000001	-10000001	-100000001	-1000000001	-10000000001	-100000000001	-1000000000001	-10000000000001	-100000000000001	-1000000000000001	-10000000000000001	-100000000000000001	-1000000000000000001	-10000000000000000001
+-1	-11	-101	-1001	-10001	-100001	-1000001	-10000001	-100000001	-1000000001	-10000000001	-100000000001	-1000000000001	-10000000000001	-100000000000001	-1000000000000001	-10000000000000001	-100000000000000001	-1000000000000000001	8446744073709551615
+
+select * from t1 where a=18446744073709551615;
+
+[EXPECT RESULT]:
+a
+18446744073709551615
+[ACTUAL RESULT]:
+a
+
+select * from t1;
+
+[EXPECT RESULT]:
+a
+18446744073709551612
+18446744073709551613
+18446744073709551614
+[ACTUAL RESULT]:
+a
+18446744073709551615
+18446744073709551614
+18446744073709551613
+18446744073709551612
+
+select min(big),max(big),max(big)-1 from t1;
+
+[EXPECT RESULT]:
+min(big)	max(big)	max(big) - 1
+0	18446744073709551615	18446744073709551614
+[ACTUAL RESULT]:
+min(big)	max(big)	max(big) - 1
+0	18446744073709551615	1.8446744073709552E19
+
+select min(big),max(big),max(big)-1 from t1 group by a;
+
+[EXPECT RESULT]:
+min(big)	max(big)	max(big) - 1
+0	18446744073709551615	18446744073709551614
+[ACTUAL RESULT]:
+min(big)	max(big)	max(big) - 1
+0	18446744073709551615	1.8446744073709552E19
+
+select * from t1 join t2 on t1.value64=t2.value64 where t1.value64=17156792991891826145;
+
+[EXPECT RESULT]:
+value64	value32	value64	value32
+17156792991891826145	1	17156792991891826145	3
+[ACTUAL RESULT]:
+value64	value32	value64	value32
+
+select * from t1 where bigint_col=17666000000000000000;
+
+[EXPECT RESULT]:
+bigint_col
+17666000000000000000
+[ACTUAL RESULT]:
+bigint_col
+
+select * from t1 where bigint_col='17666000000000000000';
+
+[EXPECT RESULT]:
+bigint_col
+17666000000000000000
+[ACTUAL RESULT]:
+Operator '=' with parameters [BIGINT UNSIGNED VARCHAR] will be implemented in future version.
+
+select cast(10000002383263201056 as unsigned) mod 50 as result;
+
+[EXPECT RESULT]:
+result
+6
+[ACTUAL RESULT]:
+result
+0.0
+
+select cast(19999999999999999999 as signed);
+
+[EXPECT RESULT]:
+cast(19999999999999999999 as signed)
+9223372036854775807
+[ACTUAL RESULT]:
+strconv.ParseInt: parsing "19999999999999999999": value out of range
+
+select cast(-19999999999999999999 as signed);
+
+[EXPECT RESULT]:
+cast(-19999999999999999999 as signed)
+-9223372036854775808
+[ACTUAL RESULT]:
+Operator 'unary_minus' with parameters [VARCHAR] will be implemented in future version.
+
+insert INTO t1 (id,a) VALUES
+(1,0),
+(2,CAST(0x7FFFFFFFFFFFFFFF AS UNSIGNED)),
+(3,CAST(0x8000000000000000 AS UNSIGNED)),
+(4,CAST(0xFFFFFFFFFFFFFFFF AS UNSIGNED));
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Data truncation: Function expression in INSERT statement value list will be supported in future version. for column 'a' at row 1
+
+select * from t1 where ((a = 18446744073709551615) and (b = '18446744073709551615')) order by a asc;
+
+[EXPECT RESULT]:
+id	a	b
+4	18446744073709551615	18446744073709551615
+[ACTUAL RESULT]:
+id	a	b
+
+SELECT * from t_bigint WHERE id = '1.1';
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [BIGINT VARCHAR] will be implemented in future version.
+
+SELECT * from t_bigint WHERE id = '1.1e0';
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [BIGINT VARCHAR] will be implemented in future version.
+
+SELECT * from t_bigint WHERE id IN ('1.1', '2.2');
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [BIGINT VARCHAR] will be implemented in future version.
+
+SELECT * from t_bigint WHERE id IN ('1.1e0', '2.2e0');
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [BIGINT VARCHAR] will be implemented in future version.
+
+SELECT * from t_bigint WHERE id BETWEEN '1.1' AND '1.9';
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '>=' with parameters [BIGINT VARCHAR] will be implemented in future version.
+
+SELECT * from t_bigint WHERE id BETWEEN '1.1e0' AND '1.9e0';
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '>=' with parameters [BIGINT VARCHAR] will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a) BETWEEN 0 and 0.9;
+
+[EXPECT RESULT]:
+a
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a)=0.9;
+
+[EXPECT RESULT]:
+a
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a) in (0.8,0.9);
+
+[EXPECT RESULT]:
+a
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+select count(*) from t
+where id>=8894754949779693574 and id =17790886498483827171 order by 1 asc;
+
+[EXPECT RESULT]:
+count(*)
+1
+[ACTUAL RESULT]:
+count(*)
+0
+
+select count(*) from t
+where id between 8894754949779693574 and 17790886498483827171;
+
+[EXPECT RESULT]:
+count(*)
+3
+[ACTUAL RESULT]:
+count(*)
+0
+
+SELECT (184467440737095 BETWEEN 0 AND 18446744073709551500);
+
+[EXPECT RESULT]:
+(184467440737095 BETWEEN 0 AND 18446744073709551500)
+false
+[ACTUAL RESULT]:
+184467440737095 between 0 and 18446744073709551500
+false
+
+SELECT CAST(100 AS UNSIGNED) BETWEEN 1 AND -1;
+
+[EXPECT RESULT]:
+CAST(100 AS UNSIGNED) BETWEEN 1 AND -1
+false
+[ACTUAL RESULT]:
+cast(100 as unsigned unsigned) between 1 and -1
+false
+
+SELECT CAST(100 AS UNSIGNED) NOT BETWEEN 1 AND -1;
+
+[EXPECT RESULT]:
+CAST(100 AS UNSIGNED) NOT BETWEEN 1 AND -1
+true
+[ACTUAL RESULT]:
+cast(100 as unsigned unsigned) not between 1 and -1
+true
+
+SELECT CAST(0 AS UNSIGNED) BETWEEN 0 AND -1;
+
+[EXPECT RESULT]:
+CAST(0 AS UNSIGNED) BETWEEN 0 AND -1
+false
+[ACTUAL RESULT]:
+cast(0 as unsigned unsigned) between 0 and -1
+false
+
+SELECT CAST(0 AS UNSIGNED) NOT BETWEEN 0 AND -1;
+
+[EXPECT RESULT]:
+CAST(0 AS UNSIGNED) NOT BETWEEN 0 AND -1
+true
+[ACTUAL RESULT]:
+cast(0 as unsigned unsigned) not between 0 and -1
+true
+
+SELECT ( 9223372036854775808 BETWEEN 9223372036854775808 AND 9223372036854775808 );
+
+[EXPECT RESULT]:
+( 9223372036854775808 BETWEEN 9223372036854775808 AND 9223372036854775808 )
+true
+[ACTUAL RESULT]:
+9223372036854775808 between 9223372036854775808 and 9223372036854775808
+true
+
+SELECT ( 9223372036854775807 BETWEEN 9223372036854775808 AND 1 );
+
+[EXPECT RESULT]:
+( 9223372036854775807 BETWEEN 9223372036854775808 AND 1 )
+false
+[ACTUAL RESULT]:
+9223372036854775807 between 9223372036854775808 and 1
+false
+
+SELECT ( -1 BETWEEN 9223372036854775808 AND 1 );
+
+[EXPECT RESULT]:
+( -1 BETWEEN 9223372036854775808 AND 1 )
+false
+[ACTUAL RESULT]:
+-1 between 9223372036854775808 and 1
+true
+
+SELECT ( 0 BETWEEN 9223372036854775808 AND 1 );
+
+[EXPECT RESULT]:
+( 0 BETWEEN 9223372036854775808 AND 1 )
+false
+[ACTUAL RESULT]:
+0 between 9223372036854775808 and 1
+true
+
+SELECT ( 1 BETWEEN 9223372036854775808 AND 1 );
+
+[EXPECT RESULT]:
+( 1 BETWEEN 9223372036854775808 AND 1 )
+false
+[ACTUAL RESULT]:
+1 between 9223372036854775808 and 1
+true
+
+]]></failure>
+    </testcase>
+    <testcase name="cases/dtype/bool.test" time="0.05">
+        <failure type="0002" message="The actual result is not in accordance with the expectation.More,See the detail."><![CDATA[select * from t1;
+
+[EXPECT RESULT]:
+a	b
+false	true
+true	false
+true	true
+false	false
+false	true
+null	null
+[ACTUAL RESULT]:
+a	b
+false	true
+true	false
+true	true
+false	false
+null	null
+
+SELECT * FROM t1 WHERE IF(a AND 1, 0, 1);
+
+[EXPECT RESULT]:
+a	b
+false	true
+false	false
+null	null
+[ACTUAL RESULT]:
+Only bool expression can be used as filter condition.
+
+SELECT * FROM t1 WHERE IF(1 AND a, 0, 1);
+
+[EXPECT RESULT]:
+a	b
+false	true
+false	false
+null	null
+[ACTUAL RESULT]:
+Only bool expression can be used as filter condition.
+
+select a<2 from t2;
+
+[EXPECT RESULT]:
+a<2
+true
+false
+[ACTUAL RESULT]:
+a < 2
+true
+false
+
+select a<2 and b<3 from t2;
+
+[EXPECT RESULT]:
+a<2 and b<3
+true
+false
+[ACTUAL RESULT]:
+a < 2 and b < 3
+true
+false
+
+select a=1 or b=3 from t2;
+
+[EXPECT RESULT]:
+a=1 or b=3
+false
+true
+[ACTUAL RESULT]:
+a = 1 or b = 3
+true
+false
+
+select max(b)<min(a) from t1;
+
+[EXPECT RESULT]:
+max(b)<min(a)
+false
+[ACTUAL RESULT]:
+max(b) < min(a)
+false
+
+select * from t2 where a<1 AND NOT b order by b desc;
+
+[EXPECT RESULT]:
+a	b
+[ACTUAL RESULT]:
+Operator 'not' with parameters [INT] will be implemented in future version.
+
+select t1.a,t2.b from t1 join t2 on t1.a=t2.a order by t1.a desc;
+
+[EXPECT RESULT]:
+a	b
+true	2
+true	2
+[ACTUAL RESULT]:
+Operator '=' with parameters [BOOL INT] will be implemented in future version.
+
+select a,any_value(b) from t1 group by a order by a asc;
+
+[EXPECT RESULT]:
+a	any_value(b)
+null	null
+false	true
+true	false
+[ACTUAL RESULT]:
+a	any_value(b)
+false	true
+null	null
+true	false
+
+select a,b from t1 where a not in (0,2);
+
+[EXPECT RESULT]:
+a	b
+true	false
+true	true
+[ACTUAL RESULT]:
+Can't cast '2' as boolean type.
+
+select distinct t.a from (select * from t1) t where a not in (2) order by t.a asc;
+
+[EXPECT RESULT]:
+a
+false
+true
+[ACTUAL RESULT]:
+Can't cast '2' as boolean type.
+
+select a and b from t1 where exists (select a from t1 where a is null) order by a desc;
+
+[EXPECT RESULT]:
+a and b
+false
+true
+false
+false
+null
+[ACTUAL RESULT]:
+a and b
+true
+false
+null
+false
+false
+
+update t1 set a=false where b is null;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator 'cast' with parameters [BOOL BOOL] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	b
+true	false	
+true	true
+[ACTUAL RESULT]:
+a	b
+true	false
+true	true
+null	null
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	b
+true	false
+[ACTUAL RESULT]:
+a	b
+true	false
+null	null
+
+]]></failure>
+    </testcase>
+    <testcase name="cases/dtype/char.test" time="0.146">
+        <failure type="0002" message="The actual result is not in accordance with the expectation.More,See the detail."><![CDATA[SELECT CONCAT_WS(2,' test');
+
+[EXPECT RESULT]:
+CONCAT_WS(2,' test')
+2 test
+[ACTUAL RESULT]:
+Function 'concat_ws' with parameters [BIGINT VARCHAR] will be implemented in future version.
+
+SELECT '9223372036854775807' = 9223372036854775807;
+
+[EXPECT RESULT]:
+'9223372036854775807' = 9223372036854775807
+1
+[ACTUAL RESULT]:
+Operator '=' with parameters [VARCHAR BIGINT] will be implemented in future version.
+
+SELECT '9223372036854775807' = "9223372036854775807";
+
+[EXPECT RESULT]:
+'9223372036854775807' = "9223372036854775807"
+true
+[ACTUAL RESULT]:
+9223372036854775807 = 9223372036854775807
+true
+
+SELECT CAST('9223372036854775807' AS UNSIGNED) = 9223372036854775806;
+
+[EXPECT RESULT]:
+CAST('9223372036854775807' AS UNSIGNED) = 9223372036854775806
+false
+[ACTUAL RESULT]:
+cast(9223372036854775807 as unsigned unsigned) = 9223372036854775806
+true
+
+SELECT CAST("2017-08-29" AS DATE);
+
+[EXPECT RESULT]:
+CAST("2017-08-29" AS DATE)
+2017-08-29
+[ACTUAL RESULT]:
+cast(2017-08-29 as date)
+2017-08-29
+
+SELECT CAST(5-10 AS CHAR);
+
+[EXPECT RESULT]:
+CAST(5-10 AS CHAR)
+-5
+[ACTUAL RESULT]:
+cast(5 - 10 as char)
+-5
+
+SELECT CONCAT_WS('My', 'S', 'QL');
+
+[EXPECT RESULT]:
+CONCAT_WS('My', 'S', 'QL')
+SMyQL
+[ACTUAL RESULT]:
+concat_ws(My, S, QL)
+SMyQL
+
+SELECT CONCAT_WS('My', NULL, 'QL');
+
+[EXPECT RESULT]:
+CONCAT_WS('My', NULL, 'QL')
+null
+[ACTUAL RESULT]:
+Function 'concat_ws' with parameters [VARCHAR unexpected type: 0 VARCHAR] will be implemented in future version.
+
+SELECT CONCAT_WS(14,'.3');
+
+[EXPECT RESULT]:
+CONCAT_WS(14,'.3')
+14.3
+[ACTUAL RESULT]:
+Function 'concat_ws' with parameters [BIGINT VARCHAR] will be implemented in future version.
+
+SELECT (CAST(0x7FFFFFFFFFFFFFFF AS char));
+
+[EXPECT RESULT]:
+(CAST(0x7FFFFFFFFFFFFFFF AS char))
+9223372036854775807
+[ACTUAL RESULT]:
+cast(0x7fffffffffffffff as char)
+9223372036854775807
+
+select concat_ws(LastName,FirstName) from Demochar where Age > 40 order by 1 asc;
+
+[EXPECT RESULT]:
+concat_ws(LastName,FirstName)
+JohnsonDavid
+MartinKelly
+TamburelloAndrea
+[ACTUAL RESULT]:
+the first argument(the separator) for concat_ws must be a constant char/varchar
+
+select concat_ws(LastName,FirstName) as fullname from Demochar where Age > 40 order by fullname desc;
+
+[EXPECT RESULT]:
+fullname
+TamburelloAndrea
+MartinKelly
+JohnsonDavid
+[ACTUAL RESULT]:
+the first argument(the separator) for concat_ws must be a constant char/varchar
+
+select concat_ws(LastName,FirstName),Gender,Age from Demochar where Gender='F' order by Age asc;
+
+[EXPECT RESULT]:
+concat_ws(LastName,FirstName)	Gender	Age
+PolandCarole	F	29
+RapierAbigail	F	38
+TamburelloAndrea	F	45
+MartinKelly	F	54
+[ACTUAL RESULT]:
+the first argument(the separator) for concat_ws must be a constant char/varchar
+
+select cast(Age as char) and Age as cAge from Demochar where Age>=50 order by cAge;
+
+[EXPECT RESULT]:
+cage
+1
+1
+[ACTUAL RESULT]:
+Operator 'and' with parameters [CHAR INT] will be implemented in future version.
+
+select max(lastName),min(lastName) from employees;
+
+[EXPECT RESULT]:
+max(lastname)	min(lastname)
+Vanauf	Bondur
+[ACTUAL RESULT]:
+max(lastname)	min(lastname)
+Vanauf
+
+select officeCode,sum(cast(officeCode as unsigned)) from employees group by officeCode;
+
+[EXPECT RESULT]:
+officecode	sum(cast(officecode as unsigned))
+1	6
+6	12
+4	16
+2	4
+3	6
+7	14
+[ACTUAL RESULT]:
+officecode	sum(cast(officecode as unsigned unsigned))
+1	6
+6	12
+4	16
+2	4
+3	6
+7	14
+
+select employeeNumber,officeCode,reportsTo from employees where employeeNumber>1400 and reportsTo is not null order by officeCode+1,employeeNumber;
+
+[EXPECT RESULT]:
+employeeNumber  officeCode      reportsTo
+1401    4       1102
+1611    6       1088
+1501    7       1102
+1504    7       1102
+[ACTUAL RESULT]:
+Operator '+' with parameters [VARCHAR BIGINT] will be implemented in future version.
+
+select e.jobTitle,sum(jobid) from employees e join job j on e.jobTitle=j.jobTitle group by jobTitle having sum(jobid)>5;
+
+[EXPECT RESULT]:
+jobTitle        sum(jobid)
+Sales Manager (NA)      6
+Sales Rep       84
+[ACTUAL RESULT]:
+Column reference 'jobtitle' is ambiguous
+
+select e.jobTitle,sum(jobid) from employees e join job j on e.jobTitle=j.jobTitle group by jobTitle having sum(jobid)>5 order by 2 desc;
+
+[EXPECT RESULT]:
+jobTitle        sum(jobid)
+Sales Rep       84
+Sales Manager (NA)      6
+[ACTUAL RESULT]:
+Column reference 'jobtitle' is ambiguous
+
+update t1 set a=a+'101';
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '+' with parameters [VARCHAR VARCHAR] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+103	0
+105	0
+107	0
+109	0
+111	0
+113	0
+115	0
+117	0
+119	0
+121	0
+123	0
+124	0
+125	0
+127	0
+[ACTUAL RESULT]:
+a	b
+2	0
+4	0
+6	0
+8	0
+10	0
+12	0
+14	0
+16	0
+18	0
+20	0
+22	0
+24	0
+26	0
+23	0
+
+update t1 set a=a+'a' where 1 > 2;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '+' with parameters [VARCHAR VARCHAR] will be implemented in future version.
+
+update t1 set a=a+a where 3 > 2;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '+' with parameters [VARCHAR VARCHAR] will be implemented in future version.
+
+delete from t1 where a=1 limit 1;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [VARCHAR BIGINT] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	b
+1	2
+[ACTUAL RESULT]:
+a	b
+1	1
+1	2
+
+INSERT INTO t1 VALUES (1,3);
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Data truncation: Incorrect VARCHAR value: '1' for column 'a' at row 0
+
+delete from t1 where a=1;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [VARCHAR BIGINT] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	b
+[ACTUAL RESULT]:
+a	b
+1	1
+1	2
+
+delete from t1 where a=2+2;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [VARCHAR BIGINT] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+10	0
+12	0
+14	0
+16	0
+18	0
+2	0
+20	0
+22	0
+23	0
+24	0
+26	0
+6	0
+8	0
+[ACTUAL RESULT]:
+a	b
+2	0
+4	0
+6	0
+8	0
+10	0
+12	0
+14	0
+16	0
+18	0
+20	0
+22	0
+24	0
+26	0
+23	0
+
+delete from t1 where  a=24;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [VARCHAR BIGINT] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+10	0
+12	0
+14	0
+16	0
+18	0
+2	0
+20	0
+22	0
+23	0
+26	0
+6	0
+8	0
+[ACTUAL RESULT]:
+a	b
+2	0
+4	0
+6	0
+8	0
+10	0
+12	0
+14	0
+16	0
+18	0
+20	0
+22	0
+24	0
+26	0
+23	0
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+10	0
+12	0
+14	0
+16	0
+18	0
+2	0
+20	0
+22	0
+23	0
+26	0
+6	0
+8	0
+[ACTUAL RESULT]:
+a	b
+2	0
+4	0
+6	0
+8	0
+10	0
+12	0
+14	0
+16	0
+18	0
+20	0
+22	0
+24	0
+26	0
+23	0
+
+]]></failure>
+    </testcase>
+    <testcase name="cases/dtype/datatype.test" time="0.073">
+        <failure type="0002" message="The actual result is not in accordance with the expectation.More,See the detail."><![CDATA[select * from t4 where b>'20211213';
+
+[EXPECT RESULT]:
+a	b	c
+2	2021-12-14	2021-12-13 00:00:00
+3	2021-12-14	2021-12-14 00:00:00
+4	2021-12-15	2021-12-14 00:00:00
+[ACTUAL RESULT]:
+Operator '>' with parameters [DATE VARCHAR] will be implemented in future version.
+
+select * from t4 where c>'20211213';
+
+[EXPECT RESULT]:
+a	b	c
+1	2021-12-13	2021-12-13 13:00:00
+3	2021-12-14	2021-12-14 00:00:00
+4	2021-12-15	2021-12-14 00:00:00
+[ACTUAL RESULT]:
+Operator '>' with parameters [DATETIME VARCHAR] will be implemented in future version.
+
+select * from t4 where b>'2021-12-13';
+
+[EXPECT RESULT]:
+a	b	c
+2	2021-12-14	2021-12-13 00:00:00
+3	2021-12-14	2021-12-14 00:00:00
+4	2021-12-15	2021-12-14 00:00:00
+[ACTUAL RESULT]:
+Operator '>' with parameters [DATE VARCHAR] will be implemented in future version.
+
+select * from t4 where c>'2021-12-13';
+
+[EXPECT RESULT]:
+a	b	c
+1	2021-12-13	2021-12-13 13:00:00
+3	2021-12-14	2021-12-14 00:00:00
+4	2021-12-15	2021-12-14 00:00:00
+[ACTUAL RESULT]:
+Operator '>' with parameters [DATETIME VARCHAR] will be implemented in future version.
+
+select * from t4 where b between '2021-12-13' and '2021-12-14';
+
+[EXPECT RESULT]:
+a	b	c
+1	2021-12-13	2021-12-13 13:00:00
+2	2021-12-14	2021-12-13 00:00:00
+3	2021-12-14	2021-12-14 00:00:00
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DATE VARCHAR] will be implemented in future version.
+
+select * from t4 where b not between '2021-12-13' and '2021-12-14';
+
+[EXPECT RESULT]:
+a	b	c
+4	2021-12-15	2021-12-14 00:00:00
+[ACTUAL RESULT]:
+Operator '<' with parameters [DATE VARCHAR] will be implemented in future version.
+
+]]></failure>
+    </testcase>
+    <testcase name="cases/dtype/date.test" time="0.139">
+        <failure type="0002" message="The actual result is not in accordance with the expectation.More,See the detail."><![CDATA[select cast('0000-01-01' as date),cast('0000-01-01' as date)-1;
+
+[EXPECT RESULT]:
+cast('0000-01-01' as date)	cast('0000-01-01' as date)-1
+0000-01-01	100
+[ACTUAL RESULT]:
+Operator '-' with parameters [DATE BIGINT] will be implemented in future version.
+
+select cast('2000-1-1' as date);
+
+[EXPECT RESULT]:
+cast('2000-1-1' as date)
+2000-01-01
+[ACTUAL RESULT]:
+Incorrect date value
+
+select cast('200-01-1' as date);
+
+[EXPECT RESULT]:
+cast('200-01-1' as date)
+0200-01-01
+[ACTUAL RESULT]:
+Incorrect date value
+
+select cast('2021-02-29' as date);
+
+[EXPECT RESULT]:
+cast('2021-02-29' as date)
+NULL
+[ACTUAL RESULT]:
+Incorrect date value
+
+select cast('2022-02-01' as date)-cast('2022-01-01' as date);
+
+[EXPECT RESULT]:
+cast('2022-02-01' as date)-cast('2022-01-01' as date)
+100
+[ACTUAL RESULT]:
+Operator '-' with parameters [DATE DATE] will be implemented in future version.
+
+select cast('2020-02-01' as date)+NULL;
+
+[EXPECT RESULT]:
+cast('2020-02-01' as date)+NULL
+NULL
+[ACTUAL RESULT]:
+function doesn't implement its eval method
+
+select cast('0000-00-00' as date);
+
+[EXPECT RESULT]:
+cast('0000-00-00' as date)
+NULL
+[ACTUAL RESULT]:
+Incorrect date value
+
+select cast(cast(0x13488c5 as signed) as date);
+
+[EXPECT RESULT]:
+cast(cast(0x13488c5 as signed) as date)
+2022-01-01
+[ACTUAL RESULT]:
+Operator 'cast' with parameters [BIGINT DATE] will be implemented in future version.
+
+SELECT DATE_ADD('2017-06-15', INTERVAL 10 DAY);
+
+[EXPECT RESULT]:
+DATE_ADD('2017-06-15', INTERVAL 10 DAY)
+2017-06-25
+[ACTUAL RESULT]:
+date_add(2017-06-15, interval(10 day))
+2017-06-25
+
+SELECT DATE_ADD('2017-06-15', INTERVAL -10 MONTH);
+
+[EXPECT RESULT]:
+DATE_ADD('2017-06-15', INTERVAL -10 MONTH)
+2016-08-15
+[ACTUAL RESULT]:
+date_add(2017-06-15, interval(-10 month))
+2018-04-15
+
+SELECT DATE_ADD('2017-06-15', INTERVAL -2018 YEAR);
+
+[EXPECT RESULT]:
+DATE_ADD('2017-06-15', INTERVAL -2018 YEAR)
+NULL
+[ACTUAL RESULT]:
+date_add(2017-06-15, interval(-2018 year))
+4035-06-15
+
+SELECT DATE_ADD(20200215, INTERVAL 14 DAY);
+
+[EXPECT RESULT]:
+DATE_ADD(20200215, INTERVAL 14 DAY)
+2020-02-29
+[ACTUAL RESULT]:
+Function 'date_add' with parameters [BIGINT BIGINT BIGINT] will be implemented in future version.
+
+select * from t1 where a='2022-01-01';
+
+[EXPECT RESULT]:
+a
+2022-01-01
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATE VARCHAR] will be implemented in future version.
+
+delete from t1 where a=20220102;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATE BIGINT] will be implemented in future version.
+
+select * from t1 where a<>'20220104' order by 1 asc;
+
+[EXPECT RESULT]:
+a
+2022-01-01
+2022-01-03
+[ACTUAL RESULT]:
+Operator '<>' with parameters [DATE VARCHAR] will be implemented in future version.
+
+update t1 set a='2022-02-02' where a='2022-01-03';
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATE VARCHAR] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+a
+2022-01-01
+2022-01-04
+2022-02-02
+[ACTUAL RESULT]:
+a
+2022-01-01
+2022-01-02
+2022-01-03
+2022-01-04
+
+select distinct big from t1 where big=20000101;
+
+[EXPECT RESULT]:
+big
+2000-01-01
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATE BIGINT] will be implemented in future version.
+
+select min(big),max(big),max(big)-1 from t1;
+
+[EXPECT RESULT]:
+min(big)	max(big)	max(big)-1
+2000-01-01	2002-01-01	20020100
+[ACTUAL RESULT]:
+Operator '-' with parameters [DATE BIGINT] will be implemented in future version.
+
+select min(big),avg(big),count(big)+1 from t1 group by big;
+
+[EXPECT RESULT]:
+min(big)	avg(big)	count(big)+1
+2000-01-01	20000101.0000	2
+2001-01-01	20010101.0000	2
+2002-01-01	20020101.0000	2
+[ACTUAL RESULT]:
+Function 'avg' with parameters [DATE] will be implemented in future version.
+
+select * from t1 join t2 on t1.dvalue=t2.dvalue where t1.dvalue>='2022-01-01' group by t1.dvalue order by t2.dvalue;
+
+[EXPECT RESULT]:
+dvalue	value32	dvalue	value32
+2022-01-01	1	2022-01-01	5
+2022-01-02	2	2022-01-02	4
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DATE VARCHAR] will be implemented in future version.
+
+SELECT id, id >= 20200102 FROM t_date;
+
+[EXPECT RESULT]:
+id	id >= 20200102
+2020-01-01	false	
+2022-01-02	true
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DATE BIGINT] will be implemented in future version.
+
+SELECT id, 1.1 <= '2020-01-01' FROM t_date;
+
+[EXPECT RESULT]:
+id	1.1 <= '2020-01-01'
+2020-01-01	true	
+2022-01-02	true
+[ACTUAL RESULT]:
+Operator '<=' with parameters [DOUBLE VARCHAR] will be implemented in future version.
+
+SELECT id, id = 202020101 FROM t_date;
+
+[EXPECT RESULT]:
+id	id = 202020101
+2020-01-01	false	
+2022-01-02	false
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATE BIGINT] will be implemented in future version.
+
+SELECT id, 20200101 = id FROM t_date;
+
+[EXPECT RESULT]:
+id	20200101 = id
+2020-01-01	true	
+2022-01-02	false
+[ACTUAL RESULT]:
+Operator '=' with parameters [BIGINT DATE] will be implemented in future version.
+
+SELECT * from t_date WHERE id = 20200101;
+
+[EXPECT RESULT]:
+id
+2020-01-01
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATE BIGINT] will be implemented in future version.
+
+SELECT * from t_date WHERE id = 2.0200101e7;
+
+[EXPECT RESULT]:
+id
+2020-01-01
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATE DOUBLE] will be implemented in future version.
+
+SELECT * from t_date WHERE id = '20200101';
+
+[EXPECT RESULT]:
+id
+2020-01-01
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATE VARCHAR] will be implemented in future version.
+
+SELECT * from t_date WHERE id IN ('2020-01-01','2022-01-03');
+
+[EXPECT RESULT]:
+id
+2020-01-01
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATE VARCHAR] will be implemented in future version.
+
+SELECT * from t_date WHERE id IN (2.0200101e7,2.0200103e7 );
+
+[EXPECT RESULT]:
+id
+2020-01-01
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATE DOUBLE] will be implemented in future version.
+
+SELECT * from t_date WHERE id IN (20220101, 20220103);
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATE BIGINT] will be implemented in future version.
+
+SELECT * from t_date WHERE id IN ('2.0200101e7','2.0200103e7');
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATE VARCHAR] will be implemented in future version.
+
+SELECT * from t_date WHERE id BETWEEN 20191231 AND 20200101;
+
+[EXPECT RESULT]:
+id
+2020-01-01
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DATE BIGINT] will be implemented in future version.
+
+SELECT * from t_date WHERE id BETWEEN 2.0200101e7 and 2.0200103e7;
+
+[EXPECT RESULT]:
+id
+2020-01-01
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DATE DOUBLE] will be implemented in future version.
+
+SELECT * from t_date WHERE id BETWEEN '2020-01-02' AND '2020-01-03';
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DATE VARCHAR] will be implemented in future version.
+
+SELECT * from t_date WHERE id BETWEEN '2.0200101e7' and '2.0200103e7';
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DATE VARCHAR] will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a) BETWEEN '2022-02-28' and '2022-03-01';
+
+[EXPECT RESULT]:
+a
+2022-03-01
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a)=20220301;
+
+[EXPECT RESULT]:
+a
+2022-03-01
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a) in ('2022-02-28','2022-03-01');
+
+[EXPECT RESULT]:
+a
+2022-03-01
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT CAST(20220101 AS date) BETWEEN 20220101 AND -1;
+
+[EXPECT RESULT]:
+CAST(20220101 AS date) BETWEEN 20220101 AND -1
+false
+[ACTUAL RESULT]:
+Operator 'cast' with parameters [BIGINT DATE] will be implemented in future version.
+
+SELECT CAST(00000501 AS date) NOT BETWEEN 100 AND -1;
+
+[EXPECT RESULT]:
+CAST(00000501 AS date) NOT BETWEEN 100 AND -1
+true
+[ACTUAL RESULT]:
+Operator 'cast' with parameters [BIGINT DATE] will be implemented in future version.
+
+SELECT CAST(0 AS date) BETWEEN 0 AND -1;
+
+[EXPECT RESULT]:
+CAST(0 AS date) BETWEEN 0 AND -1
+NULL
+[ACTUAL RESULT]:
+Operator 'cast' with parameters [BIGINT DATE] will be implemented in future version.
+
+SELECT CAST(10000101 as date) BETWEEN '1000-01-01' and '1000-01-02';
+
+[EXPECT RESULT]:
+CAST(10000101 as date) BETWEEN '1000-01-01' and '1000-01-02'
+true
+[ACTUAL RESULT]:
+Operator 'cast' with parameters [BIGINT DATE] will be implemented in future version.
+
+update t1 set a='2022-01-02' where a='2022-01-01' limit 1;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATE VARCHAR] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-02	1
+2022-01-01	2
+[ACTUAL RESULT]:
+a	b
+2022-01-01	1
+2022-01-01	2
+
+update t1 set a='2022-01-02' where a='2022-01-01';
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATE VARCHAR] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-02	1
+2022-01-02	2
+2022-01-02	3
+[ACTUAL RESULT]:
+a	b
+2022-01-01	1
+2022-01-01	2
+2022-01-01	3
+
+update t1 set a=a+101;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '+' with parameters [DATE BIGINT] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-02-03	2000-01-01
+2022-02-05	2000-01-01
+2022-02-07	2000-01-01
+2022-02-09	2000-01-01
+2022-02-11	2000-01-01
+2022-02-13	2000-01-01
+[ACTUAL RESULT]:
+a	b
+2022-01-02	2000-01-01
+2022-01-04	2000-01-01
+2022-01-06	2000-01-01
+2022-01-08	2000-01-01
+2022-01-10	2000-01-01
+2022-01-12	2000-01-01
+
+update t1 set a='2022-01-27' where a='2022-02-05';
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATE VARCHAR] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-02-03	2000-01-01
+2022-01-27	2000-01-01
+2022-02-07	2000-01-01
+2022-02-09	2000-01-01
+2022-02-11	2000-01-01
+2022-02-13	2000-01-01
+[ACTUAL RESULT]:
+a	b
+2022-01-02	2000-01-01
+2022-01-04	2000-01-01
+2022-01-06	2000-01-01
+2022-01-08	2000-01-01
+2022-01-10	2000-01-01
+2022-01-12	2000-01-01
+
+update t1 set a=a-1 where 1 > 2;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '-' with parameters [DATE BIGINT] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-02-03	2000-01-01
+2022-01-27	2000-01-01
+2022-02-07	2000-01-01
+2022-02-09	2000-01-01
+2022-02-11	2000-01-01
+2022-02-13	2000-01-01
+[ACTUAL RESULT]:
+a	b
+2022-01-02	2000-01-01
+2022-01-04	2000-01-01
+2022-01-06	2000-01-01
+2022-01-08	2000-01-01
+2022-01-10	2000-01-01
+2022-01-12	2000-01-01
+
+update t1 set a=a-1 where 3 > 2;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '-' with parameters [DATE BIGINT] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-02-02	2000-01-01
+2022-01-26	2000-01-01
+2022-02-06	2000-01-01
+2022-02-08	2000-01-01
+2022-02-10	2000-01-01
+2022-02-12	2000-01-01
+[ACTUAL RESULT]:
+a	b
+2022-01-02	2000-01-01
+2022-01-04	2000-01-01
+2022-01-06	2000-01-01
+2022-01-08	2000-01-01
+2022-01-10	2000-01-01
+2022-01-12	2000-01-01
+
+delete from t1 where a='2022-01-01' limit 1;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATE VARCHAR] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-01	2
+[ACTUAL RESULT]:
+a	b
+2022-01-01	1
+2022-01-01	2
+
+delete from t1 where a='2022-01-01';
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATE VARCHAR] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	b
+[ACTUAL RESULT]:
+a	b
+2022-01-01	1
+2022-01-01	2
+2022-01-01	3
+
+delete from t1 where a=20220101+3;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATE BIGINT] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-02	2000-01-01
+2022-01-06	2000-01-01
+2022-01-08	2000-01-01
+2022-01-10	2000-01-01
+2022-01-12	2000-01-01
+[ACTUAL RESULT]:
+a	b
+2022-01-02	2000-01-01
+2022-01-04	2000-01-01
+2022-01-06	2000-01-01
+2022-01-08	2000-01-01
+2022-01-10	2000-01-01
+2022-01-12	2000-01-01
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-02	2000-01-01
+2022-01-06	2000-01-01
+2022-01-08	2000-01-01
+2022-01-10	2000-01-01
+2022-01-12	2000-01-01
+[ACTUAL RESULT]:
+a	b
+2022-01-02	2000-01-01
+2022-01-04	2000-01-01
+2022-01-06	2000-01-01
+2022-01-08	2000-01-01
+2022-01-10	2000-01-01
+2022-01-12	2000-01-01
+
+]]></failure>
+    </testcase>
+    <testcase name="cases/dtype/datetime.test" time="0.14">
+        <failure type="0002" message="The actual result is not in accordance with the expectation.More,See the detail."><![CDATA[select cast('2000-01-01 00:00:00.9011' as datetime(0));
+
+[EXPECT RESULT]:
+cast(2000-01-01 00:00:00.9011 as datetime(0))
+2000-01-01 00:00:01
+[ACTUAL RESULT]:
+cast(2000-01-01 00:00:00.9011 as datetime(0))
+2000-01-01 00:00:00
+
+select cast('2000-01-01 00:00:00.001100999' as datetime(6));
+
+[EXPECT RESULT]:
+cast(2000-01-01 00:00:00.001100999 as datetime(6))
+2000-01-01 00:00:00.001101
+[ACTUAL RESULT]:
+cast(2000-01-01 00:00:00.001100999 as datetime(6))
+2000-01-01 00:00:00
+
+select cast('2000-01-01 00:00:00.001109' as datetime(5));
+
+[EXPECT RESULT]:
+cast(2000-01-01 00:00:00.001109 as datetime(5))
+2000-01-01 00:00:00.00111
+[ACTUAL RESULT]:
+cast(2000-01-01 00:00:00.001109 as datetime(5))
+2000-01-01 00:00:00
+
+select cast('2000-1-1' as datetime(0));
+
+[EXPECT RESULT]:
+cast(2000-1-1 as datetime(0))
+2000-01-01 00:00:00
+[ACTUAL RESULT]:
+Incorrect datetime value
+
+select cast('2022-01-01 25:00:00' as datetime(0));
+
+[EXPECT RESULT]:
+cast(2022-01-01 25:00:00 as datetime(0))
+NULL
+[ACTUAL RESULT]:
+Incorrect datetime value
+
+select cast('2000-1-1' as datetime(0))+1;
+
+[EXPECT RESULT]:
+cast(2000-1-1 as datetime(0))+1
+20000101000001
+[ACTUAL RESULT]:
+Operator '+' with parameters [DATETIME BIGINT] will be implemented in future version.
+
+select cast('2000-1-1' as datetime(0))*1;
+
+[EXPECT RESULT]:
+cast(2000-1-1 as datetime(0))*1
+20000101000000
+[ACTUAL RESULT]:
+Operator '*' with parameters [DATETIME BIGINT] will be implemented in future version.
+
+select cast('2000-1-1' as datetime(0))*1.1;
+
+[EXPECT RESULT]:
+cast(2000-1-1 as datetime(0))*1.1
+22000111100000.0
+[ACTUAL RESULT]:
+Operator '*' with parameters [DATETIME DOUBLE] will be implemented in future version.
+
+SELECT DATE_ADD('2022-02-28 23:59:59.9999', INTERVAL 1 SECOND) '1 second later';
+
+[EXPECT RESULT]:
+1 second later
+2022-03-01 00:00:00.999900
+[ACTUAL RESULT]:
+1 second later
+2022-03-01 00:00:01
+
+SELECT DATE_ADD('2022-02-28 23:59:59.9999', INTERVAL 1 MINUTE) '1 minute later';
+
+[EXPECT RESULT]:
+1 minute later
+2022-03-01 00:00:59.999900
+[ACTUAL RESULT]:
+1 minute later
+2022-03-01 00:01:00
+
+SELECT DATE_ADD('2022-02-28 23:59:59.9999', INTERVAL 1 HOUR) '1 hour later';
+
+[EXPECT RESULT]:
+1 hour later
+2022-03-01 00:59:59.999900
+[ACTUAL RESULT]:
+1 hour later
+2022-03-01 01:00:00
+
+SELECT DATE_ADD('2022-02-28 23:59:59.9999', INTERVAL 1 DAY) '1 day later';
+
+[EXPECT RESULT]:
+1 day later
+2022-03-01 23:59:59.999900
+[ACTUAL RESULT]:
+1 day later
+2022-03-02 00:00:00
+
+SELECT DATE_ADD('2022-02-28 23:59:59.9999', INTERVAL 1 WEEK) '1 week later';
+
+[EXPECT RESULT]:
+1 week later
+2022-03-07 23:59:59.999900
+[ACTUAL RESULT]:
+1 week later
+2022-03-08 00:00:00
+
+SELECT DATE_ADD('2022-02-28 23:59:59.9999', INTERVAL -13 MONTH) '1 month earlier';
+
+[EXPECT RESULT]:
+1 month earlier
+2021-01-28 23:59:59.999900
+[ACTUAL RESULT]:
+1 month earlier
+2023-04-01 00:00:00
+
+SELECT DATE_ADD('2022-02-28 23:59:59.9999', INTERVAL -1 YEAR) '1 year earlier';
+
+[EXPECT RESULT]:
+1 year earlier
+2021-02-28 23:59:59.999900
+[ACTUAL RESULT]:
+1 year earlier
+2023-03-01 00:00:00
+
+select cast(cast('2000-12-31' as datetime(0)) as date);
+
+[EXPECT RESULT]:
+cast(cast('2000-12-31' as datetime(0)) as date)
+2000-12-31
+[ACTUAL RESULT]:
+cast(cast(2000-12-31 as datetime(0)) as date)
+2000-12-31
+
+select * from t1 where a='2022-01-02';
+
+[EXPECT RESULT]:
+a
+2022-01-02 00:00:00
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATETIME VARCHAR] will be implemented in future version.
+
+select * from t1 where a>20220102;
+
+[EXPECT RESULT]:
+a
+2022-01-02 00:00:01
+2022-01-02 00:00:02
+[ACTUAL RESULT]:
+Operator '>' with parameters [DATETIME BIGINT] will be implemented in future version.
+
+select * from t1 where a!='2022-01-02';
+
+[EXPECT RESULT]:
+a
+2020-01-01 00:00:00
+2022-01-02 00:00:01
+2022-01-02 00:00:02
+[ACTUAL RESULT]:
+Operator '<>' with parameters [DATETIME VARCHAR] will be implemented in future version.
+
+update t1 set a=DATE_ADD(a ,INTERVAL 1 WEEK) where a>'20220102';
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '>' with parameters [DATETIME VARCHAR] will be implemented in future version.
+
+insert into t1 (big) values ('20220103'),('2022-01-01'),('2022-01-01 00:00:01'),('2022-01-02 00:00.00.000050');
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Data truncation: Incorrect DATETIME value: '2022-01-02 00:00.00.000050' for column 'big' at row 3
+
+select min(big),max(big),max(big)-1 from t1 group by a;
+
+[EXPECT RESULT]:
+min(big)	max(big)	max(big) - 1
+2022-01-01 00:00:00.0000	2022-01-03 00:00:00.0000	20220102999999.0000
+[ACTUAL RESULT]:
+Operator '-' with parameters [DATETIME BIGINT] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+id	a
+2022-01-31 00:00:00.000001	1
+[ACTUAL RESULT]:
+id	a
+2022-01-31 00:00:00	1
+
+select * from t1;
+
+[EXPECT RESULT]:
+dt	value32
+2022-01-01 00:00:00.000050	1
+2022-01-01 00:00:00.000500	2
+2022-01-01 00:00:00.005000	3
+[ACTUAL RESULT]:
+dt	value32
+2022-01-01 00:00:00.000050000	1
+2022-01-01 00:00:00.000500000	2
+2022-01-01 00:00:00.005000000	3
+
+select * from t2;
+
+[EXPECT RESULT]:
+dt	value32
+2022-01-01 00:00:00.001	5
+2022-01-01 00:00:00.005	4
+[ACTUAL RESULT]:
+dt	value32
+2022-01-01 00:00:00.005000000	4
+2022-01-01 00:00:00.001000000	5
+
+select * from t1 join t2 on t1.dt=t2.dt order by 1 desc, t2.dt asc;
+
+[EXPECT RESULT]:
+dt	value32	dt	value32
+2022-01-01 00:00:00.005000	3	2022-01-01 00:00:00.005	4
+[ACTUAL RESULT]:
+dt	value32	dt	value32
+2022-01-01 00:00:00.005000000	3	2022-01-01 00:00:00.005000000	4
+
+select * from t1 join t2 on t1.dt=t2.dt where t1.value32<>t2.value32;
+
+[EXPECT RESULT]:
+dt	value32	dt	value32
+2022-01-01 00:00:00.005000	3	2022-01-01 00:00:00.005	4
+[ACTUAL RESULT]:
+dt	value32	dt	value32
+2022-01-01 00:00:00.005000000	3	2022-01-01 00:00:00.005000000	4
+
+SELECT id, id >= 20200102 FROM t_datetime;
+
+[EXPECT RESULT]:
+id	id >= 20200102
+2020-01-01 23:59:59.999999	false	
+2022-01-02 00:00:00.000000	true
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DATETIME BIGINT] will be implemented in future version.
+
+SELECT id, id = 202020101 FROM t_datetime;
+
+[EXPECT RESULT]:
+id	id = 202020101
+2020-01-01 23:59:59.999999	false	
+2022-01-02 00:00:00.000000	false
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATETIME BIGINT] will be implemented in future version.
+
+SELECT id, 20200101 = id FROM t_datetime;
+
+[EXPECT RESULT]:
+id	20200101 = id
+2020-01-01 23:59:59.999999	false	
+2022-01-02 00:00:00.000000	false
+[ACTUAL RESULT]:
+Operator '=' with parameters [BIGINT DATETIME] will be implemented in future version.
+
+SELECT * from t_datetime WHERE id = 20200102;
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATETIME BIGINT] will be implemented in future version.
+
+SELECT * from t_datetime WHERE id = 2.0200102e7;
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATETIME DOUBLE] will be implemented in future version.
+
+SELECT * from t_datetime WHERE id = '20200102';
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATETIME VARCHAR] will be implemented in future version.
+
+SELECT * from t_datetime WHERE id IN ('2020-01-01','2022-01-02');
+
+[EXPECT RESULT]:
+id
+2022-01-02 00:00:00.000000
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATETIME VARCHAR] will be implemented in future version.
+
+SELECT * from t_datetime WHERE id IN (2.0200101e7,2.0200102e7 );
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATETIME DOUBLE] will be implemented in future version.
+
+SELECT * from t_datetime WHERE id IN ('20220101', 20220102);
+
+[EXPECT RESULT]:
+id
+2022-01-02 00:00:00.000000
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATETIME VARCHAR] will be implemented in future version.
+
+SELECT * from t_datetime WHERE id IN ('2.0200101e7','2.0200102e7');
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATETIME VARCHAR] will be implemented in future version.
+
+SELECT * from t_datetime WHERE id BETWEEN 20191231 AND 20200101;
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DATETIME BIGINT] will be implemented in future version.
+
+SELECT * from t_datetime WHERE id BETWEEN 2.0200101e7 and 2.0200102e7;
+
+[EXPECT RESULT]:
+id
+2020-01-01 23:59:59.999999
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DATETIME DOUBLE] will be implemented in future version.
+
+SELECT * from t_datetime WHERE id BETWEEN '2020-01-01' AND '2020-01-02';
+
+[EXPECT RESULT]:
+id
+2020-01-01 23:59:59.999999
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DATETIME VARCHAR] will be implemented in future version.
+
+SELECT * from t_datetime WHERE id BETWEEN '2022-01-01 00:00:00' AND '2022-01-02 00:00:00.000000';
+
+[EXPECT RESULT]:
+id
+2022-01-02 00:00:00.000000
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DATETIME VARCHAR] will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a) not BETWEEN '2022-02-28' and '2022-03-01';
+
+[EXPECT RESULT]:
+a
+2022-03-01 00:00:01.000100
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a)!=20220301;
+
+[EXPECT RESULT]:
+a
+2022-03-01 00:00:01.000100
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a) in ('2022-03-01','2022-03-01 00:00:00.0001');
+
+[EXPECT RESULT]:
+a
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT CAST(20220101 AS datetime(0)) BETWEEN 20220101 AND -1;
+
+[EXPECT RESULT]:
+CAST(20220101 AS datetime(0)) BETWEEN 20220101 AND -1
+false
+[ACTUAL RESULT]:
+Operator 'cast' with parameters [BIGINT DATETIME] will be implemented in future version.
+
+SELECT CAST(00000501 AS datetime(0)) NOT BETWEEN 100 AND -1;
+
+[EXPECT RESULT]:
+CAST(00000501 AS datetime(0)) NOT BETWEEN 100 AND -1
+true
+[ACTUAL RESULT]:
+Operator 'cast' with parameters [BIGINT DATETIME] will be implemented in future version.
+
+SELECT CAST(0 AS datetime(0)) BETWEEN 0 AND -1;
+
+[EXPECT RESULT]:
+CAST(0 AS datetime(0)) BETWEEN 0 AND -1
+NULL
+[ACTUAL RESULT]:
+Operator 'cast' with parameters [BIGINT DATETIME] will be implemented in future version.
+
+SELECT CAST(1000101 as datetime(0)) BETWEEN '1000-01-01' and '1000-01-02';
+
+[EXPECT RESULT]:
+CAST(1000101 as datetime(0)) BETWEEN '1000-01-01' and '1000-01-02'
+false
+[ACTUAL RESULT]:
+Operator 'cast' with parameters [BIGINT DATETIME] will be implemented in future version.
+
+update t1 set a='2022-01-02' where a='2022-01-01 00:00:00' limit 1;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATETIME VARCHAR] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-02 00:00:00	1
+2022-01-01 00:00:00	2
+[ACTUAL RESULT]:
+a	b
+2022-01-01 00:00:00	1
+2022-01-01 00:00:00	2
+
+update t1 set a='2022-01-02' where a='2022-01-01 00:00:00';
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATETIME VARCHAR] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-02 00:00:00	1
+2022-01-02 00:00:00	2
+2022-01-02 00:00:00	3
+[ACTUAL RESULT]:
+a	b
+2022-01-01 00:00:00	1
+2022-01-01 00:00:00	2
+2022-01-01 00:00:00	3
+
+update t1 set a=a+101;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '+' with parameters [DATETIME BIGINT] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-02 00:01:01	2000-01-01 00:00:00.0000
+2022-01-04 00:01:01	2000-01-01 00:00:00.0000
+2022-01-06 00:01:01	2000-01-01 00:00:00.0000
+2022-01-08 00:01:01	2000-01-01 00:00:00.0000
+2022-01-10 01:02:02	2000-01-01 00:00:00.0000
+2022-01-12 00:01:01	2000-01-01 00:00:00.0000
+[ACTUAL RESULT]:
+a	b
+2022-01-02 00:00:00	2000-01-01 00:00:00
+2022-01-04 00:00:00	2000-01-01 00:00:00
+2022-01-06 00:00:00	2000-01-01 00:00:00
+2022-01-08 00:00:00	2000-01-01 00:00:00
+2022-01-10 01:01:01	2000-01-01 00:00:00
+2022-01-12 00:00:00	2000-01-01 00:00:00
+
+update t1 set a='2022-01-27 12:12:12.0001' where a='2022-01-08 00:01:01';
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATETIME VARCHAR] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-02 00:01:01	2000-01-01 00:00:00.0000
+2022-01-04 00:01:01	2000-01-01 00:00:00.0000
+2022-01-06 00:01:01	2000-01-01 00:00:00.0000
+2022-01-10 01:02:02	2000-01-01 00:00:00.0000
+2022-01-12 00:01:01	2000-01-01 00:00:00.0000
+2022-01-27 12:12:12	2000-01-01 00:00:00.0000
+[ACTUAL RESULT]:
+a	b
+2022-01-02 00:00:00	2000-01-01 00:00:00
+2022-01-04 00:00:00	2000-01-01 00:00:00
+2022-01-06 00:00:00	2000-01-01 00:00:00
+2022-01-08 00:00:00	2000-01-01 00:00:00
+2022-01-10 01:01:01	2000-01-01 00:00:00
+2022-01-12 00:00:00	2000-01-01 00:00:00
+
+update t1 set a=a-1 where 1 > 2;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '-' with parameters [DATETIME BIGINT] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-02 00:01:01	2000-01-01 00:00:00.0000
+2022-01-04 00:01:01	2000-01-01 00:00:00.0000
+2022-01-06 00:01:01	2000-01-01 00:00:00.0000
+2022-01-10 01:02:02	2000-01-01 00:00:00.0000
+2022-01-12 00:01:01	2000-01-01 00:00:00.0000
+2022-01-27 12:12:12	2000-01-01 00:00:00.0000
+[ACTUAL RESULT]:
+a	b
+2022-01-02 00:00:00	2000-01-01 00:00:00
+2022-01-04 00:00:00	2000-01-01 00:00:00
+2022-01-06 00:00:00	2000-01-01 00:00:00
+2022-01-08 00:00:00	2000-01-01 00:00:00
+2022-01-10 01:01:01	2000-01-01 00:00:00
+2022-01-12 00:00:00	2000-01-01 00:00:00
+
+update t1 set a=a-1 where 3 > 2;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '-' with parameters [DATETIME BIGINT] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-02 00:01:00	2000-01-01 00:00:00.0000
+2022-01-04 00:01:00	2000-01-01 00:00:00.0000
+2022-01-06 00:01:00	2000-01-01 00:00:00.0000
+2022-01-10 01:02:01	2000-01-01 00:00:00.0000
+2022-01-12 00:01:00	2000-01-01 00:00:00.0000
+2022-01-27 12:12:11	2000-01-01 00:00:00.0000
+[ACTUAL RESULT]:
+a	b
+2022-01-02 00:00:00	2000-01-01 00:00:00
+2022-01-04 00:00:00	2000-01-01 00:00:00
+2022-01-06 00:00:00	2000-01-01 00:00:00
+2022-01-08 00:00:00	2000-01-01 00:00:00
+2022-01-10 01:01:01	2000-01-01 00:00:00
+2022-01-12 00:00:00	2000-01-01 00:00:00
+
+delete from t1 where a='2022-01-01 00:00:00' limit 1;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATETIME VARCHAR] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-01 00:00:00	2
+[ACTUAL RESULT]:
+a	b
+2022-01-01 00:00:00	1
+2022-01-01 00:00:00	2
+
+delete from t1 where a='2022-01-01';
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATETIME VARCHAR] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	b
+[ACTUAL RESULT]:
+a	b
+2022-01-01 00:00:00	1
+2022-01-01 00:00:00	2
+2022-01-01 00:00:00	3
+
+delete from t1 where a=20220101+3;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [DATETIME BIGINT] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-02 00:00:00	2000-01-01 00:00:00.0000
+2022-01-06 00:00:00	2000-01-01 00:00:00.0000
+2022-01-08 00:00:00	2000-01-01 00:00:00.0000
+2022-01-10 01:01:01	2000-01-01 00:00:00.0000
+2022-01-12 00:00:00	2000-01-01 00:00:00.0000
+[ACTUAL RESULT]:
+a	b
+2022-01-02 00:00:00	2000-01-01 00:00:00
+2022-01-04 00:00:00	2000-01-01 00:00:00
+2022-01-06 00:00:00	2000-01-01 00:00:00
+2022-01-08 00:00:00	2000-01-01 00:00:00
+2022-01-10 01:01:01	2000-01-01 00:00:00
+2022-01-12 00:00:00	2000-01-01 00:00:00
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-02 00:00:00	2000-01-01 00:00:00.0000
+2022-01-06 00:00:00	2000-01-01 00:00:00.0000
+2022-01-08 00:00:00	2000-01-01 00:00:00.0000
+2022-01-10 01:01:01	2000-01-01 00:00:00.0000
+2022-01-12 00:00:00	2000-01-01 00:00:00.0000
+[ACTUAL RESULT]:
+a	b
+2022-01-02 00:00:00	2000-01-01 00:00:00
+2022-01-04 00:00:00	2000-01-01 00:00:00
+2022-01-06 00:00:00	2000-01-01 00:00:00
+2022-01-08 00:00:00	2000-01-01 00:00:00
+2022-01-10 01:01:01	2000-01-01 00:00:00
+2022-01-12 00:00:00	2000-01-01 00:00:00
+
+]]></failure>
+    </testcase>
+    <testcase name="cases/dtype/decimal.test" time="0.168">
+        <failure type="0002" message="The actual result is not in accordance with the expectation.More,See the detail."><![CDATA[select 1123.2333+1233.3331;
+
+[EXPECT RESULT]:
+1123.2333+1233.3331
+2356.5664
+[ACTUAL RESULT]:
+1123.2333 + 1233.3331
+2356.5664
+
+select cast(9223372.036854775808 as decimal)+1;
+
+[EXPECT RESULT]:
+cast(9223372.036854775808 as decimal)+1
+9223373
+[ACTUAL RESULT]:
+cast(9223372.036854775808 as decimal(10)) + 1
+9223373
+
+select round(cast(2320310.66666612312 as decimal));
+
+[EXPECT RESULT]:
+round(cast(2320310.66666612312 as decimal))
+2320311
+[ACTUAL RESULT]:
+Function 'round' with parameters [DECIMAL64] will be implemented in future version.
+
+select floor(cast(2231231.501231 as decimal));
+
+[EXPECT RESULT]:
+floor(cast(2231231.501231 as decimal))
+2231232
+[ACTUAL RESULT]:
+Function 'floor' with parameters [DECIMAL64] will be implemented in future version.
+
+insert into t1 values (18446744073709551615), (0xFFFFFFFFFFFFFE), (18446744073709551613.0000000), (18446744073709551612.0000000001);
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Data truncation: Incorrect DECIMAL128 value: '0xfffffffffffffe' for column 'a' at row 1
+
+select * from t1;
+
+[EXPECT RESULT]:
+a
+72057594037927934
+18446744073709551612
+18446744073709551613
+18446744073709551615
+[ACTUAL RESULT]:
+a
+
+select * from t1 where a=18446744073709551615;
+
+[EXPECT RESULT]:
+a
+18446744073709551615
+[ACTUAL RESULT]:
+a
+
+delete from t1 where a=18446744073709551615.000000000;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [DECIMAL128 DOUBLE] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+a
+72057594037927934
+18446744073709551612
+18446744073709551613
+[ACTUAL RESULT]:
+a
+
+select min(big),max(big),max(big)-1 from t1;
+
+[EXPECT RESULT]:
+min(big)	max(big)	max(big)-1
+-1.00000000000	92.23372036855	91.23372036855
+select min(big),avg(big),max(big)-1 from t1 group by a;
+min(big)	avg(big)	max(big)-1
+-1.00000000000	34.526466426966667	91.23372036855
+[ACTUAL RESULT]:
+min(big)	max(big)	max(big) - 1
+-1.00000000000	92.23372036855	91.23372036855
+
+insert into t1 (big) values (0),(18446744073), (0xFFFFFE), (184467.13), (184462);
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Data truncation: Incorrect DECIMAL128 value: '0xfffffe' for column 'big' at row 2
+
+select * from t1 order by 2 desc;
+
+[EXPECT RESULT]:
+a	big
+1	18446744073.0000
+1	16777214.0000
+1	184467.1300
+1	184462.0000
+1	0.0000
+[ACTUAL RESULT]:
+a	big
+
+select * from t1 order by big limit 1,2;
+
+[EXPECT RESULT]:
+a	big
+1	184462.0000
+1	184467.1300
+[ACTUAL RESULT]:
+a	big
+
+select * from t1 order by big limit 2 offset 1;
+
+[EXPECT RESULT]:
+a	big
+1	184462.0000
+1	184467.1300
+[ACTUAL RESULT]:
+a	big
+
+select min(big),max(big),max(big)-1 from t1;
+
+[EXPECT RESULT]:
+min(big)	max(big)	max(big)-1
+0.0000	18446744073.0000	18446744072.0000
+select min(big),count(big),max(big)-1 from t1 group by a;
+min(big)	count(big)	max(big)-1
+0.0000	5	18446744072.0000
+[ACTUAL RESULT]:
+min(big)	max(big)	max(big) - 1
+null	null	null
+
+select * from t1 where decimal_col=-17666000000000000000 order by 1 asc;
+
+[EXPECT RESULT]:
+decimal_col
+-17666000000000000000
+[ACTUAL RESULT]:
+decimal_col
+
+select * from t1 where decimal_col='-17666000000000000000' order by decimal_col desc;
+
+[EXPECT RESULT]:
+decimal_col
+-17666000000000000000
+[ACTUAL RESULT]:
+Operator '=' with parameters [DECIMAL128 VARCHAR] will be implemented in future version.
+
+select cast(10000002383263201056 as decimal) mod 50 as result;
+
+[EXPECT RESULT]:
+result
+49
+[ACTUAL RESULT]:
+Operator '%' with parameters [DECIMAL64 BIGINT] will be implemented in future version.
+
+select cast(cast(19999999999999999999 as decimal) as unsigned);
+
+[EXPECT RESULT]:
+cast(cast(19999999999999999999 as decimal) as unsigned)
+9999999999
+[ACTUAL RESULT]:
+input decimal value out of range for Decimal(10, 0)
+
+INSERT INTO t1 (id,a) VALUES
+(1,0),
+(2,CAST(0x7FFFFFFFFFFFFFFF AS UNSIGNED)),
+(3,CAST(0x8000000000000000 AS UNSIGNED)),
+(4,CAST(0xFFFFFFFFFFFFFFFF AS UNSIGNED));
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Data truncation: Function expression in INSERT statement value list will be supported in future version. for column 'a' at row 1
+
+select distinct * from t1 where ((a = '2147483647') and (b = '2147483647'));
+
+[EXPECT RESULT]:
+id	a	b
+3	2147483647	2147483647
+5	2147483647	2147483647
+[ACTUAL RESULT]:
+Operator '=' with parameters [DECIMAL128 VARCHAR] will be implemented in future version.
+
+select a,count(a) from t1 group by a having count(a)>=2;
+
+[EXPECT RESULT]:
+a	count(a)
+2147483647	2
+[ACTUAL RESULT]:
+a	count(a)
+
+SELECT id, id >= 1.1 FROM t_decimal;
+
+[EXPECT RESULT]:
+id	id >= 1.1
+1.00000	false	
+2.00000	true	
+1.10000	true	
+2.20000	true
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DECIMAL64 DOUBLE] will be implemented in future version.
+
+SELECT id, 1.1 <= id FROM t_decimal;
+
+[EXPECT RESULT]:
+id	1.1 <= id
+1.00000	false	
+2.00000	true	
+1.10000	true	
+2.20000	true
+[ACTUAL RESULT]:
+Operator '<=' with parameters [DOUBLE DECIMAL64] will be implemented in future version.
+
+SELECT id, id = 1.1 FROM t_decimal;
+
+[EXPECT RESULT]:
+id	id = 1.1
+1.00000	false	
+2.00000	false	
+1.10000	true	
+2.20000	false
+[ACTUAL RESULT]:
+Operator '=' with parameters [DECIMAL64 DOUBLE] will be implemented in future version.
+
+SELECT id, 1.1 = id FROM t_decimal;
+
+[EXPECT RESULT]:
+id	1.1 = id
+1.00000	false	
+2.00000	false	
+1.10000	true	
+2.20000	false
+[ACTUAL RESULT]:
+Operator '=' with parameters [DOUBLE DECIMAL64] will be implemented in future version.
+
+SELECT * from t_decimal WHERE id = 1.1;
+
+[EXPECT RESULT]:
+id
+1.10000
+[ACTUAL RESULT]:
+Operator '=' with parameters [DECIMAL64 DOUBLE] will be implemented in future version.
+
+SELECT * from t_decimal WHERE id = 1.1e0;
+
+[EXPECT RESULT]:
+id
+1.10000
+[ACTUAL RESULT]:
+Operator '=' with parameters [DECIMAL64 DOUBLE] will be implemented in future version.
+
+SELECT * from t_decimal WHERE id = '1.1';
+
+[EXPECT RESULT]:
+id
+1.10000
+[ACTUAL RESULT]:
+Operator '=' with parameters [DECIMAL64 VARCHAR] will be implemented in future version.
+
+SELECT * from t_decimal WHERE id = '1.1e0';
+
+[EXPECT RESULT]:
+id
+1.10000
+[ACTUAL RESULT]:
+Operator '=' with parameters [DECIMAL64 VARCHAR] will be implemented in future version.
+
+SELECT * from t_decimal WHERE id IN (1.1, 2.2);
+
+[EXPECT RESULT]:
+id
+1.10000
+2.20000
+[ACTUAL RESULT]:
+Operator '=' with parameters [DECIMAL64 DOUBLE] will be implemented in future version.
+
+SELECT * from t_decimal WHERE id IN (1.1e0, 2.2e0);
+
+[EXPECT RESULT]:
+id
+1.10000
+2.20000
+[ACTUAL RESULT]:
+Operator '=' with parameters [DECIMAL64 DOUBLE] will be implemented in future version.
+
+SELECT * from t_decimal WHERE id IN ('1.1', '2.2');
+
+[EXPECT RESULT]:
+id
+1.10000
+2.20000
+[ACTUAL RESULT]:
+Operator '=' with parameters [DECIMAL64 VARCHAR] will be implemented in future version.
+
+SELECT * from t_decimal WHERE id IN ('1.1e0', '2.2e0');
+
+[EXPECT RESULT]:
+id
+1.10000
+2.20000
+[ACTUAL RESULT]:
+Operator '=' with parameters [DECIMAL64 VARCHAR] will be implemented in future version.
+
+SELECT * from t_decimal WHERE id BETWEEN 1.1 AND 1.9;
+
+[EXPECT RESULT]:
+id
+1.10000
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DECIMAL64 DOUBLE] will be implemented in future version.
+
+SELECT * from t_decimal WHERE id BETWEEN 1.1e0 AND 1.9e0;
+
+[EXPECT RESULT]:
+id
+1.10000
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DECIMAL64 DOUBLE] will be implemented in future version.
+
+SELECT * from t_decimal WHERE id BETWEEN '1.1' AND '1.9';
+
+[EXPECT RESULT]:
+id
+1.10000
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DECIMAL64 VARCHAR] will be implemented in future version.
+
+SELECT * from t_decimal WHERE id BETWEEN '1.1e0' AND '1.9e0';
+
+[EXPECT RESULT]:
+id
+1.10000
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DECIMAL64 VARCHAR] will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a) BETWEEN 0 and 0.9;
+
+[EXPECT RESULT]:
+a
+0.9
+0.9
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a)=0.9;
+
+[EXPECT RESULT]:
+a
+0.9
+0.9
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a) in (0.8,0.9);
+
+[EXPECT RESULT]:
+a
+0.9
+0.9
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT * FROM t1 WHERE a BETWEEN 0 AND 0.9;
+
+[EXPECT RESULT]:
+a
+0.9
+0.9
+[ACTUAL RESULT]:
+Operator '<=' with parameters [DECIMAL64 DOUBLE] will be implemented in future version.
+
+SELECT * FROM t1 WHERE a=0.9;
+
+[EXPECT RESULT]:
+a
+0.9
+0.9
+[ACTUAL RESULT]:
+Operator '=' with parameters [DECIMAL64 DOUBLE] will be implemented in future version.
+
+SELECT * FROM t1 WHERE a IN (0.8,0.9);
+
+[EXPECT RESULT]:
+a
+0.9
+0.9
+[ACTUAL RESULT]:
+Operator '=' with parameters [DECIMAL64 DOUBLE] will be implemented in future version.
+
+select count(*) from t
+where id>=88947549497796.3574 and id <=889475494977969.358;
+
+[EXPECT RESULT]:
+count(*)
+3
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DECIMAL128 DOUBLE] will be implemented in future version.
+
+select count(*) from t
+where id between 88947549497796.3574 and 889475494977969.358;
+
+[EXPECT RESULT]:
+count(*)
+3
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DECIMAL128 DOUBLE] will be implemented in future version.
+
+SELECT CAST(1.00 AS decimal) BETWEEN 1 AND -1;
+
+[EXPECT RESULT]:
+CAST(1.00 AS decimal) BETWEEN 1 AND -1
+false
+[ACTUAL RESULT]:
+cast(1.00 as decimal(10)) between 1 and -1
+false
+
+SELECT CAST(1.00 AS decimal) NOT BETWEEN 1 AND -1;
+
+[EXPECT RESULT]:
+CAST(1.00 AS decimal) NOT BETWEEN 1 AND -1
+true
+[ACTUAL RESULT]:
+cast(1.00 as decimal(10)) not between 1 and -1
+true
+
+SELECT CAST(-0 AS decimal) BETWEEN 0 AND -1;
+
+[EXPECT RESULT]:
+CAST(-0 AS decimal) BETWEEN 0 AND -1
+false
+[ACTUAL RESULT]:
+cast(-0 as decimal(10)) between 0 and -1
+false
+
+SELECT CAST(0 AS decimal) NOT BETWEEN 0 AND -1;
+
+[EXPECT RESULT]:
+CAST(0 AS decimal) NOT BETWEEN 0 AND -1
+true
+[ACTUAL RESULT]:
+cast(0 as decimal(10)) not between 0 and -1
+true
+
+update t1 set a=2 where a=1.00;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [DECIMAL64 DOUBLE] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	b
+2.00	1.00
+2.00	2.00
+2.00	3.00
+[ACTUAL RESULT]:
+a	b
+1.00	1.00
+1.00	2.00
+1.00	3.00
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+27.00000	12346
+103.00000	12346
+105.00000	12346
+107.00000	12346
+109.00000	12346
+111.00000	12346
+113.00000	12346
+115.00000	12346
+117.00000	12346
+119.00000	12346
+121.00000	12346
+123.00000	12346
+124.00000	12346
+127.00000	12346
+[ACTUAL RESULT]:
+a	b
+103.00000	12346
+105.00000	12346
+107.00000	12346
+109.00000	12346
+111.00000	12346
+113.00000	12346
+115.00000	12346
+117.00000	12346
+119.00000	12346
+121.00000	12346
+123.00000	12346
+125.00000	12346
+127.00000	12346
+124.00000	12346
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+27.00000	12346
+103.00000	12346
+105.00000	12346
+107.00000	12346
+109.00000	12346
+111.00000	12346
+113.00000	12346
+115.00000	12346
+117.00000	12346
+119.00000	12346
+121.00000	12346
+123.00000	12346
+124.00000	12346
+127.00000	12346
+[ACTUAL RESULT]:
+a	b
+103.00000	12346
+105.00000	12346
+107.00000	12346
+109.00000	12346
+111.00000	12346
+113.00000	12346
+115.00000	12346
+117.00000	12346
+119.00000	12346
+121.00000	12346
+123.00000	12346
+125.00000	12346
+127.00000	12346
+124.00000	12346
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+26.00000	12346
+102.00000	12346
+104.00000	12346
+106.00000	12346
+108.00000	12346
+110.00000	12346
+112.00000	12346
+114.00000	12346
+116.00000	12346
+118.00000	12346
+120.00000	12346
+122.00000	12346
+123.00000	12346
+126.00000	12346
+[ACTUAL RESULT]:
+a	b
+102.00000	12346
+104.00000	12346
+106.00000	12346
+108.00000	12346
+110.00000	12346
+112.00000	12346
+114.00000	12346
+116.00000	12346
+118.00000	12346
+120.00000	12346
+122.00000	12346
+124.00000	12346
+126.00000	12346
+123.00000	12346
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	b
+1.00	2.0000
+[ACTUAL RESULT]:
+a	b
+1.00	1.0000
+1.00	2.0000
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	b
+[ACTUAL RESULT]:
+a	b
+1.00	1.0000
+1.00	2.0000
+1.00	3.0000
+
+delete from t1 where a=2+2.0000;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [DECIMAL64 DOUBLE] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+2.11110	12346
+6.12311	12346
+8.41231	12346
+24.00000	12346
+[ACTUAL RESULT]:
+a	b
+2.11110	12346
+4.00000	12346
+6.12311	12346
+8.41231	12346
+24.00000	12346
+
+delete from t1 where  a=24.0000;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [DECIMAL64 DOUBLE] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+2.11110	12346
+6.12311	12346
+8.41231	12346
+[ACTUAL RESULT]:
+a	b
+2.11110	12346
+4.00000	12346
+6.12311	12346
+8.41231	12346
+24.00000	12346
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+2.11110	12346
+6.12311	12346
+8.41231	12346
+[ACTUAL RESULT]:
+a	b
+2.11110	12346
+4.00000	12346
+6.12311	12346
+8.41231	12346
+24.00000	12346
+
+]]></failure>
+    </testcase>
+    <testcase name="cases/dtype/double.test" time="0.23">
+        <failure type="0002" message="The actual result is not in accordance with the expectation.More,See the detail."><![CDATA[select 1.7976931348623158E+308*1,-2.2250738585072015E-308+1.2250738585072015E-308;
+
+[EXPECT RESULT]:
+1.7976931348623158E+308*1	-2.2250738585072015E-308+1.2250738585072015E-308
+1.7976931348623157e308	-1e-308
+[ACTUAL RESULT]:
+1.7976931348623158e+308 * 1	-2.2250738585072015e-308 + 1.2250738585072015e-308
+1.7976931348623157E308	-1.0E-308
+
+show create table t1;
+
+[EXPECT RESULT]:
+att_database	att_relname	attname	atttyp	attnum	att_length	attnotnull	atthasdef	att_default	attisdropped	att_constraint_type	att_is_unsigned	att_is_auto_increment	att_comment	att_is_hidden
+test01	t1	id	22	1	4	0	0		0	n	0	0		0
+test01	t1	str	61	2	24	0	0		0	n	0	0		0
+test01	t1	name	61	3	24	0	0		0	n	0	0		0
+test01	t1	PADDR	33	4	16	0	0		0	n	0	0	Physical address	1
+double	t1	a	31	1	8	0	0		0	n	0	0		0
+double	t1	PADDR	33	2	16	0	0		0	n	0	0	Physical address	1
+[ACTUAL RESULT]:
+Table	Create Table
+t1	CREATE TABLE `t1` (
+`id` INT NULL,
+`ti` TINYINT UNSIGNED NULL,
+`si` SMALLINT NULL,
+`bi` BIGINT UNSIGNED NULL,
+`fl` FLOAT NULL,
+`dl` DOUBLE NULL,
+`de` DECIMAL64 NULL,
+`ch` VARCHAR NULL,
+`vch` VARCHAR NULL,
+`dd` DATE NULL,
+`dt` DATETIME NULL,
+`PADDR` DECIMAL128 NULL,
+`a` DOUBLE NULL
+)
+
+select * from t1 where a>='17.6660';
+
+[EXPECT RESULT]:
+a
+17.666
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DOUBLE VARCHAR] will be implemented in future version.
+
+INSERT INTO t1 (id,a) VALUES
+(1,0),
+(2,CAST(0x7FFFFFFFFFFFFFFF AS UNSIGNED)),
+(3,CAST(0x8000000000000000 AS UNSIGNED)),
+(4,CAST(0xFFFFFFFFFFFFFFFF AS UNSIGNED));
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Data truncation: Function expression in INSERT statement value list will be supported in future version. for column 'a' at row 1
+
+select * from t1;
+
+[EXPECT RESULT]:
+id	a	b
+1	0	NULL
+2	9223372036854776000	NULL
+3	9223372036854776000	NULL
+4	18446744073709552000	NULL
+[ACTUAL RESULT]:
+id	a	b
+
+select * from t1;
+
+[EXPECT RESULT]:
+id	a	b
+1	0	0
+2	9223372036854776000	9.223372036854776e18
+3	9223372036854776000	9.223372036854776e18
+4	18446744073709552000	1.844674407370955e19
+[ACTUAL RESULT]:
+id	a	b
+
+select a,count(a) from t1 where ((a = 9.223372036854776e18) and (b = '9.223372036854776e18')) group by a having count(a)>1 order by count(a);
+
+[EXPECT RESULT]:
+a	count(a)
+9223372036854776000	2
+[ACTUAL RESULT]:
+a	count(a)
+
+SELECT id, id = 1.1 FROM t_double;
+
+[EXPECT RESULT]:
+id	id = 1.1
+1.2	false	
+1.1	true	
+2.0	false
+[ACTUAL RESULT]:
+id	id = 1.1
+1.19	false
+1.11	false
+2.0	false
+
+SELECT id, 1.1 = id FROM t_double;
+
+[EXPECT RESULT]:
+id	1.1 = id
+1.2	false	
+1.1	true	
+2.0	false
+[ACTUAL RESULT]:
+id	1.1 = id
+1.19	false
+1.11	false
+2.0	false
+
+SELECT * from t_double WHERE id = 1.1;
+
+[EXPECT RESULT]:
+id
+1.1
+[ACTUAL RESULT]:
+id
+
+SELECT * from t_double WHERE id = 1.1e0;
+
+[EXPECT RESULT]:
+id
+1.1
+[ACTUAL RESULT]:
+id
+
+SELECT * from t_double WHERE id = '1.1';
+
+[EXPECT RESULT]:
+id
+1.1
+[ACTUAL RESULT]:
+Operator '=' with parameters [DOUBLE VARCHAR] will be implemented in future version.
+
+SELECT * from t_double WHERE id = '1.1e0';
+
+[EXPECT RESULT]:
+id
+1.1
+[ACTUAL RESULT]:
+Operator '=' with parameters [DOUBLE VARCHAR] will be implemented in future version.
+
+SELECT * from t_double WHERE id IN (1.1, 2.2);
+
+[EXPECT RESULT]:
+id
+1.1
+[ACTUAL RESULT]:
+id
+
+SELECT * from t_double WHERE id IN (1.1e0, 2.2e0);
+
+[EXPECT RESULT]:
+id
+1.1
+[ACTUAL RESULT]:
+id
+
+SELECT * from t_double WHERE id IN ('1.1', '2.2');
+
+[EXPECT RESULT]:
+id
+1.1
+[ACTUAL RESULT]:
+Operator '=' with parameters [DOUBLE VARCHAR] will be implemented in future version.
+
+SELECT * from t_double WHERE id IN ('1.1e0', '2.2e0');
+
+[EXPECT RESULT]:
+id
+1.1
+[ACTUAL RESULT]:
+Operator '=' with parameters [DOUBLE VARCHAR] will be implemented in future version.
+
+SELECT * from t_double WHERE id BETWEEN '1.1' AND '1.9';
+
+[EXPECT RESULT]:
+id
+1.2
+1.1
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DOUBLE VARCHAR] will be implemented in future version.
+
+SELECT * from t_double WHERE id BETWEEN '1.1e0' AND '1.9e0';
+
+[EXPECT RESULT]:
+id
+1.2
+1.1
+[ACTUAL RESULT]:
+Operator '>=' with parameters [DOUBLE VARCHAR] will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a) BETWEEN 0 and 0.9;
+
+[EXPECT RESULT]:
+a
+0.8999
+0.8000
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+]]></failure>
+    </testcase>
+    <testcase name="cases/dtype/float.test" time="0.222">
+        <failure type="0002" message="The actual result is not in accordance with the expectation.More,See the detail."><![CDATA[select -3.402823466E+38*1,-1.175494351E-38-0.1E-38;
+
+[EXPECT RESULT]:
+-3.402823466E+38*1	-1.175494351E-38-0.1E-38
+-3.402823466e38	-1.275494351e-38
+[ACTUAL RESULT]:
+-3.402823466e+38 * 1	-1.175494351e-38 - 0.1e-38
+-3.402823466E38	-1.275494351E-38
+
+select * from t1 order by 1;
+
+[EXPECT RESULT]:
+a
+-3.40282e38
+-1.17549e-38
+0
+1.17549e-38
+3.40282e38
+[ACTUAL RESULT]:
+a
+-3.4028235E38
+-1.1754944E-38
+0.0
+1.1754944E-38
+3.4028235E38
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	big
+1	-1.00000
+1	12345679.00000
+1	92233718038528.00000
+[ACTUAL RESULT]:
+a	big
+1.0	-1.0
+1.0	1.2345679E7
+1.0	9.223372E13
+
+select min(big),max(big),max(big)-1 from t1;
+
+[EXPECT RESULT]:
+min(big)	max(big)	max(big)-1
+-1.00000	92233718038528.00000	92233718038527.00000
+[ACTUAL RESULT]:
+min(big)	max(big)	max(big) - 1
+-1.0	9.223372E13	9.2233718038527E13
+
+select min(big),max(big),max(big)-1 from t1 group by a;
+
+[EXPECT RESULT]:
+min(big)	max(big)	max(big)-1
+-1.00000	92233718038528.00000	92233718038527.00000
+[ACTUAL RESULT]:
+min(big)	max(big)	max(big) - 1
+-1.0	9.223372E13	9.2233718038527E13
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	big
+1	-1
+1	12345700
+1	92233700000000
+[ACTUAL RESULT]:
+a	big
+1.0	-1.0
+1.0	1.2345679E7
+1.0	9.223372E13
+
+select * from t1 order by big limit 1,2;
+
+[EXPECT RESULT]:
+a	big
+1	12345700
+1	92233700000000
+[ACTUAL RESULT]:
+a	big
+1.0	1.2345679E7
+1.0	9.223372E13
+
+select * from t1 order by big limit 2 offset 1;
+
+[EXPECT RESULT]:
+a	big
+1	12345700
+1	92233700000000
+[ACTUAL RESULT]:
+a	big
+1.0	1.2345679E7
+1.0	9.223372E13
+
+select min(big),max(big),max(big)-1 from t1;
+
+[EXPECT RESULT]:
+min(big)	max(big)	max(big)-1
+-1	92233700000000	92233718038527
+[ACTUAL RESULT]:
+min(big)	max(big)	max(big) - 1
+-1.0	9.223372E13	9.2233718038527E13
+
+select min(big),max(big),max(big)-1 from t1 group by a;
+
+[EXPECT RESULT]:
+min(big)	max(big)	max(big)-1
+-1	92233700000000	92233718038527
+[ACTUAL RESULT]:
+min(big)	max(big)	max(big) - 1
+-1.0	9.223372E13	9.2233718038527E13
+
+select * from t1 where a>='17.6660';
+
+[EXPECT RESULT]:
+a
+17.666
+[ACTUAL RESULT]:
+Operator '>=' with parameters [FLOAT VARCHAR] will be implemented in future version.
+
+select a  mod 50 as result from t1;
+
+[EXPECT RESULT]:
+result
+17.666000366210938
+[ACTUAL RESULT]:
+result
+0.0
+
+select cast(a+a as signed) from t1;
+
+[EXPECT RESULT]:
+cast(a+a as signed)
+35
+[ACTUAL RESULT]:
+cast(a + a as signed)
+35
+
+select cast(0-a as signed) from t1;
+
+[EXPECT RESULT]:
+cast(0-a as signed)
+-18
+[ACTUAL RESULT]:
+cast(0 - a as signed)
+-17
+
+INSERT INTO t1 (id,a) VALUES
+(1,0),
+(2,CAST(0x7FFFFFFFFFFFFFFF AS UNSIGNED)),
+(3,CAST(0x8000000000000000 AS UNSIGNED)),
+(4,CAST(0xFFFFFFFFFFFFFFFF AS UNSIGNED));
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Data truncation: Function expression in INSERT statement value list will be supported in future version. for column 'a' at row 1
+
+select * from t1;
+
+[EXPECT RESULT]:
+id	a	b
+1	0	NULL
+2	9.22337e18	NULL
+3	9.22337e18	NULL
+4	1.84467e19	NULL
+[ACTUAL RESULT]:
+id	a	b
+
+select distinct a,b from t1 where ((a != 9.223372036854776e18) and (b != '9.223372036854776e18')) order by 2;
+
+[EXPECT RESULT]:
+a	b
+0	0
+1.84467e19	1.844674407370955e19
+[ACTUAL RESULT]:
+a	b
+
+SELECT id, id = 1.1 FROM t_float;
+
+[EXPECT RESULT]:
+id	id = 1.1
+1.0	false	
+1.1	true	
+2.0	false
+[ACTUAL RESULT]:
+id	id = 1.1
+1.0	false
+1.1	false
+2.0	false
+
+SELECT id, 1.1 = id FROM t_float;
+
+[EXPECT RESULT]:
+id	1.1 = id
+1.0	false	
+1.1	true	
+2.0	false
+[ACTUAL RESULT]:
+id	1.1 = id
+1.0	false
+1.1	false
+2.0	false
+
+SELECT * from t_float WHERE id = 1.1;
+
+[EXPECT RESULT]:
+id
+1.1
+[ACTUAL RESULT]:
+id
+
+SELECT * from t_float WHERE id = 1.1e0;
+
+[EXPECT RESULT]:
+id
+1.1
+[ACTUAL RESULT]:
+id
+
+SELECT * from t_float WHERE id = '1.1';
+
+[EXPECT RESULT]:
+id
+1.1
+[ACTUAL RESULT]:
+Operator '=' with parameters [FLOAT VARCHAR] will be implemented in future version.
+
+SELECT * from t_float WHERE id = '1.1e0';
+
+[EXPECT RESULT]:
+id
+1.1
+[ACTUAL RESULT]:
+Operator '=' with parameters [FLOAT VARCHAR] will be implemented in future version.
+
+SELECT * from t_float WHERE id IN ('1.1', '2.2');
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [FLOAT VARCHAR] will be implemented in future version.
+
+SELECT * from t_float WHERE id IN ('1.1e0', '2.2e0');
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [FLOAT VARCHAR] will be implemented in future version.
+
+SELECT * from t_float WHERE id BETWEEN '1.1' AND '1.9';
+
+[EXPECT RESULT]:
+id
+1.1
+[ACTUAL RESULT]:
+Operator '>=' with parameters [FLOAT VARCHAR] will be implemented in future version.
+
+SELECT * from t_float WHERE id BETWEEN '1.1e0' AND '1.9e0';
+
+[EXPECT RESULT]:
+id
+1.1
+[ACTUAL RESULT]:
+Operator '>=' with parameters [FLOAT VARCHAR] will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a) BETWEEN 0 and 0.9;
+
+[EXPECT RESULT]:
+a
+0
+0.8
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a)=0.9;
+
+[EXPECT RESULT]:
+a
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a) in (0.8,0.9);
+
+[EXPECT RESULT]:
+a
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT (1234.0 BETWEEN 0 AND 1234);
+
+[EXPECT RESULT]:
+(1234.0 BETWEEN 0 AND 1234)
+true
+[ACTUAL RESULT]:
+1234.0 between 0 and 1234
+true
+
+SELECT CAST(1.00 AS UNSIGNED) BETWEEN 1 AND -1;
+
+[EXPECT RESULT]:
+CAST(1.00 AS UNSIGNED) BETWEEN 1 AND -1
+false
+[ACTUAL RESULT]:
+cast(1.00 as unsigned unsigned) between 1 and -1
+false
+
+SELECT CAST(1.00 AS UNSIGNED) NOT BETWEEN 1 AND -1;
+
+[EXPECT RESULT]:
+CAST(1.00 AS UNSIGNED) NOT BETWEEN 1 AND -1
+true
+[ACTUAL RESULT]:
+cast(1.00 as unsigned unsigned) not between 1 and -1
+true
+
+SELECT CAST(0.00 AS UNSIGNED) BETWEEN 0 AND -1;
+
+[EXPECT RESULT]:
+CAST(0.00 AS UNSIGNED) BETWEEN 0 AND -1
+false
+[ACTUAL RESULT]:
+cast(0.00 as unsigned unsigned) between 0 and -1
+false
+
+SELECT CAST(0.00 AS UNSIGNED) NOT BETWEEN 0 AND -1;
+
+[EXPECT RESULT]:
+CAST(0.00 AS UNSIGNED) NOT BETWEEN 0 AND -1
+true
+[ACTUAL RESULT]:
+cast(0.00 as unsigned unsigned) not between 0 and -1
+true
+
+SELECT ( -1 BETWEEN 0 AND 1 );
+
+[EXPECT RESULT]:
+( -1 BETWEEN 0 AND 1 )
+false
+[ACTUAL RESULT]:
+-1 between 0 and 1
+false
+
+SELECT ( 0 BETWEEN  0.000000001 AND 1 );
+
+[EXPECT RESULT]:
+( 0 BETWEEN  0.000000001 AND 1 )
+false
+[ACTUAL RESULT]:
+0 between 0.000000001 and 1
+false
+
+SELECT ( 1 BETWEEN 1.0000001 and 0);
+
+[EXPECT RESULT]:
+( 1 BETWEEN 1.0000001 and 0)
+false
+[ACTUAL RESULT]:
+1 between 1.0000001 and 0
+false
+
+]]></failure>
+    </testcase>
+    <testcase name="cases/dtype/int.test" time="1.086">
+        <failure type="0002" message="The actual result is not in accordance with the expectation.More,See the detail."><![CDATA[select min(int32),max(int32),max(int32)-1 from t1;
+
+[EXPECT RESULT]:
+min(int32)	max(int32)	max(int32)-1
+-1	2147483647	2147483646
+[ACTUAL RESULT]:
+min(int32)	max(int32)	max(int32) - 1
+-1	2147483647	2147483646
+
+select min(int32),max(int32),max(int32)-1 from t1 group by a;
+
+[EXPECT RESULT]:
+min(int32)	max(int32)	max(int32)-1
+-1	2147483647	2147483646
+[ACTUAL RESULT]:
+min(int32)	max(int32)	max(int32) - 1
+-1	2147483647	2147483646
+
+select min(int32),max(int32),max(int32)-1 from t1;
+
+[EXPECT RESULT]:
+min(int32)	max(int32)	max(int32)-1
+0	4294967295	4294967294
+[ACTUAL RESULT]:
+min(int32)	max(int32)	max(int32) - 1
+0	4294967295	4294967294
+
+select min(int32),max(int32),max(int32)-1 from t1 group by a;
+
+[EXPECT RESULT]:
+min(int32)	max(int32)	max(int32)-1
+0	4294967295	4294967294
+[ACTUAL RESULT]:
+min(int32)	max(int32)	max(int32) - 1
+0	4294967295	4294967294
+
+select * from t1 where int_col='4294960000';
+
+[EXPECT RESULT]:
+int_col
+4294960000
+[ACTUAL RESULT]:
+Operator '=' with parameters [INT UNSIGNED VARCHAR] will be implemented in future version.
+
+INSERT INTO t1 (id,a) VALUES
+(1,0),
+(2,CAST(0x7FFFFFFF AS UNSIGNED)),
+(3,CAST(0x80000000 AS UNSIGNED)),
+(4,CAST(0xFFFFFFFF AS UNSIGNED));
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Data truncation: Function expression in INSERT statement value list will be supported in future version. for column 'a' at row 1
+
+select * from t1 where ((a = 4294967295) and (b = '4294967295')) order by 1 desc, 2 asc;
+
+[EXPECT RESULT]:
+id	a	b
+4	4294967295	4294967295
+[ACTUAL RESULT]:
+id	a	b
+
+SELECT * from t_int WHERE id = '1.1';
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [INT VARCHAR] will be implemented in future version.
+
+SELECT * from t_int WHERE id = '1.1e0';
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [INT VARCHAR] will be implemented in future version.
+
+SELECT * from t_int WHERE id IN ('1.1', '2.2');
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [INT VARCHAR] will be implemented in future version.
+
+SELECT * from t_int WHERE id IN ('1.1e0', '2.2e0');
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [INT VARCHAR] will be implemented in future version.
+
+SELECT * from t_int WHERE id BETWEEN '1.1' AND '1.9';
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '>=' with parameters [INT VARCHAR] will be implemented in future version.
+
+SELECT * from t_int WHERE id BETWEEN '1.1e0' AND '1.9e0';
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '>=' with parameters [INT VARCHAR] will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a) BETWEEN 0 and 0.9;
+
+[EXPECT RESULT]:
+a
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a)=0.9;
+
+[EXPECT RESULT]:
+a
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a) in (0.8,0.9);
+
+[EXPECT RESULT]:
+a
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT (4294967294 BETWEEN 0 AND 4294967295);
+
+[EXPECT RESULT]:
+(4294967294 BETWEEN 0 AND 4294967295)
+true
+[ACTUAL RESULT]:
+4294967294 between 0 and 4294967295
+true
+
+SELECT CAST(100 AS UNSIGNED) BETWEEN 1 AND -1;
+
+[EXPECT RESULT]:
+CAST(100 AS UNSIGNED) BETWEEN 1 AND -1
+false
+[ACTUAL RESULT]:
+cast(100 as unsigned unsigned) between 1 and -1
+false
+
+SELECT CAST(100 AS UNSIGNED) NOT BETWEEN 1 AND -1;
+
+[EXPECT RESULT]:
+CAST(100 AS UNSIGNED) NOT BETWEEN 1 AND -1
+true
+[ACTUAL RESULT]:
+cast(100 as unsigned unsigned) not between 1 and -1
+true
+
+SELECT CAST(0 AS UNSIGNED) BETWEEN 0 AND -1;
+
+[EXPECT RESULT]:
+CAST(0 AS UNSIGNED) BETWEEN 0 AND -1
+false
+[ACTUAL RESULT]:
+cast(0 as unsigned unsigned) between 0 and -1
+false
+
+SELECT CAST(0 AS UNSIGNED) NOT BETWEEN 0 AND -1;
+
+[EXPECT RESULT]:
+CAST(0 AS UNSIGNED) NOT BETWEEN 0 AND -1
+true
+[ACTUAL RESULT]:
+cast(0 as unsigned unsigned) not between 0 and -1
+true
+
+SELECT ( 4294967296 BETWEEN 4294967296 AND 4294967296 );
+
+[EXPECT RESULT]:
+( 4294967296 BETWEEN 4294967296 AND 4294967296 )
+true
+[ACTUAL RESULT]:
+4294967296 between 4294967296 and 4294967296
+true
+
+SELECT ( 2147483647 BETWEEN 4294967296 AND 1 );
+
+[EXPECT RESULT]:
+( 2147483647 BETWEEN 4294967296 AND 1 )
+false
+[ACTUAL RESULT]:
+2147483647 between 4294967296 and 1
+false
+
+SELECT ( -1 BETWEEN 4294967296 AND 1 );
+
+[EXPECT RESULT]:
+( -1 BETWEEN 4294967296 AND 1 )
+false
+[ACTUAL RESULT]:
+-1 between 4294967296 and 1
+false
+
+SELECT ( 0 BETWEEN 4294967296 AND 1 );
+
+[EXPECT RESULT]:
+( 0 BETWEEN 4294967296 AND 1 )
+false
+[ACTUAL RESULT]:
+0 between 4294967296 and 1
+false
+
+SELECT ( 1 BETWEEN 4294967296 AND 1 );
+
+[EXPECT RESULT]:
+( 1 BETWEEN 4294967296 AND 1 )
+false
+[ACTUAL RESULT]:
+1 between 4294967296 and 1
+false
+
+]]></failure>
+    </testcase>
+    <testcase name="cases/dtype/smallint.test" time="1.018">
+        <failure type="0002" message="The actual result is not in accordance with the expectation.More,See the detail."><![CDATA[select min(smallint16),max(smallint16),max(smallint16)-1 from t1;
+
+[EXPECT RESULT]:
+min(smallint16)	max(smallint16)	max(smallint16)-1
+-32768	32767	32766
+[ACTUAL RESULT]:
+min(smallint16)	max(smallint16)	max(smallint16) - 1
+-32768	32767	32766
+
+select min(smallint16),max(smallint16),max(smallint16)-1 from t1 group by a;
+
+[EXPECT RESULT]:
+min(smallint16)	max(smallint16)	max(smallint16)-1
+-32768	32767	32766
+[ACTUAL RESULT]:
+min(smallint16)	max(smallint16)	max(smallint16) - 1
+-32768	32767	32766
+
+select min(smallint16),max(smallint16),max(smallint16)-1 from t1;
+
+[EXPECT RESULT]:
+min(smallint16)	max(smallint16)	max(smallint16)-1
+0	65535	65534
+[ACTUAL RESULT]:
+min(smallint16)	max(smallint16)	max(smallint16) - 1
+0	65535	65534
+
+select min(smallint16),max(smallint16),max(smallint16)-1 from t1 group by a;
+
+[EXPECT RESULT]:
+min(smallint16)	max(smallint16)	max(smallint16)-1
+0	65535	65534
+[ACTUAL RESULT]:
+min(smallint16)	max(smallint16)	max(smallint16) - 1
+0	65535	65534
+
+select * from t1 where smallint_col='65500';
+
+[EXPECT RESULT]:
+smallint_col
+65500
+[ACTUAL RESULT]:
+Operator '=' with parameters [SMALLINT UNSIGNED VARCHAR] will be implemented in future version.
+
+INSERT INTO t1 (id,a) VALUES
+(1,0),
+(2,CAST(0x7FFF AS UNSIGNED)),
+(3,CAST(0x8000 AS UNSIGNED)),
+(4,CAST(0xFFFF AS UNSIGNED));
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Data truncation: Function expression in INSERT statement value list will be supported in future version. for column 'a' at row 1
+
+select * from t1 where ((a = 65535) and (b = '65535')) order by 1 desc, 2 asc;
+
+[EXPECT RESULT]:
+id	a	b
+4	65535	65535
+[ACTUAL RESULT]:
+id	a	b
+
+SELECT * from t_smallint WHERE id = '1.1';
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [SMALLINT VARCHAR] will be implemented in future version.
+
+SELECT * from t_smallint WHERE id = '1.1e0';
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [SMALLINT VARCHAR] will be implemented in future version.
+
+SELECT * from t_smallint WHERE id IN ('1.1', '2.2');
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [SMALLINT VARCHAR] will be implemented in future version.
+
+SELECT * from t_smallint WHERE id IN ('1.1e0', '2.2e0');
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [SMALLINT VARCHAR] will be implemented in future version.
+
+SELECT * from t_smallint WHERE id BETWEEN '1.1' AND '1.9';
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '>=' with parameters [SMALLINT VARCHAR] will be implemented in future version.
+
+SELECT * from t_smallint WHERE id BETWEEN '1.1e0' AND '1.9e0';
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '>=' with parameters [SMALLINT VARCHAR] will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a) BETWEEN 0 and 0.9;
+
+[EXPECT RESULT]:
+a
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a)=0.9;
+
+[EXPECT RESULT]:
+a
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a) in (0.8,0.9);
+
+[EXPECT RESULT]:
+a
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT (65534 BETWEEN 0 AND 65535);
+
+[EXPECT RESULT]:
+(65534 BETWEEN 0 AND 65535)
+true
+[ACTUAL RESULT]:
+65534 between 0 and 65535
+true
+
+SELECT CAST(100 AS UNSIGNED) BETWEEN 1 AND -1;
+
+[EXPECT RESULT]:
+CAST(100 AS UNSIGNED) BETWEEN 1 AND -1
+false
+[ACTUAL RESULT]:
+cast(100 as unsigned unsigned) between 1 and -1
+false
+
+SELECT CAST(100 AS UNSIGNED) NOT BETWEEN 1 AND -1;
+
+[EXPECT RESULT]:
+CAST(100 AS UNSIGNED) NOT BETWEEN 1 AND -1
+true
+[ACTUAL RESULT]:
+cast(100 as unsigned unsigned) not between 1 and -1
+true
+
+SELECT CAST(0 AS UNSIGNED) BETWEEN 0 AND -1;
+
+[EXPECT RESULT]:
+CAST(0 AS UNSIGNED) BETWEEN 0 AND -1
+false
+[ACTUAL RESULT]:
+cast(0 as unsigned unsigned) between 0 and -1
+false
+
+SELECT CAST(0 AS UNSIGNED) NOT BETWEEN 0 AND -1;
+
+[EXPECT RESULT]:
+CAST(0 AS UNSIGNED) NOT BETWEEN 0 AND -1
+true
+[ACTUAL RESULT]:
+cast(0 as unsigned unsigned) not between 0 and -1
+true
+
+SELECT ( 65535 BETWEEN 65535 AND 65535 );
+
+[EXPECT RESULT]:
+( 65535 BETWEEN 65535 AND 65535 )
+true
+[ACTUAL RESULT]:
+65535 between 65535 and 65535
+true
+
+SELECT ( 32767 BETWEEN 65535 AND 1 );
+
+[EXPECT RESULT]:
+( 32767 BETWEEN 65535 AND 1 )
+false
+[ACTUAL RESULT]:
+32767 between 65535 and 1
+false
+
+SELECT ( -1 BETWEEN 65535 AND 1 );
+
+[EXPECT RESULT]:
+( -1 BETWEEN 65535 AND 1 )
+false
+[ACTUAL RESULT]:
+-1 between 65535 and 1
+false
+
+SELECT ( 0 BETWEEN 65535 AND 1 );
+
+[EXPECT RESULT]:
+( 0 BETWEEN 65535 AND 1 )
+false
+[ACTUAL RESULT]:
+0 between 65535 and 1
+false
+
+SELECT ( 1 BETWEEN 65535 AND 1 );
+
+[EXPECT RESULT]:
+( 1 BETWEEN 65535 AND 1 )
+false
+[ACTUAL RESULT]:
+1 between 65535 and 1
+false
+
+]]></failure>
+    </testcase>
+    <testcase name="cases/dtype/timestamp.test" time="0.747">
+        <failure type="0002" message="The actual result is not in accordance with the expectation.More,See the detail."><![CDATA[select * from t1 where a='2022-01-02';
+
+[EXPECT RESULT]:
+a
+2022-01-02 00:00:00
+[ACTUAL RESULT]:
+Operator '=' with parameters [TIMESTAMP VARCHAR] will be implemented in future version.
+
+select * from t1 where a>20220102;
+
+[EXPECT RESULT]:
+a
+2022-01-02 00:00:01
+2022-01-02 00:00:02
+[ACTUAL RESULT]:
+Operator '>' with parameters [TIMESTAMP BIGINT] will be implemented in future version.
+
+select * from t1 where a!='2022-01-02';
+
+[EXPECT RESULT]:
+a
+2020-01-01 00:00:00
+2022-01-02 00:00:01
+2022-01-02 00:00:02
+[ACTUAL RESULT]:
+Operator '<>' with parameters [TIMESTAMP VARCHAR] will be implemented in future version.
+
+update t1 set a=DATE_ADD(a ,INTERVAL 1 WEEK) where a>'20220102';
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '>' with parameters [TIMESTAMP VARCHAR] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+a
+2020-01-01 00:00:00
+2022-01-02 00:00:00
+2022-01-09 00:00:01
+2022-01-09 00:00:02
+[ACTUAL RESULT]:
+a
+2020-01-01 00:00:00
+2022-01-02 00:00:00
+2022-01-02 00:00:01
+2022-01-02 00:00:02
+
+insert into t1 (big) values ('20220103'),('2022-01-01'),('2022-01-01 00:00:01'),('2022-01-02 00:00.00.000050');
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Data truncation: Incorrect TIMESTAMP value: '2022-01-02 00:00.00.000050' for column 'big' at row 3
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	big
+1	2022-01-01 00:00:00.0000
+1	2022-01-01 00:00:01.0000
+1	2022-01-02 00:00:00.0001
+1	2022-01-03 00:00:00.0000
+[ACTUAL RESULT]:
+a	big
+
+select * from t1 order by big limit 1,3;
+
+[EXPECT RESULT]:
+a	big
+1	2022-01-01 00:00:01.0000
+1	2022-01-02 00:00:00.0001
+1	2022-01-03 00:00:00.0000
+[ACTUAL RESULT]:
+a	big
+
+select * from t1 order by big limit 3 offset 1;
+
+[EXPECT RESULT]:
+a	big
+1	2022-01-01 00:00:01.0000
+1	2022-01-02 00:00:00.0001
+1	2022-01-03 00:00:00.0000
+[ACTUAL RESULT]:
+a	big
+
+select min(big),max(big),max(big)-1 from t1 group by a;
+
+[EXPECT RESULT]:
+min(big)	max(big)	max(big)-1
+2022-01-01 00:00:00.0000	2022-01-03 00:00:00.0000	20220102999999.0000
+[ACTUAL RESULT]:
+Operator '-' with parameters [TIMESTAMP BIGINT] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+id	a
+2022-01-31 00:00:00.000001	1
+[ACTUAL RESULT]:
+id	a
+2022-01-31 00:00:00.000001000	1
+
+select * from t1;
+
+[EXPECT RESULT]:
+dt	value32
+2022-01-01 00:00:00.000050	1
+2022-01-01 00:00:00.000500	2
+2022-01-01 00:00:00.005000	3
+[ACTUAL RESULT]:
+dt	value32
+2022-01-01 00:00:00.000050000	1
+2022-01-01 00:00:00.000500000	2
+2022-01-01 00:00:00.005000000	3
+
+select * from t2;
+
+[EXPECT RESULT]:
+dt	value32
+2022-01-01 00:00:00.001	5
+2022-01-01 00:00:00.005	4
+[ACTUAL RESULT]:
+dt	value32
+2022-01-01 00:00:00.005000000	4
+2022-01-01 00:00:00.001000000	5
+
+select * from t1 join t2 on t1.dt=t2.dt order by 1 desc, t2.dt asc;
+
+[EXPECT RESULT]:
+dt	value32	dt	value32
+2022-01-01 00:00:00.005000	3	2022-01-01 00:00:00.005	4
+[ACTUAL RESULT]:
+Operator '=' with parameters [TIMESTAMP TIMESTAMP] will be implemented in future version.
+
+select * from t1 join t2 on t1.dt=t2.dt where t1.value32<>t2.value32;
+
+[EXPECT RESULT]:
+dt	value32	dt	value32
+2022-01-01 00:00:00.005000	3	2022-01-01 00:00:00.005	4
+[ACTUAL RESULT]:
+Operator '=' with parameters [TIMESTAMP TIMESTAMP] will be implemented in future version.
+
+SELECT id, id >= 20200102 FROM t_timestamp;
+
+[EXPECT RESULT]:
+id	id >= 20200102
+2020-01-01 23:59:59.999999	false	
+2022-01-02 00:00:00.000000	true
+[ACTUAL RESULT]:
+Operator '>=' with parameters [TIMESTAMP BIGINT] will be implemented in future version.
+
+SELECT id, id = 202020101 FROM t_timestamp;
+
+[EXPECT RESULT]:
+id	id = 202020101
+2020-01-01 23:59:59.999999	false	
+2022-01-02 00:00:00.000000	false
+[ACTUAL RESULT]:
+Operator '=' with parameters [TIMESTAMP BIGINT] will be implemented in future version.
+
+SELECT id, 20200101 = id FROM t_timestamp;
+
+[EXPECT RESULT]:
+id	20200101 = id
+2020-01-01 23:59:59.999999	false	
+2022-01-02 00:00:00.000000	false
+[ACTUAL RESULT]:
+Operator '=' with parameters [BIGINT TIMESTAMP] will be implemented in future version.
+
+SELECT * from t_timestamp WHERE id = 20200102;
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [TIMESTAMP BIGINT] will be implemented in future version.
+
+SELECT * from t_timestamp WHERE id = 2.0200102e7;
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [TIMESTAMP DOUBLE] will be implemented in future version.
+
+SELECT * from t_timestamp WHERE id = '20200102';
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [TIMESTAMP VARCHAR] will be implemented in future version.
+
+SELECT * from t_timestamp WHERE id IN ('2020-01-01','2022-01-02');
+
+[EXPECT RESULT]:
+id
+2022-01-02 00:00:00.000000
+[ACTUAL RESULT]:
+Operator '=' with parameters [TIMESTAMP VARCHAR] will be implemented in future version.
+
+SELECT * from t_timestamp WHERE id IN (2.0200101e7,2.0200102e7 );
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [TIMESTAMP DOUBLE] will be implemented in future version.
+
+SELECT * from t_timestamp WHERE id IN ('20220101', 20220102);
+
+[EXPECT RESULT]:
+id
+2022-01-02 00:00:00.000000
+[ACTUAL RESULT]:
+Operator '=' with parameters [TIMESTAMP VARCHAR] will be implemented in future version.
+
+SELECT * from t_timestamp WHERE id IN ('2.0200101e7','2.0200102e7');
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [TIMESTAMP VARCHAR] will be implemented in future version.
+
+SELECT * from t_timestamp WHERE id BETWEEN 20191231 AND 20200101;
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '>=' with parameters [TIMESTAMP BIGINT] will be implemented in future version.
+
+SELECT * from t_timestamp WHERE id BETWEEN 2.0200101e7 and 2.0200102e7;
+
+[EXPECT RESULT]:
+id
+2020-01-01 23:59:59.999999
+[ACTUAL RESULT]:
+Operator '>=' with parameters [TIMESTAMP DOUBLE] will be implemented in future version.
+
+SELECT * from t_timestamp WHERE id BETWEEN '2020-01-01' AND '2020-01-02';
+
+[EXPECT RESULT]:
+id
+2020-01-01 23:59:59.999999
+[ACTUAL RESULT]:
+Operator '>=' with parameters [TIMESTAMP VARCHAR] will be implemented in future version.
+
+SELECT * from t_timestamp WHERE id BETWEEN '2022-01-01 00:00:00' AND '2022-01-02 00:00:00.000000';
+
+[EXPECT RESULT]:
+id
+2022-01-02 00:00:00.000000
+[ACTUAL RESULT]:
+Operator '>=' with parameters [TIMESTAMP VARCHAR] will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a) not BETWEEN '2022-02-28' and '2022-03-01';
+
+[EXPECT RESULT]:
+a
+2022-03-01 00:00:01.000100
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a)!=20220301;
+
+[EXPECT RESULT]:
+a
+2022-03-01 00:00:01.000100
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a) in ('2022-03-01','2022-03-01 00:00:00.0001');
+
+[EXPECT RESULT]:
+a
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+update t1 set a='2022-01-02' where a='2022-01-01 00:00:00' limit 1;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [TIMESTAMP VARCHAR] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-02 00:00:00	1
+2022-01-01 00:00:00	2
+[ACTUAL RESULT]:
+a	b
+2022-01-01 00:00:00	1
+2022-01-01 00:00:00	2
+
+update t1 set a='2022-01-02' where a='2022-01-01 00:00:00';
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [TIMESTAMP VARCHAR] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-02 00:00:00	1
+2022-01-02 00:00:00	2
+2022-01-02 00:00:00	3
+[ACTUAL RESULT]:
+a	b
+2022-01-01 00:00:00	1
+2022-01-01 00:00:00	2
+2022-01-01 00:00:00	3
+
+update t1 set a=a+101;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '+' with parameters [TIMESTAMP BIGINT] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-02 00:01:01	2000-01-01 00:00:00.0000
+2022-01-04 00:01:01	2000-01-01 00:00:00.0000
+2022-01-06 00:01:01	2000-01-01 00:00:00.0000
+2022-01-08 00:01:01	2000-01-01 00:00:00.0000
+2022-01-10 01:02:02	2000-01-01 00:00:00.0000
+2022-01-12 00:01:01	2000-01-01 00:00:00.0000
+[ACTUAL RESULT]:
+a	b
+2022-01-02 00:00:00	2000-01-01 00:00:00
+2022-01-04 00:00:00	2000-01-01 00:00:00
+2022-01-06 00:00:00	2000-01-01 00:00:00
+2022-01-08 00:00:00	2000-01-01 00:00:00
+2022-01-10 01:01:01	2000-01-01 00:00:00
+2022-01-12 00:00:00	2000-01-01 00:00:00
+
+update t1 set a='2022-01-27 12:12:12.0001' where a='2022-01-08 00:01:01';
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [TIMESTAMP VARCHAR] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-02 00:01:01	2000-01-01 00:00:00.0000
+2022-01-04 00:01:01	2000-01-01 00:00:00.0000
+2022-01-06 00:01:01	2000-01-01 00:00:00.0000
+2022-01-10 01:02:02	2000-01-01 00:00:00.0000
+2022-01-12 00:01:01	2000-01-01 00:00:00.0000
+2022-01-27 12:12:12	2000-01-01 00:00:00.0000
+[ACTUAL RESULT]:
+a	b
+2022-01-02 00:00:00	2000-01-01 00:00:00
+2022-01-04 00:00:00	2000-01-01 00:00:00
+2022-01-06 00:00:00	2000-01-01 00:00:00
+2022-01-08 00:00:00	2000-01-01 00:00:00
+2022-01-10 01:01:01	2000-01-01 00:00:00
+2022-01-12 00:00:00	2000-01-01 00:00:00
+
+update t1 set a=a-1 where 1 > 2;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '-' with parameters [TIMESTAMP BIGINT] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-02 00:01:01	2000-01-01 00:00:00.0000
+2022-01-04 00:01:01	2000-01-01 00:00:00.0000
+2022-01-06 00:01:01	2000-01-01 00:00:00.0000
+2022-01-10 01:02:02	2000-01-01 00:00:00.0000
+2022-01-12 00:01:01	2000-01-01 00:00:00.0000
+2022-01-27 12:12:12	2000-01-01 00:00:00.0000
+[ACTUAL RESULT]:
+a	b
+2022-01-02 00:00:00	2000-01-01 00:00:00
+2022-01-04 00:00:00	2000-01-01 00:00:00
+2022-01-06 00:00:00	2000-01-01 00:00:00
+2022-01-08 00:00:00	2000-01-01 00:00:00
+2022-01-10 01:01:01	2000-01-01 00:00:00
+2022-01-12 00:00:00	2000-01-01 00:00:00
+
+update t1 set a=a-1 where 3 > 2;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '-' with parameters [TIMESTAMP BIGINT] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-02 00:01:00	2000-01-01 00:00:00.0000
+2022-01-04 00:01:00	2000-01-01 00:00:00.0000
+2022-01-06 00:01:00	2000-01-01 00:00:00.0000
+2022-01-10 01:02:01	2000-01-01 00:00:00.0000
+2022-01-12 00:01:00	2000-01-01 00:00:00.0000
+2022-01-27 12:12:11	2000-01-01 00:00:00.0000
+[ACTUAL RESULT]:
+a	b
+2022-01-02 00:00:00	2000-01-01 00:00:00
+2022-01-04 00:00:00	2000-01-01 00:00:00
+2022-01-06 00:00:00	2000-01-01 00:00:00
+2022-01-08 00:00:00	2000-01-01 00:00:00
+2022-01-10 01:01:01	2000-01-01 00:00:00
+2022-01-12 00:00:00	2000-01-01 00:00:00
+
+delete from t1 where a='2022-01-01 00:00:00' limit 1;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [TIMESTAMP VARCHAR] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-01 00:00:00	2
+[ACTUAL RESULT]:
+a	b
+2022-01-01 00:00:00	1
+2022-01-01 00:00:00	2
+
+delete from t1 where a='2022-01-01';
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [TIMESTAMP VARCHAR] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	b
+[ACTUAL RESULT]:
+a	b
+2022-01-01 00:00:00	1
+2022-01-01 00:00:00	2
+2022-01-01 00:00:00	3
+
+delete from t1 where a=20220101+3;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [TIMESTAMP BIGINT] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-02 00:00:00	2000-01-01 00:00:00.0000
+2022-01-06 00:00:00	2000-01-01 00:00:00.0000
+2022-01-08 00:00:00	2000-01-01 00:00:00.0000
+2022-01-10 01:01:01	2000-01-01 00:00:00.0000
+2022-01-12 00:00:00	2000-01-01 00:00:00.0000
+[ACTUAL RESULT]:
+a	b
+2022-01-02 00:00:00	2000-01-01 00:00:00
+2022-01-04 00:00:00	2000-01-01 00:00:00
+2022-01-06 00:00:00	2000-01-01 00:00:00
+2022-01-08 00:00:00	2000-01-01 00:00:00
+2022-01-10 01:01:01	2000-01-01 00:00:00
+2022-01-12 00:00:00	2000-01-01 00:00:00
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+2022-01-02 00:00:00	2000-01-01 00:00:00.0000
+2022-01-06 00:00:00	2000-01-01 00:00:00.0000
+2022-01-08 00:00:00	2000-01-01 00:00:00.0000
+2022-01-10 01:01:01	2000-01-01 00:00:00.0000
+2022-01-12 00:00:00	2000-01-01 00:00:00.0000
+[ACTUAL RESULT]:
+a	b
+2022-01-02 00:00:00	2000-01-01 00:00:00
+2022-01-04 00:00:00	2000-01-01 00:00:00
+2022-01-06 00:00:00	2000-01-01 00:00:00
+2022-01-08 00:00:00	2000-01-01 00:00:00
+2022-01-10 01:01:01	2000-01-01 00:00:00
+2022-01-12 00:00:00	2000-01-01 00:00:00
+
+]]></failure>
+    </testcase>
+    <testcase name="cases/dtype/tinyint.test" time="1.165">
+        <failure type="0002" message="The actual result is not in accordance with the expectation.More,See the detail."><![CDATA[select min(tinyint8),max(tinyint8),max(tinyint8)-1 from t1;
+
+[EXPECT RESULT]:
+min(tinyint8)	max(tinyint8)	max(tinyint8)-1
+-128	127	126
+[ACTUAL RESULT]:
+min(tinyint8)	max(tinyint8)	max(tinyint8) - 1
+-128	127	126
+
+select min(tinyint8),max(tinyint8),max(tinyint8)-1 from t1 group by a;
+
+[EXPECT RESULT]:
+min(tinyint8)	max(tinyint8)	max(tinyint8)-1
+-128	127	126
+[ACTUAL RESULT]:
+min(tinyint8)	max(tinyint8)	max(tinyint8) - 1
+-128	127	126
+
+select min(tinyint8),max(tinyint8),max(tinyint8)-1 from t1;
+
+[EXPECT RESULT]:
+min(tinyint8)	max(tinyint8)	max(tinyint8)-1
+0	255	254
+[ACTUAL RESULT]:
+min(tinyint8)	max(tinyint8)	max(tinyint8) - 1
+0	255	254
+
+select min(tinyint8),max(tinyint8),max(tinyint8)-1 from t1 group by a;
+
+[EXPECT RESULT]:
+min(tinyint8)	max(tinyint8)	max(tinyint8)-1
+0	255	254
+[ACTUAL RESULT]:
+min(tinyint8)	max(tinyint8)	max(tinyint8) - 1
+0	255	254
+
+select * from t1 where tinyint_col='250';
+
+[EXPECT RESULT]:
+tinyint_col
+250
+[ACTUAL RESULT]:
+Operator '=' with parameters [TINYINT UNSIGNED VARCHAR] will be implemented in future version.
+
+INSERT INTO t1 (id,a) VALUES
+(1,0),
+(2,CAST(0x7F AS UNSIGNED)),
+(3,CAST(0x80 AS UNSIGNED)),
+(4,CAST(0xFF AS UNSIGNED));
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Data truncation: Function expression in INSERT statement value list will be supported in future version. for column 'a' at row 1
+
+select * from t1 where ((a = 255) and (b = '255')) order by 1 desc, 2 asc;
+
+[EXPECT RESULT]:
+id	a	b
+4	255	255
+[ACTUAL RESULT]:
+id	a	b
+
+SELECT * from t_tinyint WHERE id = '1.1';
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [TINYINT VARCHAR] will be implemented in future version.
+
+SELECT * from t_tinyint WHERE id = '1.1e0';
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [TINYINT VARCHAR] will be implemented in future version.
+
+SELECT * from t_tinyint WHERE id IN ('1.1', '2.2');
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [TINYINT VARCHAR] will be implemented in future version.
+
+SELECT * from t_tinyint WHERE id IN ('1.1e0', '2.2e0');
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '=' with parameters [TINYINT VARCHAR] will be implemented in future version.
+
+SELECT * from t_tinyint WHERE id BETWEEN '1.1' AND '1.9';
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '>=' with parameters [TINYINT VARCHAR] will be implemented in future version.
+
+SELECT * from t_tinyint WHERE id BETWEEN '1.1e0' AND '1.9e0';
+
+[EXPECT RESULT]:
+id
+[ACTUAL RESULT]:
+Operator '>=' with parameters [TINYINT VARCHAR] will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a) BETWEEN 0 and 0.9;
+
+[EXPECT RESULT]:
+a
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a)=0.9;
+
+[EXPECT RESULT]:
+a
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT * FROM t1 WHERE coalesce(a) in (0.8,0.9);
+
+[EXPECT RESULT]:
+a
+[ACTUAL RESULT]:
+Function or operator 'coalesce' will be implemented in future version.
+
+SELECT (254 BETWEEN 0 AND 255);
+
+[EXPECT RESULT]:
+(254 BETWEEN 0 AND 255)
+true
+[ACTUAL RESULT]:
+254 between 0 and 255
+true
+
+SELECT 0 <= 127;
+
+[EXPECT RESULT]:
+0 <= 127
+ture
+[ACTUAL RESULT]:
+0 <= 127
+true
+
+SELECT CAST(100 AS UNSIGNED) BETWEEN 1 AND -1;
+
+[EXPECT RESULT]:
+CAST(100 AS UNSIGNED) BETWEEN 1 AND -1
+false
+[ACTUAL RESULT]:
+cast(100 as unsigned unsigned) between 1 and -1
+false
+
+SELECT CAST(100 AS UNSIGNED) NOT BETWEEN 1 AND -1;
+
+[EXPECT RESULT]:
+CAST(100 AS UNSIGNED) NOT BETWEEN 1 AND -1
+true
+[ACTUAL RESULT]:
+cast(100 as unsigned unsigned) not between 1 and -1
+true
+
+SELECT CAST(0 AS UNSIGNED) BETWEEN 0 AND -1;
+
+[EXPECT RESULT]:
+CAST(0 AS UNSIGNED) BETWEEN 0 AND -1
+false
+[ACTUAL RESULT]:
+cast(0 as unsigned unsigned) between 0 and -1
+false
+
+SELECT CAST(0 AS UNSIGNED) NOT BETWEEN 0 AND -1;
+
+[EXPECT RESULT]:
+CAST(0 AS UNSIGNED) NOT BETWEEN 0 AND -1
+true
+[ACTUAL RESULT]:
+cast(0 as unsigned unsigned) not between 0 and -1
+true
+
+SELECT ( 255 BETWEEN 255 AND 255 );
+
+[EXPECT RESULT]:
+( 255 BETWEEN 255 AND 255 )
+true
+[ACTUAL RESULT]:
+255 between 255 and 255
+true
+
+SELECT ( 127 BETWEEN 255 AND 1 );
+
+[EXPECT RESULT]:
+( 127 BETWEEN 255 AND 1 )
+false
+[ACTUAL RESULT]:
+127 between 255 and 1
+false
+
+SELECT ( -1 BETWEEN 255 AND 1 );
+
+[EXPECT RESULT]:
+( -1 BETWEEN 255 AND 1 )
+false
+[ACTUAL RESULT]:
+-1 between 255 and 1
+false
+
+SELECT ( 0 BETWEEN 255 AND 1 );
+
+[EXPECT RESULT]:
+( 0 BETWEEN 255 AND 1 )
+false
+[ACTUAL RESULT]:
+0 between 255 and 1
+false
+
+SELECT ( 1 BETWEEN 255 AND 1 );
+
+[EXPECT RESULT]:
+( 1 BETWEEN 255 AND 1 )
+false
+[ACTUAL RESULT]:
+1 between 255 and 1
+false
+
+]]></failure>
+    </testcase>
+    <testcase name="cases/dtype/varchar.test" time="0.579">
+        <failure type="0002" message="The actual result is not in accordance with the expectation.More,See the detail."><![CDATA[select * from t1 where a like 'ab\_def';
+
+[EXPECT RESULT]:
+a
+ab_def
+[ACTUAL RESULT]:
+a
+abcdef
+ab_def
+
+select * from t1 where a like "\__cdef";
+
+[EXPECT RESULT]:
+a
+_bcdef
+[ACTUAL RESULT]:
+a
+abcdef
+_bcdef
+a_cdef
+
+select * from t1 where a not like "%d_\_";
+
+[EXPECT RESULT]:
+a
+abcdef
+_bcdef
+a_cdef
+ab_def
+abc_ef
+abcd_f
+[ACTUAL RESULT]:
+a
+abc_ef
+
+select concat_ws(LastName,FirstName) from Demovarchar where Age > 40 order by 1 asc;
+
+[EXPECT RESULT]:
+concat_ws(LastName,FirstName)
+JohnsonDavid
+MartinKelly
+TamburelloAndrea
+[ACTUAL RESULT]:
+the first argument(the separator) for concat_ws must be a constant char/varchar
+
+select concat_ws(LastName,FirstName) as fullname from Demovarchar where Age > 40 order by fullname desc;
+
+[EXPECT RESULT]:
+fullname
+TamburelloAndrea
+MartinKelly
+JohnsonDavid
+[ACTUAL RESULT]:
+the first argument(the separator) for concat_ws must be a constant char/varchar
+
+select concat_ws(LastName,FirstName),Gender,Age from Demovarchar where Gender='F' order by Age asc;
+
+[EXPECT RESULT]:
+concat_ws(LastName,FirstName)	Gender	Age
+PolandCarole	F	29
+RapierAbigail	F	38
+TamburelloAndrea	F	45
+MartinKelly	F	54
+[ACTUAL RESULT]:
+the first argument(the separator) for concat_ws must be a constant char/varchar
+
+select cast(Age as char) as cAge from Demovarchar where cast(Age as char) like '2_';
+
+[EXPECT RESULT]:
+cAge
+29
+27
+[ACTUAL RESULT]:
+cage
+
+select cast(Age as char) and Age as cAge from Demovarchar where Age>=50 order by cAge desc;
+
+[EXPECT RESULT]:
+cAge
+1
+1
+[ACTUAL RESULT]:
+Operator 'and' with parameters [CHAR INT] will be implemented in future version.
+
+select max(lastName),min(lastName) from employees;
+
+[EXPECT RESULT]:
+max(lastName)	min(lastName)
+Vanauf	Bondur
+[ACTUAL RESULT]:
+max(lastname)	min(lastname)
+Vanauf
+
+select avg(officeCode) from employees where jobTitle like 'Sales%' group by jobTitle;
+
+[EXPECT RESULT]:
+avg(officeCode)
+6
+1
+3.6666666666666665
+[ACTUAL RESULT]:
+Function 'avg' with parameters [VARCHAR] will be implemented in future version.
+
+select officeCode,sum(cast(officeCode as unsigned)) from employees group by officeCode;
+
+[EXPECT RESULT]:
+officeCode	sum(cast(officeCode as unsigned))
+1	6
+6	12
+4	16
+2	4
+3	6
+7	14
+[ACTUAL RESULT]:
+officecode	sum(cast(officecode as unsigned unsigned))
+1	6
+6	12
+4	16
+2	4
+3	6
+7	14
+
+select employeeNumber,officeCode,reportsTo from employees where employeeNumber>1400 and reportsTo is not null order by officeCode+1,employeeNumber;
+
+[EXPECT RESULT]:
+employeeNumber	officeCode	reportsTo
+1401	4	1102
+1611	6	1088
+1501	7	1102
+1504	7	1102
+[ACTUAL RESULT]:
+Operator '+' with parameters [VARCHAR BIGINT] will be implemented in future version.
+
+select e.jobTitle,sum(jobid) from employees e join job j on e.jobTitle=j.jobTitle group by jobTitle having sum(jobid)>5;
+
+[EXPECT RESULT]:
+jobTitle	sum(jobid)
+Sales Manager (NA)	6
+Sales Rep	84
+[ACTUAL RESULT]:
+Column reference 'jobtitle' is ambiguous
+
+select e.jobTitle,sum(jobid) from employees e join job j on e.jobTitle=j.jobTitle group by jobTitle having sum(jobid)>5 order by 2 desc;
+
+[EXPECT RESULT]:
+jobTitle	sum(jobid)
+Sales Rep	84
+Sales Manager (NA)	6
+[ACTUAL RESULT]:
+Column reference 'jobtitle' is ambiguous
+
+update t1 set a=a+'101';
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '+' with parameters [VARCHAR VARCHAR] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+103	0
+105	0
+107	0
+109	0
+111	0
+113	0
+115	0
+117	0
+119	0
+121	0
+123	0
+124	0
+125	0
+127	0
+[ACTUAL RESULT]:
+a	b
+2	0
+4	0
+6	0
+8	0
+10	0
+12	0
+14	0
+16	0
+18	0
+20	0
+22	0
+24	0
+26	0
+23	0
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+103	0
+105	0
+107	0
+109	0
+111	0
+113	0
+115	0
+117	0
+119	0
+121	0
+123	0
+124	0
+125	0
+127	0
+[ACTUAL RESULT]:
+a	b
+2	0
+4	0
+6	0
+8	0
+10	0
+12	0
+14	0
+16	0
+18	0
+20	0
+22	0
+24	0
+26	0
+23	0
+
+update t1 set a=a+'a' where 1 > 2;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '+' with parameters [VARCHAR VARCHAR] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+103	0
+105	0
+107	0
+109	0
+111	0
+113	0
+115	0
+117	0
+119	0
+121	0
+123	0
+124	0
+125	0
+127	0
+[ACTUAL RESULT]:
+a	b
+2	0
+4	0
+6	0
+8	0
+10	0
+12	0
+14	0
+16	0
+18	0
+20	0
+22	0
+24	0
+26	0
+23	0
+
+update t1 set a=a+a where 3 > 2;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '+' with parameters [VARCHAR VARCHAR] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+206	0
+210	0
+214	0
+218	0
+222	0
+226	0
+230	0
+234	0
+238	0
+242	0
+246	0
+248	0
+250	0
+254	0
+[ACTUAL RESULT]:
+a	b
+2	0
+4	0
+6	0
+8	0
+10	0
+12	0
+14	0
+16	0
+18	0
+20	0
+22	0
+24	0
+26	0
+23	0
+
+delete from t1 where a=1 limit 1;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [VARCHAR BIGINT] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	b
+1	2
+[ACTUAL RESULT]:
+a	b
+1	1
+1	2
+
+INSERT INTO t1 VALUES (1,3);
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Data truncation: Incorrect VARCHAR value: '1' for column 'a' at row 0
+
+delete from t1 where a=1;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [VARCHAR BIGINT] will be implemented in future version.
+
+select * from t1;
+
+[EXPECT RESULT]:
+a	b
+[ACTUAL RESULT]:
+a	b
+1	1
+1	2
+
+delete from t1 where a=2+2;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [VARCHAR BIGINT] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+10	0
+12	0
+14	0
+16	0
+18	0
+2	0
+20	0
+22	0
+23	0
+24	0
+26	0
+6	0
+8	0
+[ACTUAL RESULT]:
+a	b
+2	0
+4	0
+6	0
+8	0
+10	0
+12	0
+14	0
+16	0
+18	0
+20	0
+22	0
+24	0
+26	0
+23	0
+
+delete from t1 where  a=24;
+
+[EXPECT RESULT]:
+
+[ACTUAL RESULT]:
+Operator '=' with parameters [VARCHAR BIGINT] will be implemented in future version.
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+10	0
+12	0
+14	0
+16	0
+18	0
+2	0
+20	0
+22	0
+23	0
+26	0
+6	0
+8	0
+[ACTUAL RESULT]:
+a	b
+2	0
+4	0
+6	0
+8	0
+10	0
+12	0
+14	0
+16	0
+18	0
+20	0
+22	0
+24	0
+26	0
+23	0
+
+select a,b from t1;
+
+[EXPECT RESULT]:
+a	b
+10	0
+12	0
+14	0
+16	0
+18	0
+2	0
+20	0
+22	0
+23	0
+26	0
+6	0
+8	0
+[ACTUAL RESULT]:
+a	b
+2	0
+4	0
+6	0
+8	0
+10	0
+12	0
+14	0
+16	0
+18	0
+20	0
+22	0
+24	0
+26	0
+23	0
+
+]]></failure>
+    </testcase>
+</testsuite>

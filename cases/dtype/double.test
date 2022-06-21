@@ -178,8 +178,6 @@ create table t1 (a double(10,5) primary key, b char(32));
 insert into t1 values (1,'apple'), (2,'apple');
 select * from t1;
 -- @ignore{
-update t1, t1 as t2 set t1.a=t1.a*2 where t1.b = t2.b and t1.a > t2.a;
-select * from t1;
 -- @ignore}
 
 #Test cases of delete with single table
@@ -226,6 +224,4 @@ create table t1 (a double(10,5) primary key, b char(32));
 insert into t1 values (1,'apple'), (2,'apple');
 select * from t1;
 -- @ignore{
-delete t1 from t1,t1 as t2 where t1.b = t2.b and t1.a > t2.a;
 -- @ignore}
-select * from t1;
