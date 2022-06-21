@@ -135,15 +135,7 @@ SELECT distinct extracted_week from t1;
 extracted_week
 0
 select date from t1 having extract(day FROM date)=1;
-date
-2000-01-01
-2000-01-01
-2000-01-01
-2000-01-01
-2000-01-01
-2000-01-01
-2000-01-01
-2000-01-01
+column "date" must appear in the GROUP BY clause or be used in an aggregate function
 drop table t1;
 CREATE TABLE t1
 (`date` date,
@@ -156,8 +148,7 @@ SELECT distinct extracted_week from t1;
 extracted_week
 0
 select date from t1 having extract(day FROM date)=1;
-date
-2000-01-01
+column "date" must appear in the GROUP BY clause or be used in an aggregate function
 drop table t1;
 select extract(month from NULL);
 extract(month from NULL)
