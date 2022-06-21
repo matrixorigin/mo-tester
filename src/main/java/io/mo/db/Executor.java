@@ -777,8 +777,7 @@ public class Executor {
                     return false;
 
                 for(int j = 0; j < exp_values.length; j++){
-                    LOG.info("exp value = "+ exp_values[j]);
-                    LOG.info("act value = "+ act_values[j]);
+
                     //if the expected value is not a numeric
                     if(!isNumeric(exp_values[j])){
                         // and the expected value does not equals with the actual value,return false
@@ -793,32 +792,64 @@ public class Executor {
                         //if both of the expected and actual values are numeric
 
                         //if values is the format of scientific notation,transfer them to the noraml format
-                        if(exp_values[j].indexOf("E") != -1 || exp_values[j].indexOf("e") != -1){
+                        /*if(exp_values[j].indexOf("E") != -1 || exp_values[j].indexOf("e") != -1){
                             exp_values[j] = nf.format(Double.parseDouble(exp_values[j]));
                         }
 
                         if(act_values[j].indexOf("E") != -1 || act_values[j].indexOf("e") != -1){
                             act_values[j] = nf.format(Double.parseDouble(act_values[j]));
-                        }
+                        }*/
 
-                        LOG.info("transfer exp value = "+ exp_values[j]);
-                        LOG.info("transfer act value = "+ act_values[j]);
+                        exp_values[j] = nf.format(Double.parseDouble(exp_values[j]));
+                        act_values[j] = nf.format(Double.parseDouble(act_values[j]));
 
                         //First, check whether the integer parts are equal
                         String exp_int_part = null;
                         String act_int_part = null;
-                        if(exp_values[j].indexOf(".") == -1)
-                            exp_int_part = exp_values[j];
-                        else
-                            exp_int_part = exp_values[j].substring(0,exp_values[j].indexOf("."));
 
-                        if(act_values[j].indexOf(".") == -1)
-                            act_int_part = act_values[j];
-                        else
-                            act_int_part = act_values[j].substring(0,act_values[j].indexOf("."));
+                        if(exp_values[j].indexOf(".") == -1){
+                            if(exp_values[j].length() != act_values[j].length())
+                                return false;
+                            else{
+                                if(exp_values[j].length() < 10 && !exp_values[j].equalsIgnoreCase(act_values[j]))
+                                    return false;
 
-                        if(!exp_int_part.equalsIgnoreCase(act_int_part))
+                                if(exp_values[j].startsWith("-") || exp_values[j].startsWith("-")){
+                                    exp_values[j] =  exp_values[j].substring(0,1) + "0."+ exp_values[j].substring(1).replace(".","");
+                                }else
+                                    exp_values[j] = "0." + exp_values[j].replace(".","");
+
+                                if(act_values[j].startsWith("-") || act_values[j].startsWith("-")){
+                                    act_values[j] =  act_values[j].substring(0,1) + "0."+ act_values[j].substring(1).replace(".","");
+                                }else
+                                    act_values[j] = "0." + act_values[j].replace(".","");
+                            }
+                        }
+
+                        //LOG.info("exp value = "+ exp_values[j]);
+                        //LOG.info("act value = "+ act_values[j]);
+
+                        exp_int_part = exp_values[j].substring(0,exp_values[j].indexOf("."));
+                        act_int_part = act_values[j].substring(0,act_values[j].indexOf("."));
+                        if(exp_int_part.length() != act_int_part.length()){
+                                return false;
+                        }
+
+                        if(exp_int_part.length() < 10 && !exp_int_part.equalsIgnoreCase(act_int_part))
                             return false;
+
+                        if(exp_values[j].startsWith("-") || exp_values[j].startsWith("-")){
+                            exp_values[j] =  exp_values[j].substring(0,1) + "0."+ exp_values[j].substring(1).replace(".","");
+                        }else
+                            exp_values[j] = "0." + exp_values[j].replace(".","");
+
+                        if(act_values[j].startsWith("-") || act_values[j].startsWith("-")){
+                            act_values[j] =  act_values[j].substring(0,1) + "0."+ act_values[j].substring(1).replace(".","");
+                        }else
+                            act_values[j] = "0." + act_values[j].replace(".","");
+
+                        LOG.info("transfer exp value = "+ exp_values[j]);
+                        LOG.info("transfer act value = "+ act_values[j]);
 
                         // round the number with large scale to the scale the same as the number with short scale
                         if(exp_values[j].length() > act_values[j].length())
@@ -830,14 +861,14 @@ public class Executor {
                         double tolerable_error = 2.0/Math.pow(10.0,scale);
                         if(tolerable_error < COMMON.TOLERABLE_ERROR)
                             tolerable_error = COMMON.TOLERABLE_ERROR;
-                        LOG.info("tolerable_error = "+tolerable_error);
+                        //LOG.info("tolerable_error = "+tolerable_error);
                         double n_exp = Double.parseDouble(exp_values[j]);
-                        LOG.info("n_exp = "+ n_exp);
+                        //LOG.info("n_exp = "+ n_exp);
                         //LOG.info("act_values["+j+"] = "+act_values[j]);
                         double n_act = Double.parseDouble(act_values[j]);
-                        LOG.info("n_act = "+ n_act);
-                        LOG.info("Math.abs(n_exp - n_act) = "+Math.abs(n_exp - n_act));
-                        LOG.info(Math.abs(n_exp - n_act) + " > "+tolerable_error + " = "+(Math.abs(n_exp - n_act) > tolerable_error));
+                        //LOG.info("n_act = "+ n_act);
+                        //LOG.info("Math.abs(n_exp - n_act) = "+Math.abs(n_exp - n_act));
+                        //LOG.info(Math.abs(n_exp - n_act) + " > "+tolerable_error + " = "+(Math.abs(n_exp - n_act) > tolerable_error));
                         if(Math.abs(n_exp - n_act) > tolerable_error)
                             return false;
                     }
@@ -880,15 +911,13 @@ public class Executor {
     }
     public static void main(String args[]){
         System.out.println(isNumeric("-2.4492935982947064E-16"));
-        double d = Double.parseDouble("-2.4492935982947064E-16");
+        //double d = Double.parseDouble("-2.4492935982947064E-16");
+        double d = Double.parseDouble("66447663013875.0000");
         NumberFormat nf = NumberFormat.getNumberInstance();
         nf.setGroupingUsed(false);
         nf.setMaximumFractionDigits(50);
         String p = nf.format(d);
         System.out.println(p);
-        System.out.println(d);
-        BigDecimal bd = new BigDecimal(d);
-        System.out.println(bd);
         //System.out.println("33334444".substring(0,"33334444".indexOf(".")));
         /*String e = "1113.32";
         String a = "1113.3199462890625";
