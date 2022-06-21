@@ -9,7 +9,7 @@ SELECT distinct 1 FROM t1 group by a order by any_value(count(*))-any_value(coun
 SELECT DISTINCT GP1.a AS g1 FROM t1 AS GP1
 WHERE GP1.a >= 0
 ORDER BY 2+ANY_VALUE(GP1.b) LIMIT 8;
-[42803]column "gp1.a" must appear in the GROUP BY clause or be used in an aggregate function
+column "gp1.a" must appear in the GROUP BY clause or be used in an aggregate function
 drop table t1;
 create table t1(
 a int,

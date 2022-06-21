@@ -145,7 +145,7 @@ bc
 create table t1(f1 varchar(255));
 insert into t1 values ("123"),("456");
 select substring(f1,1,1) from t1 group by 1;
-[42803]column "t1.f1" must appear in the GROUP BY clause or be used in an aggregate function
+column "t1.f1" must appear in the GROUP BY clause or be used in an aggregate function
 drop table t1;
 SELECT '1' IN ('1', SUBSTRING(-9223372036854775809, 1));
 '1' IN ('1', SUBSTRING(-9223372036854775809, 1))

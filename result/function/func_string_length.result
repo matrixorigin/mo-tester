@@ -63,7 +63,7 @@ CREATE TABLE t1 (a varchar(10));
 INSERT INTO t1 VALUES ('abc'), ('xyz');
 SELECT a, CONCAT_WS(",",a,' ',a) AS c FROM t1
 HAVING LENGTH(REVERSE(c)) >0;
-[42803]column "c" must appear in the GROUP BY clause or be used in an aggregate function
+column "c" must appear in the GROUP BY clause or be used in an aggregate function
 DROP TABLE t1;
 select length(space(1)) as a;
 a
