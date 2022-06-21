@@ -61,7 +61,7 @@ a
 1
 2
 SELECT ABS(i) AS a FROM t GROUP BY a ORDER BY a + 1;
-[42P10]column "a" does not exist
+column "a" does not exist
 DROP TABLE t;
 CREATE TABLE t1(c0 INTEGER, c1 INTEGER, c2 INTEGER);
 CREATE TABLE t2(c0 INTEGER, c1 INTEGER, c2 INTEGER);

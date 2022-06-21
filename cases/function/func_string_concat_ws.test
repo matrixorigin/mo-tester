@@ -6,13 +6,13 @@ INSERT INTO t1 VALUES (1413006,'idlfmv'),
 SELECT number, any_value(alpha), CONCAT_WS('<---->',number,any_value(alpha)) AS new
 FROM t1 GROUP BY number;
 SELECT CONCAT_WS('<---->',number,alpha) AS new
-FROM t1 GROUP BY new LIMIT 1;
+FROM t1 GROUP BY CONCAT_WS('<---->',number,alpha) LIMIT 1;
 SELECT any_value(number), any_value(alpha), CONCAT_WS('<->',any_value(number),any_value(alpha)) AS new
-FROM t1 GROUP BY new LIMIT 1;
+FROM t1 GROUP BY CONCAT_WS('<->',any_value(number),any_value(alpha)) LIMIT 1;
 SELECT any_value(number), any_value(alpha), CONCAT_WS('-',any_value(number),any_value(alpha),any_value(alpha),any_value(alpha),any_value(alpha),any_value(alpha),any_value(alpha),any_value(alpha)) AS new
-FROM t1 GROUP BY new LIMIT 1;
+FROM t1 GROUP BY CONCAT_WS('-',any_value(number),any_value(alpha),any_value(alpha),any_value(alpha),any_value(alpha),any_value(alpha),any_value(alpha),any_value(alpha)) LIMIT 1;
 SELECT any_value(number), any_value(alpha), CONCAT_WS('<------------------>',any_value(number),any_value(alpha)) AS new
-FROM t1 GROUP BY new LIMIT 1;
+FROM t1 GROUP BY CONCAT_WS('<------------------>',any_value(number),any_value(alpha)) LIMIT 1;
 drop table t1;
 
 #SELECT, 嵌套，NULL
