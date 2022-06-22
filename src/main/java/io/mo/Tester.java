@@ -190,6 +190,7 @@ public class Tester {
             return;
         }
         File[] fs = file.listFiles();
+        sort(fs);
         for(int i = 0;i < fs.length;i++){
             generateRs(fs[i]);
         }
