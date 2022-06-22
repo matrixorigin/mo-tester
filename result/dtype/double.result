@@ -41,13 +41,10 @@ a
 drop table t1;
 create table t1(a float(34));
 show create table t1;
-att_database	att_relname	attname	atttyp	attnum	att_length	attnotnull	atthasdef	att_default	attisdropped	att_constraint_type	att_is_unsigned	att_is_auto_increment	att_comment	att_is_hidden
-test01	t1	id	22	1	4	0	0		0	n	0	0		0
-test01	t1	str	61	2	24	0	0		0	n	0	0		0
-test01	t1	name	61	3	24	0	0		0	n	0	0		0
-test01	t1	PADDR	33	4	16	0	0		0	n	0	0	Physical address	1
-double	t1	a	31	1	8	0	0		0	n	0	0		0
-double	t1	PADDR	33	2	16	0	0		0	n	0	0	Physical address	1
+Table   Create Table
+t1      CREATE TABLE `t1` (
+`a` DOUBLE DEFAULT NULL
+)
 drop table t1;
 create table t1 ( a double not null default 1, big double(30,5) );
 insert into t1 (big) values (-1),(12345678.901234567),(92233720368547.75807);

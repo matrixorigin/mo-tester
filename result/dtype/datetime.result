@@ -19,20 +19,20 @@ cast(2000-01-01 00:00:00.501109 as datetime(0))
 select cast('2000-01-01 00:00:00.49999' as datetime(0));
 cast(2000-01-01 00:00:00.49999 as datetime(0))
 2000-01-01 00:00:00
-select cast('2000-1-1' as datetime(0));
-cast(2000-1-1 as datetime(0))
+select cast('2000-01-01' as datetime(0));
+cast(2000-01-01 as datetime(0))
 2000-01-01 00:00:00
 select cast('2022-01-01 25:00:00' as datetime(0));
 cast(2022-01-01 25:00:00 as datetime(0))
 NULL
-select cast('2000-1-1' as datetime(0))+1;
-cast(2000-1-1 as datetime(0))+1
+select cast('2000-01-01' as datetime(0))+1;
+cast(2000-01-01 as datetime(0))+1
 20000101000001
-select cast('2000-1-1' as datetime(0))*1;
-cast(2000-1-1 as datetime(0))*1
+select cast('2000-01-01' as datetime(0))*1;
+cast(2000-01-01 as datetime(0))*1
 20000101000000
-select cast('2000-1-1' as datetime(0))*1.1;
-cast(2000-1-1 as datetime(0))*1.1
+select cast('2000-01-01' as datetime(0))*1.1;
+cast(2000-01-01 as datetime(0))*1.1
 22000111100000.0
 SELECT DATE_ADD('2022-02-28 23:59:59.9999', INTERVAL 1 SECOND) '1 second later';
 1 second later
@@ -49,12 +49,12 @@ SELECT DATE_ADD('2022-02-28 23:59:59.9999', INTERVAL 1 DAY) '1 day later';
 SELECT DATE_ADD('2022-02-28 23:59:59.9999', INTERVAL 1 WEEK) '1 week later';
 1 week later
 2022-03-07 23:59:59.999900
-SELECT DATE_ADD('2022-02-28 23:59:59.9999', INTERVAL -13 MONTH) '1 month earlier';
+SELECT DATE_ADD('2022-02-28 23:59:59.9999', INTERVAL 13 MONTH) '1 month earlier';
 1 month earlier
-2021-01-28 23:59:59.999900
-SELECT DATE_ADD('2022-02-28 23:59:59.9999', INTERVAL -1 YEAR) '1 year earlier';
+2022-03-28 23:59:59.999900
+SELECT DATE_ADD('2022-02-28 23:59:59.9999', INTERVAL 1 YEAR) '1 year earlier';
 1 year earlier
-2021-02-28 23:59:59.999900 
+2023-02-28 23:59:59.999900 
 select cast(cast('2000-12-31' as date) as datetime(0));
 cast(cast(2000-12-31 as date) as datetime(0))
 2000-12-31 00:00:00

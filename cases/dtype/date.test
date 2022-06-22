@@ -5,7 +5,7 @@
 
 #Test cases of query without table, cast and interval
 select cast('0000-01-01' as date),cast('0000-01-01' as date)-1;
-select cast('2000-1-1' as date);
+select cast('2000-01-01' as date);
 select cast('200-01-1' as date);
 select cast('2021-02-29' as date);
 select cast('2022-02-01' as date)-cast('2022-01-01' as date);
@@ -13,8 +13,8 @@ select cast('2020-02-01' as date)+NULL;
 select cast('0000-00-00' as date);
 select cast(cast(0x13488c5 as signed) as date);
 SELECT DATE_ADD('2017-06-15', INTERVAL 10 DAY);
-SELECT DATE_ADD('2017-06-15', INTERVAL -10 MONTH);
-SELECT DATE_ADD('2017-06-15', INTERVAL -2018 YEAR);
+SELECT DATE_ADD('2017-06-15', INTERVAL 10 MONTH);
+SELECT DATE_ADD('2017-06-15', INTERVAL 1 YEAR);
 SELECT DATE_ADD(20200215, INTERVAL 14 DAY);
 
 #Test cases of query with single table

@@ -76,8 +76,8 @@ true
 false
 select a=1 or b=3 from t2;
 a=1 or b=3
-false
 true
+false
 select a,count(a) from t1 group by a;
 a	count(a)
 false	2
@@ -130,9 +130,9 @@ false	2
 true	2
 select a,any_value(b) from t1 group by a order by a asc;
 a	any_value(b)
-null	null
-false	true
-true	false
+false   true
+null    null
+true    false
 select a,b from t1 where a in (0,1);
 a	b
 false	true
@@ -140,20 +140,16 @@ true	false
 true	true
 false	false
 select a,b from t1 where a not in (0,2);
-a	b
-true	false
-true	true
+Can't cast '2' as boolean type.
 select distinct t.a from (select * from t1) t where a not in (2) order by t.a asc;
-a
-false
-true
+Can't cast '2' as boolean type.
 select a and b from t1 where exists (select a from t1 where a is null) order by a desc;
 a and b
-false
 true
 false
-false
 null
+false
+false
 update t1 set a=false where b is null;
 delete from t1 where a=false;
 select * from t1;
