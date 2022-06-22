@@ -1,15 +1,15 @@
 select cast('0000-01-01' as date),cast('0000-01-01' as date)-1;
 cast('0000-01-01' as date)	cast('0000-01-01' as date)-1
 0000-01-01	100
-select cast('2000-1-1' as date);
-cast('2000-1-1' as date)
-2000-01-01
+select cast('2000-01-01' as date);
+cast('2000-01-01' as date)
+Incorrect date value
 select cast('200-01-1' as date);
 cast('200-01-1' as date)
-0200-01-01
+Incorrect date value
 select cast('2021-02-29' as date);
 cast('2021-02-29' as date)
-NULL
+Incorrect date value
 select cast('2022-02-01' as date)-cast('2022-01-01' as date);
 cast('2022-02-01' as date)-cast('2022-01-01' as date)
 100
@@ -17,7 +17,7 @@ select cast('2020-02-01' as date)+NULL;
 cast('2020-02-01' as date)+NULL
 NULL
 select cast('0000-00-00' as date);
-cast('0000-00-00' as date)
+Incorrect date value
 NULL
 select cast(cast(0x13488c5 as signed) as date);
 cast(cast(0x13488c5 as signed) as date)
@@ -25,12 +25,12 @@ cast(cast(0x13488c5 as signed) as date)
 SELECT DATE_ADD('2017-06-15', INTERVAL 10 DAY);
 DATE_ADD('2017-06-15', INTERVAL 10 DAY)
 2017-06-25
-SELECT DATE_ADD('2017-06-15', INTERVAL -10 MONTH);
-DATE_ADD('2017-06-15', INTERVAL -10 MONTH)
-2016-08-15
-SELECT DATE_ADD('2017-06-15', INTERVAL -2018 YEAR);
-DATE_ADD('2017-06-15', INTERVAL -2018 YEAR)
-NULL
+SELECT DATE_ADD('2017-06-15', INTERVAL 10 MONTH);
+DATE_ADD('2017-06-15', INTERVAL 10 MONTH)
+2018-04-15
+SELECT DATE_ADD('2017-06-15', INTERVAL 1 YEAR);
+DATE_ADD('2017-06-15', INTERVAL 1 YEAR)
+2018-06-15
 SELECT DATE_ADD(20200215, INTERVAL 14 DAY);
 DATE_ADD(20200215, INTERVAL 14 DAY)
 2020-02-29
