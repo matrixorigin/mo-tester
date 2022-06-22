@@ -7,8 +7,32 @@ insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-
 insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
 insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
 insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
-select avg(a),avg(b),avg(c),avg(d),avg(e),avg(f),avg(g),avg(h),avg(i),avg(k),avg(l),avg(m),avg(n) from t1;
-select avg(a),avg(b),avg(c),avg(d),avg(e),avg(f),avg(g),avg(h),avg(i),avg(k),avg(l),avg(m),avg(n) from t1 limit 1;
+select avg(a) from t1;
+select avg(b) from t1;
+select avg(c) from t1;
+select avg(d) from t1;
+select avg(e) from t1;
+select avg(f) from t1;
+select avg(g) from t1;
+select avg(h) from t1;
+select avg(i) from t1;
+select avg(k) from t1;
+select avg(l) from t1;
+select avg(m) from t1;
+select avg(n) from t1;
+select avg(a) from t1 limit 1;
+select avg(b) from t1 limit 1;
+select avg(c) from t1 limit 1;
+select avg(d) from t1 limit 1;
+select avg(e) from t1 limit 1;
+select avg(f) from t1 limit 1;
+select avg(g) from t1 limit 1;
+select avg(h) from t1 limit 1;
+select avg(i) from t1 limit 1;
+select avg(k) from t1 limit 1;
+select avg(l) from t1 limit 1;
+select avg(m) from t1 limit 1;
+select avg(n) from t1 limit 1;
 drop table t1;
 
 #0.5暂不支持time类型
@@ -188,6 +212,9 @@ SELECT a,COUNT(DISTINCT b) AS cnt FROM t1 GROUP BY a HAVING cnt > 50;
 #SELECT a,AVG(DISTINCT b) AS average FROM t1 GROUP BY a HAVING average > 50;
 SELECT DISTINCT a, SUM( b) AS sumation FROM t1 GROUP BY a HAVING sumation > 50;
 SELECT DISTINCT a, AVG( b) AS average FROM t1 GROUP BY a HAVING average > 50;
+SELECT a,COUNT(DISTINCT b) FROM t1 GROUP BY a HAVING COUNT(DISTINCT b) > 50;
+SELECT DISTINCT a, SUM( b) FROM t1 GROUP BY a HAVING SUM( b) > 50;
+SELECT DISTINCT a, AVG( b) FROM t1 GROUP BY a HAVING AVG( b) > 50;
 DROP TABLE t1;
 
 

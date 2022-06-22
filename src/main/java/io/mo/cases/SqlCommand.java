@@ -81,10 +81,14 @@ public class SqlCommand {
 
     private void check() {
         String command = this.command.toString();
+        command = command.toLowerCase();
         String opt = command.split(" ")[0];
         if (opt.equalsIgnoreCase("select")
                 || opt.equalsIgnoreCase("show")
-                || opt.equalsIgnoreCase("with"))
+                || opt.equalsIgnoreCase("with")
+                || command.startsWith("select")
+                || command.startsWith("show")
+                || command.startsWith("with"))
             this.update = false;
         else
             this.update = true;

@@ -158,6 +158,7 @@ FROM qn;
 drop table if exists t1;
 drop table if exists t2;
 create table t1(a int, b int, c int);
+create table t2(a int);
 insert into t1 values(null,null,null),(2,3,4),(4,5,6);
 INSERT INTO t2
 WITH qn AS (SELECT 10*a as a FROM t1),

@@ -58,7 +58,7 @@ col1
 drop table if exists tbl_datetime;
 drop table if exists tbl_decimal;
 CREATE TABLE tbl_decimal (col1 DECIMAL(65, 30));
-For decimal(M), M must between 0 and 38. at position 47; You have an error in your SQL syntax; check the manual that corresponds to your MatrixOne server version for the right syntax to use
+You have an error in your SQL syntax; check the manual that corresponds to your MatrixOne server version for the right syntax to use. For decimal(M), M must between 0 and 38. at position 47;
 drop table if exists tbl_decimal;
 drop table if exists t1;
 create table t1 (id int not null, str char(10));
@@ -139,10 +139,11 @@ create table t1 (a int, b int);
 create table t2 (a int, b int);
 insert into t1 values (1,1),(2,1),(3,1);
 insert into t2 values (1,1), (3,1);
-update t1 left join t2  on t1.a=t2.a set t1.b=2, t2.b=2 where t1.b=1 and t2.b=1 or t2.a is NULL;
 select t1.a, t1.b,t2.a, t2.b from t1 left join t2  on t1.a=t2.a where t1.b=1 and t2.b=1 or t2.a is NULL;
 a	b	a	b
-2	2	null	null
+1	1	1	1
+2	1	null	null
+3	1	3	1
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -244,7 +245,7 @@ drop table if exists t2;
 drop table if exists t3;
 CREATE TABLE t1 (a DATE NOT NULL, b INT);
 INSERT INTO t1 VALUES ('1999-05-100',1), ('1999-05-10',2);
-Data truncation: Incorrect date value: '1999-05-100' for column 'a' at row 1
+Data truncation: Incorrect DATE value: '1999-05-100' for column 'a' at row 0
 CREATE TABLE t2 (a DATETIME NOT NULL, b INT);
 INSERT INTO t2 VALUES ('1999-05-10 00:01:01',1), ('1999-05-10 00:00:00',2);
 SELECT * FROM t1 WHERE a IS NULL;
@@ -272,9 +273,9 @@ drop table if exists t2;
 drop table if exists t3;
 drop table if exists t1;
 create table t1 (col1 datetime);
-insert into t1 values(STR_TO_DATE('31.10.2004 15.30','%d.%m.%Y %H.%i'));
-insert into t1 values(STR_TO_DATE('2004.12.12 11:22:33 AM','%Y.%m.%d %r'));
-insert into t1 values(STR_TO_DATE('2004.12.12 10:22:59','%Y.%m.%d %T'));
+insert into t1 values("2004-10-31 15:30:00");
+insert into t1 values("2004-12-12 11:22:33");
+insert into t1 values("2004-12-12 10:22:59");
 insert into t1 values(null);
 select count(*) from t1 where STR_TO_DATE('2004.12.12 10:22:61','%Y.%m.%d %T') IS NULL;
 count(*)

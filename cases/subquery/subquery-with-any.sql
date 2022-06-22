@@ -117,7 +117,7 @@ select * from t1 where a1 > any(select b1 from t2);
 DROP TABLE IF EXISTS t1;
 DROP TABLE IF EXISTS t2;
 create table t1 (s1 char);
-insert into t1 values (1),(2);
+insert into t1 values ('1'),('2');
 select * from t1 where (s1 < any (select s1 from t1));
 select * from t1 where not (s1 < any (select s1 from t1));
 select * from t1 where (s1+1 = ANY (select s1 from t1));
@@ -246,7 +246,7 @@ SELECT * FROM t1 WHERE t1.number < ANY(SELECT number FROM t2);
 DROP TABLE IF EXISTS t1;
 DROP TABLE IF EXISTS t2;
 CREATE TABLE t1 (a varchar(5), b varchar(10));
-INSERT INTO t1 VALUES ('AAA', 5), ('BBB', 4), ('BBB', 1), ('CCC', 2), ('CCC', 7), ('AAA', 2), ('AAA', 4), ('BBB', 3), ('AAA', 8);
+INSERT INTO t1 VALUES ('AAA', '5'), ('BBB', '4'), ('BBB', '1'), ('CCC', '2'), ('CCC', '7'), ('AAA', '2'), ('AAA', '4'), ('BBB', '3'), ('AAA', '8');
 SELECT * FROM t1 WHERE (a,b) = ANY (SELECT a, max(b) FROM t1 GROUP BY a);
 
 DROP TABLE IF EXISTS t1;
@@ -257,26 +257,24 @@ DROP TABLE IF EXISTS t2;
 -- @label:bvt
 create table t1 (s1 char);
 insert into t1 values ('e');
-ANALYZE TABLE t1;
 select * from t1 where 'f' > any (select s1 from t1);
-select * from t1 where 'f' > any (select s1 from t1 union select s1 from t1);
 
 DROP TABLE IF EXISTS t1;
 DROP TABLE IF EXISTS t2;
 CREATE TABLE t1 ( a int, b int );
 INSERT INTO t1 VALUES (1,1),(2,2),(3,3);
-SELECT a FROM t1 WHERE a > ANY (SELECT a FROM t1 WHERE b = 2 UNION SELECT a FROM t1 WHERE b = 2);
-SELECT a FROM t1 WHERE a < ANY (SELECT a FROM t1 WHERE b = 2 UNION SELECT a FROM t1 WHERE b = 2);
-SELECT a FROM t1 WHERE a = ANY (SELECT a FROM t1 WHERE b = 2 UNION SELECT a FROM t1 WHERE b = 2);
-SELECT a FROM t1 WHERE a >= ANY (SELECT a FROM t1 WHERE b = 2 UNION SELECT a FROM t1 WHERE b = 2);
-SELECT a FROM t1 WHERE a <= ANY (SELECT a FROM t1 WHERE b = 2 UNION SELECT a FROM t1 WHERE b = 2);
-SELECT a FROM t1 WHERE a <> ANY (SELECT a FROM t1 WHERE b = 2 UNION SELECT a FROM t1 WHERE b = 2);
-SELECT a FROM t1 WHERE a > ANY (SELECT a FROM t1 HAVING a = 2 UNION SELECT a FROM t1 HAVING a = 2);
-SELECT a FROM t1 WHERE a < ANY (SELECT a FROM t1 HAVING a = 2 UNION SELECT a FROM t1 HAVING a = 2);
-SELECT a FROM t1 WHERE a = ANY (SELECT a FROM t1 HAVING a = 2 UNION SELECT a FROM t1 HAVING a = 2);
-SELECT a FROM t1 WHERE a >= ANY (SELECT a FROM t1 HAVING a = 2 UNION SELECT a FROM t1 HAVING a = 2);
-SELECT a FROM t1 WHERE a <= ANY (SELECT a FROM t1 HAVING a = 2 UNION SELECT a FROM t1 HAVING a = 2);
-SELECT a FROM t1 WHERE a <> ANY (SELECT a FROM t1 HAVING a = 2 UNION SELECT a FROM t1 HAVING a = 2);
+SELECT a FROM t1 WHERE a > ANY (SELECT a FROM t1 WHERE b = 2);
+SELECT a FROM t1 WHERE a < ANY (SELECT a FROM t1 WHERE b = 2);
+SELECT a FROM t1 WHERE a = ANY (SELECT a FROM t1 WHERE b = 2);
+SELECT a FROM t1 WHERE a >= ANY (SELECT a FROM t1 WHERE b = 2);
+SELECT a FROM t1 WHERE a <= ANY (SELECT a FROM t1 WHERE b = 2);
+SELECT a FROM t1 WHERE a <> ANY (SELECT a FROM t1 WHERE b = 2);
+SELECT a FROM t1 WHERE a > ANY (SELECT a FROM t1 HAVING a = 2);
+SELECT a FROM t1 WHERE a < ANY (SELECT a FROM t1 HAVING a = 2);
+SELECT a FROM t1 WHERE a = ANY (SELECT a FROM t1 HAVING a = 2);
+SELECT a FROM t1 WHERE a >= ANY (SELECT a FROM t1 HAVING a = 2);
+SELECT a FROM t1 WHERE a <= ANY (SELECT a FROM t1 HAVING a = 2);
+SELECT a FROM t1 WHERE a <> ANY (SELECT a FROM t1 HAVING a = 2);
 
 -- @case
 -- @desc:test for [any] subquery with NULL
@@ -337,7 +335,7 @@ INSERT INTO t2s VALUES (100), (200), (300);
 SELECT * FROM t1
 WHERE NOT t1.I = ANY
 (
-  SELECT STRAIGHT_JOIN t2s.i
+  SELECT t2s.i
   FROM
   t1s LEFT OUTER JOIN t2s ON t2s.i = t1s.i
   HAVING t2s.i = 999

@@ -6,9 +6,45 @@ insert into t1 values(1, 1, 2, 43, 5, 35.5, 31.133, 14.314, "2012-03-10", "2012-
 insert into t1 values(71, 1, 2, 34, 5, 5.5, 341.13, 15.314, "2012-03-22", "2013-03-12 10:03:12", "2032-03-12 13:04:12", "abr23c", "3dcf");
 insert into t1 values(1, 1, 21, 4, 54, 53.5, 431.13, 14.394, "2011-03-12", "2015-03-12 10:03:12", "2002-03-12 13:03:12", "afbc", "dct5f");
 insert into t1 values(1, 71, 2, 34, 5, 5.5, 31.313, 124.314, "2012-01-12", "2019-03-12 10:03:12", "2013-03-12 13:03:12", "3abd1c", "dcvf");
-select min(a),min(b),min(c),min(d),min(e),min(f),min(g),min(h),min(i),min(k),min(l),min(m),min(n) from t1;
-min(a)	min(b)	min(c)	min(d)	min(e)	min(f)	min(g)	min(h)	min(i)	min(k)	min(l)	min(m)	min(n)
-1	1	2	4	5	5.5	31.133	14.3140000000000000000	2011-03-12	2012-03-12 10:03:12	2002-03-12 13:03:12	3abd1c	3dcf
+select min(a) from t1;
+min(a)
+1
+select min(b) from t1;
+min(b)
+1
+select min(c) from t1;
+min(c)
+2
+select min(d) from t1;
+min(d)
+4
+select min(e) from t1;
+min(e)
+5
+select min(f) from t1;
+min(f)
+5.5
+select min(g) from t1;
+min(g)
+31.133
+select min(h) from t1;
+min(h)
+14.3140000000000000000
+select min(i) from t1;
+min(i)
+2011-03-12
+select min(k) from t1;
+min(k)
+2012-03-12 10:03:12
+select min(l) from t1;
+min(l)
+2002-03-12 13:03:12
+select min(m) from t1;
+min(m)
+3abd1c
+select min(n) from t1;
+min(n)
+3dcf
 drop table t1;
 select min(99999999999999999.99999);
 min(99999999999999999.99999)
@@ -73,9 +109,7 @@ drop table t1;
 CREATE TABLE t1 (Fld1 int(11) default NULL,Fld2 int(11) default NULL);
 INSERT INTO t1 VALUES (1,10),(1,20),(2,NULL),(2,NULL),(3,50);
 select Fld1,  min( Fld2) as q from t1 group by Fld1 having q is not null;
-Fld1	q
-1	10
-3	50
+column "q" must appear in the GROUP BY clause or be used in an aggregate function
 select Fld1, min(Fld2) from t1 group by Fld1 having min(Fld2) is not null;
 Fld1	min(Fld2)
 1	10
