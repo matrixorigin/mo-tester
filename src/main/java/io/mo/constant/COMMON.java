@@ -28,8 +28,8 @@ public class COMMON {
 
     public static String DELIMITER_FLAGE = "-- @delimiter:";
 
-    public static String NEW_SESSION_START_FLAG = "-- @session{";
-    public static String NEW_SESSION_END_FLAG = "-- session}";
+    public static String NEW_SESSION_START_FLAG = "-- @session:";
+    public static String NEW_SESSION_END_FLAG = "-- @session}";
 
     public static String IGNORE_START_FLAG = "-- @ignore{";
     public static String IGNORE_END_FLAG = "-- @ignore}";

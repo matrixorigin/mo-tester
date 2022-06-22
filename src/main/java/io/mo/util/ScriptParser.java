@@ -5,6 +5,9 @@ import io.mo.cases.TestCase;
 import io.mo.cases.TestScript;
 import io.mo.cases.TestSuite;
 import io.mo.constant.COMMON;
+import io.mo.db.Executor;
+import jdk.jfr.internal.LogLevel;
+import org.apache.log4j.Logger;
 import org.apache.poi.ss.formula.functions.T;
 
 import java.io.*;
@@ -22,6 +25,7 @@ public class ScriptParser {
     private static TestScript testScript = new TestScript();;
 
     private String path;
+    private static Logger LOG = Logger.getLogger(ScriptParser.class.getName());
 
     public ScriptParser(String path){
     }
@@ -37,18 +41,34 @@ public class ScriptParser {
             String line = lineReader.readLine();
             String trimmedLine = null;
             boolean ignore = false;
+            int con_id = 0;
+
             while (line != null) {
                 line = new String(line.getBytes(), "utf-8");
                 trimmedLine = line.trim();
 
                 //extract sql commands from the script file
-                //if line is comment or null or mark to ignore flag,ignore
                 if (trimmedLine.equals("") || lineIsComment(trimmedLine)) {
 
+                    //if line is  mark to ignore flag,ignore
                     if(trimmedLine.startsWith(COMMON.IGNORE_START_FLAG) && COMMON.IGNORE_MODEL)
                         ignore = true;
                     if(trimmedLine.startsWith(COMMON.IGNORE_END_FLAG))
                         ignore = false;
+
+                    //if line is mark to start a new conneciton
+                    if(trimmedLine.startsWith(COMMON.NEW_SESSION_START_FLAG)){
+                        if(trimmedLine.indexOf("id=") == -1){
+                            LOG.warn("["+path+"][row:"+rowNum+"]The new connection flag doesn't specify the connection id by [id=X],and the id will be set to default value 1");
+                            command.setConn_id(1);
+                        }
+                        con_id = Integer.parseInt(trimmedLine.substring(trimmedLine.indexOf("id=") + 3,trimmedLine.indexOf("id=") + 4));
+                    }
+
+                    if(trimmedLine.startsWith(COMMON.NEW_SESSION_END_FLAG)){
+                        con_id = 0;
+                    }
+
                     line = lineReader.readLine();
                     rowNum++;
                     continue;
@@ -56,7 +76,7 @@ public class ScriptParser {
 
                 if(trimmedLine.contains(delimiter) || trimmedLine.equals(delimiter)){
                     command.append(trimmedLine);
-                    command.setConn_id(COMMON.CONNECTION_ID);
+                    command.setConn_id(con_id);
                     command.setIgnore(ignore);
                     command.setPosition(rowNum);
                     testScript.addCommand(command);
