@@ -14,15 +14,15 @@ FROM t1 GROUP BY CONCAT_WS('<---->',number,alpha) LIMIT 1;
 new
 1413006<---->idlfmv
 SELECT any_value(number), any_value(alpha), CONCAT_WS('<->',any_value(number),any_value(alpha)) AS new
-FROM t1 GROUP BY CONCAT_WS('<->',any_value(number),any_value(alpha)) LIMIT 1;
+FROM t1 GROUP BY new LIMIT 1;
 any_value(number)	any_value(alpha)	new
 1413006	idlfmv	1413006<->idlfmv
 SELECT any_value(number), any_value(alpha), CONCAT_WS('-',any_value(number),any_value(alpha),any_value(alpha),any_value(alpha),any_value(alpha),any_value(alpha),any_value(alpha),any_value(alpha)) AS new
-FROM t1 GROUP BY CONCAT_WS('-',any_value(number),any_value(alpha),any_value(alpha),any_value(alpha),any_value(alpha),any_value(alpha),any_value(alpha),any_value(alpha)) LIMIT 1;
+FROM t1 GROUP BY new LIMIT 1;
 any_value(number)	any_value(alpha)	new
 1413006	idlfmv	1413006-idlfmv-idlfmv-idlfmv-idlfmv-idlfmv-idlfmv-idlfmv
 SELECT any_value(number), any_value(alpha), CONCAT_WS('<------------------>',any_value(number),any_value(alpha)) AS new
-FROM t1 GROUP BY CONCAT_WS('<------------------>',any_value(number),any_value(alpha)) LIMIT 1;
+FROM t1 GROUP BY new LIMIT 1;
 any_value(number)	any_value(alpha)	new
 1413006	idlfmv	1413006<------------------>idlfmv
 drop table t1;
