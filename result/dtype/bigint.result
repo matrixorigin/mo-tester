@@ -260,7 +260,7 @@ SELECT ( 0 BETWEEN 9223372036854775808 AND 1 );
 false
 SELECT ( 1 BETWEEN 9223372036854775808 AND 1 );
 ( 1 BETWEEN 9223372036854775808 AND 1 )
-true
+false
 drop table if exists t1;
 drop table if exists t2;
 drop table if exists t3;
