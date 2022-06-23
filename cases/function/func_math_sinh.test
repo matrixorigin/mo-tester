@@ -15,8 +15,11 @@ SELECT SINH(-2);
 
 
 #EXTREME VALUES
+-- @bvt:issue#3266
 SELECT SINH(13413);
 SELECT SINH(-3114);
+-- @bvt:issue
+
 SELECT SINH(1);
 SELECT SINH(-1);
 SELECT SINH(0);
@@ -83,8 +86,9 @@ SELECT a FROM t1 group by a having SINH(a)>0;
 drop table t1;
 
 #科学计算
+-- @bvt:issue#3266
 SELECT SINH(0.745e5);
-
+-- @bvt:issue
 
 
 

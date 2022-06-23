@@ -489,7 +489,9 @@ SELECT date("2022-12-22 02:34:23") = date("2022-12-22 03:34:23");
 #insert & distinct
 drop table if exists t1;
 create table t1(a date);
-insert into t1 values(DATE("2017-06-15 09:34:21")),(DATE("2019-06-25 10:12:21")),(DATE("2019-06-25 18:20:49"));
+insert into t1 SELECT DATE("2017-06-15 09:34:21");
+insert into t1 SELECT DATE("2019-06-25 10:12:21");
+insert into t1 SELECT DATE("2019-06-25 18:20:49");
 select distinct a from t1;
 drop table t1;
 

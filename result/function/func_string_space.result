@@ -82,8 +82,7 @@ SELECT space(1073741824);
 space(1073741824)
 null
 SELECT TO_DATE(SPACE(2),'1');
-TO_DATE(SPACE(2),'1')
-null
+invalid inputs for function 'to_date()'   1
 drop table if exists t1;
 create table t1(a INT);
 insert into t1 values(1),(1),(2),(3);

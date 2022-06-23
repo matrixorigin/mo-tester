@@ -12,8 +12,7 @@ SELECT '    MySQL' AS String, RTRIM ('MySQL')  AS Tstring;
 String	Tstring
     MySQL	MySQL
 select cast(rtrim('  20.06 ') as decimal(19,2));
-cast(rtrim('  20.06 ') as decimal(19,2))
-20.06
+invalid decimal string
 select cast(rtrim(ltrim('  20.06 ')) as decimal(19,2));
 cast(rtrim(ltrim('  20.06 ')) as decimal(19,2))
 20.06
@@ -46,131 +45,131 @@ CREATE TABLE `Ｔ７` (`Ｃ１` char(8));
 CREATE TABLE `Ｔ８` (`Ｃ１` char(8));
 CREATE TABLE `Ｔ９` (`Ｃ１` char(8));
 INSERT INTO `Ｔ１` VALUES ('ｱｲｳｴｵ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ１` VALUES ('ｱｲｳｴｵ ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ１` VALUES ('ｱｲｳｴｵ  ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ１` VALUES ('ｱｲｳｴｵ   ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ１` VALUES ('ｱｲｳｴｵ　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ１` VALUES ('ｱｲｳｴｵ　　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ１` VALUES ('ｱｲｳｴｵ　　　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ２` VALUES ('あいうえお');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ２` VALUES ('あいうえお ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ２` VALUES ('あいうえお  ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ２` VALUES ('あいうえお   ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ２` VALUES ('あいうえお　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ２` VALUES ('あいうえお　　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ２` VALUES ('あいうえお　　　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ３` VALUES ('龔龖龗龞龡');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ３` VALUES ('龔龖龗龞龡 ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ３` VALUES ('龔龖龗龞龡  ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ３` VALUES ('龔龖龗龞龡   ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ３` VALUES ('龔龖龗龞龡　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ３` VALUES ('龔龖龗龞龡　　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ３` VALUES ('龔龖龗龞龡　　　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ４` VALUES ('ｱｲｳｴｵ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ４` VALUES ('ｱｲｳｴｵ ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ４` VALUES ('ｱｲｳｴｵ  ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ４` VALUES ('ｱｲｳｴｵ   ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ４` VALUES ('ｱｲｳｴｵ　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ４` VALUES ('ｱｲｳｴｵ　　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ４` VALUES ('ｱｲｳｴｵ　　　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ５` VALUES ('あいうえお');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ５` VALUES ('あいうえお ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ５` VALUES ('あいうえお  ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ５` VALUES ('あいうえお   ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ５` VALUES ('あいうえお　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ５` VALUES ('あいうえお　　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ５` VALUES ('あいうえお　　　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ６` VALUES ('龔龖龗龞龡');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ６` VALUES ('龔龖龗龞龡 ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ６` VALUES ('龔龖龗龞龡  ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ６` VALUES ('龔龖龗龞龡   ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ６` VALUES ('龔龖龗龞龡　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ６` VALUES ('龔龖龗龞龡　　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ６` VALUES ('龔龖龗龞龡　　　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ７` VALUES ('ｱｲｳｴｵ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ７` VALUES ('ｱｲｳｴｵ ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ７` VALUES ('ｱｲｳｴｵ  ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ７` VALUES ('ｱｲｳｴｵ   ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ７` VALUES ('ｱｲｳｴｵ　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ７` VALUES ('ｱｲｳｴｵ　　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ７` VALUES ('ｱｲｳｴｵ　　　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ８` VALUES ('あいうえお');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ８` VALUES ('あいうえお ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ８` VALUES ('あいうえお  ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ８` VALUES ('あいうえお   ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ８` VALUES ('あいうえお　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ８` VALUES ('あいうえお　　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ８` VALUES ('あいうえお　　　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ９` VALUES ('龔龖龗龞龡');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ９` VALUES ('龔龖龗龞龡 ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ９` VALUES ('龔龖龗龞龡  ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ９` VALUES ('龔龖龗龞龡   ');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ９` VALUES ('龔龖龗龞龡　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ９` VALUES ('龔龖龗龞龡　　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 INSERT INTO `Ｔ９` VALUES ('龔龖龗龞龡　　　');
-[22000]Data too long for column 'Ｃ１' at row 1
+Data too long for column 'Ｃ１' at row 1
 SELECT RTRIM(`Ｃ１`) from `Ｔ１`;
 RTRIM(`Ｃ１`)　　
 SELECT RTRIM(`Ｃ１`) from `Ｔ２`;
@@ -233,17 +232,18 @@ drop table t1;
 drop table if exists t1;
 create table t1(a INT,  b datetime);
 insert into t1 values(1, "2017-06-15    "),(1, "2019-06-25    "),(2, "    2019-06-25  "),(3, "   2019-06-25   ");
+Data truncation: Incorrect DATETIME value: '2017-06-15    ' for column 'b' at row 0
 select b from t1 group by b having rtrim(ltrim(b))>"2018-01-01";
 b
-2019-06-25 00:00:00
 drop table t1;
 create table t1(a INT,  b date);
 create table t2(a INT,  b date);
 insert into t1 values(1, "    2012-10-12   "),(2, "   2004-04-24.   "),(3, "   2008-12-04.  "),(4, "    2012-03-23.   ");
+Data truncation: Incorrect DATE value: '    2012-10-12   ' for column 'b' at row 0
 insert into t2 values(1, "    2013-04-30  "),(2, "  1994-10-04  "),(3, "   2018-06-04  "),(4, " 2012-10-12  ");
+Data truncation: Incorrect DATE value: '    2013-04-30  ' for column 'b' at row 0
 SELECT t1.a, t2.a FROM t1 JOIN t2 ON (rtrim(ltrim(t1.b)) = ltrim(rtrim(t2.b)));
 a	a
-1	4
 drop table t1;
 drop table t2;
 SELECT RTRIM(space(100000000)+"123");

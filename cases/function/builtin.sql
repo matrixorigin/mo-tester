@@ -169,10 +169,11 @@ insert into t1 values(0,0),(-15,-20),(-22,-12.5);
 insert into t1 values(0,360),(30,390),(90,450),(180,270),(180,180);
 -- @case
 -- @desc:test for func cot() select
+-- @bvt:issue#3133 
 select cot(a*pi()/180) as cota,cot(b*pi()/180) cotb from t1;
 select cot(a*pi()/180)*cot(b*pi()/180) as cotab,cot(cot(a*pi()/180)) as c from t1;
 select b from t1 where cot(a*pi()/180)<=cot(b*pi()/180)  order by a;
-
+-- @bvt:issue
 
 drop table if exists t1;
 create table t1(a date, b datetime,c varchar(30));
@@ -358,7 +359,9 @@ insert into t1 values(0,360),(30,390),(90,450),(180,270),(180,180);
 -- @case
 -- @desc:test for func tan() select
 select tan(a*pi()/180) as tana,tan(b*pi()/180) tanb from t1;
+-- @bvt:issue#3239
 select tan(a*pi()/180)*tan(b*pi()/180) as tanab,tan(tan(a*pi()/180)) as c from t1;
+-- @bvt:issue
 select b from t1 where tan(a*pi()/180)<=tan(b*pi()/180)  order by a;
 
 -- @suite
