@@ -3,7 +3,9 @@
 -- @case
 -- @desc:test for [in] subquery with constant operand
 -- @label:bvt
+-- @bvt:issue#3304
 SELECT 1 IN (SELECT 1);
+-- @bvt:issue
 SELECT 1 FROM (SELECT 1 as a) b WHERE 1 IN (SELECT (SELECT a));
 SELECT 1 FROM (SELECT 1 as a) b WHERE 1 not IN (SELECT (SELECT a));
 SELECT * FROM (SELECT 1 as id) b WHERE id IN (SELECT * FROM (SELECT 1 as id) c ORDER BY id);
@@ -32,7 +34,9 @@ insert into t2 values (100, 5);
 select * from t3 where a in (select b from t2);
 select * from t3 where a in (select b from t2 where b > 7);
 select * from t3 where a not in (select b from t2);
+-- @bvt:issue#3304
 SELECT 0 IN (SELECT 1 FROM t1 a);
+-- @bvt:issue
 -- error
 select * from t3 where a in (select a,b from t2);
 select * from t3 where a in (select * from t2);
@@ -44,8 +48,10 @@ create table t1 (s1 char(5), index s1(s1));
 create table t2 (s1 char(5), index s1(s1));
 insert into t1 values ('a1'),('a2'),('a3');
 insert into t2 values ('a1'),('a2');
+-- @bvt:issue#3304
 select s1, s1 NOT IN (SELECT s1 FROM t2) from t1;
 select s1, s1 NOT IN (SELECT s1 FROM t2 WHERE s1 < 'a2') from t1;
+-- @bvt:issue
 
 drop table if exists t1;
 drop table if exists t2;
@@ -78,7 +84,9 @@ INSERT INTO t1 VALUES (1), (3), (5), (7);
 INSERT INTO t1 VALUES (NULL);
 CREATE TABLE t2(a int);
 INSERT INTO t2 VALUES (1),(2),(3);
+-- @bvt:issue#3304
 SELECT a, a IN (SELECT a FROM t1) FROM t2;
+-- @bvt:issue
 
 drop table if exists t1;
 drop table if exists t2;
@@ -185,13 +193,17 @@ create table t2 (oref int, a int);
 insert into t2 values(1, 1),(2, 2),(3, 3), (4, NULL),(2, NULL);
 create table t3 (a int);
 insert into t3 values (NULL), (NULL);
+-- @bvt:issue#3304
 select a, oref, a in (select max(ie) from t1 where oref=t2.oref group by grp) Z from t2;
+-- @bvt:issue
 select a, oref from t2 where a in (select max(ie) from t1 where oref=t2.oref group by grp);
 select a, oref, a in (
   select max(ie) from t1 where oref=t2.oref group by grp union
   select max(ie) from t1 where oref=t2.oref group by grp
   ) Z from t2;
+-- @bvt:issue#3304
 select a in (select max(ie) from t1 where oref=4 group by grp) from t3;
+-- @bvt:issue
 
 drop table if exists t1;
 drop table if exists t2;
@@ -200,13 +212,16 @@ create table t1 (a int, oref int);
 insert into t1 values(1, 1),(1, NULL),(2, 3),(2, NULL),(3, NULL);
 create table t2 (a int, oref int);
 insert into t2 values (1, 1), (2,2), (NULL, 3), (NULL, 4);
+-- @bvt:issue#3304
 select oref, a, a in (select a from t1 where oref=t2.oref) Z from t2;
+-- @bvt:issue
 select oref, a from t2 where a in (select a from t1 where oref=t2.oref);
 -- @ignore{
 delete from t2;
 insert into t2 values (NULL, 0),(NULL, 0), (NULL, 0), (NULL, 0);
+-- @bvt:issue#3304
 select oref, a, a in (select a from t1 where oref=t2.oref) Z from t2;
--- @ignore}
+-- @bvt:issue
 drop table if exists t1;
 drop table if exists t2;
 
