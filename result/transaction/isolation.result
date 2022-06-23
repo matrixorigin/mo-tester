@@ -7,17 +7,15 @@ Insert into test_11 values(3,1);
 Insert into test_11 values(4,2);
 select * from test_11;
 c	d
-3	1
-4	2
 1	1
 2	2
+3	1
+4	2
 use isolation;
 select * from test_11;
 c	d
 1	1
 2	2
-3	1
-4	2
 commit;
 select * from test_11;
 c	d
@@ -48,8 +46,6 @@ select * from test_11;
 c	d
 1	1
 2	2
-3	1
-4	2
 delete from test_11 where c =1;
 select * from test_11;
 c	d
@@ -58,9 +54,8 @@ c	d
 4	2
 select * from test_11;
 c	d
+1	1
 2	2
-3	1
-4	2
 update test_11 set d = c +1 where c > 2;
 select * from test_11;
 c	d
@@ -69,9 +64,8 @@ c	d
 4	5
 select * from test_11;
 c	d
+1	1
 2	2
-3	4
-4	5
 commit;
 select * from test_11;
 c	d
@@ -93,9 +87,7 @@ c	d
 1	1
 2	2
 select * from test_11;
-c	d
-1	1
-2	2
+table "test_11" does not exist
 commit;
 select * from test_11;
 c	d
@@ -115,23 +107,24 @@ c	d
 1	1
 2	2
 delete from test_11 where c = 1;
+cannot find delete table
 select * from test_11;
-c	d
-2	2
+table "test_11" does not exist
 Insert into test_11 values(1,1);
+tae data: duplicate
 select * from test_11;
 c	d
-2	2
 1	1
+2	2
 commit;
 select * from test_11;
 c	d
-2	2
 1	1
+2	2
 select * from test_11;
 c	d
-2	2
 1	1
+2	2
 drop table if exists test_11;
 create table test_11 (c int primary key,d int);
 Insert into test_11 values(1,1);
@@ -149,57 +142,45 @@ select * from test_11;
 c	d
 1	1
 2	2
-3	1
-4	2
 Insert into test_11 values(5,4);
 select * from test_11;
 c	d
-3	1
-4	2
-5	4
 1	1
 2	2
+5	4
 select * from test_11;
 c	d
 1	1
 2	2
 3	1
 4	2
+Insert into test_11 values(50,50);
+Insert into test_11 values(50,50);
+select * from test_11;
+c	d
+1	1
+2	2
 5	4
-Insert into test_11 values(50,50);
-Insert into test_11 values(50,50);
+50	50
+select * from test_11;
+c	d
+1	1
+2	2
+3	1
+4	2
+50	50
+commit;
 tae data: duplicate
 select * from test_11;
 c	d
 1	1
 2	2
-3	1
-4	2
 5	4
 50	50
 select * from test_11;
 c	d
 1	1
 2	2
-3	1
-4	2
-5	4
-50	50
-commit;
-select * from test_11;
-c	d
-1	1
-2	2
-3	1
-4	2
-5	4
-50	50
-select * from test_11;
-c	d
-1	1
-2	2
-3	1
-4	2
 5	4
 50	50
 drop table if exists test_11;
@@ -227,7 +208,6 @@ select * from test_11;
 c	d
 1	1
 2	2
-50	50
 commit;
 select * from test_11;
 c	d
@@ -258,19 +238,17 @@ select * from test_11;
 c	d
 1	1
 2	2
-50	50
 Insert into test_11 values(50,50);
-tae data: duplicate
-select * from test_11;
-c	d
-50	50
-1	1
-2	2
 select * from test_11;
 c	d
 1	1
 2	2
 50	50
+select * from test_11;
+c	d
+50	50
+1	1
+2	2
 select * from test_11;
 c	d
 1	1
@@ -285,7 +263,9 @@ select * from test_11;
 c	d
 1	1
 2	2
+50	50
 commit;
+tae txn: w-w conflict error
 select * from test_11;
 c	d
 1	1
@@ -306,16 +286,14 @@ c	d
 Insert into test_11 values(50,50);
 select * from test_11;
 c	d
+50	50
 1	1
 2	2
-50	50
 select * from test_11;
 c	d
 1	1
 2	2
-50	50
 Insert into test_11 values(50,50);
-tae data: duplicate
 select * from test_11;
 c	d
 1	1
@@ -341,10 +319,11 @@ select * from test_11;
 c	d
 1	1
 2	2
-100	50
+50	50
 Insert into test_11 values(100,50);
 tae data: duplicate
 commit;
+tae txn: w-w conflict error
 select * from test_11;
 c	d
 1	1
@@ -374,9 +353,7 @@ select * from test_11;
 c	d
 1	1
 2	2
-50	50
 Insert into test_11 values(50,50);
-tae data: duplicate
 select * from test_11;
 c	d
 1	1
@@ -400,9 +377,9 @@ c	d
 100	50
 select * from test_11;
 c	d
+50	50
 1	1
 2	2
-100	50
 update test_11 set c = 101 where c = 50;
 commit;
 select * from test_11;
@@ -410,11 +387,13 @@ c	d
 1	1
 2	2
 100	50
+101	50
 select * from test_11;
 c	d
 1	1
 2	2
 100	50
+101	50
 drop table if exists test_11;
 create table test_11 (c int primary key,d int);
 Insert into test_11 values(1,1);
@@ -427,43 +406,42 @@ c	d
 Insert into test_11 values(50,50);
 select * from test_11;
 c	d
+50	50
 1	1
 2	2
-50	50
 select * from test_11;
 c	d
 1	1
 2	2
-50	50
 Insert into test_11 values(50,50);
+select * from test_11;
+c	d
+1	1
+2	2
+50	50
+select * from test_11;
+c	d
+1	1
+2	2
+50	50
+select * from test_11;
+c	d
+1	1
+2	2
+50	50
+update test_11 set c = 100 where d = 50;
+select * from test_11;
+c	d
+1	1
+2	2
+100	50
+select * from test_11;
+c	d
+50	50
+1	1
+2	2
+update test_11 set c = 100 where d = 50;
 tae data: duplicate
-select * from test_11;
-c	d
-1	1
-2	2
-50	50
-select * from test_11;
-c	d
-50	50
-1	1
-2	2
-select * from test_11;
-c	d
-1	1
-2	2
-50	50
-update test_11 set c = 100 where d = 50;
-select * from test_11;
-c	d
-1	1
-2	2
-100	50
-select * from test_11;
-c	d
-1	1
-2	2
-100	50
-update test_11 set c = 100 where d = 50;
 commit;
 select * from test_11;
 c	d
@@ -485,9 +463,7 @@ c	d
 1	1
 2	2
 select * from test_11;
-c	d
-1	1
-2	2
+table "test_11" does not exist
 commit;
 select * from test_11;
 c	d
@@ -514,7 +490,9 @@ drop table test_11;
 select * from test_11;
 table "test_11" does not exist
 select * from test_11;
-table "test_11" does not exist
+c	d
+1	1
+2	2
 commit;
 select * from test_11;
 table "test_11" does not exist
@@ -530,17 +508,13 @@ c	d
 1	1
 2	2
 select * from test_11;
-c	d
-1	1
-2	2
+table "test_11" does not exist
 select * from test_11;
 c	d
 1	1
 2	2
 select * from test_11;
-c	d
-1	1
-2	2
+table "test_11" does not exist
 commit;
 select * from test_11;
 c	d

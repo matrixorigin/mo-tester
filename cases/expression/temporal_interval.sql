@@ -31,11 +31,17 @@ select date_add("1997-12-31 23:59:59",INTERVAL 100000 MONTH);
 select date_add("1997-12-31 23:59:59",INTERVAL 100000 QUARTER);
 select date_add("1997-12-31 23:59:59",INTERVAL -100000 YEAR);
 select date_add("1997-12-31 23:59:59",INTERVAL "10000:1" MINUTE_SECOND);
+-- @bvt:issue#3236
 select date_add("1997-12-31 23:59:59",INTERVAL "-10000:1" HOUR_MINUTE);
+-- @bvt:issue
 select date_add("1997-12-31 23:59:59",INTERVAL "10000:1" DAY_HOUR);
+-- @bvt:issue#3236
 select date_add("1997-12-31 23:59:59",INTERVAL "-100 1" YEAR_MONTH);
+-- @bvt:issue
 select date_add("1997-12-31 23:59:59",INTERVAL "10000:99:99" HOUR_SECOND);
+-- @bvt:issue#3236
 select date_add("1997-12-31 23:59:59",INTERVAL " -10000 99:99" DAY_MINUTE);
+-- @bvt:issue
 select date_add("1997-12-31 23:59:59",INTERVAL "10000 99:99:99" DAY_SECOND);
 select date_add("1997-12-31",INTERVAL 1 SECOND);
 select date_add("1997-12-31",INTERVAL 1 DAY);
@@ -66,7 +72,9 @@ select date_sub("1998-01-01 00:00:00",INTERVAL 1 MONTH);
 select date_sub("1998-01-01 00:00:00",INTERVAL 1 QUARTER);
 select date_sub("1998-01-01 00:00:00",INTERVAL 1 YEAR);
 select date_sub("1998-01-01 00:00:00",INTERVAL 100000 SECOND);
+-- @bvt:issue#3236
 select date_sub("1998-01-01 00:00:009",INTERVAL -100000 MINUTE);
+-- @bvt:issue
 select date_sub("1998-01-01 00:00:00",INTERVAL 100000 HOUR);
 select date_sub("1998-01-01 00:00:00",INTERVAL 0 HOUR);
 select date_sub("1998-01-01 00:00:00",INTERVAL -100000 DAY);
@@ -81,11 +89,17 @@ select date_sub("1998-01-01 00:00:00",INTERVAL "1:1:1" HOUR_SECOND);
 select date_sub("1998-01-01 00:00:00",INTERVAL "1 1:1" DAY_MINUTE);
 select date_sub("1998-01-01 00:00:00",INTERVAL "1 1:1:1" DAY_SECOND);
 select date_sub("1998-01-01 00:00:00",INTERVAL "10000:1" MINUTE_SECOND);
+-- @bvt:issue#3236
 select date_sub("1998-01-01 00:00:00",INTERVAL "-10000:1" HOUR_MINUTE);
+-- @bvt:issue
 select date_sub("1998-01-01 00:00:00",INTERVAL "10000:1" DAY_HOUR);
+-- @bvt:issue#3236
 select date_sub("1998-01-01 00:00:00",INTERVAL "-100 1" YEAR_MONTH);
+-- @bvt:issue
 select date_sub("1998-01-01 00:00:00",INTERVAL "10000:99:99" HOUR_SECOND);
+-- @bvt:issue#3236
 select date_sub("1998-01-01 00:00:00",INTERVAL " -10000 99:99" DAY_MINUTE);
+-- @bvt:issue
 select date_sub("1998-01-01 00:00:00",INTERVAL "10000 99:99:99" DAY_SECOND);
 select date_sub("1998-01-01 00:00:00.000001",INTERVAL "1 1:1:1.000002" DAY_MICROSECOND);
 select date_sub("1998-01-01 00:00:00.000001",INTERVAL "1:1:1.000002" HOUR_MICROSECOND);

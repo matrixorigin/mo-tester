@@ -131,7 +131,7 @@ select date_add('1996-02-29',Interval '1' year);
 date_add('1996-02-29',Interval '1' year)
 1997-02-28
 select date_add('1996-02-29',Interval q year);
-Unknown column 'q' in 'field list'
+Column 'q' does not exist
 select date_add("1997-12-31 23:59:59",INTERVAL 1.5 SECOND);
 date_add("1997-12-31 23:59:59",INTERVAL 1.5 SECOND)
 1998-01-01 00:00:00
@@ -140,10 +140,10 @@ date_add("1997-12-31 23:59:59",INTERVAL 1.5 MINUTE)
 1998-01-01 00:00:59
 select date_add("1997-12-31 23:59:59",INTERVAL 1.5 HOUR);
 date_add("1997-12-31 23:59:59",INTERVAL 1.5 HOUR)
-1998-01-01 01:59:59
+1998-01-01 00:59:59
 select date_add("1997-12-31 23:59:59",INTERVAL 1.5 DAY);
 date_add("1997-12-31 23:59:59",INTERVAL 1.5 DAY)
-1998-01-01 00:59:59
+1998-01-01 23:59:59
 select date_add("1997-12-31 23:59:59",INTERVAL 1.5 ABC);
 You have an error in your SQL syntax; check the manual that corresponds to your MatrixOne server version for the right syntax to use. syntax error at position 55 near 'abc';
 select date_sub("1998-01-01 00:00:00",INTERVAL 1 SECOND);
@@ -279,7 +279,7 @@ select date_sub('1996-02-29',Interval '1' year);
 date_sub('1996-02-29',Interval '1' year)
 1995-02-28
 select date_add('1996-02-29',Interval a year);
-Unknown column 'a' in 'field list'
+Column 'a' does not exist
 select date_sub("1998-01-01 00:00:00",INTERVAL 1.5 SECOND);
 date_sub("1998-01-01 00:00:00",INTERVAL 1.5 SECOND)
 1997-12-31 23:59:59
@@ -492,11 +492,7 @@ a
 1998-12-30
 1997-12-30
 select count(a),c + INTERVAL 1 DAY as c1 from t1 group by (c + INTERVAL 1 DAY) having c1 > "1998-01-01 00:59:59";
-count(a)	c1
-2	1998-01-02 00:59:59
-2	1998-01-03 00:59:59
-2	1998-01-03 01:01:00
-4	1998-01-02 00:00:00
+column "c1" must appear in the GROUP BY clause or be used in an aggregate function
 select i,c + INTERVAL 1 MINUTE from t1 where a - INTERVAL 1 SECOND  > "1997-01-01 00:00:00.000001" order by c + INTERVAL 1 MINUTE DESC;
 i	c + INTERVAL 1 MINUTE
 3	1998-01-02 01:02:00

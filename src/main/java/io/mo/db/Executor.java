@@ -738,8 +738,9 @@ public class Executor {
 
     public static boolean equals(SqlCommand command,String exp,String act){
         // or if the result is expected error,compare directedly.
-        if( command.isError())
-            return exp.equalsIgnoreCase(act);
+        if( command.isError()) {
+            return exp.trim().equalsIgnoreCase(act.trim());
+        }
 
         String[] exps = exp.split("\n");
         String[] acts = act.split("\n");
@@ -910,14 +911,17 @@ public class Executor {
         //return str.matches("^[+\\-]?\\d*[.]?\\d+$");
     }
     public static void main(String args[]){
-        System.out.println(isNumeric("-2.4492935982947064E-16"));
+        String exp = "You have an error in your SQL syntax; check the manual that corresponds to your MatrixOne server version for the right syntax to use. syntax error at position 55 near 'abc';";
+        String act = "You have an error in your SQL syntax; check the manual that corresponds to your MatrixOne server version for the right syntax to use. syntax error at position 55 near 'abc';";
+        System.out.println(exp.equalsIgnoreCase(act));
+        //System.out.println(isNumeric("-2.4492935982947064E-16"));
         //double d = Double.parseDouble("-2.4492935982947064E-16");
-        double d = Double.parseDouble("66447663013875.0000");
-        NumberFormat nf = NumberFormat.getNumberInstance();
-        nf.setGroupingUsed(false);
-        nf.setMaximumFractionDigits(50);
-        String p = nf.format(d);
-        System.out.println(p);
+        //double d = Double.parseDouble("66447663013875.0000");
+        //NumberFormat nf = NumberFormat.getNumberInstance();
+        //nf.setGroupingUsed(false);
+        //nf.setMaximumFractionDigits(50);
+        //String p = nf.format(d);
+        //System.out.println(p);
         //System.out.println("33334444".substring(0,"33334444".indexOf(".")));
         /*String e = "1113.32";
         String a = "1113.3199462890625";
