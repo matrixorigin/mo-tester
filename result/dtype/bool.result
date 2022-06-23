@@ -7,7 +7,6 @@ false	true
 true	false
 true	true
 false	false
-false	true
 null	null
 SELECT * FROM t1 WHERE IF(a AND 1, 0, 1);
 a	b
