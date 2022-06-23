@@ -50,11 +50,17 @@ public class ScriptParser {
                 //extract sql commands from the script file
                 if (trimmedLine.equals("") || lineIsComment(trimmedLine)) {
 
-                    //if line is  mark to ignore flag,ignore
+                    /*//if line is  mark to ignore flag,ignore
                     if(trimmedLine.startsWith(COMMON.IGNORE_START_FLAG) && COMMON.IGNORE_MODEL)
                         ignore = true;
                     if(trimmedLine.startsWith(COMMON.IGNORE_END_FLAG))
+                        ignore = false;*/
+                    //deal the tag bvt:issue:{issue number},when cases with this tag,will be ignored
+                    if(trimmedLine.startsWith(COMMON.BVT_ISSUE_START_FLAG) && COMMON.IGNORE_MODEL)
+                        ignore = true;
+                    if(trimmedLine.equalsIgnoreCase(COMMON.BVT_ISSUE_END_FLAG))
                         ignore = false;
+
 
                     //if line is mark to start a new conneciton
                     if(trimmedLine.startsWith(COMMON.NEW_SESSION_START_FLAG)){

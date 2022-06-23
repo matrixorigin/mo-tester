@@ -31,6 +31,9 @@ public class COMMON {
     public static String NEW_SESSION_START_FLAG = "-- @session:";
     public static String NEW_SESSION_END_FLAG = "-- @session}";
 
+    public static String BVT_ISSUE_START_FLAG = "-- @bvt:issue#";
+    public static String BVT_ISSUE_END_FLAG = "-- @bvt:issue";
+
     public static String IGNORE_START_FLAG = "-- @ignore{";
     public static String IGNORE_END_FLAG = "-- @ignore}";
 
