@@ -61,7 +61,13 @@ And you can also specify some parameters when executing the command `run.sh`,par
 -r  set The success rate that test cases should reach,default value is configured by the `rate` in `run.yaml`
 -i  set the including list, and only script files in the path which name contain one of the list will be excuted,if more than one,seperated by `,`,if not specified,refers to all cases included
 -e  set the excluding list, and script files in the path which name contain one of the list will not be excuted,if more than one,seperated by `,`,if not specified,refers to none of cases excluded
--g  means SQL commands which is marked with ignore-flag will not be executed
+-g  means SQL commands which is marked with [bvt:issue] flag will not be executed,this flag starts with [-- @bvt:issue#{issueNO.}],and ends with [-- @bvt:issue],eg:
+    -- @bvt:issue#3236
+    select date_add("1997-12-31 23:59:59",INTERVAL "-10000:1" HOUR_MINUTE);
+    select date_add("1997-12-31 23:59:59",INTERVAL "-100 1" YEAR_MONTH);
+    -- @bvt:issue
+    Those two sql commands are associated with the issue#3236,and they will not been executed in bvt test,until the flag is removed when the issue#3236 is fixed.
+    
 -n  means the meta data of the resultset will be ignored when comparing the result
 Examples:
 bash run.sh -p case -m run -t script -r 100 -i select,subquery -e substring -g
