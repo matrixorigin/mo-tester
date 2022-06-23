@@ -25,6 +25,9 @@ public class Debugger {
         Statement statement = null;
         Connection connection = ConnectionManager.getConnection();
 
+        String def_db = "debug";
+        createTestDB(connection,def_db);
+
         ArrayList<SqlCommand> commands = script.getCommands();
         for (int j = 0; j < commands.size(); j++) {
             SqlCommand command = commands.get(j);
@@ -52,6 +55,7 @@ public class Debugger {
                 continue;
             }
         }
+        dropTestDB(connection,def_db);
         //script.print();
     }
 
@@ -319,6 +323,31 @@ public class Debugger {
             return true;
 
         return false;
+    }
+
+    public static  void createTestDB(Connection connection,String name){
+        if(connection == null) return;
+        Statement statement = null;
+        try {
+            statement = connection.createStatement();
+            statement.executeUpdate("create database IF NOT EXISTS `"+name+"`;");
+            statement.executeUpdate("use `"+name+"`;");
+        } catch (SQLException e) {
+            System.out.println("create database "+name+"is failed.cause: "+e.getMessage());
+        }
+    }
+
+    public static  void dropTestDB(Connection connection,String name){
+        if(connection == null) return;
+        Statement statement = null;
+        try {
+            statement = connection.createStatement();
+            statement.executeUpdate("drop database IF EXISTS `"+name+"`;");
+        } catch (SQLException e) {
+            //e.printStackTrace();
+            System.out.println("drop database "+name+"is failed.cause: "+e.getMessage());
+        }
+
     }
 
 }

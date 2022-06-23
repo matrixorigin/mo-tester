@@ -659,7 +659,7 @@ CREATE TABLE t2 (
 ) ;
 INSERT INTO t2 VALUES (4,'vita'), (1,'vita'), (2,'vita'), (1,'vita');
 -- @ignore{
-update t1, t2 set t2.name='lenka' where t2.id in (select id from t1);
+update t2 set t2.name='lenka' where t2.id in (select id from t1);
 select * from t2;
 delete from t1 where t1.id in  (select id from t2);
 select * from t1;
@@ -686,8 +686,8 @@ SELECT t1.a FROM t1 where t1.a in (select t2.a from t2 order by t2.a desc) ;
 -- @label:bvt
 DROP TABLE IF EXISTS t1;
 drop table if exists t2;
-CREATE TABLE `t1` ( `aid` int(11) NOT NULL default 0, `bid` int(11) NOT NULL default 0, PRIMARY KEY  (`aid`));
-CREATE TABLE `t2` ( `aid` int(11) NOT NULL default 0, `bid` int(11) NOT NULL default 0, PRIMARY KEY  (`aid`));
+CREATE TABLE `t1` ( `aid` int(11) NOT NULL default 0, `bid` int(11) NOT NULL default 0);
+CREATE TABLE `t2` ( `aid` int(11) NOT NULL default 0, `bid` int(11) NOT NULL default 0);
 insert into t1 values (1,1),(1,2),(2,1),(2,2);
 insert into t2 values (1,2),(2,2);
 select * from t1 where t1.aid not in (select aid from t2 where bid=t1.bid);
@@ -892,7 +892,6 @@ CREATE TABLE t1 (a int);
 CREATE TABLE t2 (b int, PRIMARY KEY(b));
 INSERT INTO t1 VALUES (1), (NULL), (4);
 INSERT INTO t2 VALUES (3), (1),(2), (5), (4), (7), (6);
-ANALYZE TABLE t1, t2;
 SELECT a FROM t1, t2 WHERE a=b AND (b NOT IN (SELECT a FROM t1));
 SELECT a FROM t1, t2 WHERE a=b AND (b NOT IN (SELECT a FROM t1 WHERE a > 4));
 
@@ -939,7 +938,7 @@ INSERT INTO t2s VALUES (100), (200), (300);
 SELECT * FROM t1
 WHERE t1.i NOT IN
 (
-  SELECT STRAIGHT_JOIN t2s.i
+  SELECT t2s.i
   FROM
   t1s LEFT OUTER JOIN t2s ON t2s.i = t1s.i
   HAVING t2s.i = 999
@@ -948,16 +947,16 @@ WHERE t1.i NOT IN
 SELECT * FROM t1
 WHERE t1.I IN
 (
-  SELECT STRAIGHT_JOIN t2s.i
+  SELECT t2s.i
   FROM
   t1s LEFT OUTER JOIN t2s ON t2s.i = t1s.i
   HAVING t2s.i = 999
-) IS UNKNOWN;
+);
 
 SELECT * FROM t1
 WHERE NOT t1.I = ANY
 (
-  SELECT STRAIGHT_JOIN t2s.i
+  SELECT t2s.i
   FROM
   t1s LEFT OUTER JOIN t2s ON t2s.i = t1s.i
   HAVING t2s.i = 999
@@ -965,11 +964,11 @@ WHERE NOT t1.I = ANY
 
 SELECT * FROM t1
  WHERE t1.i = ANY (
-  SELECT STRAIGHT_JOIN t2s.i
+  SELECT t2s.i
   FROM
   t1s LEFT OUTER JOIN t2s ON t2s.i = t1s.i
   HAVING t2s.i = 999
- ) IS UNKNOWN;
+ );
 
 DROP TABLE IF EXISTS t1;
 drop table if exists t2;
@@ -997,7 +996,7 @@ WHERE     c.parent_id IN (
               SELECT parent_id
               FROM   child
               WHERE  parent_id = 3
-          ) IS NOT TRUE;
+          );
 
 SELECT    p.id, c.parent_id
 FROM      parent p
@@ -1007,7 +1006,7 @@ WHERE     c.parent_id IN (
               SELECT parent_id
               FROM   child
               WHERE  parent_id = 3
-          ) IS FALSE;
+          );
 
 DROP TABLE IF EXISTS parent;
 DROP TABLE IF EXISTS child;

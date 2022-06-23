@@ -6,12 +6,84 @@ insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-
 insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
 insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
 insert into t1 values(1, 1, 2, 4, 5, 5.5, 31.13, 14.314, "2012-03-12", "2012-03-12 10:03:12", "2012-03-12 13:03:12", "abc", "dcf");
-select avg(a),avg(b),avg(c),avg(d),avg(e),avg(f),avg(g),avg(h),avg(i),avg(k),avg(l),avg(m),avg(n) from t1;
-avg(a)	avg(b)	avg(c)	avg(d)	avg(e)	avg(f)	avg(g)	avg(h)	avg(i)	avg(k)	avg(l)	avg(m)	avg(n)
-1.0000	1.0000	2.0000	4.0000	5.0000	5.5	31.13	14.31400000000000000000000	20120312.0000	20120312100312.0000	20120312130312.0000	0.0	0.0
-select avg(a),avg(b),avg(c),avg(d),avg(e),avg(f),avg(g),avg(h),avg(i),avg(k),avg(l),avg(m),avg(n) from t1 limit 1;
-avg(a)	avg(b)	avg(c)	avg(d)	avg(e)	avg(f)	avg(g)	avg(h)	avg(i)	avg(k)	avg(l)	avg(m)	avg(n)
-1.0000	1.0000	2.0000	4.0000	5.0000	5.5	31.13	14.31400000000000000000000	20120312.0000	20120312100312.0000	20120312130312.0000	0.0	0.0
+select avg(a) from t1;
+avg(a)
+1.0000
+select avg(b) from t1;
+avg(b)
+1.0000
+select avg(c) from t1;
+avg(c)
+2.0000
+select avg(d) from t1;
+avg(d)
+4.0000
+select avg(e) from t1;
+avg(e)
+5.0000
+select avg(f) from t1;
+avg(f)
+5.5
+select avg(g) from t1;
+avg(g)
+31.13
+select avg(h) from t1;
+avg(h)
+14.31400000000000000000000
+select avg(i) from t1;
+avg(i)
+20120312.0000
+select avg(k) from t1;
+avg(k)
+20120312100312.0000
+select avg(l) from t1;
+avg(l)
+20120312130312.0000
+select avg(m) from t1;
+avg(m)
+0.0
+select avg(n) from t1;
+avg(n)
+0.0
+select avg(a) from t1 limit 1;
+avg(a)
+1.0000
+select avg(b) from t1 limit 1;
+avg(b)
+1.0000
+select avg(c) from t1 limit 1;
+avg(c)
+2.0000
+select avg(d) from t1 limit 1;
+avg(d)
+4.0000
+select avg(e) from t1 limit 1;
+avg(e)
+5.0000
+select avg(f) from t1 limit 1;
+avg(f)
+5.5
+select avg(g) from t1 limit 1;
+avg(g)
+31.13
+select avg(h) from t1 limit 1;
+avg(h)
+14.31400000000000000000000
+select avg(i) from t1 limit 1;
+avg(i)
+20120312.0000
+select avg(k) from t1 limit 1;
+avg(k)
+20120312100312.0000
+select avg(l) from t1 limit 1;
+avg(l)
+20120312130312.0000
+select avg(m) from t1 limit 1;
+avg(m)
+0.0
+select avg(n) from t1 limit 1;
+avg(n)
+0.0
 drop table t1;
 create table t1(a bigint);
 select avg(a) from t1;
@@ -214,13 +286,19 @@ INSERT INTO t1 SELECT a, b+8192    FROM t1;
 INSERT INTO t1 SELECT a, b+16384   FROM t1;
 INSERT INTO t1 SELECT a, b+32768   FROM t1;
 SELECT a,COUNT(DISTINCT b) AS cnt FROM t1 GROUP BY a HAVING cnt > 50;
-a	cnt
-1	65536
+column "cnt" must appear in the GROUP BY clause or be used in an aggregate function
 SELECT DISTINCT a, SUM( b) AS sumation FROM t1 GROUP BY a HAVING sumation > 50;
-a	sumation
-1	2147516416
+column "sumation" must appear in the GROUP BY clause or be used in an aggregate function
 SELECT DISTINCT a, AVG( b) AS average FROM t1 GROUP BY a HAVING average > 50;
-a	average
+column "average" must appear in the GROUP BY clause or be used in an aggregate function
+SELECT a,COUNT(DISTINCT b) FROM t1 GROUP BY a HAVING COUNT(DISTINCT b) > 50;
+a	COUNT(DISTINCT b)
+1	65536
+SELECT DISTINCT a, SUM( b) FROM t1 GROUP BY a HAVING SUM( b) > 50;
+a	SUM( b)
+1	2147516416
+SELECT DISTINCT a, AVG( b) FROM t1 GROUP BY a HAVING AVG( b) > 50;
+a	AVG( b)
 1	32768.5000
 DROP TABLE t1;
 CREATE TABLE t1(a DOUBLE);
@@ -261,13 +339,13 @@ drop table t2;
 CREATE TABLE t1(a DOUBLE);
 INSERT INTO t1 VALUES (10), (20);
 SELECT AVG(min(a)) FROM t1 group by a;
-Invalid use of group function
+aggregate function calls cannot be nested
 DROP TABLE t1;
 CREATE TABLE t1 (id int(11),value1 float(10,2));
 INSERT INTO t1 VALUES (1,0.00),(1,1.00), (1,2.00), (2,10.00), (2,11.00), (2,12.00);
 CREATE TABLE t2 (id int(11),name char(20));
 INSERT INTO t2 VALUES (1,'Set One'),(2,'Set Two');
 select name, avg(value1), std(value1), variance(value1) from t1, t2 where t1.id = t2.id group by t1.id;
-[42803]column "t2.name" must appear in the GROUP BY clause or be used in an aggregate function
+column "t2.name" must appear in the GROUP BY clause or be used in an aggregate function
 drop table t1;
 drop table t2;

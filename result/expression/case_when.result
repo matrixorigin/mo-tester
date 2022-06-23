@@ -1,20 +1,20 @@
 select CASE "b" when "a" then 1 when "b" then 2 END;
-CASE "b" when "a" then 1 when "b" then 2 END
+case b when a then 1 when b then 2 end
 2
 select CASE "c" when "a" then 1 when "b" then 2 END;
-CASE "c" when "a" then 1 when "b" then 2 END
+case c when a then 1 when b then 2 end
 null
 select CASE "c" when "a" then 1 when "b" then 2 ELSE 3 END;
-CASE "c" when "a" then 1 when "b" then 2 ELSE 3 END
+case c when a then 1 when b then 2 else 3 end
 3
 select CASE when 1=0 then "true" else "false" END;
 CASE when 1=0 then "true" else "false" END
 false
 select CASE 1 when 1 then "one" WHEN 2 then "two" ELSE "more" END;
-CASE 1 when 1 then "one" WHEN 2 then "two" ELSE "more" END
+case 1 when 1 then one when 2 then two else more end
 one
 select CASE 2.0 when 1 then "one" WHEN 2.0 then "two" ELSE "more" END;
-CASE 2.0 when 1 then "one" WHEN 2.0 then "two" ELSE "more" END
+case 2.0 when 1 then one when 2.0 then two else more end
 two
 select (CASE "two" when "one" then "1" WHEN "two" then "2" END) | 0;
 (CASE "two" when "one" then "1" WHEN "two" then "2" END) | 0
@@ -23,17 +23,14 @@ select (CASE "two" when "one" then 1.00 WHEN "two" then 2.00 END) +0.0;
 (CASE "two" when "one" then 1.00 WHEN "two" then 2.00 END) +0.0
 2.00
 select case 1/0 when "a" then "true" else "false" END;
-case 1/0 when "a" then "true" else "false" END
-false
+Operator '=' with parameters [DOUBLE VARCHAR] will be implemented in future version.
 select case 1/0 when "a" then "true" END;
-case 1/0 when "a" then "true" END
-null
+Operator '=' with parameters [DOUBLE VARCHAR] will be implemented in future version.
 select (case 1/0 when "a" then "true" END) | 0;
 (case 1/0 when "a" then "true" END) | 0
 null
 select (case 1/0 when "a" then "true" END) + 0.0;
-(case 1/0 when "a" then "true" END) + 0.0
-null
+Operator '=' with parameters [DOUBLE VARCHAR] will be implemented in future version.
 select case when 1>0 then "TRUE" else "FALSE" END;
 case when 1>0 then "TRUE" else "FALSE" END
 TRUE
@@ -41,25 +38,23 @@ select case when 1<0 then "TRUE" else "FALSE" END;
 case when 1<0 then "TRUE" else "FALSE" END
 FALSE
 SELECT CAST(CASE WHEN 0 THEN '2001-01-01' END AS DATE);
-CAST(CASE WHEN 0 THEN '2001-01-01' END AS DATE)
-null
+Operator 'case' with parameters [BIGINT VARCHAR unexpected type: 0] will be implemented in future version.
 SELECT CAST(CASE WHEN 0 THEN DATE'2001-01-01' END AS DATE);
-CAST(CASE WHEN 0 THEN DATE'2001-01-01' END AS DATE)
-null
+Operator 'case' with parameters [BIGINT DATE unexpected type: 0] will be implemented in future version.
 select case 1.0 when 0.1 then "a" when 1.0 then "b" else "c" END;
-case 1.0 when 0.1 then "a" when 1.0 then "b" else "c" END
+case 1.0 when 0.1 then a when 1.0 then b else c end
 b
 select case 0.1 when 0.1 then "a" when 1.0 then "b" else "c" END;
-case 0.1 when 0.1 then "a" when 1.0 then "b" else "c" END
+case 0.1 when 0.1 then a when 1.0 then b else c end
 a
 select case 1 when 0.1 then "a" when 1.0 then "b" else "c" END;
-case 1 when 0.1 then "a" when 1.0 then "b" else "c" END
+case 1 when 0.1 then a when 1.0 then b else c end
 b
 select case 1.0 when 0.1 then "a" when 1 then "b" else "c" END;
-case 1.0 when 0.1 then "a" when 1 then "b" else "c" END
+case 1.0 when 0.1 then a when 1 then b else c end
 b
 select case 1.001 when 0.1 then "a" when 1 then "b" else "c" END;
-case 1.001 when 0.1 then "a" when 1 then "b" else "c" END
+case 1.001 when 0.1 then a when 1 then b else c end
 c
 drop table if exists t1;
 drop table if exists t2;
@@ -155,9 +150,7 @@ drop table if exists big;
 SELECT 'case+union+test'
 UNION
 SELECT CASE '1' WHEN '2' THEN 'BUG' ELSE 'nobug' END;
-case+union+test
-case+union+test
-nobug
+'union' will be supported in future version.
 drop table t1;
 CREATE TABLE t1(a int);
 insert into t1 values(1),(1),(2),(1),(3),(2),(1);
