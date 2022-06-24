@@ -1,3 +1,4 @@
+-- @bvt:issue#3233
 use tpch;
 select
     sum(l_extendedprice * l_discount) as revenue
@@ -49,3 +50,4 @@ order by
     cust_nation,
     l_year
 ;
+-- @bvt:issue
