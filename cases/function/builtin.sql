@@ -335,8 +335,7 @@ VALUES
 (5,'Riya Jain', 'IX'),
 (6,'Tapan Samanta', 'X');
 
--- @case
--- @desc:test for func startswith() select
+
 select a,startswith(b,'An') from t1;
 select a,b,c from t1 where startswith(b,'An')=1 and startswith(c,'I')=1;
 

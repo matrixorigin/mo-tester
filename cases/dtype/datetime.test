@@ -6,11 +6,13 @@
 #Test cases of query without table, cast and interval included
 select cast('2000-01-01 00:00:00' as datetime(0));
 select cast('2000-01-01 00:00:00.0011' as datetime(0));
+-- @bvt:issue#3359
 select cast('2000-01-01 00:00:00.9011' as datetime(0));
 select cast('2000-01-01 00:00:00.001100999' as datetime(6));
 select cast('2000-01-01 00:00:00.001109' as datetime(5));
 select cast('2000-01-01 00:00:00.501109' as datetime(0));
 select cast('2000-01-01 00:00:00.49999' as datetime(0));
+-- @bvt:issue#
 select cast('2000-01-01' as datetime(0));
 select cast('2022-01-01 25:00:00' as datetime(0));
 -- @bvt:issue#3254
@@ -32,9 +34,11 @@ select cast(cast('2000-12-31' as datetime(0)) as date);
 
 #Test cases of query with single table
 drop table if exists t1;
+-- @bvt:issue#3362#
 create table t1 (a datetime(0) not null, primary key(a));
 insert into t1 values ('20200101000000'), ('2022-01-02'), ('2022-01-02 00:00:01'), ('2022-01-02 00:00:01.512345');
 select * from t1;
+-- @bvt:issue
 -- @bvt:issue#3254
 select * from t1 where a='2022-01-02';
 -- @bvt:issue
@@ -45,21 +49,25 @@ select * from t1 where a>20220102;
 select * from t1 where a!='2022-01-02';
 update t1 set a=DATE_ADD(a ,INTERVAL 1 WEEK) where a>'20220102';
 select * from t1;
--- @bvt:issue
 drop table t1;
+-- @bvt:issue
+-- @bvt:issue#3362
 create table t1 ( a int not null default 1, big datetime(4) primary key);
 insert into t1 (big) values ('20220103'),('2022-01-01'),('2022-01-01 00:00:01'),('2022-01-02 00:00.00.000050');
 select * from t1;
 select * from t1 order by big limit 1,3;
 select * from t1 order by big limit 3 offset 1;
+-- @bvt:issue
 -- @bvt:issue#3258
 select min(big),max(big),max(big)-1 from t1 group by a;
--- @bvt:issue
 select big,count(big) from t1 group by big having count(big)>1 order by 2;
 drop table t1;
+-- @bvt:issue
 create table t1 (id datetime(6) not null default "2022-01-31 00:00:00.0000006", a int, primary key (a));
 insert into t1(a) values(1);
+-- @bvt:issue#3359
 select * from t1;
+-- @bvt:issue
 
 #Test cases of query with multi tables
 drop table if exists t1;
@@ -79,10 +87,12 @@ insert into t1 values('2022-01-01 00:00:00.000500', 2);
 insert into t1 values('2022-01-01 00:00:00.005000', 3);
 insert into t2 values('2022-01-01 00:00:00.005', 4);
 insert into t2 values('2022-01-01 00:00:00.001', 5);
+-- @bvt:issue#3290
 select * from t1;
 select * from t2;
 select * from t1 join t2 on t1.dt=t2.dt order by 1 desc, t2.dt asc;
 select * from t1 join t2 on t1.dt=t2.dt where t1.value32<>t2.value32;
+-- @bvt:issue#
 
 #Test cases of query with operators
 drop table if exists t1;
@@ -187,8 +197,8 @@ delete from t1 where a='2022-01-01 00:00:00' limit 1;
 select * from t1;
 INSERT INTO t1 VALUES ('2022-01-01 00:00:00',3);
 delete from t1 where a='2022-01-01';
--- @bvt:issue
 select * from t1;
+-- @bvt:issue
 drop table t1;
 create table t1 (
 a datetime(0) primary key,

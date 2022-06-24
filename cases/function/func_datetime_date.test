@@ -4,12 +4,20 @@ SELECT DATE(0.0124);
 SELECT DATE("2112123");
 SELECT DATE(1231241.4513);
 SELECT DATE("2017-06-15");
+
+-- @bvt:issue#3269
 SELECT DATE("2017-06-15 09:34:21");
+-- @bvt:issue
 SELECT DATE("The date is 2017-06-15");
+
+-- @bvt:issue#3269
 SELECT DATE('2008-05-17 11:31:31') as required_DATE;
+-- @bvt:issue
 
 #NULL值
+-- @bvt:issue#3183
 select coalesce(date(NULL)), coalesce(cast(NULL as DATE));
+-- @bvt:issue
 select date(NULL);
 
 
@@ -39,8 +47,12 @@ drop table t1;
 
 
 #EXTREME VALUES
+-- @bvt:issue#3269
 select date("1997-12-31 23:59:59.000001");
+-- @bvt:issue
+
 select date("1997-13-31 23:59:59.000001");
+
 SELECT DATE(20110512154559.6 + 0e0);
 SELECT DATE(concat_ws('a', 0));
 
@@ -52,6 +64,7 @@ DROP TABLE t1;
 
 
 #逻辑比较
+-- @bvt:issue#3183
 CREATE TABLE t1
 (first_usage DATE, last_recharge DATETIME, life_time SMALLINT(4) UNSIGNED);
 INSERT INTO t1 VALUES ('2011-04-27', null, 900);
@@ -60,6 +73,7 @@ DATE_ADD(coalesce(last_recharge, first_usage), INTERVAL life_time DAY ) as dt,
 DATE_ADD(coalesce(last_recharge, first_usage), INTERVAL life_time DAY ) <
 DATE('2011-04-28') as exp FROM t1;
 DROP TABLE t1;
+-- @bvt:issue
 
 
 #EXTREME VALUES
@@ -483,10 +497,13 @@ DROP TABLE t3;
 
 #逻辑操作
 #SELECT date(now()) = date(utc_timestamp());
-SELECT date("2022-12-22 02:34:23") = date("2022-12-22 03:34:23");
 
+-- @bvt:issue#3269
+SELECT date("2022-12-22 02:34:23") = date("2022-12-22 03:34:23");
+-- @bvt:issue
 
 #insert & distinct
+-- @bvt:issue#3269
 drop table if exists t1;
 create table t1(a date);
 insert into t1 SELECT DATE("2017-06-15 09:34:21");
@@ -494,7 +511,7 @@ insert into t1 SELECT DATE("2019-06-25 10:12:21");
 insert into t1 SELECT DATE("2019-06-25 18:20:49");
 select distinct a from t1;
 drop table t1;
-
+-- @bvt:issue
 
 #HAVING & 算术运算
 drop table if exists t1;

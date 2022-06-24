@@ -45,13 +45,3 @@ a
 18446744073709551613
 18446744073709551614
 18446744073709551615
-drop table if exists t1;
-create table t1 (name char(20) not null primary key );
-insert into t1 values ("å");
-insert into t1 values ("ä");
-Duplicate entry 'ä' for key 't1.PRIMARY'
-insert into t1 values ("ö");
-select * from t1 order by name;
-name
-å
-ö

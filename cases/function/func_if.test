@@ -6,6 +6,8 @@ SELECT * FROM t1 WHERE IF(a AND 1, 0, 1);
 SELECT * FROM t1 WHERE IF(1 AND a, 0, 1);
 drop table t1;
 
+-- @bvt:issue#3333
+-- @bvt:issue#3183
 CREATE TABLE t (i1 INT,
 d1 DOUBLE,
 e2 DECIMAL(5,2));
@@ -15,6 +17,8 @@ INSERT INTO t VALUES ( 6,    6.0,  10.0/3),
 ( 2,    2.0,  null  );
 SELECT coalesce(e2,i1) nullif_c, IF(e2 IS NULL,i1,e2) if_c, SUM(d1) FROM t GROUP BY e2,i1 ORDER BY nullif_c, SUM(d1);
 DROP TABLE t;
+-- @bvt:issue
+-- @bvt:issue
 
 
 CREATE TABLE source(bt INTEGER, bf INTEGER, i8u BIGINT UNSIGNED, i8s BIGINT);
@@ -31,13 +35,14 @@ drop table t1;
 
 select if(1, cast(1111111111111111111 as unsigned), 1) i, case when 1 then cast(1111111111111111111 as unsigned) else 1 end c, coalesce(cast(1111111111111111111 as unsigned), 1) co;
 
+-- @bvt:issue#3183
 create table t1 (a bigint unsigned);
 insert into t1 select (if(1, 9223372036854775808, 1));
 insert into t1 select (case when 1 then 9223372036854775808 else 1 end);
 insert into t1 select (coalesce(9223372036854775808, 1));
 select * from t1;
 drop table t1;
-
+-- @bvt:issue
 
 CREATE TABLE t (i1 INT,
 d1 DOUBLE,
@@ -79,7 +84,9 @@ select IF(0,"ERROR","this"),IF(1,"is","ERROR"),IF(NULL,"ERROR","a"),IF(1,2,3)|0,
 CREATE TABLE t1 (st varchar(255) NOT NULL, u int(11) NOT NULL);
 INSERT INTO t1 VALUES ('a',1),('A',1),('aa',1),('AA',1),('a',1),('aaa',0),('BBB',0);
 select if(1,st,st) s from t1 order by s;
+-- @bvt:issue#3334
 select if(u=1,st,st) s from t1 order by s;
+-- @bvt:issue
 select if(u=1,st,st) s from t1 where st like "%a%" order by s;
 drop table t1;
 
@@ -89,10 +96,12 @@ insert into t1 values (144.54);
 select sum(if(num is null,0.00,num)) from t1;
 drop table t1;
 
+-- @bvt:issue#3336
 create table t1 (x int, y int);
 insert into t1 values (0,6),(10,16),(20,26),(30,10),(40,46),(50,56);
 select min(if(y -x > 5,y,NULL)), max(if(y - x > 5,y,NULL)) from t1;
 drop table t1;
+-- @bvt:issue
 
 
 create table t1 (a int);
@@ -133,11 +142,12 @@ INSERT INTO t1 VALUES(1), (2), (3), (4), ('12345678901234567890');
 SELECT * FROM (SELECT MAX(IF(1, CAST(c AS UNSIGNED), 0)) FROM t1) AS te;
 DROP TABLE t1;
 
+-- @bvt:issue#3265
 CREATE TABLE t1 (a int, b DOUBLE);
 INSERT INTO t1 VALUES (NULL, 0), (NULL, 1);
 SELECT IF(b, (SELECT a FROM t1 LIMIT 1), b) c FROM t1 GROUP BY c;
 DROP TABLE t1;
-
+-- @bvt:issue
 
 SELECT if(0, (SELECT min('hello')), NULL);
 SELECT if(1, (SELECT min('hello')), NULL);

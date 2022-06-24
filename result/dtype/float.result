@@ -57,17 +57,17 @@ create table t1 ( a float not null default 1, big float);
 insert into t1 (big) values (-1),(12345678.901234567),(92233720368547.75807);
 select * from t1;
 a	big
-1	-1
-1	12345700
-1	92233700000000
+1.0	-1.0
+1.0	1.2345679E7
+1.0	9.223372E13
 select * from t1 order by big limit 1,2;
 a	big
-1	12345700
-1	92233700000000
+1.0	1.2345679E7
+1.0	9.223372E13
 select * from t1 order by big limit 2 offset 1;
 a	big
-1	12345700
-1	92233700000000
+1.0	1.2345679E7
+1.0	9.223372E13
 select min(big),max(big),max(big)-1 from t1;
 min(big)	max(big)	max(big)-1
 -1	92233700000000	92233718038527
@@ -179,11 +179,6 @@ id	1.1 <= id
 2.0	true	
 SELECT id, id = 1.1 FROM t_float;
 id	id = 1.1
-1.0	false	
-1.1	true	
-2.0	false	
-SELECT id, 1.1 = id FROM t_float;
-id	1.1 = id
 1.0	false	
 1.1	true	
 2.0	false	

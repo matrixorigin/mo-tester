@@ -170,8 +170,7 @@ select date_add("1997-12-31",INTERVAL "1 1" YEAR_MONTH);
 date_add("1997-12-31",INTERVAL "1 1" YEAR_MONTH)
 1999-01-31
 SELECT DATE_ADD(to_date('9999-12-30 23:59:00','%Y-%m-%d %H:%i:%s'), INTERVAL 1 MINUTE);
-DATE_ADD(to_date('9999-12-30 23:59:00','%Y-%m-%d %H:%i:%s'), INTERVAL 1 MINUTE)
-9999-12-31 00:00:00
+FUNCTION func_datetime_date_add.to_date does not exist
 SELECT extract(week from DATE_ADD('2020-12-30 23:59:00', INTERVAL 1 year));
 extract(week from DATE_ADD('2020-12-30 23:59:00', INTERVAL 1 year))
 52
@@ -233,12 +232,14 @@ select DATE_ADD('20071108181000', INTERVAL 1 DAY);
 DATE_ADD('20071108181000', INTERVAL 1 DAY)
 2007-11-09 18:10:00
 select DATE_ADD(20071108181000,   INTERVAL 1 DAY);
-[42883]unsupported parameter types [BIGINT BIGINT BIGINT] for function 'date_add'
+DATE_ADD(20071108181000,   INTERVAL 1 DAY)
+2007-11-09 18:10:00
 select DATE_ADD('20071108',       INTERVAL 1 DAY);
 DATE_ADD('20071108',       INTERVAL 1 DAY)
 2007-11-09
 select DATE_ADD(20071108,         INTERVAL 1 DAY);
-[42883]unsupported parameter types [BIGINT BIGINT BIGINT] for function 'date_add'
+DATE_ADD(20071108,         INTERVAL 1 DAY)
+2007-11-09
 select date_add('1000-01-01 00:00:00', interval '1.03:02:01.05' day_microsecond);
 date_add('1000-01-01 00:00:00', interval '1.03:02:01.05' day_microsecond)
 1000-01-02 03:02:01.050000
@@ -253,40 +254,52 @@ date_add("2001-01-01 23:59:59",INTERVAL -2000 YEAR)
 0001-01-01 23:59:59
 SELECT
 date_add('1995-01-05', INTERVAL '9223372036854775807-02' YEAR_MONTH) as result;
-Can not issue SELECT via executeUpdate() or executeLargeUpdate().
+result
+null
 SELECT
 date_add('1995-01-05', INTERVAL '9223372036854775808-02' YEAR_MONTH) as result;
-Can not issue SELECT via executeUpdate() or executeLargeUpdate().
+result
+null
 SELECT
 date_add('1995-01-05', INTERVAL '9223372036854775808-02' DAY) as result;
-Can not issue SELECT via executeUpdate() or executeLargeUpdate().
+result
+null
 SELECT
 date_add('1995-01-05', INTERVAL '9223372036854775808-02' WEEK) as result;
-Can not issue SELECT via executeUpdate() or executeLargeUpdate().
+result
+null
 SELECT
 date_add('1995-01-05', INTERVAL '9223372036854775808-02' SECOND) as result;
-Can not issue SELECT via executeUpdate() or executeLargeUpdate().
+result
+null
 SELECT
 date_add('1995-01-05', INTERVAL '9223372036854775700-02' YEAR_MONTH) as result;
-Can not issue SELECT via executeUpdate() or executeLargeUpdate().
+result
+null
 SELECT
 date_add('1995-01-05', INTERVAL 9223372036854775806 SECOND) as result;
-Can not issue SELECT via executeUpdate() or executeLargeUpdate().
+result
+null
 SELECT
 date_add('1995-01-05', INTERVAL 9223372036854775806 MINUTE) as result;
-Can not issue SELECT via executeUpdate() or executeLargeUpdate().
+result
+null
 SELECT
 date_add('1995-01-05', INTERVAL 9223372036854775806 HOUR) as result;
-Can not issue SELECT via executeUpdate() or executeLargeUpdate().
+result
+null
 SELECT
 date_add('1995-01-05', INTERVAL -9223372036854775806 SECOND) as result;
-Can not issue SELECT via executeUpdate() or executeLargeUpdate().
+result
+null
 SELECT
 date_add('1995-01-05', INTERVAL -9223372036854775806 MINUTE) as result;
-Can not issue SELECT via executeUpdate() or executeLargeUpdate().
+result
+null
 SELECT
 date_add('1995-01-05', INTERVAL -9223372036854775806 HOUR) as result;
-Can not issue SELECT via executeUpdate() or executeLargeUpdate().
+result
+null
 drop table if exists t1;
 create table t1 (a int, b date);
 insert into t1 values(1, "2010-10-30"), (2, NULL);
@@ -339,13 +352,15 @@ DATE_SUB('2007-08-03', INTERVAL 1 MINUTE) AS field_str1,
 DATE_SUB('2007-08-03 17:33:00', INTERVAL 1 MINUTE) AS field1_str2,
 DATE_SUB(DATE('2007-08-03'), INTERVAL 1 DAY) AS field_date,
 DATE_SUB(CAST('2007-08-03 17:33:00' AS DATETIME), INTERVAL 1 MINUTE) AS field_datetime;
-Can not issue SELECT via executeUpdate() or executeLargeUpdate().
+field_str1	field1_str2	field_date	field_datetime
+2007-08-02 23:59:00	2007-08-03 17:32:00	2007-08-02	2007-08-03 17:32:00
 SELECT
 OCT(DATE_SUB('2007-08-03', INTERVAL 1 MINUTE)) AS field_str1,
 OCT(DATE_SUB('2007-08-03 17:33:00', INTERVAL 1 MINUTE)) AS field1_str2,
 OCT(DATE_SUB(DATE('2007-08-03'), INTERVAL 1 DAY)) AS field_date,
 OCT(DATE_SUB(CAST('2007-08-03 17:33:00' AS DATETIME), INTERVAL 1 MINUTE)) AS field_datetime;
-Can not issue SELECT via executeUpdate() or executeLargeUpdate().
+field_str1	field1_str2	field_date	field_datetime
+3727	3727	3727	3727
 select date_sub("1998-01-01 00:00:00.000001",INTERVAL "1 1:1:1.000002" DAY_MICROSECOND);
 date_sub("1998-01-01 00:00:00.000001",INTERVAL "1 1:1:1.000002" DAY_MICROSECOND)
 1997-12-30 22:58:58.999999

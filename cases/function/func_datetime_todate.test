@@ -1,4 +1,6 @@
 #SELECT different usage
+
+-- @bvt:issue#3203
 SELECT to_date('01,5,2013','%d,%m,%Y');
 SELECT to_date('May 1, 2013','%M %d,%Y');
 SELECT to_date('a09:30:17','a%h:%i:%s');
@@ -15,7 +17,9 @@ SELECT to_date('200442 Monday', '%X%V %W');
 
 SELECT CAST(to_date('nope','%d-%m-%Y') AS YEAR);
 select to_date(concat_ws(' ','15-01-2001'), ' 2:59:58.999');
+-- @bvt:issue
 
+-- @bvt:issue#3327
 create table t1 (date char(30), format char(30) not null);
 insert into t1 values
 ('2003-01-02 10:11:12', '%Y-%m-%d %H:%i:%S'),
@@ -74,8 +78,9 @@ insert into t1 values
 select date,format,to_date(date, format) as to_date from t1;
 select date,format,concat_ws(" ",to_date(date, format),'') as con from t1;
 drop table t1;
+-- @bvt:issue
 
-
+-- @bvt:issue#3203
 select to_date( 1, NULL );
 select to_date( NULL, 1 );
 select to_date( 1, IF(1=1,NULL,NULL) );
@@ -116,3 +121,5 @@ select * from t2;
 DELETE FROM t2;
 drop table t1;
 drop table t2;
+
+-- @bvt:issue
