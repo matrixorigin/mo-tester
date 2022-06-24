@@ -1,3 +1,4 @@
+-- @bvt:issue#3183
 #ORDER BY
 CREATE TABLE t (i1 INT,
 d1 DOUBLE,
@@ -11,6 +12,7 @@ IF(e2 IS NULL,i1,e2) if_c,
 SUM(d1) FROM t
 GROUP BY e2,i1 ORDER BY nullif_c, SUM(d1);
 DROP TABLE t;
+-- @bvt:issue
 
 #子查询
 CREATE TABLE t1(a INT);

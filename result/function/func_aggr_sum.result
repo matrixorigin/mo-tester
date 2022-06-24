@@ -21,9 +21,7 @@ INSERT INTO t1 VALUES (1),(2),(3),(4);
 INSERT INTO t2 VALUES (1),(2);
 SELECT t1.a, t2.a FROM t1 JOIN t2
 ON t1.a+t2.a = (SELECT COUNT(*) FROM t1);
-a	a
-2	2
-3	1
+subquery in JOIN condition not yet supported
 SELECT a + (SELECT SUM(a) + (SELECT COUNT(a) FROM t1) FROM t1) AS cnt
 FROM t2;
 cnt
@@ -41,8 +39,12 @@ insert into t1 values (1,4), (2,2),(2,2), (4,1),(4,1),(4,1),(4,1);
 select sum(b) from t1 group by a;
 sum(b)
 4
+4
+4
 select sum(b) from (select a,b from t1) y group by a;
 sum(b)
+4
+4
 4
 drop table t1;
 CREATE TABLE t1
@@ -67,6 +69,12 @@ GROUP BY a)
 SELECT t2.a, (SELECT MIN(c) FROM cte AS cte2 WHERE t2.d = cte2.b)
 FROM t2 LEFT JOIN cte AS cte1 ON t2.a = cte1.a
 LEFT JOIN t2 AS tx ON tx.e = cte1.c;
+a	(SELECT MIN(c) FROM cte AS cte2 WHERE t2.d = cte2.b)
+1	60
+1	60
+1	60
+2	60
+3	60
 drop table t1;
 drop table t2;
 create table t1 (num  double(12,2));

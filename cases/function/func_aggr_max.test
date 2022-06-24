@@ -65,7 +65,9 @@ insert into t1 values ("ö");
 insert into t2 select * from t1;
 select * from t1 order by name;
 select concat_ws(",","*",name,"*") from t1 order by 1;
+-- @bvt:issue#3344
 select min(name),min(concat_ws(",","*",name,"*")),max(name),max(concat_ws("*",name,"*")) from t1;
+-- @bvt:issue
 drop table t1;
 drop table t2;
 
@@ -104,7 +106,9 @@ create table t1 (a1 int, a2 char(3));
 insert into t1 values(10,'aaa'), (10,null), (10,'bbb'), (20,'zzz');
 create table t2(a1 char(3), a2 int, a3 real);
 select * from t1;
+-- @bvt:issue#3344
 select min(a2) from t1;
+-- @bvt:issue
 select max(t1.a1), max(t2.a2) from t1, t2;
 select max(t1.a1) from t1, t2;
 select max(t2.a2), max(t1.a1) from t1, t2;
@@ -122,7 +126,7 @@ select max(t1.a2),max(t2.a1) from t1 left outer join t2 on t1.a1=10;
 drop table t1;
 drop table t2;
 
-
+-- @bvt:issue#3343
 CREATE TABLE t1 (a int, b int);
 select count(b), sum(b), avg(b), std(b), min(b), max(b), bit_and(b), bit_or(b) from t1;
 select a,count(b), sum(b), avg(b), std(b), min(b), max(b), bit_and(b), bit_or(b) from t1 group by a;
@@ -136,9 +140,10 @@ select a,count(b), sum(b), avg(b), std(b), min(b), max(b), bit_and(b), bit_or(b)
 insert into t1 values (3,1);
 select a,count(b), sum(b), avg(b), std(b), min(b), max(b), bit_and(b), bit_or(b) from t1 group by a;
 drop table t1;
+-- @bvt:issue
 
 
-
+-- @bvt:issue#3139
 create table t1(a1 char(3) primary key,a2 smallint,a3 char(3),a4 real,a5 date);
 create table t2(a1 char(3) primary key,a2 char(17),a3 char(2),a4 char(3));
 insert into t1 values('AME',0,'SEA',0.100,date'1942-02-19');
@@ -202,7 +207,7 @@ select min(a3) from t1 where a2 = 2 and a3 >= 'SEA' and a3 = 'MIN';
 select min(t1.a1), min(t2.a4) from t1,t2 where t1.a1 < 'KKK' and t2.a4 < 'KKK';
 drop table t1;
 drop table t2;
-
+-- @bvt:issue
 
 
 create table t1 (a int);
@@ -249,7 +254,12 @@ DROP TABLE t1;
 
 
 create table t1 (f1 int, f2 int, f3 date, f4 datetime);
-insert into t1 values(98,1998,"1998-01-01","1998-01-01 00:00:00"),('00',2000,20000101,"2000-01-01 00:00:01"),(02,2002,20020101,"2002-01-01 23:59:59"),(60,2060,20600101,"2060-01-01 11:11:11"),(70,1970,19700101,"1970-11-11 22:22:22"),(NULL,NULL,NULL,NULL);
+insert into t1 values(98,1998,"1998-01-01","1998-01-01 00:00:00");
+insert into t1 values('00',2000,20000101,"2000-01-01 00:00:01");
+insert into t1 values(02,2002,20020101,"2002-01-01 23:59:59");
+insert into t1 values(60,2060,20600101,"2060-01-01 11:11:11");
+insert into t1 values(70,1970,19700101,"1970-11-11 22:22:22");
+insert into t1 values(NULL,NULL,NULL,NULL);
 select min(f1),max(f1) from t1;
 select min(f2),max(f2) from t1;
 select min(f3),max(f3) from t1;
