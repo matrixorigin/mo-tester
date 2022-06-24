@@ -88,7 +88,10 @@ public class SqlCommand {
                 || opt.equalsIgnoreCase("with")
                 || command.startsWith("select")
                 || command.startsWith("show")
-                || command.startsWith("with"))
+                || command.startsWith("with")
+                || command.startsWith("SELECT")
+                || command.startsWith("SHOW")
+                || command.startsWith("WITH"))
             this.update = false;
         else
             this.update = true;
