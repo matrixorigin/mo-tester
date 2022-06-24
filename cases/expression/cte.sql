@@ -13,20 +13,23 @@ SELECT * FROM qn;
 WITH qn AS (SELECT a FROM t1), qn2 as (select b from t1)
 SELECT * FROM qn2;
 -- error
+-- @bvt:issue#3299
 WITH qn AS (SELECT a FROM t1), qn as (select b from t1)
 SELECT 1 FROM qn;
+-- @bvt:issue
 -- error parser
 with test.qn as (select "with") select * from test.qn;
 with qn as (select "with" as a)
 with qn2 as (select "with" as a)
 select a from qn;
-
+-- @bvt:issue#3302
 with qne as (select a from t1),
      qnm as (select a from t1),
      qnea as (select a from t1),
      qnma as (select a from t1)
 select qne.a,qnm.a,alias1.a,alias2.a
 from qne, qnm, qnea as alias1, qnma as alias2 limit 2;
+-- @bvt:issue
 
 -- @case
 -- @desc:test for with multiple refs
@@ -137,15 +140,18 @@ insert into t1 values(null,null,null),(2,3,4),(4,5,6);
 with qn as
   (with qn2 as (select "qn2" as a from t1) select "qn", a from qn2)
 select * from qn;
-
+-- @bvt:issue#3304
 SELECT (WITH qn AS (SELECT t2.a*a as a FROM t1),
         qn2 AS (SELECT 3*a AS b FROM qn)
         SELECT * from qn2 LIMIT 1)
 FROM t1 as t2;
+-- @bvt:issue
 
+-- @bvt:issue#3303
 WITH qn AS (SELECT b as a FROM t1)
 SELECT (WITH qn2 AS (SELECT a FROM qn WHERE a IS NULL or a>0)
         SELECT qn2.a FROM qn2) FROM qn;
+-- @bvt:issue
 
 WITH qn AS (select "outer" as a)
 SELECT (WITH qn AS (SELECT "inner" as a) SELECT a from qn),
@@ -232,12 +238,14 @@ create table t1 (s1 char(5), index s1(s1));
 create table t2 (s1 char(5), index s1(s1));
 insert into t1 values ('a1'),('a2'),('a3');
 insert into t2 values ('a1'),('a2');
+-- @bvt:issue#3304
 with qn as (SELECT s1 FROM t2)
 select s1, s1 = ANY (select * from qn) from t1;
 with qn as (SELECT s1 FROM t2)
 select s1, s1 < ANY (select * from qn) from t1;
 with qn as (SELECT s1 FROM t2)
 select s1, s1 = ANY (select * from qn) from t1;
+-- @bvt:issue
 
 drop table if exists t1;
 drop table if exists t2;
@@ -275,10 +283,13 @@ insert into t1 values (2);
 insert into t2 values (1,7),(2,7);
 insert into t4 values (4,8),(3,8),(5,9);
 insert into t3 values (6),(7),(3);
+-- @bvt:issue#3304
 with qn as (select * from t2 where t2.b=t3.a)
 select * from t3 where exists (select * from qn);
+
 with qn as (select * from t2 where t2.b=t3.a)
 select * from t3 where not exists (select * from qn);
+-- @bvt:issue
 drop table if exists t1;
 drop table if exists t2;
 DROP TABLE IF EXISTS t3;

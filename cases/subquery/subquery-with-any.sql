@@ -35,9 +35,11 @@ create table t1 (s1 char(5));
 create table t2 (s1 char(5));
 insert into t1 values ('a1'),('a2'),('a3');
 insert into t2 values ('a1'),('a2');
+-- @bvt:issue#3304
 select s1, s1 = ANY (SELECT s1 FROM t2) from t1;
 select s1, s1 < ANY (SELECT s1 FROM t2) from t1;
 select s1, s1 = ANY (SELECT s1 FROM t2) from t1;
+-- @bvt:issue
 
 DROP TABLE IF EXISTS t1;
 DROP TABLE IF EXISTS t2;
@@ -64,24 +66,28 @@ SELECT a FROM t1 WHERE a = ANY ( SELECT a FROM t1 WHERE b = 2 );
 SELECT a FROM t1 WHERE a >= ANY ( SELECT a FROM t1 WHERE b = 2 );
 SELECT a FROM t1 WHERE a <= ANY ( SELECT a FROM t1 WHERE b = 2 );
 SELECT a FROM t1 WHERE a <> ANY ( SELECT a FROM t1 WHERE b = 2 );
--- error
+-- @bvt:issue#3308
 SELECT a FROM t1 WHERE (1,2) > ANY (SELECT a FROM t1 WHERE b = 2);
+-- @bvt:issue
 -- error
 SELECT a FROM t1 WHERE a > ANY (SELECT a,2 FROM t1 WHERE b = 2);
 -- error
 SELECT a FROM t1 WHERE (1,2) > ANY (SELECT a,2 FROM t1 WHERE b = 2);
 -- error
 SELECT a FROM t1 WHERE (1,2) <> ANY (SELECT a,2 FROM t1 WHERE b = 2);
--- error
+-- @bvt:issue#3308
 SELECT a FROM t1 WHERE (1,2) = ANY (SELECT a FROM t1 WHERE b = 2);
--- error
-SELECT a FROM t1 WHERE a = ANY (SELECT a,2 FROM t1 WHERE b = 2);
--- error
-SELECT a FROM t1 WHERE (1,2) = ANY (SELECT a,2 FROM t1 WHERE b = 2);
--- error
-SELECT a FROM t1 WHERE (1,2) <> ALL (SELECT a FROM t1 WHERE b = 2);
 
+SELECT a FROM t1 WHERE a = ANY (SELECT a,2 FROM t1 WHERE b = 2);
+-- @bvt:issue
+SELECT a FROM t1 WHERE (1,2) = ANY (SELECT a,2 FROM t1 WHERE b = 2);
+-- @bvt:issue#3308
+SELECT a FROM t1 WHERE (1,2) <> ALL (SELECT a FROM t1 WHERE b = 2);
+-- @bvt:issue
+
+-- @bvt:issue#3309
 SELECT a FROM t1 WHERE (a,1) = ANY (SELECT a,1 FROM t1 WHERE b = 2);
+-- @bvt:issue
 SELECT a FROM t1 WHERE (a,1) = ANY (SELECT a,1 FROM t1 HAVING a = 2);
 SELECT a FROM t1 WHERE (a,1) = ANY (SELECT a,1 FROM t1 WHERE b = 2 UNION SELECT a,1 FROM t1 WHERE b = 2);
 SELECT a FROM t1 WHERE (a,1) = ANY (SELECT a,1 FROM t1 HAVING a = 2 UNION SELECT a,1 FROM t1 HAVING a = 2);
@@ -119,7 +125,9 @@ DROP TABLE IF EXISTS t2;
 create table t1 (s1 char);
 insert into t1 values ('1'),('2');
 select * from t1 where (s1 < any (select s1 from t1));
+-- @bvt:issue#3309
 select * from t1 where not (s1 < any (select s1 from t1));
+-- @bvt:issue
 select * from t1 where (s1+1 = ANY (select s1 from t1));
 select * from t1 where NOT(s1+1 = ANY (select s1 from t1));
 
@@ -136,11 +144,12 @@ DROP TABLE IF EXISTS t2;
 -- @desc:test for [any] subquery with with * and mutil tuple
 -- @label:bvt
 create table t1 (a integer, b integer);
+-- @bvt:issue#3309
 select (select * from t1) = (select 1,2);
 select (select 1,2) = (select * from t1);
-# queries whih can be converted to IN
 select  (1,2) = ANY (select * from t1);
 select  (1,2) != ALL (select * from t1);
+-- @bvt:issue
 DROP TABLE IF EXISTS t1;
 
 -- @case
@@ -167,7 +176,9 @@ CREATE TABLE `t2` (
 INSERT INTO t2 (mot,topic,dt,pseudo) VALUES ('joce','40143','2002-10-22','joce'), ('joce','43506','2002-10-22','joce');
 SELECT * from t2 where topic = any (SELECT topic FROM t2 GROUP BY topic);
 SELECT * from t2 where topic = any (SELECT topic FROM t2 GROUP BY topic HAVING topic < 4100);
+-- @bvt:issue#3307
 SELECT * from t2 where topic = any (SELECT SUM(topic) FROM t1);
+-- @bvt:issue
 SELECT * from t2 where topic <> any (SELECT SUM(topic) FROM t2);
 SELECT * from t2 where topic = any (SELECT topic FROM t2 GROUP BY topic HAVING topic < 41000);
 
@@ -247,8 +258,9 @@ DROP TABLE IF EXISTS t1;
 DROP TABLE IF EXISTS t2;
 CREATE TABLE t1 (a varchar(5), b varchar(10));
 INSERT INTO t1 VALUES ('AAA', '5'), ('BBB', '4'), ('BBB', '1'), ('CCC', '2'), ('CCC', '7'), ('AAA', '2'), ('AAA', '4'), ('BBB', '3'), ('AAA', '8');
+-- @bvt:issue#3309
 SELECT * FROM t1 WHERE (a,b) = ANY (SELECT a, max(b) FROM t1 GROUP BY a);
-
+-- @bvt:issue
 DROP TABLE IF EXISTS t1;
 DROP TABLE IF EXISTS t2;
 
@@ -284,33 +296,37 @@ create table t1 (a int);
 insert into t1 values (1),(2),(3);
 -- @ignore{
 update t1 set a=NULL where a=2;
+-- @bvt:issue#3304
 select 1 > ANY (SELECT * from t1);
 select 10 > ANY (SELECT * from t1);
+-- @bvt:issue
 -- @ignore}
 
 DROP TABLE IF EXISTS t1;
 create table t1 (a varchar(20));
 insert into t1 values ('A'),('BC'),('DEF');
--- @ignore{
 update t1 set a=NULL where a='BC';
+-- @bvt:issue#3304
 select 'A' > ANY (SELECT * from t1);
 select 'XYZS' > ANY (SELECT * from t1);
--- @ignore}
+-- @bvt:issue
 
 DROP TABLE IF EXISTS t1;
 create table t1 (a float);
 insert into t1 values (1.5),(2.5),(3.5);
--- @ignore{
 update t1 set a=NULL where a=2.5;
+-- @bvt:issue#3304
 select 1.5 > ANY (SELECT * from t1);
 select 10.5 > ANY (SELECT * from t1);
--- @ignore}
+-- @bvt:issue
 
 DROP TABLE IF EXISTS t1;
 create table t1 (s1 int);
 insert into t1 values (1),(null);
 select * from t1 where s1 < all (select s1 from t1);
+-- @bvt:issue#3304
 select s1, s1 < all (select s1 from t1) from t1;
+-- @bvt:issue
 
 DROP TABLE IF EXISTS t1;
 CREATE TABLE t1( a INT );

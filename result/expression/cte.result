@@ -103,9 +103,7 @@ SELECT (WITH qn AS (SELECT 10*a as a FROM t1),
 qn2 AS (SELECT 3*a AS b FROM qn)
 SELECT * from qn2 LIMIT 1)
 FROM t1;
-(WITH qn AS (SELECT 10*a as a FROM t1),
-qn2 AS (SELECT 3*a AS b FROM qn)
-SELECT * from qn2 LIMIT 1)
+(with qn as (select 10 * a as a from t1), qn2 as (select 3 * a as b from qn) select * from qn2 limit 1)
 null
 null
 null
@@ -185,10 +183,7 @@ WITH qn AS (SELECT 10*a as a FROM t1),
 qn2 AS (SELECT 3*a AS b FROM qn)
 SELECT * from qn2;
 SELECT * FROM t2;
-b
-null
-60
-120
+a
 null
 60
 120
@@ -207,27 +202,27 @@ null
 with qn as (select a from t1 order by 1)
 select qn.a from qn, t1 as t2;
 a
-4
-2
 null
-4
-2
 null
-4
-2
 null
+2
+2
+2
+4
+4
+4
 with qn as (select a from t1 order by 1 limit 10)
 select qn.a from qn, t1 as t2;
 a
-4
-2
 null
-4
-2
 null
-4
-2
 null
+2
+2
+2
+4
+4
+4
 drop table if exists t1;
 drop table if exists t2;
 create table t1(a int, b int, c int);
@@ -248,7 +243,7 @@ insert into t1 values(null,null,null),(2,3,4),(4,5,6),(4,5,6),(8,9,10);
 with qn () as (select 1) select * from qn, qn qn1;
 You have an error in your SQL syntax; check the manual that corresponds to your MatrixOne server version for the right syntax to use. syntax error at position 11;
 with qn (foo, bar) as (select 1) select * from qn, qn qn1;
-CTE table column length not match
+table "qn" has 1 columns available but 2 columns specified
 with qn as (select 1,1) select * from qn;
 Column reference 'qn.1' is ambiguous
 with qn as (select 1,1 from t1) select * from qn;
