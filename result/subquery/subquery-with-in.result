@@ -950,33 +950,22 @@ INSERT INTO t2 VALUES
 (2,10), (2,20), (4,10), (5,10), (3,20), (2,40);
 INSERT INTO t3 VALUES (10), (30), (10), (20) ;
 SELECT a FROM t1 GROUP BY a HAVING a IN (SELECT c FROM t2 WHERE MAX(b)>20);
-a
-2
-4
+aggregate functions not allowed here
 SELECT a FROM t1 GROUP BY a  HAVING a IN (SELECT c FROM t2 WHERE MAX(b)<d);
-a
-2
+aggregate functions not allowed here
 SELECT a FROM t1 GROUP BY a  HAVING a IN (SELECT c FROM t2 WHERE MAX(b)>d);
-a
-2
-4
+aggregate functions not allowed here
 SELECT a FROM t1 GROUP BY a  HAVING a IN (SELECT c FROM t2  WHERE d >= SOME(SELECT e FROM t3 WHERE MAX(b)=e));
-a
-2
-3
+aggregate functions not allowed here
 SELECT a FROM t1 GROUP BY a  HAVING a IN (SELECT c FROM t2  WHERE  EXISTS(SELECT e FROM t3 WHERE MAX(b)=e AND e <= d));
-a
-2
-3
+aggregate functions not allowed here
 SELECT a FROM t1 GROUP BY a  HAVING a IN (SELECT c FROM t2  WHERE d > SOME(SELECT e FROM t3 WHERE MAX(b)=e));
-a
-2
+aggregate functions not allowed here
 SELECT a FROM t1 GROUP BY a  HAVING a IN (SELECT c FROM t2  WHERE  EXISTS(SELECT e FROM t3 WHERE MAX(b)=e AND e < d));
-a
-2
+aggregate functions not allowed here
 SELECT a FROM t1 GROUP BY a  HAVING a IN (SELECT c FROM t2  WHERE MIN(b) < d AND EXISTS(SELECT e FROM t3 WHERE MAX(b)=e AND e <= d));
-a
-2
+aggregate functions not allowed here
+
 DROP TABLE IF EXISTS t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -1279,10 +1268,7 @@ FROM
 t1s LEFT OUTER JOIN t2s ON t2s.i = t1s.i
 HAVING t2s.i = 999
 );
-i
-1
-2
-3
+column "t2s.i" must appear in the GROUP BY clause or be used in an aggregate function
 SELECT * FROM t1
 WHERE t1.I IN
 (
@@ -1291,7 +1277,7 @@ FROM
 t1s LEFT OUTER JOIN t2s ON t2s.i = t1s.i
 HAVING t2s.i = 999
 );
-i
+column "t2s.i" must appear in the GROUP BY clause or be used in an aggregate function
 SELECT * FROM t1
 WHERE NOT t1.I = ANY
 (
@@ -1300,10 +1286,7 @@ FROM
 t1s LEFT OUTER JOIN t2s ON t2s.i = t1s.i
 HAVING t2s.i = 999
 );
-i
-1
-2
-3
+column "t2s.i" must appear in the GROUP BY clause or be used in an aggregate function
 SELECT * FROM t1
 WHERE t1.i = ANY (
 SELECT t2s.i
@@ -1311,7 +1294,7 @@ FROM
 t1s LEFT OUTER JOIN t2s ON t2s.i = t1s.i
 HAVING t2s.i = 999
 );
-i
+column "t2s.i" must appear in the GROUP BY clause or be used in an aggregate function
 DROP TABLE IF EXISTS t1;
 drop table if exists t2;
 drop table if exists t3;
@@ -1535,12 +1518,10 @@ SELECT (NULL, NULL) IN (SELECT 1,1 FROM t1);
 SELECT (NULL OR 1) IN (SELECT 1 FROM t1);
 Operator '=' with parameters [BOOL BIGINT] will be implemented in future version.
 SELECT (NULL IS NULL) IN  (SELECT 1 FROM t1);
-(NULL IS NULL) IN  (SELECT 1 FROM t1)
-0
+Operator '=' with parameters [BOOL BIGINT] will be implemented in future version.
 DROP TABLE IF EXISTS t1;
 CREATE TABLE t1 (a INTEGER);
 INSERT INTO t1 VALUES (1), (2), (3);
 SELECT 2 IN ( SELECT 5 UNION SELECT NULL ) FROM t1;
-2 IN ( SELECT 5 UNION SELECT NULL )
 'union' will be supported in future version.
 DROP TABLE IF EXISTS t1;
