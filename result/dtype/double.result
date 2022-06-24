@@ -41,8 +41,8 @@ a
 drop table t1;
 create table t1(a float(34));
 show create table t1;
-Table   Create Table
-t1      CREATE TABLE `t1` (
+Table	Create Table
+t1	CREATE TABLE `t1` (
 `a` DOUBLE DEFAULT NULL
 )
 drop table t1;

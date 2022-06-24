@@ -301,7 +301,7 @@ j decimal(10,5) not null default 12345.67890,
 primary key (a));
 insert into t1 (a) values (2),(4),(6),(8),(10),(12),(14),(16),(18),(20),(22),(24),(26),(23);
 update t1 set a=a+101;
-select a,b from t1;
+select a,b from t1 order by 1;
 a	b
 103.00000	12346
 105.00000	12346
@@ -318,7 +318,7 @@ a	b
 125.00000	12346
 127.00000	12346
 update t1 set a=27 where a=125;
-select a,b from t1;
+select a,b from t1 order by 1;
 a	b
 27.00000	12346
 103.00000	12346
@@ -335,7 +335,7 @@ a	b
 124.00000	12346
 127.00000	12346
 update t1 set a=a-1 where 1 > 2;
-select a,b from t1;
+select a,b from t1 order by 1;
 a	b
 27.00000	12346
 103.00000	12346
@@ -352,7 +352,7 @@ a	b
 124.00000	12346
 127.00000	12346
 update t1 set a=a-1 where 3 > 2;
-select a,b from t1;
+select a,b from t1 order by 1;
 a	b
 26.00000	12346
 102.00000	12346
@@ -405,26 +405,26 @@ j decimal(10,5) not null default 12345.67890,
 primary key (a));
 insert into t1 (a) values (2.1111),(4),(00006.12311),(8.41231),(24.0000);
 delete from t1 where a=2+2.0000;
-select a,b from t1;
+select a,b from t1 order by 1;
 a	b
 2.11110	12346
 6.12311	12346
 8.41231	12346
 24.00000	12346
 delete from t1 where  a=24.0000;
-select a,b from t1;
+select a,b from t1 order by 1;
 a	b
 2.11110	12346
 6.12311	12346
 8.41231	12346
 delete from t1 where  3 < 2;
-select a,b from t1;
+select a,b from t1 order by 1;
 a	b
 2.11110	12346
 6.12311	12346
 8.41231	12346
 delete from t1 where  1 < 2;
-select a,b from t1;
+select a,b from t1 order by 1;
 a	b
 drop table t1;
 create table t1 (a decimal(10,5) primary key, b char(32));

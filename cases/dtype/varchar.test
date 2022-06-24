@@ -36,7 +36,6 @@ SELECT * FROM Demovarchar;
 select concat_ws(LastName,FirstName) from Demovarchar where Age > 40 order by 1 asc;
 select concat_ws(LastName,FirstName) as fullname from Demovarchar where Age > 40 order by fullname desc;
 select concat_ws(LastName,FirstName),Gender,Age from Demovarchar where Gender='F' order by Age asc;
-select cast(Age as char) as cAge from Demovarchar where cast(Age as char) like '2_';
 -- @bvt:issue#3252
 select cast(Age as char) and Age as cAge from Demovarchar where Age>=50 order by cAge desc;
 -- @bvt:issue

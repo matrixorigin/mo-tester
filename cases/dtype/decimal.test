@@ -15,9 +15,11 @@ select floor(cast(2231231.501231 as decimal));
 #Test cases of query with single table
 drop table if exists t1;
 create table t1 (a decimal(29,0) not null, primary key(a));
+-- @bvt:issue#3364
 insert into t1 values (18446744073709551615), (0xFFFFFFFFFFFFFE), (18446744073709551613.0000000), (18446744073709551612.0000000001);
 select * from t1;
 select * from t1 where a=18446744073709551615;
+-- @bvt:issue
 -- @bvt:issue#3280
 delete from t1 where a=18446744073709551615.000000000;  
 select * from t1;
@@ -27,7 +29,8 @@ create table t1 ( a int not null default 1, big decimal(29,11) );
 insert into t1 (big) values (-1),(12.34567891234567),(92.23372036854775807);
 select * from t1;
 select min(big),max(big),max(big)-1 from t1;
-#select min(big),avg(big),max(big)-1 from t1 group by a;
+select min(big),avg(big),max(big)-1 from t1 group by a;
+-- @bvt:issue#3364
 drop table t1;
 create table t1 ( a int not null default 1, big decimal(20,4) primary key);
 insert into t1 (big) values (0),(18446744073), (0xFFFFFE), (184467.13), (184462);
@@ -35,7 +38,8 @@ select * from t1 order by 2 desc;
 select * from t1 order by big limit 1,2;
 select * from t1 order by big limit 2 offset 1;
 select min(big),max(big),max(big)-1 from t1;
-#select min(big),count(big),max(big)-1 from t1 group by a;
+select min(big),count(big),max(big)-1 from t1 group by a;
+-- @bvt:issue
 
 #Test cases of query with multi tables
 drop table if exists t1;
@@ -67,7 +71,9 @@ select * from t1;
 drop table t1;
 create table t1 (decimal_col decimal(29,0));
 insert into t1 values (-17666000000000000000);
+-- @bvt:issue#3364
 select * from t1 where decimal_col=-17666000000000000000 order by 1 asc;
+-- @bvt:issue
 -- @bvt:issue#3281
 select * from t1 where decimal_col='-17666000000000000000' order by decimal_col desc;
 -- @bvt:issue
@@ -83,16 +89,18 @@ select cast(cast(19999999999999999999 as decimal) as unsigned);
 CREATE TABLE t1 (id INT PRIMARY KEY,
 a decimal(20),
 b VARCHAR(20));
+-- @bvt:issue#3355
 INSERT INTO t1 (id,a) VALUES
 (1,0),
 (2,CAST(0x7FFFFFFFFFFFFFFF AS UNSIGNED)),
 (3,CAST(0x8000000000000000 AS UNSIGNED)),
 (4,CAST(0xFFFFFFFFFFFFFFFF AS UNSIGNED));
 UPDATE t1 SET b = a;
+-- @bvt:issue
 -- @bvt:issue#3281
 select distinct * from t1 where ((a = '2147483647') and (b = '2147483647'));
--- @bvt:issue
 select a,count(a) from t1 group by a having count(a)>=2;
+-- @bvt:issue
 
 #Test cases of operators
 CREATE TABLE t_decimal(id decimal(10,5));
@@ -176,8 +184,8 @@ select * from t1;
 INSERT INTO t1 VALUES (1,3);
 update t1 set a=2 where a=1.00;
 select * from t1;
-drop table t1;
 -- @bvt:issue
+drop table t1;
 create table t1 (
 a decimal(10,5) not null,
 b int not null default 12345.67890,
@@ -191,14 +199,16 @@ i decimal(10,5) not null default 12345.67890,
 j decimal(10,5) not null default 12345.67890,
 primary key (a));
 insert into t1 (a) values (2),(4),(6),(8),(10),(12),(14),(16),(18),(20),(22),(24),(26),(23);
+-- @bvt:issue#3283
 update t1 set a=a+101;
-select a,b from t1;
+select a,b from t1 order by 1;
 update t1 set a=27 where a=125;
-select a,b from t1;
+select a,b from t1 order by 1;
 update t1 set a=a-1 where 1 > 2;
-select a,b from t1;
+select a,b from t1 order by 1;
 update t1 set a=a-1 where 3 > 2;
-select a,b from t1;
+select a,b from t1 order by 1;
+-- @bvt:issue
 drop table t1;
 create table t1 (a decimal(10,5) primary key, b char(32));
 insert into t1 values (1.000000,'apple'), (2.00,'apple');
@@ -212,11 +222,13 @@ drop table if exists t11;
 drop table if exists t12;
 CREATE TABLE t1 (a decimal(3,2), b decimal(5,4) primary key);
 INSERT INTO t1 VALUES (1,1),(1,2);
+-- @bvt:issue#3283
 delete from t1 where a=1 limit 1;
 select * from t1;
 INSERT INTO t1 VALUES (1,3);
 delete from t1 where a=1;
 select * from t1;
+-- @bvt:issue
 drop table t1;
 create table t1 (
 a decimal(10,5) not null,
@@ -233,13 +245,13 @@ primary key (a));
 insert into t1 (a) values (2.1111),(4),(00006.12311),(8.41231),(24.0000);
 -- @bvt:issue#3280
 delete from t1 where a=2+2.0000;
-select a,b from t1;
+select a,b from t1 order by 1;
 delete from t1 where  a=24.0000;
-select a,b from t1;
+select a,b from t1 order by 1;
 delete from t1 where  3 < 2;
-select a,b from t1;
+select a,b from t1 order by 1;
 delete from t1 where  1 < 2;
-select a,b from t1;
+select a,b from t1 order by 1;
 -- @bvt:issue
 drop table t1;
 create table t1 (a decimal(10,5) primary key, b char(32));
