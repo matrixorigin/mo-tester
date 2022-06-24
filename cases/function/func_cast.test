@@ -1,21 +1,27 @@
 select CAST(1-2 AS UNSIGNED);
 select CAST(CAST(1-2 AS UNSIGNED) AS SIGNED INTEGER);
+-- @bvt:issue#3360
 select CAST('10 ' as unsigned integer);
 select CAST('10x' as unsigned integer);
+-- @bvt:issue
+-- @bvt:issue#3294
 select cast(-5 as unsigned) | 1, cast(-5 as unsigned) & -1;
+-- @bvt:issue
 select cast(-5 as unsigned) -1, cast(-5 as unsigned) + 1;
-#select ~5, cast(~5 as signed);
 select cast(5 as unsigned) -6.0;
 select cast(NULL as signed);
 select cast(1/2 as signed);
 #select cast("A" as binary) = "a", cast(BINARY "a" as CHAR) = "A";
+-- @bvt:issue#3253
 select cast("2001-1-1" as DATE), cast("2001-1-1" as DATETIME);
+-- @bvt:issue
 #select cast("1:2:3" as TIME);
 #select CONVERT("2004-01-22 21:45:33",DATE);
+-- @bvt:issue#3279
 select 10+'10';
 select 10.0+'10';
 select 10E+0+'10';
-
+-- @bvt:issue
 # The following cast creates warnings
 
 #SELECT CONVERT(TIMESTAMP "2004-01-22 21:45:33");
@@ -27,21 +33,32 @@ select CAST(0xb3 as signed);
 select CAST(0x8fffffffffffffff as signed);
 select CAST(0xffffffffffffffff as unsigned);
 select CAST(0xfffffffffffffffe as signed);
+-- @bvt:issue#3360
 select cast('-10a' as signed integer);
 select cast('a10' as unsigned integer);
+-- @bvt:issue
+-- @bvt:issue#3247
 select 10+'a';
+-- @bvt:issue
+-- @bvt:issue#3280
 select 10.0+cast('a' as decimal);
+-- @bvt:issue
+-- @bvt:issue#3279
 select 10E+0+'a';
+-- @bvt:issue
 
 # out-of-range cases
+-- @bvt:issue#3360
 select cast('18446744073709551616' as unsigned);
 select cast('18446744073709551616' as signed);
 select cast('9223372036854775809' as signed);
+-- @bvt:issue
 select cast('-1' as unsigned);
+-- @bvt:issue#3360
 select cast('abc' as signed);
 select cast('1a' as signed);
 select cast('' as signed);
-
+-- @bvt:issue
 #
 # Character set conversion
 #
@@ -141,9 +158,10 @@ select cast('' as signed);
 #
 # The following should be fixed in 4.1
 #
-
+-- @bvt:issue#3253
 select cast("2001-1-1" as date) = "2001-01-01";
 select cast("2001-1-1" as datetime) = "2001-01-01 00:00:00";
+-- @bvt:issue
 # select cast("1:2:3" as TIME) = "1:02:03";
 select cast(NULL as DATE);
 # select cast(NULL as BINARY);
@@ -168,7 +186,9 @@ select cast(NULL as DATE);
 # When we are casting datetime value to DATE/TIME we should throw away
 # time/date parts (correspondingly).
 #
+-- @bvt:issue#3253
 select date_add(cast('2004-12-30 12:00:00' as date), interval 0 hour);
+-- @bvt:issue
 # select timediff(cast('2004-12-30 12:00:00' as time), '12:00:00');
 # Still we should not throw away "days" part of time value
 # select timediff(cast('1 12:00:00' as time), '12:00:00');
@@ -179,8 +199,10 @@ select date_add(cast('2004-12-30 12:00:00' as date), interval 0 hour);
 #
 select cast(18446744073709551615 as unsigned);
 select cast(18446744073709551615 as signed);
+-- @bvt:issue#3360
 select cast('18446744073709551615' as unsigned);
 select cast('18446744073709551615' as signed);
+-- @bvt:issue
 select cast('9223372036854775807' as signed);
 
 select cast(concat_ws('184467440','73709551615') as unsigned);
@@ -203,23 +225,27 @@ INSERT INTO t1 SET f1 = +1.0e+30 ;
 SELECT f1 AS double_val, CAST(f1 AS SIGNED INT) AS cast_val FROM t1;
 DROP TABLE t1;					   
 
-
+-- @bvt:issue#3257
 SELECT CAST(cast('01-01-01' as date) AS UNSIGNED);
 SELECT CAST(cast('01-01-01' as date) AS SIGNED);
-
+-- @bvt:issue
 #echo End of 4.1 tests
 
 
 #decimal-related additions
 select cast('1.2' as decimal(3,2));
+-- @bvt:issue#3282
 select 1e18 * cast('1.2' as decimal(3,2));
 select cast(cast('1.2' as decimal(3,2)) as signed);
+-- @bvt:issue
 
 select cast(-1e18 as decimal(22,2));
 
 create table t1(s1 timestamp);
 insert into t1 values ('2020-12-03 11:11:11');
+-- @bvt:issue#3257
 select cast(s1 as decimal(7,2)) from t1;
+-- @bvt:issue
 drop table t1;
 
 #
@@ -250,7 +276,9 @@ select cast(NULL as decimal(6)) as t1;
 #
 CREATE TABLE t1 (d1 datetime);
 INSERT INTO t1(d1) VALUES ('2007-07-19 08:30:00'), (NULL), ('2007-07-19 08:34:00'), (NULL), ('2007-07-19 08:36:00');
+-- @bvt:issue#3293
 SELECT cast(date(d1) as signed) FROM t1;
+-- @bvt:issue
 drop table t1;
 
 #
@@ -368,8 +396,9 @@ SELECT CAST(1/3 AS FLOAT) as float_col,CAST(1/3 AS DOUBLE) as double_col, CAST(1
 
 #SELECT ADDDATE(CAST("20010101235959.9" AS DOUBLE), INTERVAL 1 DAY);
 #SELECT TIMEDIFF(CAST("101112" AS DOUBLE), TIME'101010');
-
+-- @bvt:issue#3253
 SELECT CAST(DATE'2000-01-01' AS FLOAT), CAST(DATE'2000-01-01' AS DOUBLE);
+-- @bvt:issue
 #SELECT CAST(TIME'23:59:59' AS FLOAT), CAST(TIME'23:59:59' AS DOUBLE);
 #SELECT CAST(TIME'23:59:59.123456' AS FLOAT),
 #       CAST(TIME'23:59:59.123456' AS DOUBLE);
@@ -429,6 +458,7 @@ insert into t values ('2013-03-15 18:35:20', '2013-03-15','L'),('2003-01-10 00:0
 
 
 #skip_if_hypergraph  # Different warnings.
+-- @bvt:issue#3291
 SELECT CAST(col_char AS DATETIME) FROM t;
 #echo
 #skip_if_hypergraph  # Different warnings.
@@ -437,10 +467,13 @@ SELECT col_char <> col_datetime FROM t;
 #echo
 #skip_if_hypergraph  # Different warnings.
 SELECT CAST(col_char AS DATE) FROM t;
+
+-- @bvt:issue
 #echo
 #skip_if_hypergraph  # Different warnings.
+-- @bvt:issue#3253
 SELECT col_char <> col_date FROM t;
-
+-- @bvt:issue
 #SELECT CAST(col_char as TIME) FROM t;
 
 DROP TABLE t;
@@ -453,8 +486,10 @@ CREATE TABLE `CC` ( `pk` int, `col_datetime_key` datetime);
 INSERT INTO `BB` VALUES ('X');
 INSERT INTO `CC` VALUES (1,'2027-03-17 00:10:00'), (2,'2004-11-14 12:46:43');
 #skip_if_hypergraph  # Different warnings.
+-- @bvt:issue#3363
 SELECT COUNT(table1.pk) FROM CC table1 JOIN BB table3 JOIN CC table2
 WHERE (table3.col_char_key < table2.col_datetime_key);
+-- @bvt:issue
 DROP TABLE `BB`;
 DROP TABLE `CC`;
 
@@ -591,6 +626,7 @@ DROP TABLE `CC`;
 create table t1(f1 date, f2 timestamp, f3 datetime);
 insert into t1 values ("2006-01-01", "2006-01-01 12:01:01", "2006-01-01 12:01:01");
 insert into t1 values ("2006-01-02", "2006-01-02 12:01:02", "2006-01-02 12:01:02");
+-- @bvt:issue#3361
 select f1 from t1 where f1 between CAST("2006-1-1" as date) and CAST(20060101 as date);
 select f1 from t1 where f1 between cast("2006-1-1" as date) and cast("2006.1.1" as date);
 select f1 from t1 where date(f1) between cast("2006-1-1" as date) and cast("2006.1.1" as date);
@@ -599,17 +635,24 @@ select f3 from t1 where timestamp(f3) between cast("2006-1-1 12:1:1" as datetime
 select f1 from t1 where cast("2006-1-1" as date) between f1 and f3;
 select f1 from t1 where cast("2006-1-1" as date) between date(f1) and date(f3);
 select f1 from t1 where cast("2006-1-1" as date) between f1 and cast('zzz' as date);
+-- @bvt:issue
 drop table t1;
 
 
 
 create table t1 (field DATE);
 insert into t1 values ('2006-11-06');
+-- @bvt:issue#3253
 select * from t1 where field < '2006-11-06 04:08:36.0';
 select * from t1 where field = '2006-11-06 04:08:36.0';
 select * from t1 where field = '2006-11-06';
+-- @bvt:issue
+-- @bvt:issue#3254
 select * from t1 where CAST(field as DATETIME) < '2006-11-06 04:08:36.0';
+-- @bvt:issue
+-- @bvt:issue#3253
 select * from t1 where CAST(field as DATE) < '2006-11-06 04:08:36.0';
+-- @bvt:issue
 drop table t1;
 
 create table t1 (a int(11) unsigned, b int(11) unsigned);
@@ -622,9 +665,9 @@ drop table t1;
 
 
 #SELECT CAST(IFNULL(NULL, NULL) AS DECIMAL);
-
+-- @bvt:issue#3289
 select if(1, cast(1111111111111111111 as unsigned), 1) i, case when 1 then cast(1111111111111111111 as unsigned) else 1 end c, coalesce(cast(1111111111111111111 as unsigned), 1) co;
-
+-- @bvt:issue
 #CREATE TABLE t1 (f1 int,
 #gc_int int AS (f1 + 1) ,
 #gc_date DATE AS (f1 + 1));
