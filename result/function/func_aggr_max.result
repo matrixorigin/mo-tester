@@ -110,8 +110,8 @@ name
 ö
 select concat_ws(",","*",name,"*") from t1 order by 1;
 concat_ws(",","*",name,"*")
-*,å,*
 *,ä,*
+*,å,*
 *,ö,*
 select min(name),min(concat_ws(",","*",name,"*")),max(name),max(concat_ws("*",name,"*")) from t1;
 min(name)	min(concat_ws(",","*",name,"*"))	max(name)	max(concat_ws("*",name,"*"))
@@ -450,17 +450,26 @@ col1	sum(col1)	max(col1)	min(col1)
 5.000000000010	10.000000000020	5.000000000010	5.000000000010
 DROP TABLE t1;
 create table t1 (f1 int, f2 int, f3 date, f4 datetime);
-insert into t1 values(98,1998,"1998-01-01","1998-01-01 00:00:00"),('00',2000,20000101,"2000-01-01 00:00:01"),(02,2002,20020101,"2002-01-01 23:59:59"),(60,2060,20600101,"2060-01-01 11:11:11"),(70,1970,19700101,"1970-11-11 22:22:22"),(NULL,NULL,NULL,NULL);
+insert into t1 values(98,1998,"1998-01-01","1998-01-01 00:00:00");
+insert into t1 values('00',2000,20000101,"2000-01-01 00:00:01");
+Data truncation: Incorrect DATE value: '20000101' for column 'f3' at row 0
+insert into t1 values(02,2002,20020101,"2002-01-01 23:59:59");
+Data truncation: Incorrect DATE value: '20020101' for column 'f3' at row 0
+insert into t1 values(60,2060,20600101,"2060-01-01 11:11:11");
+Data truncation: Incorrect DATE value: '20600101' for column 'f3' at row 0
+insert into t1 values(70,1970,19700101,"1970-11-11 22:22:22");
+Data truncation: Incorrect DATE value: '19700101' for column 'f3' at row 0
+insert into t1 values(NULL,NULL,NULL,NULL);
 select min(f1),max(f1) from t1;
 min(f1)	max(f1)
 0	98
 select min(f2),max(f2) from t1;
 min(f2)	max(f2)
-1970	2060
+0	1998
 select min(f3),max(f3) from t1;
 min(f3)	max(f3)
-1970-01-01	2060-01-01
+0001-01-01	1998-01-01
 select min(f4),max(f4) from t1;
 min(f4)	max(f4)
-1970-11-11 22:22:22	2060-01-01 11:11:11
+0001-01-01 00:00:00	1998-01-01 00:00:00
 drop table t1;

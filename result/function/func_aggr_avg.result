@@ -184,9 +184,7 @@ SELECT a, AVG(t1.b),
 (SELECT t11.c FROM t1 t11 WHERE t11.a = t1.a AND t11.b = AVG(t1.b)) AS t11c,
 (SELECT t12.c FROM t1 t12 WHERE t12.a = t1.a AND t12.b = AVG(t1.b)) AS t12c
 FROM t1 GROUP BY a;
-a	AVG(t1.b)	t11c	t12c
-1	4.0000	6	6
-2	2.0000	7	7
+aggregate functions not allowed here
 DROP TABLE t1;
 CREATE TABLE t1 (id int(11),value1 float(10,2));
 INSERT INTO t1 VALUES (1,0.00),(1,1.00), (1,2.00), (2,10.00), (2,11.00), (2,12.00);
@@ -249,16 +247,13 @@ drop table t1;
 CREATE TABLE t1 (a INT, b INT);
 INSERT INTO t1 VALUES (1,1),(1,2),(2,3);
 SELECT (SELECT COUNT(DISTINCT t1.b)) FROM t1 GROUP BY t1.a;
-(SELECT COUNT(DISTINCT t1.b))
-2
-1
+correlated columns in aggregate function not yet supported
 SELECT (SELECT COUNT(DISTINCT 12)) FROM t1 GROUP BY t1.a;
 (SELECT COUNT(DISTINCT 12))
 1
 1
 SELECT AVG(2), BIT_AND(2), BIT_OR(2), BIT_XOR(2), COUNT(*), COUNT(12), COUNT(DISTINCT 12), MIN(2),MAX(2),STD(2), VARIANCE(2),SUM(2);
-AVG(2)	BIT_AND(2)	BIT_OR(2)	BIT_XOR(2)	COUNT(*)	COUNT(12)	COUNT(DISTINCT 12)	MIN(2)	MAX(2)	STD(2)	VARIANCE(2)	SUM(2)
-2.0000	2	2	2	1	1	1	2	2	0.0	0.0	2
+can not find any column when rewrite count(*) to starcount(col)
 DROP TABLE t1;
 CREATE TABLE t1 (col1 decimal(16,12));
 INSERT INTO t1 VALUES (-5.00000000001),(-5.00000000002),(-5.00000000003),(-5.00000000000),(-5.00000000001),(-5.00000000002);
