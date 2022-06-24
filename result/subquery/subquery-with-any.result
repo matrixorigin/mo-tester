@@ -490,10 +490,7 @@ FROM
 t1s LEFT OUTER JOIN t2s ON t2s.i = t1s.i
 HAVING t2s.i = 999
 );
-i
-1
-2
-3
+column "t2s.i" must appear in the GROUP BY clause or be used in an aggregate function
 DROP TABLE IF EXISTS t1;
 DROP TABLE IF EXISTS t1s;
 DROP TABLE IF EXISTS t2s;
