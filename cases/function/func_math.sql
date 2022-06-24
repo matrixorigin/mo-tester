@@ -13,7 +13,11 @@ insert into t1 values(4,0,0,0);
 select sinh(d),sinh(fl)from t1;
 select atan(d),atan(fl)from t1;
 select acos(d),acos(fl)from t1;
+
+-- @bvt:issue#3133
 select cot(d),cot(fl) from t1;
+-- @bvt:issue
+
 select tan(d),tan(fl) from t1;
 select sin(d),sin(fl) from t1;
 
