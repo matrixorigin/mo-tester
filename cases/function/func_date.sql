@@ -45,7 +45,10 @@ select weekday(c),weekday(vc) from t1;
 select max(month(d)),max(month(dt)) from t1;
 select min(month(d)),min(month(d)) from t1;
 select avg(month(d)),avg(month(d)) from t1;
+
+-- @bvt:issue#3191
 select sum(month(d)),sum(month(d)) from t1;
+-- @bvt:issue
 
 -- @case
 -- @desc: test for weekday with func max,min,etc

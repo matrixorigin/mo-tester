@@ -21,9 +21,12 @@ select log(-0.141241241241313, -124314124124.12412341);
 
 
 #NULL
+
+-- @bvt:issue#3314
 select log(null,2);
 select log(2, null);
 select log(null,null);
+-- @bvt:issue
 
 #INSERT
 CREATE TABLE t1(a DOUBLE);
