@@ -1,3 +1,4 @@
+-- @bvt:issue#3233
 use tpch;
 select
 	s_acctbal,
@@ -44,3 +45,4 @@ order by
 	p_partkey
 limit 100
 ;
+-- @bvt:issue

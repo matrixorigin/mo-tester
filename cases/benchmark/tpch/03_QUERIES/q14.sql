@@ -1,3 +1,4 @@
+-- @bvt:issue#3233
 use tpch;
 select
 	100.00 * sum(case
@@ -12,3 +13,4 @@ where
 	l_partkey = p_partkey
 	and l_shipdate >= date '1996-04-01'
 	and l_shipdate < date '1996-04-01' + interval '1' month;
+-- @bvt:issue

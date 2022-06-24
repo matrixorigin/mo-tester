@@ -1,3 +1,4 @@
+-- @bvt:issue#3233
 use tpch;
 select
     ps_partkey,
@@ -26,3 +27,4 @@ group by
 order by
     value desc
 ;
+-- @bvt:issue

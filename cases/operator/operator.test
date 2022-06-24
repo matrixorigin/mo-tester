@@ -106,8 +106,11 @@ select * from t2 where a in (2,4);
 select * from t2 where a not in (2,4);
 select * from t2 where c in (2.001,2.002);
 select * from t2 where b not in ('e',"f");
+-- @bvt:issue#3253
 select sum(a),c from t2 where a in (1,2) and d in ('2022-02-10','2022-02-11') group by c order by c;
+
 select * from t2 where d in ('20220208','2022-02-09');
 select * from t2 where e not in ('2022-02-09 12:00:00') and a in (4,5);
 select sum(a) as suma,e from t2 where e not in ('2022-02-09 12:00:00') and a in (4,5) group by e order by suma;
+-- @bvt:issue
 select * from t2 where c in (2.001,3);
