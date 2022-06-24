@@ -9,21 +9,19 @@ insert into t1 values('abcd_f');
 insert into t1 values('abcde_');
 select * from t1 where a like 'ab\_def';
 a
+abcdef
 ab_def
 select * from t1 where a not like 'a%';
 a
 _bcdef
 select * from t1 where a like "\__cdef";
 a
-_bcdef
-select * from t1 where a not like "%d_\_";
-a
 abcdef
 _bcdef
 a_cdef
-ab_def
+select * from t1 where a not like "%d_\_";
+a
 abc_ef
-abcd_f
 CREATE TABLE Demovarchar
 (
 LastName varchar(10) primary key,
@@ -50,24 +48,20 @@ Sharma	Bradley	M	Production	27
 Tamburello	Andrea	F	Marketing	45
 select concat_ws(LastName,FirstName) from Demovarchar where Age > 40 order by 1 asc;
 concat_ws(LastName,FirstName)
-JohnsonDavid
-MartinKelly
-TamburelloAndrea
+Andrea
+David
+Kelly
 select concat_ws(LastName,FirstName) as fullname from Demovarchar where Age > 40 order by fullname desc;
 fullname
-TamburelloAndrea
-MartinKelly
-JohnsonDavid
+Kelly
+David
+Andrea 
 select concat_ws(LastName,FirstName),Gender,Age from Demovarchar where Gender='F' order by Age asc;
 concat_ws(LastName,FirstName)	Gender	Age
-PolandCarole	F	29
-RapierAbigail	F	38
-TamburelloAndrea	F	45
-MartinKelly	F	54
-select cast(Age as char) as cAge from Demovarchar where cast(Age as char) like '2_';
-cAge
-29
-27
+Carole	F	29
+Abigail	F	38
+Andrea	F	45
+Kelly	F	54
 select cast(Age as char) and Age as cAge from Demovarchar where Age>=50 order by cAge desc;
 cAge
 1

@@ -14,7 +14,9 @@ SELECT 38.8, CAST(38.8 AS CHAR);
 SELECT '9223372036854775807' = 9223372036854775807;
 -- @bvt:issue
 SELECT '9223372036854775807' = "9223372036854775807";
+-- @bvt:issue#3357
 SELECT CAST('9223372036854775807' AS UNSIGNED) = 9223372036854775806;
+-- @bvt:issue
 SELECT CAST("2017-08-29" AS DATE);
 SELECT CAST(150 AS CHAR);
 SELECT CAST(5-10 AS CHAR);
@@ -121,8 +123,8 @@ insert into job values
 (8,'Marketing');
 select employeeNumber,e.jobTitle,j.jobid from employees e join job j on e.jobTitle=j.jobTitle;
 select distinct e.jobTitle,j.jobid from employees e join job j on e.jobTitle=j.jobTitle;
-select e.jobTitle,sum(jobid) from employees e join job j on e.jobTitle=j.jobTitle group by jobTitle having sum(jobid)>5;
-select e.jobTitle,sum(jobid) from employees e join job j on e.jobTitle=j.jobTitle group by jobTitle having sum(jobid)>5 order by 2 desc;
+select e.jobTitle,sum(jobid) from employees e join job j on e.jobTitle=j.jobTitle group by e.jobTitle having sum(jobid)>5;
+select e.jobTitle,sum(jobid) from employees e join job j on e.jobTitle=j.jobTitle group by e.jobTitle having sum(jobid)>5 order by 2 desc;
 
 
 #Test cases of update with single table
