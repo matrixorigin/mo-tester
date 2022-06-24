@@ -1,3 +1,4 @@
+-- @bvt:issue#3233
 use tpch;
 select
 	c_custkey,
@@ -32,3 +33,4 @@ order by
 	revenue desc
 limit 20
 ;
+-- @bvt:issue

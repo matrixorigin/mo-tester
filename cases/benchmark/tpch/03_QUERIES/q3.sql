@@ -1,3 +1,4 @@
+-- @bvt:issue#3233
 use tpch;
 select
 	l_orderkey,
@@ -23,3 +24,4 @@ order by
 	o_orderdate
 limit 10
 ;
+-- @bvt:issue

@@ -1,3 +1,4 @@
+-- @bvt:issue#3233
 use tpch;
 select
 	sum(l_extendedprice * l_discount) as revenue
@@ -8,3 +9,4 @@ where
 	and l_shipdate < date '1994-01-01' + interval '1' year
 	and l_discount between 0.03 - 0.01 and 0.03 + 0.01
 	and l_quantity < 24;
+-- @bvt:issue

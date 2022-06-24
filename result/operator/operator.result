@@ -157,26 +157,11 @@ Database (%aa%)
 drop database likedb;
 drop database dblike;
 SELECT * FROM t1 where t1.userID<6 OR NOT t1.userID;
-spID	userID	score
-1	1	1
-2	2	2
-2	1	4
-3	3	3
-1	1	5
+Operator 'not' with parameters [BIGINT] will be implemented in future version.
 SELECT * FROM t1 where NOT t1.userID OR t1.userID<6;
-spID	userID	score
-1	1	1
-2	2	2
-2	1	4
-3	3	3
-1	1	5
+Operator 'not' with parameters [BIGINT] will be implemented in future version.
 SELECT * FROM t1 where NOT t1.userID || t1.userID<6;
-spID	userID	score
-1	1	1
-2	2	2
-2	1	4
-3	3	3
-1	1	5
+Operator 'not' with parameters [BIGINT] will be implemented in future version.
 drop table if exists t1;
 create table t1 (a int);
 insert into t1 values (0),(1),(NULL);
@@ -207,11 +192,6 @@ username
 Mastermann Masterfrau
 select username from t3 where username like '%Frau';
 username
-Mustermann Musterfrau
-Mustermann Musterfrau
-Mustermann musterfrau
-Mustermann Masterfrau
-Mastermann Masterfrau
 Mustermann MusterFrau
 select username from t3 where username like '%Mast%';
 username
