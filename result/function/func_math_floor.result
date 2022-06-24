@@ -53,12 +53,13 @@ t2
 WHERE
 t1.col1 = t2.col1
 AND t1.col1 = FLOOR(2);
-Can not issue SELECT via executeUpdate() or executeLargeUpdate().
+col1	col1
+2	2
 drop table t1;
 drop table t2;
 CREATE TABLE t1 (a VARCHAR(250), b INT, PRIMARY KEY (b));
 insert into t1 (a) select (FLOOR(0.13 * 100));
-Field 'b' doesn't have a default value
+Column 'b' cannot be null
 insert into t1 (a) select FLOOR(1.32 * 100) from t1;
 insert into t1 (a) select FLOOR(0.0044 * 100) from t1;
 insert into t1 (a) select FLOOR(124.314 * 100) from t1;
