@@ -218,7 +218,7 @@ a
 1
 2
 select a from t2 having a in (select a from t1);
-column "a" must appear in the GROUP BY clause or be used in an aggregate function
+column "t2.a" must appear in the GROUP BY clause or be used in an aggregate function
 drop table if exists t1;
 drop table if exists t2;
 create table t1 (oref int, grp int, ie int) ;

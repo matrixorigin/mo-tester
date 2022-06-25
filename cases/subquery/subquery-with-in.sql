@@ -6,7 +6,9 @@
 -- @bvt:issue#3304
 SELECT 1 IN (SELECT 1);
 -- @bvt:issue
+-- @bvt:issue#3323
 SELECT 1 FROM (SELECT 1 as a) b WHERE 1 IN (SELECT (SELECT a));
+-- @bvt:issue
 -- @bvt:issue#3320
 SELECT 1 FROM (SELECT 1 as a) b WHERE 1 not IN (SELECT (SELECT a));
 -- @bvt:issue
