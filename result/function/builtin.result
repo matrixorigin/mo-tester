@@ -499,7 +499,6 @@ a	startswith(b, An)
 5	0
 6	0
 select a,b,c from t1 where startswith(b,'An')=1 and startswith(c,'I')=1;
-[ACTUAL RESULT]:
 a	b	c
 1	Ananya Majumdar	IX
 drop table if exists t1;

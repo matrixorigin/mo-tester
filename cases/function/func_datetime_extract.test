@@ -1,4 +1,5 @@
 #SELECT 数据格式
+-- @bvt:issue#3385
 select extract(YEAR FROM "1999-01-02 10:11:12");
 select extract(YEAR_MONTH FROM "1999-01-02");
 select extract(DAY FROM "1999-01-02");
@@ -27,6 +28,7 @@ SELECT EXTRACT(QUARTER FROM '2004-09-15') AS quarter;
 SELECT EXTRACT(QUARTER FROM '2004-10-15') AS quarter;
 SELECT EXTRACT(QUARTER FROM '2004-11-15') AS quarter;
 SELECT EXTRACT(QUARTER FROM '2004-12-15') AS quarter;
+
 
 
 #WHERE，算术运算, 比较运算
@@ -94,6 +96,8 @@ SELECT * FROM t1;
 SELECT distinct extracted_week from t1;
 select date from t1 having extract(day FROM date)=1;
 drop table t1;
+
+-- @bvt:issue
 
 #NULL
 select extract(month from NULL);

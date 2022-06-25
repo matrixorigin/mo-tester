@@ -21,7 +21,9 @@ drop table t1;
 
 
 #SELECT,  算术运算，嵌套
+-- @bvt:issue#3388
 select utc_timestamp()-utc_timestamp(),weekday(utc_timestamp())-weekday(utc_timestamp()),unix_timestamp()-unix_timestamp(utc_timestamp());
+-- @bvt:issue
 #0.5 not supported
 #select utc_timestamp()-curdate()*1000000-curtime();
 
@@ -31,15 +33,16 @@ select utc_timestamp()-utc_timestamp(),weekday(utc_timestamp())-weekday(utc_time
 #SELECT 1 FROM t1 ORDER BY MAKETIME(1, 1, a);
 #DROP TABLE t1;
 
--- @bvt:issue#3331
+
 CREATE TABLE t1 (a TIMESTAMP);
 INSERT INTO t1 select (utc_timestamp());
 INSERT INTO t1 select (utc_timestamp());
 SELECT 1 FROM t1 ORDER BY 1;
 DROP TABLE t1;
--- @bvt:issue
+
 
 #INSERT
+-- @bvt:issue#3388
 DROP TABLE if exists t1;
 #create table t1 (a int primary key, b int, c int, d timestamp default current_timestamp);
 create table t1 (a int primary key, b int, c int, d timestamp);
@@ -47,14 +50,17 @@ insert into t1 select 1,1,1,utc_timestamp();
 insert into t1 select 2,0,0,null;
 select a,b,c,year(d) from t1;
 DROP TABLE t1;
+-- @bvt:issue
 
 #比较运算,数据类型
+-- @bvt:issue#3388
 CREATE TABLE t1 (a TIMESTAMP);
 INSERT INTO t1 select (utc_timestamp());
 INSERT INTO t1 select (utc_timestamp());
 INSERT INTO t1 select (utc_timestamp());
 SELECT year(a) FROM t1 WHERE a > '2008-01-01';
 DROP TABLE t1;
+-- @bvt:issue
 
 #算术运算，CREATE SELECT
 #0.5 not supported

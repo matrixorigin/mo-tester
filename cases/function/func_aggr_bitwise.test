@@ -1,5 +1,7 @@
 #NULL
+-- @bvt:issue#3373
 SELECT bit_and(null), bit_or(null), bit_xor(null);
+-- @bvt:issue
 
 
 #EXTREME VALUE
@@ -36,12 +38,15 @@ select bit_and(e) from t1;
 select bit_and(f) from t1;
 -- @bvt:issue
 select bit_and(g) from t1;
+
+-- @bvt:issue#3373
 select bit_and(h) from t1;
 select bit_and(i) from t1;
 select bit_and(k) from t1;
 select bit_and(l) from t1;
 select bit_and(m) from t1;
 select bit_and(n) from t1;
+-- @bvt:issue
 drop table t1;
 
 create table t1(a tinyint, b SMALLINT, c bigint, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, k datetime, l TIMESTAMP, m char(255), n varchar(255));
@@ -59,12 +64,15 @@ select bit_or(e) from t1;
 select bit_or(f) from t1;
 -- @bvt:issue
 select bit_or(g) from t1;
+
+-- @bvt:issue#3373
 select bit_or(h) from t1;
 select bit_or(i) from t1;
 select bit_or(k) from t1;
 select bit_or(l) from t1;
 select bit_or(m) from t1;
 select bit_or(n) from t1;
+-- @bvt:issue
 drop table t1;
 
 create table t1(a tinyint, b SMALLINT, c bigint, d INT, e BIGINT, f FLOAT, g DOUBLE, h decimal(38,19), i DATE, k datetime, l TIMESTAMP, m char(255), n varchar(255));
@@ -81,12 +89,15 @@ select bit_xor(e) from t1;
 select bit_xor(f) from t1;
 -- @bvt:issue
 select bit_xor(g) from t1;
+
+-- @bvt:issue#3373
 select bit_xor(h) from t1;
 select bit_xor(i) from t1;
 select bit_xor(k) from t1;
 select bit_xor(l) from t1;
 select bit_xor(m) from t1;
 select bit_xor(n) from t1;
+-- @bvt:issue
 drop table t1;
 
 #0.5暂不支持time类型
@@ -143,5 +154,4 @@ drop table t1;
 
 #比较操作
 SELECT BIT_AND(1)<BIT_AND(2), BIT_AND(1)>BIT_OR(3), BIT_AND(3)>BIT_XOR(5);
-
 

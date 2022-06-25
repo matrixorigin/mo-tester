@@ -7,8 +7,10 @@ select abs(1e10);
 select abs(NULL);
 
 #EXTREME VALUE
+-- @bvt:issue#3393
 select abs(9999999999999999999999);
 select abs(-9999999999999999999999);
+-- @bvt:issue
 select abs(10/0);
 
 #嵌套
@@ -17,10 +19,12 @@ select abs(cast(-2 as unsigned)), abs(18446744073709551614), abs(-2);
 -- @bvt:issue
 
 #WHERE, 数据类型
+-- @bvt:issue#3393
 CREATE TABLE t(u TINYINT UNSIGNED NOT NULL);
 INSERT INTO t VALUES (0), (3), (255);
 SELECT * FROM t WHERE ABS(u=256)=0;
 DROP TABLE t;
+-- @bvt:issue
 
 #DISTINCT
 create table t1(a int, b int, c int);
@@ -40,7 +44,9 @@ DROP TABLE t1;
 CREATE TABLE t(i INT);
 INSERT INTO t VALUES (-1),(2),(1);
 SELECT ABS(i) AS a FROM t GROUP BY abs(i) ORDER BY a + 1;
+-- @bvt:issue#3265
 SELECT ABS(i) AS a FROM t GROUP BY a ORDER BY a + 1;
+-- @bvt:issue
 DROP TABLE t;
 
 

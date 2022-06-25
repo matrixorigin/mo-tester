@@ -186,7 +186,7 @@ SELECT SUM(a)*SUM(b) FROM t1 WHERE a=1 GROUP BY c;
 sum(a) * sum(b)
 10
 SELECT a,SUM(b) FROM t1 WHERE a=1 GROUP BY c HAVING a=1;
-column "a" must appear in the GROUP BY clause or be used in an aggregate function
+column "t1.a" must appear in the GROUP BY clause or be used in an aggregate function
 SELECT a AS d,SUM(b) FROM t1 WHERE a=1 GROUP BY c HAVING d=1;
 column "d" must appear in the GROUP BY clause or be used in an aggregate function
 SELECT SUM(a)*SUM(b) AS d FROM t1 WHERE a=1 GROUP BY c HAVING d > 0;

@@ -1,4 +1,5 @@
 #SELECT, 嵌套
+-- @bvt:issue#3412
 drop table if exists t1;
 create table t1 (
 name varchar(10),
@@ -7,6 +8,7 @@ insert into t1 values ('string',1);
 select reverse("123"+space(level)+"456") from t1;
 select concat_ws("abc", name,space(level)), concat_ws("abc",name, space(level)) from t1;
 drop table t1;
+-- @bvt:issue
 
 #DATETYPE, INSERT
 -- @bvt:issue#3172
@@ -46,10 +48,12 @@ SELECT length(space(9223372036854775809));
 SELECT SPACE(NULL);
 
 #DATE TYPE
+-- @bvt:issue#3412
 SELECT SPACE(12)+"123";
 SELECT SPACE(12314.14123)+"123";
 SELECT SPACE("1231")+"123";
 SELECT SPACE("2012-03-12")+"123";
+-- @bvt:issue
 
 #EXTREME VALUE, 嵌套
 -- @bvt:issue#3171
@@ -88,4 +92,6 @@ drop table t1;
 drop table t2;
 
 #中文
+-- @bvt:issue#3412
 SELECT space("你好")+"你好";
+-- @bvt:issue
