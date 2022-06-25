@@ -1,11 +1,9 @@
 create table t1(a int, b int, c int);
 insert into t1 values(200,1,1),(100,1,2),(400,2,2),(300,2,1);
 SELECT distinct 1 FROM t1 group by a order by any_value(count(*)-count(b));
-1
-1
+aggregate function calls cannot be nested
 SELECT distinct 1 FROM t1 group by a order by any_value(count(*))-any_value(count(b));
-1
-1
+aggregate function calls cannot be nested
 SELECT DISTINCT GP1.a AS g1 FROM t1 AS GP1
 WHERE GP1.a >= 0
 ORDER BY 2+ANY_VALUE(GP1.b) LIMIT 8;

@@ -67,7 +67,7 @@ CREATE TABLE t1 (a int);
 INSERT INTO t1 VALUES (100), (12);
 SELECT a FROM t1
 HAVING oct(a) <>0;
-column "a" must appear in the GROUP BY clause or be used in an aggregate function
+column "t1.a" must appear in the GROUP BY clause or be used in an aggregate function
 DROP TABLE t1;
 drop table if exists t1;
 create table t1(a INT,  b int);
