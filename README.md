@@ -7,13 +7,23 @@ This tester is designed to test MatrixOne or any other database functionalities 
 
 ### 0. Install JDK8 if you don't have it yet.  
 
-### 1: Run your MatrixOne instance or other DB instance. 
+### 1. Run your MatrixOne instance or other DB instance. 
 
 Checkout [Install MatrixOne](https://docs.matrixorigin.io/0.4.0/MatrixOne/Get-Started/install-standalone-matrixone/) to launch a MatrixOne instance.
 
 Or you can launch whatever database software as you want. 
 
 ### 2. Fork and clone this mo-tester project. 
+
+There is a prebuild [jar](lib/mo-tester-1.0-SNAPSHOT.jar), so you can skip the build step. Optionally, you can build it by yourself:
+
+- install maven
+- build jar
+
+```
+$ mvn package
+$ cp target/mo-tester-1.0-SNAPSHOT.jar lib/
+```
 
 ### 3. Configure the connection. 
 
@@ -43,6 +53,7 @@ user:
   name: "dump"
   passwrod: "111"
 ```
+
 ### 4. Run the test.
 
 With the simple below command, all the SQL test cases will automatically run and generate reports and error messages to `report/report.txt` and `report/error.txt`.

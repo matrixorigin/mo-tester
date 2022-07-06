@@ -801,8 +801,8 @@ public class Executor {
                             act_values[j] = nf.format(Double.parseDouble(act_values[j]));
                         }*/
 
-                        exp_values[j] = nf.format(Double.parseDouble(exp_values[j]));
-                        act_values[j] = nf.format(Double.parseDouble(act_values[j]));
+                        exp_values[j] = (new BigDecimal(exp_values[j])).toString();
+                        act_values[j] = (new BigDecimal(act_values[j])).toString();
 
                         //First, check whether the integer parts are equal
                         String exp_int_part = null;
@@ -839,15 +839,25 @@ public class Executor {
                         if(exp_int_part.length() < 10 && !exp_int_part.equalsIgnoreCase(act_int_part))
                             return false;
 
-                        if(exp_values[j].startsWith("-") || exp_values[j].startsWith("-")){
-                            exp_values[j] =  exp_values[j].substring(0,1) + "0."+ exp_values[j].substring(1).replace(".","");
-                        }else
-                            exp_values[j] = "0." + exp_values[j].replace(".","");
+                        if (exp_values[j].startsWith("-")) {
+                            if (exp_values[j].substring(1).startsWith(".")) {
+                                exp_values[j] =  "-0."+ exp_values[j].substring(1).replace(".","");
+                            }
+                        } else {
+                            if (exp_values[j].startsWith(".")) {
+                                exp_values[j] = "0." + exp_values[j].replace(".","");
+                            }
+                        }
 
-                        if(act_values[j].startsWith("-") || act_values[j].startsWith("-")){
-                            act_values[j] =  act_values[j].substring(0,1) + "0."+ act_values[j].substring(1).replace(".","");
-                        }else
-                            act_values[j] = "0." + act_values[j].replace(".","");
+                        if (act_values[j].startsWith("-")) {
+                            if (act_values[j].substring(1).startsWith(".")) {
+                                act_values[j] =  "-0."+ act_values[j].substring(1).replace(".","");
+                            }
+                        } else {
+                            if (act_values[j].startsWith(".")) {
+                                act_values[j] = "0." + act_values[j].replace(".","");
+                            }
+                        }
 
                         LOG.info("transfer exp value = "+ exp_values[j]);
                         LOG.info("transfer act value = "+ act_values[j]);
@@ -910,6 +920,7 @@ public class Executor {
         return pattern.matcher(str).matches();
         //return str.matches("^[+\\-]?\\d*[.]?\\d+$");
     }
+
     public static void main(String args[]){
         String exp = "You have an error in your SQL syntax; check the manual that corresponds to your MatrixOne server version for the right syntax to use. syntax error at position 55 near 'abc';";
         String act = "You have an error in your SQL syntax; check the manual that corresponds to your MatrixOne server version for the right syntax to use. syntax error at position 55 near 'abc';";
