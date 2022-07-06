@@ -21,8 +21,8 @@ There is a prebuild [jar](lib/mo-tester-1.0-SNAPSHOT.jar), so you can skip the b
 - build jar
 
 ```
-$ mvn package
-$ cp target/mo-tester-1.0-SNAPSHOT.jar lib/
+> mvn package
+> cp target/mo-tester-1.0-SNAPSHOT.jar lib/
 ```
 
 ### 3. Configure the connection. 
