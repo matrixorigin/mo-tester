@@ -801,8 +801,8 @@ public class Executor {
                             act_values[j] = nf.format(Double.parseDouble(act_values[j]));
                         }*/
 
-                        exp_values[j] = (new BigDecimal(exp_values[j])).toString();
-                        act_values[j] = (new BigDecimal(act_values[j])).toString();
+                        exp_values[j] = (new BigDecimal(exp_values[j])).toPlainString();
+                        act_values[j] = (new BigDecimal(act_values[j])).toPlainString();
 
                         //First, check whether the integer parts are equal
                         String exp_int_part = null;
