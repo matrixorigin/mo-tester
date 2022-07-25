@@ -675,7 +675,7 @@ public class Executor {
         if(command.getConn_id() != 0){
             if(command.getConn_user() == null){
                 connection = ConnectionManager.getConnection(command.getConn_id());
-                try {
+                /*try {
                     if (isTrxBeginning(command)) {
                         connection.setAutoCommit(false);
                     }
@@ -685,7 +685,7 @@ public class Executor {
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
-                }
+                }*/
 
                 return connection;
             }else {
