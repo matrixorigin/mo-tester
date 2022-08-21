@@ -1,103 +1,47 @@
 package io.mo.cases;
 
-import io.mo.constant.COMMON;
-import io.mo.constant.ESCAPE;
+import io.mo.result.StmtResult;
 import io.mo.result.TestResult;
 import java.lang.StringBuffer;
-
-import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 public class SqlCommand {
 
     private String id;
-
-    private String golabId;
-
-    private TestResult result;
-
     private StringBuffer command;
-
-
-    private boolean update = false;
-
     private boolean ignore = false;
-
-
-    private boolean sorted = false;
-
-
-
     private boolean error = false;
-
     private int conn_id = 0;
     private String conn_user = null;
     private String conn_pswd = null;
-
-
     private String delimiter;
+    private String issueNo = null;
 
+    //column separator in result file for this command,can be 3 values:
+    //     * 1、table,separator is \t
+    //     * 2、space,separator is 4 spaces
+    //     * 3、both,separator is \t or 4 spaces
+    //default value is both
+    private String separator = "both";
     private String scriptFile;
-
     private int position = 0;
+    private ArrayList<Integer> sortKeyIndexs = new ArrayList<>();
 
-    public SqlCommand getNext() {
-        return next;
-    }
-
-    public void setNext(SqlCommand next) {
-        this.next = next;
-    }
+    private TestResult testResult;
+    private StmtResult expResult;
+    private StmtResult actResult;
 
     private SqlCommand next;
 
     public SqlCommand(){
-        this.delimiter = COMMON.DEFAUT_DELIMITER;
         command = new StringBuffer();
-        result = new TestResult();
-    }
-
-    public SqlCommand(String id){
-        this.id = id;
-        this.delimiter = COMMON.DEFAUT_DELIMITER;
-        result = new TestResult();
-    }
-
-    public SqlCommand(String id,StringBuffer command){
-        this.command = command;
-        this.id = id;
-        this.delimiter = COMMON.DEFAUT_DELIMITER;
-        check();
-        result = new TestResult();
+        testResult = new TestResult();
     }
 
     public void append(String command){
         this.command.append(command);
-        this.command.append(COMMON.LINE_SEPARATOR);
-        if(command.toLowerCase().indexOf("order by") != -1){
-            this.sorted = true;
-        }
-        check();
     }
-
-    private void check() {
-        String command = this.command.toString();
-        command = command.toLowerCase();
-        String opt = command.split(" ")[0];
-        if (opt.equalsIgnoreCase("select")
-                || opt.equalsIgnoreCase("show")
-                || opt.equalsIgnoreCase("with")
-                || command.startsWith("select")
-                || command.startsWith("show")
-                || command.startsWith("with")
-                || command.startsWith("SELECT")
-                || command.startsWith("SHOW")
-                || command.startsWith("WITH"))
-            this.update = false;
-        else
-            this.update = true;
-
-    }
-
+    
     public String getId() {
         return id;
     }
@@ -115,16 +59,7 @@ public class SqlCommand {
     public void setCommand(StringBuffer command) {
         this.command = command;
     }
-
-    public String getDelimiter() {
-        return delimiter;
-    }
-
-    public void setDelimiter(String delimiter) {
-        this.delimiter = delimiter;
-    }
-
-
+    
     public int getConn_id() {
         return conn_id;
     }
@@ -136,28 +71,9 @@ public class SqlCommand {
     public String getConn_user() {
         return conn_user;
     }
-
-    public void setConn_user(String conn_user) {
-        try {
-            this.conn_user = ESCAPE.parse(new String(conn_user.getBytes("utf-8")));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-    }
-
     public String getConn_pswd() {
         return conn_pswd;
     }
-
-    public void setConn_pswd(String conn_pswd) {
-        this.conn_pswd = conn_pswd;
-    }
-
-
-    public boolean isUpdate() {
-        return update;
-    }
-
     public String getScriptFile() {
         return scriptFile;
     }
@@ -166,20 +82,12 @@ public class SqlCommand {
         this.scriptFile = scriptFile;
     }
 
-    public String getGolabId() {
-        return golabId;
+    public TestResult getTestResult() {
+        return testResult;
     }
 
-    public void setGolabId(String golabId) {
-        this.golabId = golabId;
-    }
-
-    public TestResult getResult() {
-        return result;
-    }
-
-    public void setResult(TestResult result) {
-        this.result = result;
+    public void setTestResult(TestResult testResult) {
+        this.testResult = testResult;
     }
 
     public boolean isIgnore() {
@@ -188,28 +96,6 @@ public class SqlCommand {
 
     public void setIgnore(boolean ignore) {
         this.ignore = ignore;
-    }
-
-    public void print(){
-        if(id != null)
-            System.out.println("----------command: id = "+id+"-------------");
-
-        if(conn_id != 0) {
-            System.out.println("----------command: conn_id = " + conn_id + "-------------");
-            if(conn_user != null){
-                System.out.println("----------command: user = " + conn_user + ",password = "+ conn_pswd +"-------------");
-            }
-        }
-        System.out.println("----------command: delimiter = " + delimiter + "-------------");
-
-        System.out.println(this.command);
-
-        if(id != null)
-            System.out.println("----------command: id = "+id+"-------------");
-    }
-
-    public boolean isSorted() {
-        return sorted;
     }
 
     public boolean isError() {
@@ -226,6 +112,58 @@ public class SqlCommand {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public SqlCommand getNext() {
+        return next;
+    }
+
+    public void setNext(SqlCommand next) {
+        this.next = next;
+    }
+
+    public ArrayList<Integer> getSortKeyIndexs(){
+        return sortKeyIndexs;
+    }
+
+    public void addSortKeyIndex(int index){
+        sortKeyIndexs.add(index);
+    }
+
+    public StmtResult getExpResult() {
+        return expResult;
+    }
+
+    public void setExpResult(StmtResult expResult) {
+        this.expResult = expResult;
+        this.testResult.setExpResult(expResult.toString());
+    }
+    
+    public StmtResult getActResult() {
+        return actResult;
+    }
+
+    public void setActResult(StmtResult actResult) {
+        this.actResult = actResult;
+        this.testResult.setActResult(actResult.toString());
+    }
+
+    public boolean checkResult(){
+        return expResult.equals(actResult);
+    }
+    public String getSeparator() {
+        return separator;
+    }
+    public void setSeparator(String separator) {
+        this.separator = separator;
+    }
+
+    public String getIssueNo() {
+        return issueNo;
+    }
+
+    public void setIssueNo(String issueNo) {
+        this.issueNo = issueNo;
     }
 
 }

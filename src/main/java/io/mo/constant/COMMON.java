@@ -6,6 +6,7 @@ public class COMMON {
 
     public static String T_FILE_SUFFIX = ".sql";
 
+    //if IGNORE_MODEL is true,menas all of sql commands that are marked with bvt:issue tag will be not executed
     public static boolean IGNORE_MODEL = false;
 
     public static boolean IS_COMPARE_META = true;
@@ -18,14 +19,6 @@ public class COMMON {
     public static String DEFAUT_DELIMITER = ";";
     public static String LINE_SEPARATOR = "\n";
 
-    public static String SUITE_FLAG = "-- @suite";
-    public static String SETUP_SUITE_FLAG = "-- @setup";
-    public static String TEARDOWN_SUITE_FLAG = "-- @teardown";
-
-    public static String CASE_START_FLAG = "-- @case";
-    public static String CASE_DESC_FLAG = "-- @desc:";
-    public static String CASE_LABEL_FLAG = "-- @label:";
-
     public static String DELIMITER_FLAGE = "-- @delimiter:";
 
     public static String NEW_SESSION_START_FLAG = "-- @session:";
@@ -34,8 +27,10 @@ public class COMMON {
     public static String BVT_ISSUE_START_FLAG = "-- @bvt:issue#";
     public static String BVT_ISSUE_END_FLAG = "-- @bvt:issue";
 
-    public static String IGNORE_START_FLAG = "-- @ignore{";
-    public static String IGNORE_END_FLAG = "-- @ignore}";
+    public static String SORT_KEY_INDEX_FLAG = "-- @sortkey:";
+
+    public static String COLUMN_SEPARATOR_FLAG = "-- @separator:";
+
 
     public static String LOG_PATH = "log";
     public static String RESULT_PATH = "result";
@@ -57,5 +52,6 @@ public class COMMON {
 
     public static String[] SPECIAL_CHARS = new String[]{"+","-","*","/","%","&",">","<","(",")","!","=","\'","\""};
 
-    public static double TOLERABLE_ERROR = 0.0000009;
+    public static double SCALE_TOLERABLE_ERROR = 0.0000009;
+    public static double INT_TOLERABLE_ERROR = 0.000000000000001;
 }

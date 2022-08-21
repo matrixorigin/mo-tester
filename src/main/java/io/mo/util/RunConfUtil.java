@@ -1,19 +1,14 @@
 package io.mo.util;
 
-import java.io.FileNotFoundException;
 import java.util.Map;
 
 public class RunConfUtil {
-    private static YamlUtil run_conf = new YamlUtil();
+    private static final YamlUtil run_conf = new YamlUtil();
     private static Map conf = null;
 
 
     public static void init(){
-        try {
             conf = run_conf.getInfo("run.yml");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -25,11 +20,6 @@ public class RunConfUtil {
     public static String getMethod(){
         if(conf == null) init();
         return (String)conf.get("method");
-    }
-
-    public static String getType(){
-        if(conf == null) init();
-        return (String)conf.get("type");
     }
 
     public static int getRate(){

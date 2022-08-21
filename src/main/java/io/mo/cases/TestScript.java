@@ -1,21 +1,21 @@
 package io.mo.cases;
 
-import io.mo.constant.COMMON;
+import io.mo.constant.RESULT;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestScript {
 
-    private ArrayList<SqlCommand> commands = new ArrayList<SqlCommand>();
-    private ArrayList<SqlCommand> errorcmds = new ArrayList<SqlCommand>();
-    private ArrayList<SqlCommand> noexeccmds = new ArrayList<SqlCommand>();
+    private ArrayList<SqlCommand> commands = new ArrayList<>();
+    private ArrayList<SqlCommand> successCommands = new ArrayList<>();
+    private ArrayList<SqlCommand> failedCommands = new ArrayList<>();
+    private ArrayList<SqlCommand> ignoredCommands = new ArrayList<>();
+    private ArrayList<SqlCommand> abnormalCommands = new ArrayList<>();
 
     private String fileName;
-    private String id;
 
-    private boolean executed = true;
+    private String id;
 
     private float duration = 0;
 
@@ -24,56 +24,40 @@ public class TestScript {
     }
 
     public void addCommand(SqlCommand command){
+        if(commands.size() != 0)
+            commands.get(commands.size() - 1).setNext(command);
         commands.add(command);
         command.setScriptFile(fileName);
     }
-
-    public void addCommand(String command){
-        SqlCommand sqlCommand = new SqlCommand();
-        sqlCommand.append(command);
-        commands.add(sqlCommand);
+    
+    public void addSuccessCmd(SqlCommand command) { successCommands.add(command); }
+    public void addFailedCmd(SqlCommand command){
+        failedCommands.add(command);
     }
-
-    public void addErrorCmd(SqlCommand command){
-        errorcmds.add(command);
+    public void addAbnoramlCmd(SqlCommand command){
+        abnormalCommands.add(command);
     }
-    public void addNoExecCmd(SqlCommand command){
-        noexeccmds.add(command);
-    }
+    public void addIgnoredCmd(SqlCommand command) { ignoredCommands.add(command); }
 
-    public int getSize(){
-        int count = 0;
-        for(int i = 0;i < commands.size();i++){
-            if(!commands.get(i).isIgnore())
-                count++;
+    public void invalid(){
+        abnormalCommands = commands;
+        for(SqlCommand command : abnormalCommands){
+            command.getTestResult().setResult(RESULT.RESULT_TYPE_ABNORMAL);
+            command.getTestResult().setErrorCode(RESULT.ERROR_PARSE_RESULT_FILE_FAILED_CODE);
+            command.getTestResult().setErrorDesc(RESULT.ERROR_PARSE_RESULT_FILE_FAILED_DESC);
+            command.getTestResult().setActResult(RESULT.ERROR_PARSE_RESULT_FILE_FAILED_DESC);
+            command.getTestResult().setExpResult(RESULT.ERROR_PARSE_RESULT_FILE_FAILED_DESC);
         }
-
-        return  count;
-    }
-
-    public ArrayList<SqlCommand>  getCommands(){
-        return commands;
-    }
-
-    public String getCommand(int i){
-        return commands.get(i).getCommand();
     }
 
     public String getScript(){
-        String script = "";
-        for(int i = 0;i < commands.size();i++){
-            script += commands.get(i).getCommand();
+        StringBuilder script = new StringBuilder();
+        for (SqlCommand command : commands) {
+            script.append(command.getCommand());
         }
-        return script;
+        return script.toString();
     }
-
-    public void print(){
-        for(int i = 0; i < commands.size();i++){
-            commands.get(i).print();
-        }
-    }
-
-
+    
     public String getFileName() {
         return fileName;
     }
@@ -81,15 +65,6 @@ public class TestScript {
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
-
-    public void setExecStatus(boolean status){
-        this.executed = status;
-    }
-
-    public boolean getExecStatus(){
-        return this.executed;
-    }
-
 
     public float getDuration() {
         return duration;
@@ -107,16 +82,30 @@ public class TestScript {
         this.id = id;
     }
 
-    public int getErrorCount(){
-        return errorcmds.size();
+    public int getTotalCmdCount() { return commands.size(); }
+    public int getSuccessCmdCount() { return successCommands.size(); }
+    public int getFailedCmdCount(){
+        return failedCommands.size();
     }
-
-    public List<SqlCommand> getErrorList(){
-        return errorcmds;
+    public int getIgnoredCmdCount(){
+        return ignoredCommands.size();
     }
-
-    public List<SqlCommand> getNoExecList(){
-        return noexeccmds;
+    public int getAbnormalCmdCount(){
+        return abnormalCommands.size();
+    }
+    public ArrayList<SqlCommand>  getCommands(){
+        return commands;
+    }
+    public String getCommand(int i){
+        return commands.get(i).getCommand();
+    }
+    public List<SqlCommand> getSuccessCmdList() { return successCommands; }
+    public List<SqlCommand> getFailedCmdList(){
+        return failedCommands;
+    }
+    public List<SqlCommand> getIgnoredCmdList() { return ignoredCommands;}
+    public List<SqlCommand> getAbnormalCmdList(){
+        return abnormalCommands;
     }
 
 
