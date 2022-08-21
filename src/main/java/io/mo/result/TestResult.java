@@ -3,7 +3,6 @@ package io.mo.result;
 import io.mo.constant.RESULT;
 
 public class TestResult {
-
     private String result;
     private String errorCode;
     private String errorDesc;
@@ -32,24 +31,12 @@ public class TestResult {
         this.expResult = expResult;
     }
 
-    public String getRemark() {
-        return remark;
-    }
-
     public void setRemark(String remark) {
         this.remark = remark;
     }
 
-    public String getErrorCode() {
-        return errorCode;
-    }
-
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
-    }
-
-    public String getErrorDesc() {
-        return errorDesc;
     }
 
     public void setErrorDesc(String errorDesc) {

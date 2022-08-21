@@ -1,6 +1,4 @@
-#version
-
-#sql scritps path,only support relative path from "cases/..."
+#test scritps path
 path: "cases/"
 
 #method
@@ -8,11 +6,6 @@ path: "cases/"
 #debug: means execute  test scripts configured by para[path] completely, only print the result to console,do not generate the test reprot,execution logs
 #genrs: means generate the expected result for the test scripts only
 method: "run"
-
-#type
-#script: means only execute the sql commands in the scripts file separately
-#suite:  means execute the sql commands in the format of testsuit.
-type: "script"
 
 #rate: means the execution success rate,if the actual rate is less than this,the programe will exit with status 1
 rate: 100

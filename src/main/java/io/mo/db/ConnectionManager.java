@@ -16,16 +16,14 @@ public class ConnectionManager {
     private static String driver = MoConfUtil.getDriver();
 
     private static Connection[] connections = new Connection[COMMON.DEFAULT_CONNECTION_NUM];
-    private static Logger LOG = Logger.getLogger(Executor.class.getName());
+    private static final Logger LOG = Logger.getLogger(Executor.class.getName());
     private static boolean server_up = true;
 
     static {
         try {
             Class.forName(driver);
             connections[0] = DriverManager.getConnection(jdbcURL, userName, pwd);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
     }
@@ -33,62 +31,91 @@ public class ConnectionManager {
     public static Connection getConnection(){
         //if mo server crash,return null;
         if(!server_up) return null;
-
-        try {
-            Class.forName(driver);
-            if(connections[0] == null || connections[0].isClosed()){
-                connections[0] = DriverManager.getConnection(jdbcURL, userName, pwd);
+        
+        //get db connection,if failed,retry 30 times 10 s interval 
+        for(int i = 0; i < 3; i++) {
+            try {
+                Class.forName(driver);
+                if (connections[0] == null || connections[0].isClosed()) {
+                    connections[0] = DriverManager.getConnection(jdbcURL, userName, pwd);
+                    return connections[0];
+                }
                 return connections[0];
+            } catch (SQLException e) {
+                LOG.error("The mo-tester can not get valid conneciton from mo, and will wait 10 seconds and retry...");
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
-            return connections[0];
-        } catch (SQLException e) {
-            //e.printStackTrace();
-            LOG.error("The mo-tester can not get valid conneciton from mo,will wait 30 seconds,and retry one time ...");
-            try {
-                Thread.sleep(30000);
-            } catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
-            }
-            try {
-                connections[0] = DriverManager.getConnection(jdbcURL, userName, pwd);
-            } catch (SQLException ex) {
-                LOG.error("The mo-tester still can not get valid conneciton from mo,the following cases wil not be executed!");
-                server_up = false;
-            }
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         }
 
+        LOG.error("The mo-tester still can not get valid conneciton from mo, the following cases wil not be executed!");
+        server_up = false;
         return null;
     }
 
-    public static Connection getConnection(int i){
+    public static Connection getConnection(int index){
 
-        try {
-            if(connections[i] == null){
-                connections[i] = DriverManager.getConnection(jdbcURL, userName, pwd);
-                return connections[i];
+        //if mo server crash,return null;
+        if(!server_up) return null;
+
+        //get db connection,if failed,retry 10 times 10 s interval 
+        for(int i = 0; i < 3; i++) {
+            try {
+                Class.forName(driver);
+                if (connections[index] == null || connections[0].isClosed()) {
+                    connections[index] = DriverManager.getConnection(jdbcURL, userName, pwd);
+                    return connections[index];
+                }
+                return connections[index];
+            } catch (SQLException e) {
+                LOG.error("The mo-tester can not get valid conneciton from mo, and will wait 10 seconds and retry...");
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
-            return connections[i];
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
 
+        LOG.error("The mo-tester still can not get valid conneciton from mo, the following cases wil not be executed!");
+        server_up = false;
         return null;
     }
 
-    public static Connection getConnection(int i,String userName, String pwd){
-        try {
-            if(connections[i] == null){
-                connections[i] = DriverManager.getConnection(jdbcURL, userName, pwd);
-                return connections[i];
+    public static Connection getConnection(int index, String userName, String pwd){
+        //if mo server crash,return null;
+        if(!server_up) return null;
+
+        //get db connection,if failed,retry 10 times 10 s interval 
+        for(int i = 0; i < 3; i++) {
+            try {
+                Class.forName(driver);
+                if (connections[index] == null || connections[0].isClosed()) {
+                    connections[index] = DriverManager.getConnection(jdbcURL, userName, pwd);
+                    return connections[index];
+                }
+                return connections[index];
+            } catch (SQLException e) {
+                LOG.error("The mo-tester can not get valid conneciton from mo, and will wait 10 seconds and retry...");
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
-            return connections[i];
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
 
+        LOG.error("The mo-tester still can not get valid conneciton from mo, the following cases wil not be executed!");
+        server_up = false;
         return null;
     }
 
