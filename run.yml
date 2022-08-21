@@ -1,5 +1,5 @@
 #test scritps path
-path: "cases/template.sql"
+path: "cases/"
 
 #method
 #run: means execute test scripts configured by para[path] completely,and generate the test reprot,execution logs

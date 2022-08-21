@@ -130,6 +130,9 @@ public class Tester {
 
     public static void run(File file){
         if(file.isFile()){
+            if(file.getName().endsWith(".result"))
+                return;
+            
             if(isInclude(file.getName())) {
                 ScriptParser.parseScript(file.getPath());
                 TestScript script = ScriptParser.getTestScript();
@@ -148,6 +151,9 @@ public class Tester {
 
     public static void generateRs(File file){
         if(file.isFile()){
+            if(file.getName().endsWith(".result"))
+                return;
+            
             if(isInclude(file.getName())) {
                 ScriptParser.parseScript(file.getPath());
                 TestScript script = ScriptParser.getTestScript();
@@ -168,6 +174,9 @@ public class Tester {
 
     public static void debug(File file){
         if(file.isFile()){
+            if(file.getName().endsWith(".result"))
+                return;
+            
             if(isInclude(file.getName())) {
                 ScriptParser.parseScript(file.getPath());
                 TestScript script = ScriptParser.getTestScript();
@@ -184,6 +193,8 @@ public class Tester {
 
     public static void check(File file){
         if(file.isFile()){
+            if(file.getName().endsWith(".result"))
+                return;
             if(isInclude(file.getName())) {
                 ScriptParser.parseScript(file.getPath());
                 TestScript script = ScriptParser.getTestScript();

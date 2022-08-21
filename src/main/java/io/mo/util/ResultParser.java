@@ -150,16 +150,26 @@ public class ResultParser {
      */
     public static void check(TestScript script){
         LOG.info("Now start to check the file["+script.getFileName()+"]....................................................");
-        File rsf = new File(script.getFileName().replaceFirst(COMMON.CASES_PATH,COMMON.RESULT_PATH).replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX));
-        if(!rsf.exists()) {
-            LOG.warn("The result of the test script file["+script.getFileName()+"] does not exists,please check....");
-            return;
+        String rsFilePath = null;
+        File resFile;
+        rsFilePath = script.getFileName().replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX);
+        resFile = new File(rsFilePath);
+        if(!resFile.exists()){
+            rsFilePath = script.getFileName().replaceFirst(COMMON.CASES_PATH,COMMON.RESULT_PATH).replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX);
+            resFile = new File(rsFilePath);
+            if(!resFile.exists()){
+                LOG.warn("The result of the test script file["+rsFilePath+"] does not exists,please check and this test script file will be skipped.");
+                //set the test script file invalid
+                script.invalid();
+                succeeded = false;
+                return;
+            }
         }
 
         StringBuilder result = new StringBuilder();
 
         try {
-            BufferedReader lineReader = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(rsf.getPath()))));
+            BufferedReader lineReader = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(resFile.getPath()))));
             while(true){
                 String line = lineReader.readLine();
                 if(line == null)
@@ -195,9 +205,9 @@ public class ResultParser {
         if(result.length() != 0){
             if(result.indexOf(COMMON.DEFAUT_DELIMITER) != -1){
                 SqlCommand last = script.getCommands().get(script.getTotalCmdCount() - 1);
-                LOG.error("["+rsf.getPath()+"]:There are some sqls and resutls which are not in the case file");
+                LOG.error("["+rsFilePath+"]:There are some sqls and resutls which are not in the case file");
                 LOG.error("The last sql in the ["+script.getFileName()+"][row:"+last.getPosition()+"]: "+last.getCommand().trim());
-                LOG.error("["+rsf.getPath()+"]Exceptional content:\n"+ result.substring(0,result.indexOf(COMMON.DEFAUT_DELIMITER)+1)+".............");
+                LOG.error("["+rsFilePath+"]Exceptional content:\n"+ result.substring(0,result.indexOf(COMMON.DEFAUT_DELIMITER)+1)+".............");
             }
         }
     }
