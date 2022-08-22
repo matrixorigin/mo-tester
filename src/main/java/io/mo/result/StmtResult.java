@@ -61,6 +61,12 @@ public class StmtResult {
             return false;
         }else {
             if(this.type == RESULT.STMT_RESULT_TYPE_ERROR){
+                if(this.errorMessage == null){
+                    if(stmtResult.getErrorMessage() != null){
+                        return false;
+                    }
+                }
+                
                 if(!this.errorMessage.trim().equals(stmtResult.getErrorMessage().trim())){
                     return false;
                 }

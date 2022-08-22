@@ -23,8 +23,10 @@ public class ResultParser {
      * Get result text of the specific SqlCommand from the result file
      */
     public static String getCommandResult(SqlCommand command){
-        if(command.getNext() != null)
-            return getCommandResult(command.getCommand(),command.getNext().getCommand());
+        if(command.getNext() != null) {
+            //System.out.println(command.getPosition()+":command = "+command.getCommand());
+            return getCommandResult(command.getCommand(), command.getNext().getCommand());
+        }
         else
             return getCommandResult(command.getCommand(),null);
     }
@@ -47,13 +49,13 @@ public class ResultParser {
             //normally,the resultText should start with the command
             //so the command result which is the content between the cmd and the nextcmd should be the substring of the resultText from cmd.length() to the position of the nextcmd
             int from = cmd.length() + 1;
-            int to   = resultText.indexOf(nextcmd,cmd.length());
-            //if from == to,means result is null
+            int to   = resultText.indexOf(nextcmd,1);
             if(from == to) {
                 resultText.delete(0,to);
                 return null;
             }else {
                 cmdResult = resultText.substring(from, to - 1);
+                //System.out.println("cmdResult = " + cmdResult);
                 //make the resultText starting with the nextcmd
                 resultText.delete(0, to);
                 return cmdResult;
@@ -100,7 +102,7 @@ public class ResultParser {
                 return;
             }
 
-            if(command.getNext() != null && resultText.indexOf(command.getNext().getCommand()) == -1){
+            if(command.getNext() != null && resultText.indexOf(command.getNext().getCommand(),1) == -1){
                 //System.out.println("resultText = \n" + resultText);
                 //System.out.println("nextCommand = \n" + command.getNext().getCommand());
                 LOG.error("[Exceptional command]["+script.getFileName()+"]["+command.getNext().getPosition()+"]:"+command.getNext().getCommand().trim() + ",it does not exist in result file");
