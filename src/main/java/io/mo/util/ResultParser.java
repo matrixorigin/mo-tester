@@ -222,6 +222,11 @@ public class ResultParser {
      * 3、both,separator is \t or 4 spaces
      */
     public static RSSet convertToRSSet(String rsText,String separator){
+        
+        if(rsText == null){
+            return null;
+        }
+        
         StringBuilder buffer = new StringBuilder();
         //first,replace separator to the system designated separator
         if(separator.equals("both"))
