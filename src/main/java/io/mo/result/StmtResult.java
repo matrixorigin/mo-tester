@@ -185,7 +185,9 @@ public class StmtResult {
         else if(this.type == RESULT.STMT_RESULT_TYPE_NONE)
             return null;
 
-        else
+        else if(this.type == RESULT.STMT_RESULT_TYPE_ABNORMAL)
+            return rsSet.getAbnormalError();
+        else 
             return orginalRSText;
     }
 }
