@@ -65,7 +65,7 @@ jobs:
 
       - name: Build MatrixOne
         run: |
-          cd $GITHUB_WORKSPACE/head && make clean && make config && make build
+          cd $GITHUB_WORKSPACE/head && make clean && make debug
           git rev-parse --short HEAD
           echo "base sha: ${{ github.event.pull_request.base.sha }}"
           echo "head sha: ${{ github.event.pull_request.head.sha }}"
@@ -73,7 +73,7 @@ jobs:
       - name: Start MO
         run: |
           cd $GITHUB_WORKSPACE/head
-          ./mo-server ./system_vars_config.toml &>mo-server.log &
+          ./mo-service -cfg ./etc/cn-standalone-test.toml &>mo-service.log &
           
       - name: Clone test-tool repository
         uses: actions/checkout@v2
