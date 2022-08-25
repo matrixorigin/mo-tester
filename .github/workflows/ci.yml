@@ -101,7 +101,7 @@ jobs:
       - name: Check MO-Server Status
         if: ${{ always() }}
         run: |
-          if [ "$(ps -ef | grep 'mo-server' | grep -v "grep" | wc -l)" -gt 0 ]; then pkill -9 mo-server; else echo 'current mo-server has already crashed'; exit 1; fi
+          if [ "$(ps -ef | grep 'mo-service' | grep -v "grep" | wc -l)" -gt 0 ]; then pkill -9 mo-service; else echo 'current mo-service has already crashed'; exit 1; fi
         
       - name: remove some files
         if: ${{ always() }}
