@@ -65,7 +65,7 @@ jobs:
 
       - name: Build MatrixOne
         run: |
-          cd $GITHUB_WORKSPACE/head && make clean && make debug
+          cd $GITHUB_WORKSPACE/head && make clean && make build
           git rev-parse --short HEAD
           echo "base sha: ${{ github.event.pull_request.base.sha }}"
           echo "head sha: ${{ github.event.pull_request.head.sha }}"
