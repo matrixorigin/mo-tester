@@ -61,12 +61,35 @@ public class StmtResult {
             return false;
         }else {
             if(this.type == RESULT.STMT_RESULT_TYPE_ERROR){
+                if(this.errorMessage == null){
+                    if(stmtResult.getErrorMessage() != null){
+                        return false;
+                    }
+                }
+
+                if(stmtResult.getErrorMessage() == null){
+                    if(this.errorMessage != null){
+                        return false;
+                    }
+                }
+                
                 if(!this.errorMessage.trim().equals(stmtResult.getErrorMessage().trim())){
                     return false;
                 }
             }
 
             if(this.type == RESULT.STMT_RESULT_TYPE_SET){
+                if(this.rsSet == null){
+                    if(stmtResult.getRsSet() != null){
+                        return false;
+                    }
+                }
+
+                if(stmtResult.getRsSet() == null){
+                    if(this.rsSet != null){
+                        return false;
+                    }
+                }
 
                 if(this.rsSet.getAbnormalError() != null || stmtResult.getRsSet().getAbnormalError() != null){
                     return false;
@@ -103,6 +126,10 @@ public class StmtResult {
     }
 
     public void setRsSet(RSSet rsSet) {
+        if(rsSet == null){
+            return;
+        }
+        
         this.rsSet = rsSet;
         if(this.command != null) {
             if (command.getSeparator().equals("both") || command.getSeparator().equals("space"))
@@ -146,8 +173,11 @@ public class StmtResult {
     }
 
     public String toString(){
-        if(this.type == RESULT.STMT_RESULT_TYPE_SET)
+        if(this.type == RESULT.STMT_RESULT_TYPE_SET){
+            if(rsSet == null)
+                return null;
             return rsSet.toString();
+        }
 
         else if(this.type == RESULT.STMT_RESULT_TYPE_ERROR)
             return errorMessage;
@@ -155,7 +185,9 @@ public class StmtResult {
         else if(this.type == RESULT.STMT_RESULT_TYPE_NONE)
             return null;
 
-        else
+        else if(this.type == RESULT.STMT_RESULT_TYPE_ABNORMAL)
+            return rsSet.getAbnormalError();
+        else 
             return orginalRSText;
     }
 }

@@ -31,6 +31,7 @@ public class ScriptParser {
             while (line != null) {
                 line = new String(line.getBytes(), StandardCharsets.UTF_8);
                 trimmedLine = line.trim();
+                //trimmedLine = line.replaceAll("\\s+$", "");
 
                 //extract sql commands from the script file
                 if (trimmedLine.equals("") || lineIsComment(trimmedLine)) {

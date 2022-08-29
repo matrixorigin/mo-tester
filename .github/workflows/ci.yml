@@ -65,7 +65,7 @@ jobs:
 
       - name: Build MatrixOne
         run: |
-          cd $GITHUB_WORKSPACE/head && make clean && make config && make build
+          cd $GITHUB_WORKSPACE/head && make clean && make build
           git rev-parse --short HEAD
           echo "base sha: ${{ github.event.pull_request.base.sha }}"
           echo "head sha: ${{ github.event.pull_request.head.sha }}"
@@ -73,7 +73,7 @@ jobs:
       - name: Start MO
         run: |
           cd $GITHUB_WORKSPACE/head
-          ./mo-server ./system_vars_config.toml &>mo-server.log &
+          ./mo-service -cfg ./etc/cn-standalone-test.toml &>mo-service.log &
           
       - name: Clone test-tool repository
         uses: actions/checkout@v2
@@ -101,7 +101,7 @@ jobs:
       - name: Check MO-Server Status
         if: ${{ always() }}
         run: |
-          if [ "$(ps -ef | grep 'mo-server' | grep -v "grep" | wc -l)" -gt 0 ]; then pkill -9 mo-server; else echo 'current mo-server has already crashed'; exit 1; fi
+          if [ "$(ps -ef | grep 'mo-service' | grep -v "grep" | wc -l)" -gt 0 ]; then pkill -9 mo-service; else echo 'current mo-service has already crashed'; exit 1; fi
         
       - name: remove some files
         if: ${{ always() }}

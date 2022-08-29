@@ -56,12 +56,12 @@ public class RSSet {
                 }
                 this.addRow(rsRow);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            this.abnormalError = RESULT.ERROR_RESULTSET_INVALID_DESC + e.getMessage();
-        }catch(NumberFormatException e){
+        } catch(NumberFormatException e){
             e.printStackTrace();
             this.abnormalError =  RESULT.ERROR_RESULTSET_INVALID_DESC + e.getMessage();
+        }catch (SQLException e) {
+            e.printStackTrace();
+            this.abnormalError = RESULT.ERROR_RESULTSET_INVALID_DESC + e.getMessage();
         }
     }
 

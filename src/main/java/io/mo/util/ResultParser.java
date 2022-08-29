@@ -10,8 +10,6 @@ import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class ResultParser {
     private static BufferedReader lineReader;
@@ -22,9 +20,11 @@ public class ResultParser {
     /**
      * Get result text of the specific SqlCommand from the result file
      */
-    public static String getCommandResult(SqlCommand command){
-        if(command.getNext() != null)
-            return getCommandResult(command.getCommand(),command.getNext().getCommand());
+    public static String getCommandResult(SqlCommand command) throws Exception{
+        if(command.getNext() != null) {
+            //System.out.println(command.getPosition()+":command = "+command.getCommand());
+            return getCommandResult(command.getCommand(), command.getNext().getCommand());
+        }
         else
             return getCommandResult(command.getCommand(),null);
     }
@@ -33,7 +33,7 @@ public class ResultParser {
      * Get result text of the specific SqlCommand from the result file
      * The result text is the content between the cmd and the next cmd in the reulst file
      */
-    public static String getCommandResult(String cmd,String nextcmd){
+    public static String getCommandResult(String cmd,String nextcmd) throws Exception{
         String cmdResult;
         if(nextcmd == null){
             //if the nextcmd is null,means cmd is the last one,return the content of the resultText directedly
@@ -41,19 +41,24 @@ public class ResultParser {
             if(cmd.length() == resultText.length())
                 //the last cmd has no result
                 return null;
-            else
-                return resultText.substring(cmd.length() + 1,resultText.length());
+            else {
+                return resultText.substring(cmd.length() + 1, resultText.length());
+            }
         }else {
             //normally,the resultText should start with the command
             //so the command result which is the content between the cmd and the nextcmd should be the substring of the resultText from cmd.length() to the position of the nextcmd
             int from = cmd.length() + 1;
-            int to   = resultText.indexOf(nextcmd,cmd.length());
-            //if from == to,means result is null
+            int index = cmd.length();
+            int to   = resultText.indexOf(nextcmd,index);
+            if(to < from){
+                throw new Exception("Parse error");
+            }
             if(from == to) {
                 resultText.delete(0,to);
                 return null;
             }else {
                 cmdResult = resultText.substring(from, to - 1);
+                //System.out.println("cmdResult = " + cmdResult);
                 //make the resultText starting with the nextcmd
                 resultText.delete(0, to);
                 return cmdResult;
@@ -62,7 +67,7 @@ public class ResultParser {
     }
 
     public static void parse(TestScript script){
-
+        reset();
         //check whether the result file exists
         String rsFilePath = null;
         File resFile;
@@ -92,17 +97,17 @@ public class ResultParser {
 
         for(int i = 0; i < script.getTotalCmdCount(); i++){
             SqlCommand command = script.getCommands().get(i);
-            if(resultText.indexOf(command.getCommand()) == -1){
+            if(resultText.indexOf(command.getCommand()) != 0){
                 LOG.error("[Exceptional command]["+script.getFileName()+"]["+command.getPosition()+"]:"+command.getCommand().trim() + ",it does not exist in result file");
                 //set the test script file invalid
                 script.invalid();
                 succeeded = false;
                 return;
             }
-
-            if(command.getNext() != null && resultText.indexOf(command.getNext().getCommand()) == -1){
-                //System.out.println("resultText = \n" + resultText);
-                //System.out.println("nextCommand = \n" + command.getNext().getCommand());
+            
+            int fromIndex = command.getCommand().length();
+            
+            if(command.getNext() != null && resultText.indexOf(command.getNext().getCommand(),fromIndex) == -1){
                 LOG.error("[Exceptional command]["+script.getFileName()+"]["+command.getNext().getPosition()+"]:"+command.getNext().getCommand().trim() + ",it does not exist in result file");
                 //set the test script file invalid
                 script.invalid();
@@ -110,7 +115,16 @@ public class ResultParser {
                 return;
             }
 
-            String resText = getCommandResult(command);
+            String resText = null;
+            try {
+                resText = getCommandResult(command);
+            } catch (Exception e) {
+                LOG.error("[Exceptional command]["+script.getFileName()+"]["+command.getPosition()+"]:"+command.getCommand().trim());
+                //set the test script file invalid
+                script.invalid();
+                succeeded = false;
+                return;
+            }
             StmtResult expResult = new StmtResult();
             expResult.setCommand(command);
             if(resText == null || resText.equals("")){
@@ -149,7 +163,8 @@ public class ResultParser {
      * check whether test file matches result file
      */
     public static void check(TestScript script){
-        LOG.info("Now start to check the file["+script.getFileName()+"]....................................................");
+        reset();
+        //check whether the result file exists
         String rsFilePath = null;
         File resFile;
         rsFilePath = script.getFileName().replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX);
@@ -166,48 +181,38 @@ public class ResultParser {
             }
         }
 
-        StringBuilder result = new StringBuilder();
-
         try {
-            BufferedReader lineReader = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(resFile.getPath()))));
-            while(true){
-                String line = lineReader.readLine();
-                if(line == null)
-                    break;
-                result.append(new String(line.getBytes(), StandardCharsets.UTF_8));
-                result.append("\n");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        if(script.getTotalCmdCount() == 0)
-            return;
-
-        String firstcmd = script.getCommand(0);
-        if(result.indexOf(firstcmd) != 0){
-            LOG.error("["+script.getFileName()+"]:The first command in case file and result file does not match.Check failed,please check the files");
-            LOG.error("[Exceptional command]["+script.getFileName()+"]["+script.getCommands().get(0).getPosition()+"]:"+firstcmd.trim()+"");
+            lineReader = new BufferedReader(new InputStreamReader(new FileInputStream(rsFilePath)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
             return;
         }
+
+        //read result file
+        read();
 
         for(int i = 0; i < script.getTotalCmdCount(); i++){
-            SqlCommand cmd = script.getCommands().get(i);
-            int pos = result.indexOf(cmd.getCommand());
-            if(pos == -1){
-                //LOG.error("["+script.getFileName()+"]["+cmd.trim()+"] does not exist in the result file.Check failed,please check the files");
-                LOG.error("[Exceptional command]["+script.getFileName()+"]["+cmd.getPosition()+"]:"+cmd.getCommand().trim());
+            SqlCommand command = script.getCommands().get(i);
+            if(resultText.indexOf(command.getCommand()) != 0){
+                LOG.error("[Exceptional command]["+script.getFileName()+"]["+command.getPosition()+"]:"+command.getCommand().trim() + ",it does not exist in result file");
                 return;
             }
-            result.delete(0,pos+cmd.getCommand().length());
-        }
 
-        if(result.length() != 0){
-            if(result.indexOf(COMMON.DEFAUT_DELIMITER) != -1){
-                SqlCommand last = script.getCommands().get(script.getTotalCmdCount() - 1);
-                LOG.error("["+rsFilePath+"]:There are some sqls and resutls which are not in the case file");
-                LOG.error("The last sql in the ["+script.getFileName()+"][row:"+last.getPosition()+"]: "+last.getCommand().trim());
-                LOG.error("["+rsFilePath+"]Exceptional content:\n"+ result.substring(0,result.indexOf(COMMON.DEFAUT_DELIMITER)+1)+".............");
+            int fromIndex = command.getCommand().length();
+
+            if(command.getNext() != null && resultText.indexOf(command.getNext().getCommand(),fromIndex) == -1){
+                LOG.error("[Exceptional command]["+script.getFileName()+"]["+command.getNext().getPosition()+"]:"+command.getNext().getCommand().trim() + ",it does not exist in result file");
+                return;
+            }
+
+            try {
+                getCommandResult(command);
+            } catch (Exception e) {
+                LOG.error("[Exceptional command]["+script.getFileName()+"]["+command.getPosition()+"]:"+command.getCommand().trim());
+                //set the test script file invalid
+                script.invalid();
+                succeeded = false;
+                return;
             }
         }
     }
@@ -220,6 +225,11 @@ public class ResultParser {
      * 3、both,separator is \t or 4 spaces
      */
     public static RSSet convertToRSSet(String rsText,String separator){
+        
+        if(rsText == null){
+            return null;
+        }
+        
         StringBuilder buffer = new StringBuilder();
         //first,replace separator to the system designated separator
         if(separator.equals("both"))
@@ -294,5 +304,28 @@ public class ResultParser {
 
     public static boolean isSucceeded(){
         return succeeded;
+    }
+    
+    public static int subStrCount(String str, String sub){
+        if(str == null || sub == null)
+            return 0;
+        
+        if(!str.contains(sub)){
+            return 0;
+        }else {
+            int i = 1;
+            String temp = str.replace(sub,"");
+            while(temp.contains(sub)){
+                i++;
+                temp = temp.replace(sub,"");
+            }
+            return i;
+        }
+    }
+    
+    public static void main(String[] args){
+        String a = "SELECT @@session.autocommit;\ncommit;";
+        int to = a.indexOf("commit;",3);
+        System.out.println(a.substring(0,0));
     }
 }

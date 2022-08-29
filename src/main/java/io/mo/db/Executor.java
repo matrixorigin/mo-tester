@@ -10,6 +10,7 @@ import io.mo.util.ResultParser;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.sql.*;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -211,7 +212,8 @@ public class Executor {
             ResultParser.parse(script);
             //if result file is parsed failed,return
             if(!ResultParser.isSucceeded()) {
-                return false;
+                LOG.warn("The test file["+script.getFileName()+"] does not match its result file");
+                LOG.warn("The mo-tester will generate new result file for ["+script.getFileName()+"] ");
             }
         }
 
@@ -236,19 +238,40 @@ public class Executor {
                         actResult.setCommand(command);
                         rs_writer.write(command.getCommand().trim());
                         rs_writer.newLine();
-                        if(isUpdate && command.isIgnore())
-                            rs_writer.write(command.getExpResult().getOrginalRSText());
-                        else
+                        if(command.isIgnore()) {
+                            if (isUpdate) {
+                                if (command.getExpResult() != null) {
+                                    if (command.getExpResult().getType() != RESULT.STMT_RESULT_TYPE_NONE)
+                                        rs_writer.write(command.getExpResult().getOrginalRSText());
+                                    else 
+                                        continue;
+                                }
+                                else 
+                                    continue;
+                            } else {
+                                rs_writer.write("[unknown result because it is related to issue#" + command.getIssueNo() + "]");
+                            }
+                        }
+                        else {
                             rs_writer.write(actResult.toString());
+                        }
 
                         if(j < commands.size() -1)
                             rs_writer.newLine();
                     }else{
                         rs_writer.write(command.getCommand().trim());
-                        if(isUpdate && command.isIgnore() && command.getExpResult().getType() != RESULT.STMT_RESULT_TYPE_NONE){
-                            rs_writer.newLine();
-                            rs_writer.write(command.getExpResult().getOrginalRSText());
-                            System.out.println(command.getCommand()+".getOrginalRSText()) = " + command.getExpResult().getOrginalRSText());
+                        if(command.isIgnore() ){
+                            if (isUpdate) {
+                                if (command.getExpResult() != null) {
+                                    if (command.getExpResult().getType() != RESULT.STMT_RESULT_TYPE_NONE) {
+                                        rs_writer.newLine();
+                                        rs_writer.write(command.getExpResult().getOrginalRSText());
+                                    }
+                                }
+                            } else {
+                                rs_writer.newLine();
+                                rs_writer.write("[unknown result because it is related to issue#" + command.getIssueNo() + "]");
+                            }
                         }
                         if(j < commands.size() -1)
                             rs_writer.newLine();
@@ -260,21 +283,34 @@ public class Executor {
                     }
                     rs_writer.write(command.getCommand().trim());
                     rs_writer.newLine();
-                    if(isUpdate && command.isIgnore())
-                        rs_writer.write(command.getExpResult().getOrginalRSText());
-                    else
+                    if(command.isIgnore()){
+                        if (isUpdate) {
+                            if (command.getExpResult() != null) {
+                                if (command.getExpResult().getType() != RESULT.STMT_RESULT_TYPE_NONE)
+                                    rs_writer.write(command.getExpResult().getOrginalRSText());
+                                else 
+                                    continue;
+                            }
+                            else 
+                                continue;
+                        } else {
+                            rs_writer.write("[unknown result because it is related to issue#" + command.getIssueNo() + "]");
+                        }
+                    } else
                         rs_writer.write(e.getMessage());
+                    
                     if(j < commands.size() -1)
                         rs_writer.newLine();
                 }
             }
+            rs_writer.newLine();
             rs_writer.flush();
             rs_writer.close();
             //drop the test db
             dropTestDB(connection,script);
         } catch (IOException e) {
             e.printStackTrace();
-            System.exit(1);
+            return false;
         }
         return true;
     }
