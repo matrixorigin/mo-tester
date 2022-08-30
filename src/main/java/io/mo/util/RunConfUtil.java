@@ -1,5 +1,8 @@
 package io.mo.util;
 
+import io.mo.constant.COMMON;
+
+import java.io.File;
 import java.util.Map;
 
 public class RunConfUtil {
@@ -25,6 +28,19 @@ public class RunConfUtil {
     public static int getRate(){
         if(conf == null) init();
         return (int)conf.get("rate");
+    }
+
+    public static String getResourcePath(){
+        if(conf == null) init();
+        String path  = (String)conf.get("path");
+        File caseFile = new File(path);
+        String srcPath = null;
+        if(caseFile.getAbsolutePath().contains(COMMON.CASES_DIR)) {
+            srcPath = caseFile.getAbsolutePath();
+            srcPath = srcPath.replace(COMMON.CASES_DIR,COMMON.RESOURCE_DIR);
+            srcPath = srcPath.substring(0,srcPath.indexOf(COMMON.RESOURCE_DIR)+COMMON.RESOURCE_DIR.length());
+        }
+        return srcPath;
     }
 
     public static void main(String[] args){

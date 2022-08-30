@@ -23,7 +23,7 @@ public class TestReport {
     private int rate = 0;
 
     public TestReport(){
-        File dir = new File(COMMON.REPORT_PATH);
+        File dir = new File(COMMON.REPORT_DIR);
         if(!dir.exists())
             dir.mkdir();
 
@@ -42,9 +42,9 @@ public class TestReport {
 
         ArrayList<SqlCommand> e_commands = new ArrayList<SqlCommand>();
         try {
-            BufferedWriter r_writer = new BufferedWriter(new FileWriter(COMMON.REPORT_PATH+"/report.txt"));
-            BufferedWriter e_writer = new BufferedWriter(new FileWriter(COMMON.REPORT_PATH+"/error.txt"));
-            BufferedWriter s_writer = new BufferedWriter(new FileWriter(COMMON.REPORT_PATH+"/success.txt"));
+            BufferedWriter r_writer = new BufferedWriter(new FileWriter(COMMON.REPORT_DIR +"/report.txt"));
+            BufferedWriter e_writer = new BufferedWriter(new FileWriter(COMMON.REPORT_DIR +"/error.txt"));
+            BufferedWriter s_writer = new BufferedWriter(new FileWriter(COMMON.REPORT_DIR +"/success.txt"));
             r_writer.write(getReportSummaryTXT(totalCmds, successCmds, failedCmds, ignoredCmds, abnormalCmds));
             LOG.info(getReportSummaryTXT(totalCmds, successCmds, failedCmds, ignoredCmds, abnormalCmds).trim());
 

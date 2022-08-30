@@ -2,8 +2,6 @@ package io.mo.constant;
 
 public class COMMON {
 
-    public static String[] RESOURCES_DIR = new String[]{"conf","cases","checkpoints","resources","result"};
-
     public static String T_FILE_SUFFIX = ".sql";
 
     //if IGNORE_MODEL is true,menas all of sql commands that are marked with bvt:issue tag will be not executed
@@ -30,14 +28,15 @@ public class COMMON {
     public static String SORT_KEY_INDEX_FLAG = "-- @sortkey:";
 
     public static String COLUMN_SEPARATOR_FLAG = "-- @separator:";
+    public static String RESOURCE_PATH_FLAG = "\\$resources";
 
+    public static String LOG_DIR = "log";
+    public static String RESULT_DIR = "result";
+    public static String CASES_DIR = "cases";
+    public static String REPORT_DIR = "report";
+    public static String RESOURCE_DIR = "resources";
 
-    public static String LOG_PATH = "log";
-    public static String RESULT_PATH = "result";
-    public static String TEST_PATH = "test";
-    public static String CASES_PATH = "cases";
-    public static String REPORT_PATH = "report";
-
+    public static String RESOURCE_PATH = "./resources";
     public static String UPDATE_RESULT_TEMPLATE = "Query OK, {num} row affected";
 
 
