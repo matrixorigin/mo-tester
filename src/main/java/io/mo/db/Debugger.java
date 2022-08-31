@@ -29,7 +29,6 @@ public class Debugger {
             try{
                 statement = connection.createStatement();
                 String sqlCmd = command.getCommand().replaceAll(COMMON.RESOURCE_PATH_FLAG,COMMON.RESOURCE_PATH);
-                System.out.println(sqlCmd);
                 statement.execute(sqlCmd);
                 ResultSet resultSet = statement.getResultSet();
                 println("MySQL> "+command.getCommand());
