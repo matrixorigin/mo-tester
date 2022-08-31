@@ -74,7 +74,7 @@ public class ResultParser {
         rsFilePath = script.getFileName().replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX);
         resFile = new File(rsFilePath);
         if(!resFile.exists()){
-            rsFilePath = script.getFileName().replaceFirst(COMMON.CASES_PATH,COMMON.RESULT_PATH).replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX);
+            rsFilePath = script.getFileName().replaceFirst(COMMON.CASES_DIR,COMMON.RESULT_DIR).replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX);
             resFile = new File(rsFilePath);
             if(!resFile.exists()){
                 LOG.warn("The result of the test script file["+rsFilePath+"] does not exists,please check and this test script file will be skipped.");
@@ -170,7 +170,7 @@ public class ResultParser {
         rsFilePath = script.getFileName().replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX);
         resFile = new File(rsFilePath);
         if(!resFile.exists()){
-            rsFilePath = script.getFileName().replaceFirst(COMMON.CASES_PATH,COMMON.RESULT_PATH).replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX);
+            rsFilePath = script.getFileName().replaceFirst(COMMON.CASES_DIR,COMMON.RESULT_DIR).replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX);
             resFile = new File(rsFilePath);
             if(!resFile.exists()){
                 LOG.warn("The result of the test script file["+rsFilePath+"] does not exists,please check and this test script file will be skipped.");

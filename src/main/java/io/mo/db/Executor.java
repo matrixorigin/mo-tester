@@ -10,11 +10,9 @@ import io.mo.util.ResultParser;
 import org.apache.log4j.Logger;
 
 import java.io.*;
-import java.lang.reflect.Type;
 import java.sql.*;
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 public class Executor {
 
@@ -89,7 +87,8 @@ public class Executor {
 
             try {
                 statement = connection.createStatement();
-                statement.execute(command.getCommand());
+                String sqlCmd = command.getCommand().replaceAll(COMMON.RESOURCE_PATH_FLAG,COMMON.RESOURCE_PATH);
+                statement.execute(sqlCmd);
                 ResultSet resultSet = statement.getResultSet();
                 if (resultSet != null) {
                     RSSet rsSet = new RSSet(resultSet);
@@ -230,7 +229,8 @@ public class Executor {
                     connection = getConnection(command);
                     statement = connection.createStatement();
 
-                    statement.execute(command.getCommand());
+                    String sqlCmd = command.getCommand().replaceAll("\\$resources",COMMON.RESOURCE_PATH);
+                    statement.execute(sqlCmd);
                     ResultSet resultSet = statement.getResultSet();
                     if(resultSet != null){
                         RSSet rsSet = new RSSet(resultSet);

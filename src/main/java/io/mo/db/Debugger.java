@@ -14,7 +14,7 @@ public class Debugger {
 
     public static void run(TestScript script){
 
-        initWriter(COMMON.LOG_PATH+"/","debug.log");
+        initWriter(COMMON.LOG_DIR +"/","debug.log");
         ConnectionManager.reset();
         boolean hasResults;
         Statement statement;
@@ -28,7 +28,8 @@ public class Debugger {
             connection = getConnection(command);
             try{
                 statement = connection.createStatement();
-                statement.execute(command.getCommand());
+                String sqlCmd = command.getCommand().replaceAll(COMMON.RESOURCE_PATH_FLAG,COMMON.RESOURCE_PATH);
+                statement.execute(sqlCmd);
                 ResultSet resultSet = statement.getResultSet();
                 println("MySQL> "+command.getCommand());
                 if (resultSet == null) {

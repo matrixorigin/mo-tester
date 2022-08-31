@@ -4,7 +4,7 @@ if [[ $# -eq 0 ]];then
     echo "No parameters provided,the mo-tester will run with parameters defined in the run.yml file. "
 
 fi
-while getopts ":p:m:t:r:i:e:gnch" opt
+while getopts ":p:m:t:r:i:e:s:gnch" opt
 do
     case $opt in
         p)
@@ -31,6 +31,10 @@ do
         EXCLUDE="exclude=${OPTARG}"
         echo -e "Script files in the path which name contain one of the : {${OPTARG}} will be not executed"
         ;;
+        s)
+        RESOURCE="resource=${OPTARG}"
+        echo -e "Script files in the path which name contain one of the : {${OPTARG}} will be not executed"
+        ;;
         g)
         IGNORE="ignore"
         echo -e "SQL commands which is marked with ignore-flag will not be executed"
@@ -51,6 +55,7 @@ do
         echo -e "   -r  set The success rate that test cases should reach"
         echo -e "   -i  set the including list, and only script files in the path which name contain one of the list will be excuted,if more than one,seperated by ,"
         echo -e "   -e  set the excluding list, and script files in the path which name contain one of the list will not be excuted,if more than one,seperated by ,"
+        echo -e "   -s  set the resource path that mo-tester use to store resources, and can be refered to $resources in test file"
         echo -e "   -g  means SQL commands which is marked with [bvt:issue] flag will not be executed,this flag starts with [-- @bvt:issue#{issueNO.}],and ends with [-- @bvt:issue],eg:"
         echo -e "       -- @bvt:issue#3236"
         echo -e "       select date_add("1997-12-31 23:59:59",INTERVAL "-10000:1" HOUR_MINUTE);"
@@ -85,7 +90,7 @@ done
 java -Xms1024M -Xmx1024M -cp ${libJars} \
         -Dconf.yml=${MO_YAML} \
         -Drun.yml=${RUN_YAML} \
-        io.mo.Tester ${PATHC} ${METHOD} ${TYPE} ${RATE} ${INCLUDE} ${EXCLUDE} ${IGNORE} ${NOMETA} ${CHECK}
+        io.mo.Tester ${PATHC} ${METHOD} ${TYPE} ${RATE} ${INCLUDE} ${EXCLUDE} ${IGNORE} ${NOMETA} ${CHECK} ${RESOURCE}
 }
 
 boot
