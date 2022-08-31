@@ -24,11 +24,12 @@ public class Tester {
         String path = RunConfUtil.getPath();
         String method = RunConfUtil.getMethod();
         int rate = RunConfUtil.getRate();
+        
+        COMMON.RESOURCE_PATH = RunConfUtil.getResourcePath();
 
         //parse the paras
         if(args != null){
             for (String arg : args) {
-
                 //get path
                 if (arg.startsWith("path")) {
                     path = arg.split("=")[1];
@@ -57,6 +58,11 @@ public class Tester {
                 //get excludes
                 if (arg.startsWith("exclude")) {
                     excludes = arg.split("=")[1].split(",");
+                }
+
+                //get resource path
+                if (arg.startsWith("resource")) {
+                    COMMON.RESOURCE_PATH = arg.split("=")[1];
                 }
 
                 //get nometa info
