@@ -59,10 +59,41 @@ public class RSCell<T> {
                cell.type == Types.BIGINT ||
                (cell.type == Types.VARCHAR && isNumeric(v1) &&isNumeric(v2))) {
 
+                //if one is NULL,the other must be NULL
+                if(v1.equals("null")){
+                    if(v2.equals("null"))
+                        return true;
+                    else
+                        return false;
+                }
+
+                if(v2.equals("null")){
+                    if(v1.equals("null"))
+                        return true;
+                    else
+                        return false;
+                }
+
                 BigDecimal bd1 = BigDecimal.valueOf(Double.valueOf(v1)).stripTrailingZeros();
                 BigDecimal bd2 = BigDecimal.valueOf(Double.valueOf(v2)).stripTrailingZeros();
                 //System.out.println("bd1 = " + bd1);
                 //System.out.println("bd2 = " + bd2);
+                
+                //if one is ZERO,the other must be ZERO
+                if(bd1.equals(BigDecimal.ZERO)){
+                    if(bd2.equals(BigDecimal.ZERO))
+                        return true;
+                    else 
+                        return false;
+                }
+
+                if(bd2.equals(BigDecimal.ZERO)){
+                    if(bd1.equals(BigDecimal.ZERO))
+                        return true;
+                    else
+                        return false;
+                }
+                
                 if(bd1.compareTo(bd2) == 0)
                     return true;
 
@@ -90,7 +121,7 @@ public class RSCell<T> {
                     LOG.debug("value[" + v1 +"] and value[" + v2 +"] match the scale tolerable error");
                     return true;
                 }
-
+                
                 error =  error.divide(bd1,BigDecimal.ROUND_HALF_UP);
                 toleration = BigDecimal.valueOf(COMMON.INT_TOLERABLE_ERROR);
                 //if error beteen bd1 and bd2 divided bd1 or db2 is less than INT_TOLERABLE_ERROR(0.0.000000000000001),return true;

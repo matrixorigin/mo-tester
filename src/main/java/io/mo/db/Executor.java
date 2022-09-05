@@ -81,7 +81,7 @@ public class Executor {
                         "[ACTUAL RESULT]:\n" + command.getTestResult().getExpResult() + "\n");
                 LOG.error("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] was executed failed");
                 LOG.error("[EXPECT RESULT]:\n" + command.getTestResult().getExpResult());
-                LOG.error("[ACTUAL RESULT]:\n" + command.getTestResult().getExpResult());
+                LOG.error("[ACTUAL RESULT]:\n" + command.getTestResult().getActResult());
                 continue;
             }
 
@@ -138,7 +138,7 @@ public class Executor {
                                 "[ACTUAL RESULT]:\n" + command.getTestResult().getExpResult() + "\n");
                         LOG.error("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] was executed failed");
                         LOG.error("[EXPECT RESULT]:\n" + command.getTestResult().getExpResult());
-                        LOG.error("[ACTUAL RESULT]:\n" + command.getTestResult().getExpResult());
+                        LOG.error("[ACTUAL RESULT]:\n" + command.getTestResult().getActResult());
                         continue;
                     }
 

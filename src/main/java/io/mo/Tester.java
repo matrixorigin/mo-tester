@@ -33,6 +33,14 @@ public class Tester {
                 //get path
                 if (arg.startsWith("path")) {
                     path = arg.split("=")[1];
+                    File caseFile = new File(path);
+                    String srcPath = null;
+                    if(caseFile.getAbsolutePath().contains(COMMON.CASES_DIR)) {
+                        srcPath = caseFile.getAbsolutePath();
+                        srcPath = srcPath.replace(COMMON.CASES_DIR,COMMON.RESOURCE_DIR);
+                        srcPath = srcPath.substring(0,srcPath.indexOf(COMMON.RESOURCE_DIR)+COMMON.RESOURCE_DIR.length());
+                    }
+                    COMMON.RESOURCE_PATH = srcPath;
                 }
 
                 //get method
