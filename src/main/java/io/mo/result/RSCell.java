@@ -51,6 +51,11 @@ public class RSCell<T> {
             //precision toleration code
             String v1 = (String)this.value;
             String v2 = (String)cell.getValue();
+            
+            //if one is NULL,return false
+            if(v1.equalsIgnoreCase("null") || v2.equalsIgnoreCase("null"))
+                return false;
+            
 
             if(cell.type == Types.FLOAT ||
                cell.type == Types.REAL  ||
@@ -58,13 +63,20 @@ public class RSCell<T> {
                cell.type == Types.DECIMAL||
                cell.type == Types.BIGINT ||
                (cell.type == Types.VARCHAR && isNumeric(v1) &&isNumeric(v2))) {
+                
 
                 BigDecimal bd1 = BigDecimal.valueOf(Double.valueOf(v1)).stripTrailingZeros();
                 BigDecimal bd2 = BigDecimal.valueOf(Double.valueOf(v2)).stripTrailingZeros();
                 //System.out.println("bd1 = " + bd1);
                 //System.out.println("bd2 = " + bd2);
+                
+                
                 if(bd1.compareTo(bd2) == 0)
                     return true;
+                else{
+                    if(bd1.equals(BigDecimal.ZERO) || bd2.equals(BigDecimal.ZERO))
+                        return false;
+                }
 
                 //round to one with samll scale, and compare
                 int scal1 = bd1.scale();
@@ -90,7 +102,7 @@ public class RSCell<T> {
                     LOG.debug("value[" + v1 +"] and value[" + v2 +"] match the scale tolerable error");
                     return true;
                 }
-
+                
                 error =  error.divide(bd1,BigDecimal.ROUND_HALF_UP);
                 toleration = BigDecimal.valueOf(COMMON.INT_TOLERABLE_ERROR);
                 //if error beteen bd1 and bd2 divided bd1 or db2 is less than INT_TOLERABLE_ERROR(0.0.000000000000001),return true;
