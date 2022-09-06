@@ -45,11 +45,19 @@ public class Tester {
 
                 //get method
                 if (arg.startsWith("method")) {
+                    if(!arg.contains("=")){
+                        LOG.error("The format of para[method] is not valid,please check......");
+                        System.exit(1);
+                    }
                     method = arg.split("=")[1];
                 }
 
                 //get sucess rate
                 if (arg.startsWith("rate")) {
+                    if(!arg.contains("=")){
+                        LOG.error("The format of para[rate] is not valid,please check......");
+                        System.exit(1);
+                    }
                     rate = Integer.parseInt(arg.split("=")[1]);
                 }
 
@@ -60,16 +68,29 @@ public class Tester {
 
                 //get includes
                 if (arg.startsWith("include")) {
+                    if(!arg.contains("=")){
+                        LOG.error("The format of para[include] is not valid,please check......");
+                        System.exit(1);
+                    }
                     includes = arg.split("=")[1].split(",");
                 }
 
                 //get excludes
                 if (arg.startsWith("exclude")) {
+                    if(!arg.contains("=")){
+                        LOG.error("The format of para[include] is not valid,please check......");
+                        System.exit(1);
+                    }
                     excludes = arg.split("=")[1].split(",");
                 }
 
                 //get resource path
                 if (arg.startsWith("resource")) {
+                    if(!arg.contains("=")){
+                        LOG.error("The format of para[resource] is not valid,please check......");
+                        System.exit(1);
+                    }
+                    
                     COMMON.RESOURCE_PATH = arg.split("=")[1];
                 }
 
