@@ -23,13 +23,6 @@
                 <include>mo.yml</include>
                 <include>run.yml</include>
                 <include>log4j.properties</include>
-            </includes>
-            <fileMode>755</fileMode>
-            <outputDirectory>./</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>./</directory>
-            <includes>
                 <include>run.sh</include>
             </includes>
             <fileMode>755</fileMode>
