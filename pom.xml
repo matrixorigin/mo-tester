@@ -56,7 +56,7 @@
   </build>
   <packaging>jar</packaging>
 
-  <name>morunner</name>
+  <name>mo-tester</name>
   <url>http://maven.apache.org</url>
 
   <properties>
