@@ -166,7 +166,6 @@ public class Tester {
     public static void run(File file){
         if(file.isFile()){
             if(!(file.getName().endsWith(".sql") || file.getName().endsWith(".test"))) {
-                LOG.warn("The postfix file["+file.getName()+"] is not .sql or .test, and this file will be skipped.");
                 return;
             }
             
@@ -189,7 +188,6 @@ public class Tester {
     public static void generateRs(File file){
         if(file.isFile()){
             if(!(file.getName().endsWith(".sql") || file.getName().endsWith(".test"))) {
-                LOG.warn("The postfix file["+file.getName()+"] is not .sql or .test, and this file will be skipped.");
                 return;
             }
             
@@ -214,7 +212,6 @@ public class Tester {
     public static void debug(File file){
         if(file.isFile()){
             if(!(file.getName().endsWith(".sql") || file.getName().endsWith(".test"))) {
-                LOG.warn("The postfix file["+file.getName()+"] is not .sql or .test, and this file will be skipped.");
                 return;
             }
             
@@ -234,8 +231,9 @@ public class Tester {
 
     public static void check(File file){
         if(file.isFile()){
-            if(file.getName().endsWith(".result"))
+            if(!(file.getName().endsWith(".sql") || file.getName().endsWith(".test"))) {
                 return;
+            }
             if(isInclude(file.getName())) {
                 ScriptParser.parseScript(file.getPath());
                 TestScript script = ScriptParser.getTestScript();
