@@ -9,8 +9,7 @@ select min(int32),max(int32),max(int32)-1 from t1;
 min(int32)    max(int32)    max(int32) - 1
 -1    2147483647    2147483646
 select min(int32),max(int32),max(int32)-1 from t1 group by a;
-min(int32)    max(int32)    max(int32) - 1
--1    2147483647    2147483646
+[unknown result because it is related to issue#1234]
 drop table t1;
 CREATE TABLE NATION  (
 N_NATIONKEY  INTEGER NOT NULL,

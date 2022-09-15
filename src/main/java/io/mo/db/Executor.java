@@ -224,8 +224,26 @@ public class Executor {
             ArrayList<SqlCommand> commands = script.getCommands();
             for (int j = 0; j < commands.size(); j++) {
                 SqlCommand command = null;
+                
                 try{
                     command = commands.get(j);
+
+                    if(command.isIgnore()) {
+                        rs_writer.write(command.getCommand().trim());
+                        rs_writer.newLine();
+                        if (isUpdate) {
+                            if (command.getExpResult() != null) {
+                                if (command.getExpResult().getType() != RESULT.STMT_RESULT_TYPE_NONE)
+                                    rs_writer.write(command.getExpResult().getOrginalRSText());
+                            }
+                        } else {
+                            rs_writer.write("[unknown result because it is related to issue#" + command.getIssueNo() + "]");
+                        }
+                        if(j < commands.size() -1)
+                            rs_writer.newLine();
+                        continue;
+                    }
+                    
                     connection = getConnection(command);
                     statement = connection.createStatement();
 
@@ -238,7 +256,8 @@ public class Executor {
                         actResult.setCommand(command);
                         rs_writer.write(command.getCommand().trim());
                         rs_writer.newLine();
-                        if(command.isIgnore()) {
+                        rs_writer.write(actResult.toString());
+                        /*if(command.isIgnore()) {
                             if (isUpdate) {
                                 if (command.getExpResult() != null) {
                                     if (command.getExpResult().getType() != RESULT.STMT_RESULT_TYPE_NONE)
@@ -254,7 +273,7 @@ public class Executor {
                         }
                         else {
                             rs_writer.write(actResult.toString());
-                        }
+                        }*/
 
                         if(j < commands.size() -1)
                             rs_writer.newLine();
