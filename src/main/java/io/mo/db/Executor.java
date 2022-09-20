@@ -199,8 +199,12 @@ public class Executor {
         boolean isUpdate = false;
         Statement statement;
         BufferedWriter rs_writer;
-        //check whether the result dir exists
+        //check whether the result file exists
         File rsf = new File(script.getFileName().replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX));
+        
+        if(!rsf.exists()){
+            rsf = new File(script.getFileName().replaceFirst(COMMON.CASES_DIR,COMMON.RESULT_DIR).replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX));
+        }
 
         //if the result file exists,menas it is to update old result file
         //and in this case,result of sqlcommand with bvt:issue tag will be not updated,because the result get from system is not correct
@@ -214,7 +218,11 @@ public class Executor {
                 LOG.warn("The test file["+script.getFileName()+"] does not match its result file");
                 LOG.warn("The mo-tester will generate new result file for ["+script.getFileName()+"] ");
             }
+        }else{
+            //if the result file does not exist
+            rsf = new File(script.getFileName().replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX));
         }
+            
 
         //create a database named filename for test;
         createTestDB(connection,script);
@@ -334,6 +342,165 @@ public class Executor {
         return true;
     }
 
+    public static void genRSForOnlyNotMatch(TestScript script){
+        LOG.info("Start to update result file for the script file["+script.getFileName()+"] now, and it will take a few moment,pleas wait......");
+        ConnectionManager.reset();
+
+        //create a database named filename for test;
+        Connection connection = ConnectionManager.getConnection();
+        if(connection == null){
+            LOG.error("No valid connnection,please check the config..");
+        }
+        createTestDB(connection,script);
+
+        //parse the result file
+        ResultParser.reset();
+        ResultParser.parse(script);
+
+        //if result file is parsed failed,return
+        if(!ResultParser.isSucceeded()) {
+            LOG.error("The result file for the script file["+script.getFileName()+"] has been updated failed.");
+            return;
+        }
+        
+        boolean needUpdate = false;
+        //run all the sql commands
+        Statement statement = null;
+        ArrayList<SqlCommand> commands = script.getCommands();
+        long start = System.currentTimeMillis();
+
+        for (SqlCommand command : commands) {
+            //if the the command is marked to ignore flag and the IGNORE_MODEL = true
+            //skip the command directly
+            if (COMMON.IGNORE_MODEL && command.isIgnore()) {
+                LOG.debug("Ignored sql command: [issue#" + command.getIssueNo() + "][" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "]");
+                script.addIgnoredCmd(command);
+                continue;
+            }
+
+            connection = getConnection(command);
+
+            //if can not get valid connection,put the command to the abnormal commands array
+            if (connection == null) {
+                LOG.error("No valid connnection,please check the config..");
+                script.addAbnoramlCmd(command);
+                LOG.error("The result file for the script file[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] was updated failed");
+                continue;
+            }
+
+            try {
+                statement = connection.createStatement();
+                String sqlCmd = command.getCommand().replaceAll(COMMON.RESOURCE_PATH_FLAG,COMMON.RESOURCE_PATH);
+                statement.execute(sqlCmd);
+                ResultSet resultSet = statement.getResultSet();
+                if (resultSet != null) {
+                    RSSet rsSet = new RSSet(resultSet);
+                    StmtResult actResult = new StmtResult(rsSet);
+                    command.setActResult(actResult);
+                    command.getTestResult().setActResult(actResult.toString());
+
+                    StmtResult expResult = command.getExpResult();
+                    expResult.setType(RESULT.STMT_RESULT_TYPE_SET);
+                    expResult.setRsSet(ResultParser.convertToRSSet(expResult.getOrginalRSText(), command.getSeparator()));
+                    command.getTestResult().setExpResult(expResult.toString());
+                } else {
+                    StmtResult actResult = new StmtResult();
+                    actResult.setType(RESULT.STMT_RESULT_TYPE_NONE);
+                    command.setActResult(actResult);
+                }
+
+                //check whether the execution result is successful
+                if (command.checkResult()) {
+                    script.addSuccessCmd(command);
+                    command.getTestResult().setResult(RESULT.RESULT_TYPE_PASS);
+                    LOG.debug("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] does not need to be updated.");
+                } else {
+                    script.addFailedCmd(command);
+                    command.getTestResult().setResult(RESULT.RESULT_TYPE_FAILED);
+                    LOG.info("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] need to be updated.");
+                    needUpdate = true;
+                }
+                statement.close();
+            } catch (SQLException e) {
+                try {
+                    if (connection.isClosed() || !connection.isValid(10)) {
+                        LOG.error("The connection has been lost,please check the logs .");
+                        script.addAbnoramlCmd(command);
+                        LOG.error("The result file for the script file[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] was updated failed");
+                        continue;
+                    }
+
+                    StmtResult actResult = new StmtResult();
+                    actResult.setType(RESULT.STMT_RESULT_TYPE_ERROR);
+                    actResult.setErrorMessage(e.getMessage());
+
+                    command.getExpResult().setType(RESULT.STMT_RESULT_TYPE_ERROR);
+                    command.getExpResult().setErrorMessage(command.getExpResult().getOrginalRSText());
+
+                    command.setActResult(actResult);
+
+                    //check whether the execution result is successful
+                    if (command.checkResult()) {
+                        script.addSuccessCmd(command);
+                        command.getTestResult().setResult(RESULT.RESULT_TYPE_PASS);
+                        LOG.debug("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] does not need to be updated.");
+                    } else {
+                        script.addFailedCmd(command);
+                        command.getTestResult().setResult(RESULT.RESULT_TYPE_FAILED);
+                        LOG.debug("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] need to be updated.");
+                        needUpdate = true;
+                    }
+
+                    assert statement != null;
+                    statement.close();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        }
+
+        //drop the test db
+        dropTestDB(connection,script);
+        
+        if(!needUpdate){
+            LOG.info("The result file for the script file["+script.getFileName()+"] does not need to be updated.");
+            return;
+        }
+        long end = System.currentTimeMillis();
+        script.setDuration((float)(end - start)/1000);
+        File rsf = new File(script.getFileName().replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX));
+        if(!rsf.exists()){
+            rsf = new File(script.getFileName().replaceFirst(COMMON.CASES_DIR,COMMON.RESULT_DIR).replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX));
+        }
+        BufferedWriter rs_writer;
+        
+        try {
+            rs_writer = new BufferedWriter(new FileWriter(rsf.getPath()));
+            ArrayList<SqlCommand> cmds = script.getCommands();
+            for (int j = 0; j < commands.size(); j++) {
+                SqlCommand command = null;
+                command = commands.get(j);
+                rs_writer.write(command.getCommand().trim());
+                rs_writer.newLine();
+                if(command.getTestResult().getResult().equalsIgnoreCase(RESULT.RESULT_TYPE_PASS)){
+                    if(command.getExpResult().getType() == RESULT.STMT_RESULT_TYPE_NONE)
+                        continue;
+                    rs_writer.write(command.getExpResult().getOrginalRSText()); 
+                }else {
+                    rs_writer.write(command.getActResult().toString());
+                }
+                if(j < commands.size() -1)
+                    rs_writer.newLine();
+            }
+            rs_writer.flush();
+            rs_writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        LOG.info("The result file for the script file["+script.getFileName()+"] has been updated successfully.");
+    }
+    
     public static Connection getConnection(SqlCommand command){
         Connection connection;
         if(command.getConn_id() != 0){
