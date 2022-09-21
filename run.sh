@@ -4,7 +4,7 @@ if [[ $# -eq 0 ]];then
     echo "No parameters provided,the mo-tester will run with parameters defined in the run.yml file. "
 
 fi
-while getopts ":p:m:t:r:i:e:s:g:fnch" opt
+while getopts ":p:m:t:r:i:e:s:gfnch" opt
 do
     case $opt in
         p)
