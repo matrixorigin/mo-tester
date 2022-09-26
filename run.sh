@@ -4,7 +4,7 @@ if [[ $# -eq 0 ]];then
     echo "No parameters provided,the mo-tester will run with parameters defined in the run.yml file. "
 
 fi
-while getopts ":p:m:t:r:i:e:s:gnch" opt
+while getopts ":p:m:t:r:i:e:s:gfnch" opt
 do
     case $opt in
         p)
@@ -38,6 +38,9 @@ do
         g)
         IGNORE="ignore"
         echo -e "SQL commands which is marked with ignore-flag will not be executed"
+        ;;
+        f)
+        FORCE="force"
         ;;
         n)
         NOMETA="nometa"
@@ -90,7 +93,7 @@ done
 java -Xms1024M -Xmx1024M -cp ${libJars} \
         -Dconf.yml=${MO_YAML} \
         -Drun.yml=${RUN_YAML} \
-        io.mo.Tester ${PATHC} ${METHOD} ${TYPE} ${RATE} ${INCLUDE} ${EXCLUDE} ${IGNORE} ${NOMETA} ${CHECK} ${RESOURCE}
+        io.mo.Tester ${PATHC} ${METHOD} ${TYPE} ${RATE} ${INCLUDE} ${EXCLUDE} ${IGNORE} ${NOMETA} ${CHECK} ${RESOURCE} ${FORCE}
 }
 
 boot

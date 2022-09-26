@@ -94,6 +94,12 @@ public class Tester {
                     COMMON.RESOURCE_PATH = arg.split("=")[1];
                 }
 
+                //get force
+                if (arg.equalsIgnoreCase("force")) {
+
+                    COMMON.FORCE_UPDATE = true;
+                }
+
                 //get nometa info
                 if (arg.equalsIgnoreCase("nometa")) {
                     COMMON.IS_COMPARE_META = false;
@@ -194,10 +200,15 @@ public class Tester {
             if(isInclude(file.getName())) {
                 ScriptParser.parseScript(file.getPath());
                 TestScript script = ScriptParser.getTestScript();
-                if(Executor.genRS(script))
-                    LOG.info("The results for the test script file["+file.getPath()+"] have been generated or updated successfully.");
-                else
-                    LOG.info("The results for the test script file["+file.getPath()+"] have been generated or updated failed.");
+                if(!COMMON.FORCE_UPDATE){
+                    if(Executor.genRS(script))
+                        LOG.info("The results for the test script file["+file.getPath()+"] have been generated or updated successfully.");
+                    else
+                        LOG.info("The results for the test script file["+file.getPath()+"] have been generated or updated failed.");
+                }else {
+                    Executor.genRSForOnlyNotMatch(script);
+                }
+                
             }
             return;
         }

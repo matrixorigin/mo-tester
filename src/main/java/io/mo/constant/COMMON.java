@@ -9,6 +9,8 @@ public class COMMON {
 
     public static boolean IS_COMPARE_META = true;
 
+    public static boolean FORCE_UPDATE = false;
+    
     public static String R_FILE_SUFFIX = ".result";
 
     public static int CONNECTION_ID = 0;//
