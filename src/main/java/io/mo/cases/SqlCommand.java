@@ -12,6 +12,8 @@ public class SqlCommand {
     private boolean ignore = false;
     private boolean error = false;
     private int conn_id = 0;
+
+
     private String conn_user = null;
     private String conn_pswd = null;
     private String delimiter;
@@ -166,4 +168,12 @@ public class SqlCommand {
         this.issueNo = issueNo;
     }
 
+
+    public void setConn_user(String conn_user) {
+        this.conn_user = conn_user;
+    }
+
+    public void setConn_pswd(String conn_pswd) {
+        this.conn_pswd = conn_pswd;
+    }
 }

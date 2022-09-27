@@ -40,7 +40,7 @@ public class Executor {
         if(!ResultParser.isSucceeded()) {
             LOG.info("The script file["+script.getFileName()+"] has been executed," +
                     ", and cost: " + script.getDuration() +"s" +
-                    "total:" + script.getCommands().size() +
+                    ", total:" + script.getCommands().size() +
                     ", success:" + script.getSuccessCmdCount() +
                     ", failed:" + script.getFailedCmdCount() +
                     ", ignored:" + script.getIgnoredCmdCount() +
@@ -265,23 +265,6 @@ public class Executor {
                         rs_writer.write(command.getCommand().trim());
                         rs_writer.newLine();
                         rs_writer.write(actResult.toString());
-                        /*if(command.isIgnore()) {
-                            if (isUpdate) {
-                                if (command.getExpResult() != null) {
-                                    if (command.getExpResult().getType() != RESULT.STMT_RESULT_TYPE_NONE)
-                                        rs_writer.write(command.getExpResult().getOrginalRSText());
-                                    else 
-                                        continue;
-                                }
-                                else 
-                                    continue;
-                            } else {
-                                rs_writer.write("[unknown result because it is related to issue#" + command.getIssueNo() + "]");
-                            }
-                        }
-                        else {
-                            rs_writer.write(actResult.toString());
-                        }*/
 
                         if(j < commands.size() -1)
                             rs_writer.newLine();

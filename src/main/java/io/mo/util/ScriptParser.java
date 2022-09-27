@@ -4,6 +4,7 @@ import io.mo.cases.SqlCommand;
 import io.mo.cases.TestScript;
 import io.mo.constant.COMMON;
 import org.apache.log4j.Logger;
+import org.apache.poi.util.StringUtil;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -27,6 +28,8 @@ public class ScriptParser {
             String issueNo = null;
             boolean ignore = false;
             int con_id = 0;
+            String con_user = null;
+            String con_pswd = null;
 
             while (line != null) {
                 line = new String(line.getBytes(), StandardCharsets.UTF_8);
@@ -49,15 +52,68 @@ public class ScriptParser {
 
                     //if line is mark to start a new connection
                     if(trimmedLine.startsWith(COMMON.NEW_SESSION_START_FLAG)){
-                        if(!trimmedLine.contains("id=")){
-                            LOG.warn("["+path+"][row:"+rowNum+"]The new connection flag doesn't specify the connection id by [id=X],and the id will be set to default value 1");
-                            command.setConn_id(1);
+
+                        String conInfo = null;
+                        if(trimmedLine.endsWith("{"))
+                            conInfo = trimmedLine.substring(COMMON.NEW_SESSION_START_FLAG.length(),trimmedLine.length() - 1);
+                        else
+                            conInfo = trimmedLine.substring(COMMON.NEW_SESSION_START_FLAG.length(),trimmedLine.length());
+                        
+                        if (conInfo == null || conInfo.equalsIgnoreCase("")){
+                            LOG.warn("["+path+"][row:"+rowNum+"]The new connection flag doesn't designate the connection id by [id=X],and the id will be set to default value 1");
+                            //command.setConn_id(COMMON.NEW_SEESION_DEFAULT_ID);
+                            con_id = COMMON.NEW_SEESION_DEFAULT_ID;
+                        }else {
+                            String[] paras = conInfo.split("&");
+                            for (String para:paras) {
+                                if(para.startsWith("id=")){
+                                    String id = para.substring(3);
+                                    if(id.equalsIgnoreCase("")){
+                                        LOG.warn("["+path+"][row:"+rowNum+"]The new connection flag doesn't designate the connection id by [id=X],and the id will be set to default value 1");
+                                        //command.setConn_id(COMMON.NEW_SEESION_DEFAULT_ID);
+                                        con_id = COMMON.NEW_SEESION_DEFAULT_ID;
+                                    }else{
+                                        if(id.matches("[0-9]")){
+                                            con_id = Integer.parseInt(id);
+                                        }else {
+                                            LOG.warn("["+path+"][row:"+rowNum+"]The new connection flag designate a invalid connection id by [id=X],and the id will be set to default value 1");
+                                            //command.setConn_id(COMMON.NEW_SEESION_DEFAULT_ID);
+                                            con_id = COMMON.NEW_SEESION_DEFAULT_ID;
+                                        }
+                                    }
+                                }
+                                
+                                if(para.startsWith("user=")){
+                                    String user = para.substring(5);
+                                    if(user.equalsIgnoreCase("")){
+                                        LOG.warn("["+path+"][row:"+rowNum+"]The new connection flag doesn't designate the connection user by [user=X],and the id will be set to value from mo.yml");
+                                        //command.setConn_user(MoConfUtil.getUserName());
+                                        con_user = MoConfUtil.getUserName();
+                                    }else {
+                                        //command.setConn_user(user);
+                                        con_user = MoConfUtil.getUserName();
+                                    }
+                                }
+                                
+                                if(para.startsWith("password=")){
+                                    String pwd = para.substring(9);
+                                    if(pwd.equalsIgnoreCase("")){
+                                        LOG.warn("["+path+"][row:"+rowNum+"]The new connection flag doesn't designate the connection password by [password=X],and the id will be set to value from mo.yml");
+                                        //command.setConn_pswd(MoConfUtil.getUserpwd());
+                                        con_pswd = MoConfUtil.getUserpwd();
+                                    }else {
+                                        //command.setConn_pswd(pwd);
+                                        con_pswd = MoConfUtil.getUserpwd();
+                                    }
+                                }
+                            }
                         }
-                        con_id = Integer.parseInt(trimmedLine.substring(trimmedLine.indexOf("id=") + 3,trimmedLine.indexOf("id=") + 4));
                     }
 
-                    if(trimmedLine.startsWith(COMMON.NEW_SESSION_END_FLAG)){
+                    if(trimmedLine.equalsIgnoreCase(COMMON.NEW_SESSION_END_FLAG) || trimmedLine.equalsIgnoreCase(COMMON.NEW_SESSION_END_FLAG + "}")){
                         con_id = 0;
+                        con_user = null;
+                        con_pswd = null;
                     }
 
                     //if line is mark to set sort key index
@@ -82,6 +138,8 @@ public class ScriptParser {
                 if(trimmedLine.contains(delimiter)){
                     command.append(trimmedLine);
                     command.setConn_id(con_id);
+                    command.setConn_user(con_user);
+                    command.setConn_pswd(con_pswd);
                     command.setIgnore(ignore);
                     command.setIssueNo(issueNo);
                     command.setPosition(rowNum);
@@ -108,6 +166,5 @@ public class ScriptParser {
     }
 
     public static void main(String[] args){
-        
     }
 }
