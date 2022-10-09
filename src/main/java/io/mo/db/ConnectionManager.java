@@ -42,7 +42,7 @@ public class ConnectionManager {
                 }
                 return connections[0];
             } catch (SQLException e) {
-                LOG.error("The mo-tester can not get valid conneciton from mo, and will wait 10 seconds and retry...");
+                LOG.error("The mo-tester can not get valid conneciton from mo with[user="+userName+", pwd="+pwd+"], and will wait 10 seconds and retry...");
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException ex) {
@@ -73,7 +73,7 @@ public class ConnectionManager {
                 }
                 return connections[index];
             } catch (SQLException e) {
-                LOG.error("The mo-tester can not get valid conneciton from mo, and will wait 10 seconds and retry...");
+                LOG.error("The mo-tester can not get valid conneciton from mo with[user="+userName+", pwd="+pwd+"], and will wait 10 seconds and retry...");
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException ex) {
@@ -99,11 +99,12 @@ public class ConnectionManager {
                 Class.forName(driver);
                 if (connections[index] == null || connections[0].isClosed()) {
                     connections[index] = DriverManager.getConnection(jdbcURL, userName, pwd);
+                    LOG.info("New conneciton from mo with[user="+userName+", pwd="+pwd+"] has been initialized.");
                     return connections[index];
                 }
                 return connections[index];
             } catch (SQLException e) {
-                LOG.error("The mo-tester can not get valid conneciton from mo, and will wait 10 seconds and retry...");
+                LOG.error("The mo-tester can not get valid conneciton from mo with[user="+userName+", pwd="+pwd+"], and will wait 10 seconds and retry...");
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException ex) {

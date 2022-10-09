@@ -110,7 +110,8 @@ public class Executor {
                 if (command.checkResult()) {
                     script.addSuccessCmd(command);
                     command.getTestResult().setResult(RESULT.RESULT_TYPE_PASS);
-                    LOG.debug("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] was executed successfully");
+                    LOG.debug("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] was executed successfully, con[id="
+                            + command.getConn_id()+", user=" +command.getConn_user()+", pwd="+command.getConn_pswd()+"].");
                 } else {
                     script.addFailedCmd(command);
                     command.getTestResult().setErrorCode(RESULT.ERROR_CHECK_FAILED_CODE);
@@ -119,7 +120,8 @@ public class Executor {
                     command.getTestResult().setRemark(command.getCommand() + "\n" +
                             "[EXPECT RESULT]:\n" + command.getTestResult().getExpResult() + "\n" +
                             "[ACTUAL RESULT]:\n" + command.getTestResult().getActResult() + "\n");
-                    LOG.error("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] was executed failed");
+                    LOG.error("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] was executed failed, con[id="
+                            + command.getConn_id()+", user=" +command.getConn_user()+", pwd="+command.getConn_pswd()+"].");
                     LOG.error("[EXPECT RESULT]:\n" + command.getTestResult().getExpResult());
                     LOG.error("[ACTUAL RESULT]:\n" + command.getTestResult().getActResult());
                 }
@@ -136,7 +138,8 @@ public class Executor {
                         command.getTestResult().setRemark(command.getCommand() + "\n" +
                                 "[EXPECT RESULT]:\n" + command.getTestResult().getExpResult() + "\n" +
                                 "[ACTUAL RESULT]:\n" + command.getTestResult().getExpResult() + "\n");
-                        LOG.error("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] was executed failed");
+                        LOG.error("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] was executed failed, con[id="
+                                + command.getConn_id()+", user=" +command.getConn_user()+", pwd="+command.getConn_pswd()+"].");
                         LOG.error("[EXPECT RESULT]:\n" + command.getTestResult().getExpResult());
                         LOG.error("[ACTUAL RESULT]:\n" + command.getTestResult().getActResult());
                         continue;
@@ -155,7 +158,8 @@ public class Executor {
                     if (command.checkResult()) {
                         script.addSuccessCmd(command);
                         command.getTestResult().setResult(RESULT.RESULT_TYPE_PASS);
-                        LOG.debug("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] was executed successfully");
+                        LOG.debug("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] was executed successfully, con[user="
+                                + command.getConn_id()+", user=" +command.getConn_user()+", pwd="+command.getConn_pswd()+"].");
                     } else {
                         script.addFailedCmd(command);
                         command.getTestResult().setErrorCode(RESULT.ERROR_CHECK_FAILED_CODE);
@@ -164,7 +168,8 @@ public class Executor {
                         command.getTestResult().setRemark(command.getCommand() + "\n" +
                                 "[EXPECT RESULT]:\n" + command.getTestResult().getExpResult() + "\n" +
                                 "[ACTUAL RESULT]:\n" + command.getTestResult().getActResult() + "\n");
-                        LOG.error("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] was executed failed");
+                        LOG.error("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] was executed failed, con[id="
+                                + command.getConn_id()+", user=" +command.getConn_user()+", pwd="+command.getConn_pswd()+"].");
                         LOG.error("[EXPECT RESULT]:\n" + command.getTestResult().getExpResult());
                         LOG.error("[ACTUAL RESULT]:\n" + command.getTestResult().getActResult());
                     }

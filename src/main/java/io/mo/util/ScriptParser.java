@@ -91,7 +91,7 @@ public class ScriptParser {
                                         con_user = MoConfUtil.getUserName();
                                     }else {
                                         //command.setConn_user(user);
-                                        con_user = MoConfUtil.getUserName();
+                                        con_user = user;
                                     }
                                 }
                                 
@@ -103,7 +103,7 @@ public class ScriptParser {
                                         con_pswd = MoConfUtil.getUserpwd();
                                     }else {
                                         //command.setConn_pswd(pwd);
-                                        con_pswd = MoConfUtil.getUserpwd();
+                                        con_pswd = pwd;
                                     }
                                 }
                             }
