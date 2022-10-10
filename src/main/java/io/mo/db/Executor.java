@@ -491,17 +491,13 @@ public class Executor {
     
     public static Connection getConnection(SqlCommand command){
         Connection connection;
-        if(command.getConn_id() != 0){
-            if(command.getConn_user() == null){
-                connection = ConnectionManager.getConnection(command.getConn_id());
-                return connection;
-            }else {
-                connection = ConnectionManager.getConnection(command.getConn_id(),command.getConn_user(),command.getConn_pswd());
-                return connection;
-            }
+        if(command.getConn_user() == null){
+            connection = ConnectionManager.getConnection(command.getConn_id());
+            return connection;
+        }else {
+            connection = ConnectionManager.getConnection(command.getConn_id(),command.getConn_user(),command.getConn_pswd());
+            return connection;
         }
-        connection = ConnectionManager.getConnection();
-        return connection;
     }
 
     public static  void createTestDB(Connection connection,String name){

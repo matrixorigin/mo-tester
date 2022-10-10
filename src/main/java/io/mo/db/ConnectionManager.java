@@ -29,33 +29,7 @@ public class ConnectionManager {
     }
 
     public static Connection getConnection(){
-        //if mo server crash,return null;
-        if(!server_up) return null;
-        
-        //get db connection,if failed,retry 30 times 10 s interval 
-        for(int i = 0; i < 3; i++) {
-            try {
-                Class.forName(driver);
-                if (connections[0] == null || connections[0].isClosed()) {
-                    connections[0] = DriverManager.getConnection(jdbcURL, userName, pwd);
-                    return connections[0];
-                }
-                return connections[0];
-            } catch (SQLException e) {
-                LOG.error("The mo-tester can not get valid conneciton from mo with[user="+userName+", pwd="+pwd+"], and will wait 10 seconds and retry...");
-                try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException ex) {
-                    throw new RuntimeException(ex);
-                }
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-
-        LOG.error("The mo-tester still can not get valid conneciton from mo, the following cases wil not be executed!");
-        server_up = false;
-        return null;
+        return getConnection(0);
     }
 
     public static Connection getConnection(int index){
@@ -63,11 +37,11 @@ public class ConnectionManager {
         //if mo server crash,return null;
         if(!server_up) return null;
 
-        //get db connection,if failed,retry 10 times 10 s interval 
+        //get db connection,if failed,retry 3 times 10 s interval 
         for(int i = 0; i < 3; i++) {
             try {
                 Class.forName(driver);
-                if (connections[index] == null || connections[0].isClosed()) {
+                if (connections[index] == null || connections[index].isClosed()) {
                     connections[index] = DriverManager.getConnection(jdbcURL, userName, pwd);
                     return connections[index];
                 }
@@ -93,7 +67,7 @@ public class ConnectionManager {
         //if mo server crash,return null;
         if(!server_up) return null;
 
-        //get db connection,if failed,retry 10 times 10 s interval 
+        //get db connection,if failed,retry 3 times 10 s interval 
         for(int i = 0; i < 3; i++) {
             try {
                 Class.forName(driver);
