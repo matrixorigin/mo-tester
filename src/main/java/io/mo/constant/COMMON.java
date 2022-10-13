@@ -28,6 +28,7 @@ public class COMMON {
     public static String BVT_ISSUE_START_FLAG = "-- @bvt:issue#";
     public static String BVT_ISSUE_END_FLAG = "-- @bvt:issue";
 
+    public static String BVT_SKIP_FILE_FLAG = "-- @skip:issue#";
     public static String SORT_KEY_INDEX_FLAG = "-- @sortkey:";
 
     public static String COLUMN_SEPARATOR_FLAG = "-- @separator:";

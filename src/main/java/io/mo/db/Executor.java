@@ -22,6 +22,12 @@ public class Executor {
      * run test file function
      */
     public static void run(TestScript script){
+        
+        if(script.isSkiped()){
+            LOG.info(String.format("Has skipped the script file [%s]",script.getFileName()));
+            return;
+        }
+        
         LOG.info("Start to execute the script file["+script.getFileName()+"] now, and it will take a few moment,pleas wait......");
         ConnectionManager.reset();
 

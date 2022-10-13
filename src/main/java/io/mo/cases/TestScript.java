@@ -19,6 +19,16 @@ public class TestScript {
 
     private float duration = 0;
 
+    public boolean isSkiped() {
+        return skiped;
+    }
+
+    public void setSkiped(boolean skiped) {
+        this.skiped = skiped;
+    }
+
+    private boolean skiped = false;
+
     public TestScript(){
 
     }
