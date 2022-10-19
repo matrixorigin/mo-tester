@@ -11,34 +11,35 @@ import java.util.*;
 
 
 public class TestReport {
-    private ArrayList<TestScript> scripts = new ArrayList<TestScript>();
-    private int totalCmds = 0;
-    private int successCmds = 0;
-    private int failedCmds = 0;
-    private int ignoredCmds = 0;
-    private int abnormalCmds = 0;
-    private long duration = 0;
+    private static ArrayList<TestScript> scripts = new ArrayList<TestScript>();
+    private static int totalCmds = 0;
+    private static int successCmds = 0;
+    private static int failedCmds = 0;
+    private static int ignoredCmds = 0;
+    private static int abnormalCmds = 0;
+
+    public static void setDuration(long duration) {
+        TestReport.duration = duration;
+    }
+
+    private static long duration = 0;
     private static Logger LOG = Logger.getLogger(TestReport.class.getName());
 
-    private int rate = 0;
+    private static int rate = 0;
 
-    public TestReport(){
+    public static void write(){
         File dir = new File(COMMON.REPORT_DIR);
         if(!dir.exists())
             dir.mkdir();
-
-    }
-
-    public void write(){
         writeTXTReport();
     }
 
 
-    public void writeTXTReport(){
+    public static void writeTXTReport(){
         if(totalCmds != 0)
             rate  = (successCmds*100)/ (totalCmds - ignoredCmds);
         else
-            rate = 0;
+            rate = 100;
 
         ArrayList<SqlCommand> e_commands = new ArrayList<SqlCommand>();
         try {
@@ -87,7 +88,7 @@ public class TestReport {
         }
     }
 
-    public void collect(TestScript script){
+    public static synchronized void collect(TestScript script){
         scripts.add(script);
         totalCmds += script.getTotalCmdCount();
         successCmds += script.getSuccessCmdCount();
@@ -97,7 +98,7 @@ public class TestReport {
         duration += script.getDuration();
     }
 
-    public String getReportSummaryTXT(int total, int success, int failed, int ignored, int abnormal){
+    public static String getReportSummaryTXT(int total, int success, int failed, int ignored, int abnormal){
         StringBuffer buffer = new StringBuffer();
         buffer.append("[SUMMARY] COST : "+ duration + "s");
         buffer.append(", ");
@@ -118,7 +119,7 @@ public class TestReport {
         return buffer.toString();
     }
 
-    public String getScriptSummaryTXT(TestScript script){
+    public static String getScriptSummaryTXT(TestScript script){
         StringBuffer buffer = new StringBuffer();
         buffer.append("["+script.getFileName()+"] COST : " + script.getDuration() + "s");
         buffer.append(", ");
@@ -143,7 +144,7 @@ public class TestReport {
         return buffer.toString();
     }
 
-    public String getErrorInfo(SqlCommand command){
+    public static String getErrorInfo(SqlCommand command){
         StringBuffer buffer = new StringBuffer();
         buffer.append("[ERROR]\n");
         buffer.append("[SCRIPT   FILE]: "+command.getScriptFile()+"\n");
@@ -154,12 +155,8 @@ public class TestReport {
         return buffer.toString();
     }
 
-    public int getRate() {
+    public static int getRate() {
         return rate;
-    }
-
-    public void setRate(int rate) {
-        this.rate = rate;
     }
 
     public static void main(String args[]){

@@ -14,7 +14,7 @@ public class COMMON {
     public static String R_FILE_SUFFIX = ".result";
 
     public static int CONNECTION_ID = 0;//
-    public static int DEFAULT_CONNECTION_NUM = 10;
+    public static int DEFAULT_CONNECTION_NUM = 100;
 
     public static String DEFAUT_DELIMITER = ";";
     public static String LINE_SEPARATOR = "\n";
@@ -42,6 +42,8 @@ public class COMMON {
 
     public static String RESOURCE_PATH = "./resources";
     public static String UPDATE_RESULT_TEMPLATE = "Query OK, {num} row affected";
+    
+    public static String PREFIX_ACCOUT_DEF = "executor_def_";
 
 
     public static int MAX_ROW_COUNT_IN_RS = 100;//the max row count in the resultset

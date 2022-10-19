@@ -1,5 +1,6 @@
 package io.mo.util;
 
+import freemarker.template.utility.NumberUtil;
 import io.mo.constant.COMMON;
 
 import java.io.File;
@@ -28,6 +29,13 @@ public class RunConfUtil {
     public static int getRate(){
         if(conf == null) init();
         return (int)conf.get("rate");
+    }
+
+    public static int getTerminals(){
+        if(conf == null) init();
+        if(conf.get("terminals") == null)
+            return 1;
+        return (int)conf.get("terminals");
     }
 
     public static String getResourcePath(){

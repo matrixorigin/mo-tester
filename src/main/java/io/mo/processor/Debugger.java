@@ -1,24 +1,29 @@
-package io.mo.db;
+package io.mo.processor;
 
 import io.mo.cases.SqlCommand;
 import io.mo.cases.TestScript;
 import io.mo.constant.COMMON;
+import io.mo.db.ConnectionPool;
 
-import java.io.*;
-import java.sql.Connection;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.*;
 import java.util.ArrayList;
 
 public class Debugger {
     private static PrintWriter logWriter;
+    
+    private static ConnectionPool connectionPool = new ConnectionPool();
 
     public static void run(TestScript script){
 
         initWriter(COMMON.LOG_DIR +"/","debug.log");
-        ConnectionManager.reset();
+        connectionPool.reset();
         boolean hasResults;
         Statement statement;
-        Connection connection = ConnectionManager.getConnection();
+        Connection connection = connectionPool.getConnection();
 
         createTestDB(connection,script);
 
@@ -191,15 +196,15 @@ public class Debugger {
         if(command.getConn_id() != 0){
             if(command.getConn_user() == null){
                 System.out.println(command.getConn_id());
-                connection = ConnectionManager.getConnection(command.getConn_id());
+                connection = connectionPool.getConnection(command.getConn_id());
                 return connection;
             }else {
                 System.out.println(command.getConn_user()+"   "+command.getConn_id()+"   "+command.getConn_pswd());
-                connection = ConnectionManager.getConnection(command.getConn_id(),command.getConn_user(),command.getConn_pswd());
+                connection = connectionPool.getConnection(command.getConn_id(),command.getConn_user(),command.getConn_pswd());
                 return connection;
             }
         }
-        connection = ConnectionManager.getConnection();
+        connection = connectionPool.getConnection();
         return connection;
     }
 

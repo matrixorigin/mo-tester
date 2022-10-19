@@ -7,5 +7,8 @@ path: "cases/"
 #genrs: means generate the expected result for the test scripts only
 method: "run"
 
+#terminals: number of terminals to execute test scripts
+terminals: 1
+
 #rate: means the execution success rate,if the actual rate is less than this,the programe will exit with status 1
 rate: 100

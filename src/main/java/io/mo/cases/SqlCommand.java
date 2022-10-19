@@ -73,13 +73,9 @@ public class SqlCommand {
     }
 
     public String getConn_user() {
-        if(conn_user == null)
-            return MoConfUtil.getUserName();
         return conn_user;
     }
     public String getConn_pswd() {
-        if(conn_pswd == null)
-            return MoConfUtil.getUserpwd();
         return conn_pswd;
     }
     public String getScriptFile() {

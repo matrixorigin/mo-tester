@@ -155,4 +155,9 @@ public class RSCell<T> {
         return pattern.matcher(str).matches();
         //return str.matches("^[+\\-]?\\d*[.]?\\d+$");
     }
+    
+    public static void main(String[] args){
+        BigDecimal bd1 = BigDecimal.valueOf(Double.valueOf(0.00)).stripTrailingZeros();
+        System.out.println(bd1.equals(BigDecimal.ZERO));
+    }
 }

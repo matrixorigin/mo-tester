@@ -1,4 +1,4 @@
-package io.mo.util;
+package io.mo.processor;
 
 import io.mo.cases.SqlCommand;
 import io.mo.cases.TestScript;
@@ -12,15 +12,15 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class ResultParser {
-    private static BufferedReader lineReader;
-    private static final StringBuffer resultText = new StringBuffer();
+    private  BufferedReader lineReader;
+    private  final StringBuffer resultText = new StringBuffer();
     private static final Logger LOG = Logger.getLogger(ResultParser.class.getName());
-    private static boolean succeeded = true;
+    private  boolean succeeded = true;
 
     /**
      * Get result text of the specific SqlCommand from the result file
      */
-    public static String getCommandResult(SqlCommand command) throws Exception{
+    public  String getCommandResult(SqlCommand command) throws Exception{
         if(command.getNext() != null) {
             //System.out.println(command.getPosition()+":command = "+command.getCommand());
             return getCommandResult(command.getCommand(), command.getNext().getCommand());
@@ -33,7 +33,7 @@ public class ResultParser {
      * Get result text of the specific SqlCommand from the result file
      * The result text is the content between the cmd and the next cmd in the reulst file
      */
-    public static String getCommandResult(String cmd,String nextcmd) throws Exception{
+    public  String getCommandResult(String cmd,String nextcmd) throws Exception{
         String cmdResult;
         if(nextcmd == null){
             //if the nextcmd is null,means cmd is the last one,return the content of the resultText directedly
@@ -66,7 +66,7 @@ public class ResultParser {
         }
     }
 
-    public static void parse(TestScript script){
+    public void parse(TestScript script){
         reset();
         //check whether the result file exists
         String rsFilePath = null;
@@ -140,7 +140,7 @@ public class ResultParser {
     /**
      * read content from result file
      */
-    public static void read(){
+    public void read(){
         try {
             if(lineReader == null || !lineReader.ready()){
                 return;
@@ -162,7 +162,7 @@ public class ResultParser {
     /**
      * check whether test file matches result file
      */
-    public static void check(TestScript script){
+    public void check(TestScript script){
         reset();
         //check whether the result file exists
         String rsFilePath = null;
@@ -224,7 +224,7 @@ public class ResultParser {
      * 2、space,separator is 4 spaces
      * 3、both,separator is \t or 4 spaces
      */
-    public static RSSet convertToRSSet(String rsText,String separator){
+    public RSSet convertToRSSet(String rsText,String separator){
         
         if(rsText == null){
             return null;
@@ -289,7 +289,7 @@ public class ResultParser {
         return rsSet;
     }
 
-    public static void reset(){
+    public void reset(){
         succeeded = true;
         resultText.delete(0,resultText.length());
         if(lineReader != null){
@@ -302,11 +302,11 @@ public class ResultParser {
         }
     }
 
-    public static boolean isSucceeded(){
+    public  boolean isSucceeded(){
         return succeeded;
     }
     
-    public static int subStrCount(String str, String sub){
+    public  int subStrCount(String str, String sub){
         if(str == null || sub == null)
             return 0;
         

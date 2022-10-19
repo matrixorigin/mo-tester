@@ -1,22 +1,24 @@
-package io.mo.util;
+package io.mo.processor;
 
 import io.mo.cases.SqlCommand;
 import io.mo.cases.TestScript;
 import io.mo.constant.COMMON;
+import io.mo.util.MoConfUtil;
 import org.apache.log4j.Logger;
-import org.apache.poi.util.StringUtil;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class ScriptParser {
-    private static String delimiter = COMMON.DEFAUT_DELIMITER;
-    private static TestScript testScript = new TestScript();
+    private  String delimiter = COMMON.DEFAUT_DELIMITER;
+    private  TestScript testScript = new TestScript();
     private static final Logger LOG = Logger.getLogger(ScriptParser.class.getName());
 
-    public static void parseScript(String path){
+    public void parseScript(String path){
         testScript = new TestScript();
         testScript.setFileName(path);
         int rowNum = 1;
@@ -163,11 +165,11 @@ public class ScriptParser {
         }
     }
 
-    private static boolean lineIsComment(String trimmedLine) {
+    private boolean lineIsComment(String trimmedLine) {
         return trimmedLine.startsWith("//") || trimmedLine.startsWith("--") || trimmedLine.startsWith("#");
     }
 
-    public static TestScript getTestScript(){
+    public TestScript getTestScript(){
         return testScript;
     }
 

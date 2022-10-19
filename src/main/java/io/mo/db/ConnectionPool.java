@@ -1,6 +1,7 @@
 package io.mo.db;
 
 import io.mo.constant.COMMON;
+import io.mo.processor.Executor;
 import io.mo.util.MoConfUtil;
 import org.apache.log4j.Logger;
 
@@ -8,31 +9,48 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class ConnectionManager {
+public class ConnectionPool {
 
-    private static String jdbcURL = MoConfUtil.getURL();
-    private static String userName = MoConfUtil.getUserName();
-    private static String pwd = MoConfUtil.getUserpwd();
-    private static String driver = MoConfUtil.getDriver();
+    private   String jdbcURL = MoConfUtil.getURL();
+    private  String userName = MoConfUtil.getUserName();
+    private  String pwd = MoConfUtil.getUserpwd();
+    private  String driver = MoConfUtil.getDriver();
 
-    private static Connection[] connections = new Connection[COMMON.DEFAULT_CONNECTION_NUM];
-    private static final Logger LOG = Logger.getLogger(Executor.class.getName());
-    private static boolean server_up = true;
+    private  Connection[] connections = new Connection[COMMON.DEFAULT_CONNECTION_NUM];
+    private  final Logger LOG = Logger.getLogger(ConnectionPool.class.getName());
+    private  boolean server_up = true;
+    
+    public ConnectionPool(){
 
-    static {
         try {
             Class.forName(driver);
             connections[0] = DriverManager.getConnection(jdbcURL, userName, pwd);
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    public ConnectionPool(String userName,String pwd){
+        this.userName = userName;
+        this.pwd = pwd;
+        
+        try {
+            Class.forName(driver);
+            connections[0] = DriverManager.getConnection(jdbcURL, this.userName, this.pwd);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public static Connection getConnection(){
+    public Connection getConnection(){
         return getConnection(0);
     }
 
-    public static Connection getConnection(int index){
+    public Connection getConnection(int index){
 
         //if mo server crash,return null;
         if(!server_up) return null;
@@ -63,10 +81,10 @@ public class ConnectionManager {
         return null;
     }
 
-    public static Connection getConnection(int index, String userName, String pwd){
+    public Connection getConnection(int index, String userName, String pwd){
         //if mo server crash,return null;
         if(!server_up) return null;
-
+        
         //get db connection,if failed,retry 3 times 10 s interval 
         for(int i = 0; i < 3; i++) {
             try {
@@ -94,7 +112,7 @@ public class ConnectionManager {
         return null;
     }
 
-    public static void reset(){
+    public void reset(){
         for(int i = 1; i < connections.length;i++){
             if(connections[i] != null){
                 try {

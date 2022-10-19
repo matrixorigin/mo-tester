@@ -4,7 +4,7 @@ if [[ $# -eq 0 ]];then
     echo "No parameters provided,the mo-tester will run with parameters defined in the run.yml file. "
 
 fi
-while getopts ":p:m:t:r:i:e:s:gfnch" opt
+while getopts ":p:m:t:r:i:e:s:lgfnch" opt
 do
     case $opt in
         p)
@@ -16,8 +16,13 @@ do
         echo -e "The method that mo-tester will run with :${OPTARG}"
         ;;
         t)
-        TYPE="type=${OPTARG}"
-        echo -e "The type of the format that mo-tester execute the sqlcommand in : ${OPTARG}"
+        expr ${OPTARG} "+" 10 &> /dev/null
+        if [ $? -ne 0 ]; then
+          echo 'The ternimals number ['${OPTARG}'] is not a number'
+          exit 1
+        fi
+        TERMINALS="ternimals=${OPTARG}"
+        echo -e "The number of ternimals to execute test scripts : ${OPTARG}"
         ;;
         r)
         RATE="rate=${OPTARG}"
@@ -33,7 +38,7 @@ do
         ;;
         s)
         RESOURCE="resource=${OPTARG}"
-        echo -e "Script files in the path which name contain one of the : {${OPTARG}} will be not executed"
+        echo -e "Resource path is ${OPTARG}}"
         ;;
         g)
         IGNORE="ignore"
@@ -50,14 +55,18 @@ do
         CHECK="check"
         echo -e "The meta data of the resultset will be ignored when comparing the resut"
         ;;
+        l)
+        SERIAL="serial=${OPTARG}"
+        echo -e "Script files which path contain one of the : {${OPTARG}} will be executed serially"
+        ;;
         h)
         echo -e "Usage:　bash run.sh [option] [param] ...\nExcute test cases task"
         echo -e "   -p  set the path of test cases needed to be executed by mo-tester"
         echo -e "   -m  set the method that mo-tester will run with"
-        echo -e "   -t  set the type of the format that mo-tester execute the sqlcommand in"
+        echo -e "   -t  set the number of ternimals to execute test scripts"
         echo -e "   -r  set The success rate that test cases should reach"
-        echo -e "   -i  set the including list, and only script files in the path which name contain one of the list will be excuted,if more than one,seperated by ,"
-        echo -e "   -e  set the excluding list, and script files in the path which name contain one of the list will not be excuted,if more than one,seperated by ,"
+        echo -e "   -i  set the including list, and only script files in the path which name contain one of the list will be executed,if more than one,seperated by ,"
+        echo -e "   -e  set the excluding list, and script files in the path which name contain one of the list will not be executed,if more than one,seperated by ,"
         echo -e "   -s  set the resource path that mo-tester use to store resources, and can be refered to $resources in test file"
         echo -e "   -g  means SQL commands which is marked with [bvt:issue] flag will not be executed,this flag starts with [-- @bvt:issue#{issueNO.}],and ends with [-- @bvt:issue],eg:"
         echo -e "       -- @bvt:issue#3236"
@@ -67,6 +76,7 @@ do
         echo -e "       Those two sql commands are associated with the issue#3236,and they will not been executed in bvt test,until the flag is removed when the issue#3236 is fixed."
         echo -e "   -n  means the meta data of the resultset will be ignored when comparing the resut"
         echo -e "   -c  check whether the case scripts match the result file"
+        echo -e "   -l  set the serial list, and all the script files which path contain one of the list will be executed,if more than one,seperated by ,"
         echo -e "Examples:"
         echo "   bash run.sh -p case -m run -t script -r 100 -i select,subquery -e substring -g"
         echo "For more support,please email to dong.su@matrixorigin.io"
@@ -93,7 +103,7 @@ done
 java -Xms1024M -Xmx1024M -cp ${libJars} \
         -Dconf.yml=${MO_YAML} \
         -Drun.yml=${RUN_YAML} \
-        io.mo.Tester ${PATHC} ${METHOD} ${TYPE} ${RATE} ${INCLUDE} ${EXCLUDE} ${IGNORE} ${NOMETA} ${CHECK} ${RESOURCE} ${FORCE}
+        io.mo.Tester ${PATHC} ${METHOD} ${TYPE} ${RATE} ${INCLUDE} ${EXCLUDE} ${IGNORE} ${NOMETA} ${CHECK} ${RESOURCE} ${FORCE} ${TERMINALS} ${SERIAL}
 }
 
 boot

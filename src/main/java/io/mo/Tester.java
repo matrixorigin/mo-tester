@@ -2,31 +2,56 @@ package io.mo;
 
 import io.mo.cases.TestScript;
 import io.mo.constant.COMMON;
-import io.mo.db.Debugger;
-import io.mo.db.Executor;
+import io.mo.processor.*;
 import io.mo.result.TestReport;
-import io.mo.util.ResultParser;
+import io.mo.util.MoConfUtil;
 import io.mo.util.RunConfUtil;
-import io.mo.util.ScriptParser;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Tester {
-    private static final TestReport report = new TestReport();
     private static final Logger LOG = Logger.getLogger(Tester.class.getName());
     private static String[] includes = null;
     private static String[] excludes = null;
 
-    public static void main(String[] args){
+    private static String[] serials = null;
+    
+    private static ExecutorService service;
+    
+    private static Executor[] executors;
+    
+    private static CountDownLatch latch;
+    
+    private static int tid = 0;
+    private static int tNum = 1;//default value 1
+    private static String path = null;
+    private static String method = null;
+    private static int rate = 100;//default value 100
+    
 
-        String path = RunConfUtil.getPath();
-        String method = RunConfUtil.getMethod();
-        int rate = RunConfUtil.getRate();
+    private static Executor serialExecutor;// executor that run scripts that must be executed serially 
+
+    private static ScriptParser scriptParser = new ScriptParser();
+    private static ResultParser resultParser = new ResultParser();
+
+    public static void main(String[] args){
+        
+        tNum = RunConfUtil.getTerminals();// ternimal number
+        path = RunConfUtil.getPath();
+        method = RunConfUtil.getMethod();
+        rate = RunConfUtil.getRate();
         
         COMMON.RESOURCE_PATH = RunConfUtil.getResourcePath();
-
+        serialExecutor = new Executor();
+        
         //parse the paras
         if(args != null){
             for (String arg : args) {
@@ -84,6 +109,15 @@ public class Tester {
                     excludes = arg.split("=")[1].split(",");
                 }
 
+                //get serial scripts
+                if (arg.startsWith("serial")) {
+                    if(!arg.contains("=")){
+                        LOG.error("The format of para[serial] is not valid,please check......");
+                        System.exit(1);
+                    }
+                    serials = arg.split("=")[1].split(",");
+                }
+
                 //get resource path
                 if (arg.startsWith("resource")) {
                     if(!arg.contains("=")){
@@ -109,6 +143,16 @@ public class Tester {
                 if (arg.equalsIgnoreCase("check")) {
                     method = "check";
                 }
+
+                //get ternimal number
+                if (arg.startsWith("ternimals")) {
+                    if(!arg.contains("=")){
+                        LOG.error("The format of para[ternimals] is not valid,please check......");
+                        System.exit(1);
+                    }
+
+                    
+                }
             }
         }
 
@@ -123,27 +167,65 @@ public class Tester {
         }
 
         File file = new File(path);
-
+        
         if(!file.exists()){
             LOG.error("The scripts file path: "+ path +" does not exist,please check.");
             return;
         }
-
-
+        
+        //init executors
+        
         if(method.equalsIgnoreCase("run")){
-            LOG.info("The method is [run],now start to run the scripts in the path["+ path +"].");
-            run(file);
-            LOG.info("All the scripts in the path["+ path +"] have been excuted.Now start to create the test report.");
-            report.write();
-            LOG.info("The test report has been generated in files[report.txt,report.xml].");
 
-            if(report.getRate() < rate){
-                LOG.error("The execution success rate is "+ report.getRate()+"%, and less than config value "+ rate +"%,this test fail.");
+            //init executors
+            latch = new CountDownLatch(tNum);
+            executors = new Executor[tNum];
+            for(int i = 0; i < tNum; i++){
+                executors[i] = new Executor(i,latch);
+            }
+            init(file);
+
+            service = Executors.newFixedThreadPool(tNum);
+            Thread sThread = new Thread(serialExecutor);
+
+            try {
+                LOG.info(String.format("The method is [run],now start to run the scripts in the path[%s].",path));
+                LOG.info(String.format("First execute all the serials scripts."));
+
+                long start = System.currentTimeMillis();
+                
+                sThread.start();
+                sThread.join();
+    
+                LOG.info(String.format("Now execute scripts in parallel."));
+//                for(Executor executor : executors){
+//                    service.submit(executor);
+//                }
+                for(int i = 0; i < executors.length;i++){
+                    service.submit(executors[i]);
+                    //executors[i].run();
+                }
+            
+                latch.await();
+                long end = System.currentTimeMillis();
+                LOG.info(String.format("All the scripts in the path[%s] have been excuted.Now start to create the test report.",path));
+                TestReport.setDuration((long)(end - start)/1000);
+                TestReport.write();
+                LOG.info("The test report has been generated in file[./report/report.txt].");
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            
+            if(TestReport.getRate() < rate){
+                LOG.error(String.format("The execution success rate is %d%%, and less than config value %d%%,this test fail.",TestReport.getRate(),rate));
                 System.exit(1);
             }else {
-                LOG.info("The execution success rate is "+ report.getRate()+"%, and not less than config value "+ rate +"%,this test succeed.");
+                LOG.info(String.format("The execution success rate is %d%%, and not less than config value %d%%,this test succeed.",TestReport.getRate(),rate));
                 System.exit(0);
             }
+            
+            service.shutdown();
+            
         }
 
         if(method.equalsIgnoreCase("debug")){
@@ -166,28 +248,35 @@ public class Tester {
                 &&!method.equalsIgnoreCase("check")){
             LOG.info("The method is ["+ method +"] can not been supported.Only[run,debug,genrs] can be supported.");
         }
-
     }
-
-    public static void run(File file){
+    
+    
+    
+    public static void init(File file){
+        
         if(file.isFile()){
             if(!(file.getName().endsWith(".sql") || file.getName().endsWith(".test"))) {
                 return;
             }
-            
+
             if(isInclude(file.getName())) {
-                ScriptParser.parseScript(file.getPath());
-                TestScript script = ScriptParser.getTestScript();
-                Executor.run(script);
-                report.collect(script);
+                if(isSerial(file.getPath())){
+                    serialExecutor.addScriptFile(file);
+                }else{
+                    executors[tid].addScriptFile(file);
+                    if(tid == tNum -1)
+                        tid = 0;
+                    else
+                        tid ++;
+                }
             }
             return;
         }
+        
         File[] fs = file.listFiles();
-        sort(fs);
         assert fs != null;
         for (File f : fs) {
-            run(f);
+            init(f);
         }
     }
 
@@ -198,15 +287,15 @@ public class Tester {
             }
             
             if(isInclude(file.getName())) {
-                ScriptParser.parseScript(file.getPath());
-                TestScript script = ScriptParser.getTestScript();
+                scriptParser.parseScript(file.getPath());
+                TestScript script = scriptParser.getTestScript();
                 if(!COMMON.FORCE_UPDATE){
-                    if(Executor.genRS(script))
+                    if(ResultGenerator.genRS(script))
                         LOG.info("The results for the test script file["+file.getPath()+"] have been generated or updated successfully.");
                     else
                         LOG.info("The results for the test script file["+file.getPath()+"] have been generated or updated failed.");
                 }else {
-                    Executor.genRSForOnlyNotMatch(script);
+                    ResultGenerator.genRSForOnlyNotMatch(script);
                 }
                 
             }
@@ -227,8 +316,8 @@ public class Tester {
             }
             
             if(isInclude(file.getName())) {
-                ScriptParser.parseScript(file.getPath());
-                TestScript script = ScriptParser.getTestScript();
+                scriptParser.parseScript(file.getPath());
+                TestScript script = scriptParser.getTestScript();
                 Debugger.run(script);
             }
             return;
@@ -246,9 +335,9 @@ public class Tester {
                 return;
             }
             if(isInclude(file.getName())) {
-                ScriptParser.parseScript(file.getPath());
-                TestScript script = ScriptParser.getTestScript();
-                ResultParser.check(script);
+                scriptParser.parseScript(file.getPath());
+                TestScript script = scriptParser.getTestScript();
+                resultParser.check(script);
             }
             return;
         }
@@ -273,7 +362,7 @@ public class Tester {
             return f1.getName().compareTo(f2.getName());
         });
     }
-
+ 
     public static boolean isInclude(String name){
         if(includes == null){
             if(excludes == null)
@@ -291,4 +380,19 @@ public class Tester {
         }
         return false;
     }
+    
+    public static boolean isSerial(String path){
+        if(serials == null){
+            return false;
+        }
+        
+        for (String serial : serials) {
+            if (path.contains(serial))
+                return true;
+        }
+        
+        return false;
+    }
+    
+    
 }
