@@ -4,6 +4,9 @@ if [[ $# -eq 0 ]];then
     echo "No parameters provided,the mo-tester will run with parameters defined in the run.yml file. "
 
 fi
+
+TIMES=1
+
 while getopts ":p:m:t:r:i:e:s:gfnch" opt
 do
     case $opt in
@@ -16,8 +19,13 @@ do
         echo -e "The method that mo-tester will run with :${OPTARG}"
         ;;
         t)
-        TYPE="type=${OPTARG}"
-        echo -e "The type of the format that mo-tester execute the sqlcommand in : ${OPTARG}"
+        expr ${OPTARG} "+" 10 &> /dev/null
+        if [ $? -ne 0 ]; then
+          echo 'The times ['${OPTARG}'] is not a number'
+          exit 1
+        fi
+        TIMES=${OPTARG}
+        echo -e "The times that mo-tester execute cases for : ${OPTARG}"
         ;;
         r)
         RATE="rate=${OPTARG}"
@@ -90,10 +98,32 @@ for libJar in `find ${LIB_WORKSPACE} -name "*.jar"`
 do
   libJars=${libJars}:${libJar}
 done
-java -Xms1024M -Xmx1024M -cp ${libJars} \
-        -Dconf.yml=${MO_YAML} \
-        -Drun.yml=${RUN_YAML} \
-        io.mo.Tester ${PATHC} ${METHOD} ${TYPE} ${RATE} ${INCLUDE} ${EXCLUDE} ${IGNORE} ${NOMETA} ${CHECK} ${RESOURCE} ${FORCE}
+
+if [ ${TIMES} -eq 1 ]; then
+  echo "This test will be only run for 1 times" | tee -a ${WORKSPACE}/log/run.log
+  java -Xms1024M -Xmx1024M -cp ${libJars} \
+          -Dconf.yml=${MO_YAML} \
+          -Drun.yml=${RUN_YAML} \
+          io.mo.Tester ${PATHC} ${METHOD} ${TYPE} ${RATE} ${INCLUDE} ${EXCLUDE} ${IGNORE} ${NOMETA} ${CHECK} ${RESOURCE} ${FORCE}
+else
+  echo "This test will be run for ${TIMES} times"
+  for i in $(seq 1 ${TIMES})
+    do
+      echo "The ${i} turn test has started, please wait......." | tee -a ${WORKSPACE}/log/run.log
+      java -Xms1024M -Xmx1024M -cp ${libJars} \
+                -Dconf.yml=${MO_YAML} \
+                -Drun.yml=${RUN_YAML} \
+                io.mo.Tester ${PATHC} ${METHOD} ${TYPE} ${RATE} ${INCLUDE} ${EXCLUDE} ${IGNORE} ${NOMETA} ${CHECK} ${RESOURCE} ${FORCE}
+      echo "The ${i} turn test has ended, and test report is in ./report/${i} dir." | tee -a ${WORKSPACE}/run.log
+      mkdir -p ${WORKSPACE}/${MOTESTER_DIR}/report/${i}/
+      mv ${WORKSPACE}/${MOTESTER_DIR}/report/*.txt ${WORKSPACE}/${MOTESTER_DIR}/report/${i}/
+    done
+fi
+  
+#java -Xms1024M -Xmx1024M -cp ${libJars} \
+#        -Dconf.yml=${MO_YAML} \
+#        -Drun.yml=${RUN_YAML} \
+#        io.mo.Tester ${PATHC} ${METHOD} ${TYPE} ${RATE} ${INCLUDE} ${EXCLUDE} ${IGNORE} ${NOMETA} ${CHECK} ${RESOURCE} ${FORCE}
 }
 
 boot
