@@ -73,7 +73,7 @@ jobs:
       - name: Start MO
         run: |
           cd $GITHUB_WORKSPACE/head
-          ./mo-service -cfg ./etc/cn-standalone-test.toml &>mo-service.log &
+          ./optools/run_bvt.sh $GITHUB_WORKSPACE/head launch-tae-CN-tae-DN
           
       - name: Clone test-tool repository
         uses: actions/checkout@v2
@@ -96,7 +96,7 @@ jobs:
           timedatectl status
           sleep 60s
           cd $GITHUB_WORKSPACE/mo-tester
-          ./run.sh -n -g -p $GITHUB_WORKSPACE/head/test/cases 2>&1
+          ./run.sh -n -g -p $GITHUB_WORKSPACE/head/test/distributed/cases 2>&1
           
       - name: Check MO-Server Status
         if: ${{ always() }}
