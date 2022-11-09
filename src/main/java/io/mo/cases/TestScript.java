@@ -2,6 +2,7 @@ package io.mo.cases;
 
 import io.mo.constant.RESULT;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,12 +16,16 @@ public class TestScript {
 
     private String fileName;
 
+    private String useDB;
+
     private String id;
 
     private float duration = 0;
 
-    public TestScript(){
+    private boolean skiped = false;
 
+    public TestScript(){
+        
     }
 
     public void addCommand(SqlCommand command){
@@ -28,6 +33,7 @@ public class TestScript {
             commands.get(commands.size() - 1).setNext(command);
         commands.add(command);
         command.setScriptFile(fileName);
+        command.setUseDB(this.useDB);
     }
     
     public void addSuccessCmd(SqlCommand command) { successCommands.add(command); }
@@ -64,7 +70,10 @@ public class TestScript {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+        File file = new File(fileName);
+        useDB = file.getName().substring(0,file.getName().lastIndexOf("."));
     }
+    
 
     public float getDuration() {
         return duration;
@@ -109,4 +118,20 @@ public class TestScript {
     }
 
 
+    public String getUseDB() {
+        return useDB;
+    }
+
+    public void setUseDB(String useDB) {
+        this.useDB = useDB;
+    }
+
+
+    public boolean isSkiped() {
+        return skiped;
+    }
+
+    public void setSkiped(boolean skiped) {
+        this.skiped = skiped;
+    }
 }

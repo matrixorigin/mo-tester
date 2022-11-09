@@ -15,6 +15,7 @@ public class SqlCommand {
     private boolean error = false;
     private int conn_id = 0;
 
+    private String useDB = null;
 
     private String conn_user = null;
     private String conn_pswd = null;
@@ -36,6 +37,8 @@ public class SqlCommand {
     private StmtResult actResult;
 
     private SqlCommand next;
+    
+    private int sleeptime = 0;
 
     public SqlCommand(){
         command = new StringBuffer();
@@ -182,4 +185,37 @@ public class SqlCommand {
     public void setConn_pswd(String conn_pswd) {
         this.conn_pswd = conn_pswd;
     }
+    
+    public void sleep(){
+        if(sleeptime == 0)
+            return;
+        else {
+            try {
+                Thread.sleep(sleeptime*1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
+
+    public int getSleeptime() {
+        return sleeptime;
+    }
+
+    public void setSleeptime(int sleeptime) {
+        this.sleeptime = sleeptime;
+    }
+
+
+
+    public String getUseDB() {
+        return useDB;
+    }
+
+    public void setUseDB(String useDB) {
+        this.useDB = useDB;
+    }
+
 }

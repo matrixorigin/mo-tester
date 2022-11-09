@@ -6,12 +6,20 @@ public class RESULT {
     public static String ERROR_CASE_IGNORE_CODE = "0002";
     public static String ERROR_CONNECTION_LOST_CODE = "0003";
     public static String ERROR_PARSE_RESULT_FILE_FAILED_CODE = "0100";
+    
+    public static String ERROR_EXECUTE_TIMEOUT_CODE = "0101";
+
+    public static String ERROR_CAN_NOT_GET_CONNECTION_CODE = "0102";
+    
     public static String ERROR_CHECK_FAILED_DESC = "The actual result is not in accordance with the expectation.More,See the detail.";
     public static String ERROR_PARSE_RESULT_FILE_FAILED_DESC = "The expected result file file can not be parsed.Please check this.";
      public static String ERROR_CASE_IGNORE_DESC = "The command is marked to ignore flag,do not be executed.";
-    public static String ERROR_CONNECTION_LOST_DESC = "The connection has been lost becuase of unknown reason.";
+    public static String ERROR_CONNECTION_LOST_DESC = "The connection has been lost because of unknown reason.";
     public static String ERROR_RESULTSET_INVALID_DESC = "The result set is not correct because of unexpected reason,Message: ";
+    
+    public static String ERROR_CAN_NOT_GET_CONNECTION_DESC =  "The mo-tester can not get valid connection to mo";
 
+    public static String ERROR_EXECUTE_TIMEOUT_DESC =  "MO does not return result in %d ms. ";
 
     public static String RESULT_TYPE_PASS = "PASS";
     public static String RESULT_TYPE_FAILED = "FAILED";

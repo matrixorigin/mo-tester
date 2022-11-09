@@ -6,6 +6,7 @@ import io.mo.constant.COMMON;
 import io.mo.constant.RESULT;
 import io.mo.result.RSSet;
 import io.mo.result.StmtResult;
+import io.mo.util.MoConfUtil;
 import io.mo.util.ResultParser;
 import org.apache.log4j.Logger;
 
@@ -17,19 +18,21 @@ import java.util.ArrayList;
 public class Executor {
 
     private static final Logger LOG = Logger.getLogger(Executor.class.getName());
-    
     /**
      * run test file function
      */
     public static void run(TestScript script){
+
+        if(script.isSkiped()){
+            LOG.info(String.format("Has skipped the script file [%s]",script.getFileName()));
+            return;
+        }
+        
         LOG.info("Start to execute the script file["+script.getFileName()+"] now, and it will take a few moment,pleas wait......");
         ConnectionManager.reset();
 
         //create a database named filename for test;
         Connection connection = ConnectionManager.getConnection();
-        if(connection == null){
-            LOG.error("No valid connnection,please check the config..");
-        }
         createTestDB(connection,script);
 
         //parse the result file
@@ -54,6 +57,12 @@ public class Executor {
         long start = System.currentTimeMillis();
 
         for (SqlCommand command : commands) {
+
+            if(command.getSleeptime() > 0){
+                LOG.info(String.format("The tester will sleep for %s s, please wait....", command.getSleeptime()));
+                command.sleep();
+            }
+            
             //if the the command is marked to ignore flag and the IGNORE_MODEL = true
             //skip the command directly
             if (COMMON.IGNORE_MODEL && command.isIgnore()) {
@@ -66,19 +75,19 @@ public class Executor {
             }
 
             connection = getConnection(command);
-        
             //if can not get valid connection,put the command to the abnormal commands array
             if (connection == null) {
-                LOG.error("No valid connnection,please check the config..");
+                LOG.error("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] can not get invalid connection,con[id="
+                        + command.getConn_id()+", user=" +command.getConn_user()+", pwd="+command.getConn_pswd()+"].");
                 script.addAbnoramlCmd(command);
-                command.getTestResult().setErrorCode(RESULT.ERROR_CONNECTION_LOST_CODE);
-                command.getTestResult().setErrorDesc(RESULT.ERROR_CONNECTION_LOST_DESC);
+                command.getTestResult().setErrorCode(RESULT.ERROR_CAN_NOT_GET_CONNECTION_CODE);
+                command.getTestResult().setErrorDesc(RESULT.ERROR_CAN_NOT_GET_CONNECTION_DESC);
                 command.getTestResult().setResult(RESULT.RESULT_TYPE_ABNORMAL);
-                command.getTestResult().setActResult(RESULT.ERROR_CONNECTION_LOST_DESC);
+                command.getTestResult().setActResult(RESULT.ERROR_CAN_NOT_GET_CONNECTION_DESC);
                 command.getTestResult().setExpResult(command.getExpResult().toString());
                 command.getTestResult().setRemark(command.getCommand() + "\n" +
                         "[EXPECT RESULT]:\n" + command.getTestResult().getExpResult() + "\n" +
-                        "[ACTUAL RESULT]:\n" + command.getTestResult().getExpResult() + "\n");
+                        "[ACTUAL RESULT]:\n" + command.getTestResult().getActResult() + "\n");
                 LOG.error("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] was executed failed");
                 LOG.error("[EXPECT RESULT]:\n" + command.getTestResult().getExpResult());
                 LOG.error("[ACTUAL RESULT]:\n" + command.getTestResult().getActResult());
@@ -86,6 +95,7 @@ public class Executor {
             }
 
             try {
+                connection.setCatalog(command.getUseDB());
                 statement = connection.createStatement();
                 String sqlCmd = command.getCommand().replaceAll(COMMON.RESOURCE_PATH_FLAG,COMMON.RESOURCE_PATH);
                 statement.execute(sqlCmd);
@@ -129,12 +139,11 @@ public class Executor {
             } catch (SQLException e) {
                 try {
                     if (connection.isClosed() || !connection.isValid(10)) {
-                        LOG.error("The connection has been lost,please check the logs .");
                         script.addAbnoramlCmd(command);
-                        command.getTestResult().setErrorCode(RESULT.ERROR_CONNECTION_LOST_CODE);
-                        command.getTestResult().setErrorDesc(RESULT.ERROR_CONNECTION_LOST_DESC);
+                        command.getTestResult().setErrorCode(RESULT.ERROR_EXECUTE_TIMEOUT_CODE);
+                        command.getTestResult().setErrorDesc(String.format(RESULT.ERROR_EXECUTE_TIMEOUT_DESC, MoConfUtil.getSocketTimeout()));
                         command.getTestResult().setResult(RESULT.RESULT_TYPE_ABNORMAL);
-                        command.getTestResult().setActResult(RESULT.ERROR_CONNECTION_LOST_DESC);
+                        command.getTestResult().setActResult(String.format(RESULT.ERROR_EXECUTE_TIMEOUT_DESC, MoConfUtil.getSocketTimeout()));
                         command.getTestResult().setRemark(command.getCommand() + "\n" +
                                 "[EXPECT RESULT]:\n" + command.getTestResult().getExpResult() + "\n" +
                                 "[ACTUAL RESULT]:\n" + command.getTestResult().getExpResult() + "\n");
@@ -506,16 +515,15 @@ public class Executor {
         try {
             statement = connection.createStatement();
             statement.executeUpdate("create database IF NOT EXISTS `"+name+"`;");
-            statement.executeUpdate("use `"+name+"`;");
+            //statement.executeUpdate("use `"+name+"`;");
         } catch (SQLException e) {
             LOG.error("create database "+name+" is failed.cause: "+e.getMessage());
         }
     }
 
     public static  void createTestDB(Connection connection,TestScript script){
-       File file = new File(script.getFileName());
-       String dbName = file.getName().substring(0,file.getName().lastIndexOf("."));
-       createTestDB(connection,dbName);
+       
+       createTestDB(connection,script.getUseDB());
     }
 
     public static  void dropTestDB(Connection connection,String name){
@@ -531,9 +539,7 @@ public class Executor {
     }
 
     public static  void dropTestDB(Connection connection,TestScript script){
-        File file = new File(script.getFileName());
-        String dbName = file.getName().substring(0,file.getName().lastIndexOf("."));
-        dropTestDB(connection,dbName);
+        dropTestDB(connection,script.getUseDB());
     }
 
     public static void main(String[] args){

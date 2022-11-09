@@ -38,7 +38,14 @@ public class ScriptParser {
 
                 //extract sql commands from the script file
                 if (trimmedLine.equals("") || lineIsComment(trimmedLine)) {
-
+                    
+                    //if line is  mark to need to be skipped
+                    if(trimmedLine.startsWith(COMMON.BVT_SKIP_FILE_FLAG)) {
+                        issueNo = trimmedLine.substring(COMMON.BVT_SKIP_FILE_FLAG.length());
+                        testScript.setSkiped(true);
+                        LOG.info(String.format("The script file [%s] is marked to be skiped for issue#%s, and it will not be executed.",path,issueNo));
+                        return ;
+                    }
                     //if line is  mark to relate to a bvt issue
                     //deal the tag bvt:issue:{issue number},when cases with this tag,will be ignored
                     if(trimmedLine.startsWith(COMMON.BVT_ISSUE_START_FLAG) && COMMON.IGNORE_MODEL) {
@@ -50,6 +57,11 @@ public class ScriptParser {
                         ignore = false;
                     }
 
+                    if(trimmedLine.startsWith(COMMON.FUNC_SLEEP_FLAG)){
+                        int time = Integer.parseInt(trimmedLine.substring(COMMON.FUNC_SLEEP_FLAG.length()));
+                        command.setSleeptime(time);
+                    }
+                    
                     //if line is mark to start a new connection
                     if(trimmedLine.startsWith(COMMON.NEW_SESSION_START_FLAG)){
 
