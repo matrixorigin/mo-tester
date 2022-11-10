@@ -15,6 +15,8 @@ public class COMMON {
 
     public static int CONNECTION_ID = 0;//
     public static int DEFAULT_CONNECTION_NUM = 10;
+    
+    public static int DEFAULT_MAX_EXECUTE_TIME = 10000;
 
     public static String DEFAUT_DELIMITER = ";";
     public static String LINE_SEPARATOR = "\n";
@@ -24,6 +26,8 @@ public class COMMON {
     public static String NEW_SESSION_START_FLAG = "-- @session:";
     public static int NEW_SEESION_DEFAULT_ID = 1;
     public static String NEW_SESSION_END_FLAG = "-- @session";
+    public static String BVT_SKIP_FILE_FLAG = "-- @skip:issue#";
+    public static String FUNC_SLEEP_FLAG = "-- @sleep:";
 
     public static String BVT_ISSUE_START_FLAG = "-- @bvt:issue#";
     public static String BVT_ISSUE_END_FLAG = "-- @bvt:issue";

@@ -324,8 +324,5 @@ public class ResultParser {
     }
     
     public static void main(String[] args){
-        String a = "SELECT @@session.autocommit;\ncommit;";
-        int to = a.indexOf("commit;",3);
-        System.out.println(a.substring(0,0));
     }
 }

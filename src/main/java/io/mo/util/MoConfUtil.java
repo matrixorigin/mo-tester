@@ -1,5 +1,7 @@
 package io.mo.util;
 
+import io.mo.constant.COMMON;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -71,6 +73,16 @@ public class MoConfUtil {
         Map jdbc = (Map)conf.get("jdbc");
         Map database = (Map)jdbc.get("database");
         return database.get("default").toString();
+    }
+
+    public static int getSocketTimeout(){
+        if(conf == null) init();
+        Map jdbc = (Map)conf.get("jdbc");
+        Map paremeter = (Map)jdbc.get("paremeter");
+        if(paremeter.containsKey("socketTimeout")) {
+            return (int)paremeter.get("socketTimeout");
+        }
+        return COMMON.DEFAULT_MAX_EXECUTE_TIME;
     }
 
 

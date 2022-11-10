@@ -16,7 +16,7 @@ public class ConnectionManager {
     private static String driver = MoConfUtil.getDriver();
 
     private static Connection[] connections = new Connection[COMMON.DEFAULT_CONNECTION_NUM];
-    private static final Logger LOG = Logger.getLogger(Executor.class.getName());
+    private static final Logger LOG = Logger.getLogger(ConnectionManager.class.getName());
     private static boolean server_up = true;
 
     static {
