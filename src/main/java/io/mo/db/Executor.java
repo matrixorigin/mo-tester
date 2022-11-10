@@ -75,6 +75,7 @@ public class Executor {
             }
 
             connection = getConnection(command);
+            
             //if can not get valid connection,put the command to the abnormal commands array
             if (connection == null) {
                 LOG.error("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] can not get invalid connection,con[id="
@@ -95,7 +96,9 @@ public class Executor {
             }
 
             try {
-                connection.setCatalog(command.getUseDB());
+                //connection.getCatalog();
+                //connection.setCatalog(command.getUseDB());
+                command.setUseDB(connection.getCatalog());
                 statement = connection.createStatement();
                 String sqlCmd = command.getCommand().replaceAll(COMMON.RESOURCE_PATH_FLAG,COMMON.RESOURCE_PATH);
                 statement.execute(sqlCmd);
@@ -138,7 +141,10 @@ public class Executor {
                 statement.close();
             } catch (SQLException e) {
                 try {
+                    
                     if (connection.isClosed() || !connection.isValid(10)) {
+                        LOG.error("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] MO does not return result in "+MoConfUtil.getSocketTimeout()+" ms,con[id="
+                                + command.getConn_id()+", user=" +command.getConn_user()+", pwd="+command.getConn_pswd()+"].");
                         script.addAbnoramlCmd(command);
                         command.getTestResult().setErrorCode(RESULT.ERROR_EXECUTE_TIMEOUT_CODE);
                         command.getTestResult().setErrorDesc(String.format(RESULT.ERROR_EXECUTE_TIMEOUT_DESC, MoConfUtil.getSocketTimeout()));
@@ -151,6 +157,11 @@ public class Executor {
                                 + command.getConn_id()+", user=" +command.getConn_user()+", pwd="+command.getConn_pswd()+"].");
                         LOG.error("[EXPECT RESULT]:\n" + command.getTestResult().getExpResult());
                         LOG.error("[ACTUAL RESULT]:\n" + command.getTestResult().getActResult());
+                        
+                        //reconnect to mo, and set db to last use db
+                        LOG.warn(String.format("The mo-tester tries to re-connect to mo, con[id=%d, user=%s, pwd=%s, db=%s], please wait.....",
+                                command.getConn_id(),command.getConn_user(),command.getConn_pswd(),command.getUseDB()));
+                        getConnection(command).setCatalog(command.getUseDB());
                         continue;
                     }
 
@@ -515,7 +526,7 @@ public class Executor {
         try {
             statement = connection.createStatement();
             statement.executeUpdate("create database IF NOT EXISTS `"+name+"`;");
-            //statement.executeUpdate("use `"+name+"`;");
+            connection.setCatalog(name);
         } catch (SQLException e) {
             LOG.error("create database "+name+" is failed.cause: "+e.getMessage());
         }

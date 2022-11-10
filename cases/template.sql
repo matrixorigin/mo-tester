@@ -15,16 +15,17 @@ N_COMMENT    VARCHAR(152),
 PRIMARY KEY (N_NATIONKEY)
 );
 -- @sleep:3
-
 load data infile '$resources/data/nation.tbl' into table nation FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n';
 select * from nation;
 
 -- @session:id=1
+use template;
 select * from nation;
 select * from nation limit 1;
 -- @session
 
 -- @session:id=2&user=root&password=111
+use template;
 select * from nation;
 select * from nation limit 2;
 -- @session
