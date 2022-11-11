@@ -16,7 +16,7 @@ jdbc:
     zeroDateTimeBehavior: "CONVERT_TO_NULL"
     failoverReadOnly: "false"
     serverTimezone: "Asia/Shanghai"
-    socketTimeout: 10000
+    socketTimeout: 60000
 #users
 user:
   name: "dump"
