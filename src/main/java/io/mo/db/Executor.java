@@ -161,7 +161,9 @@ public class Executor {
                         //reconnect to mo, and set db to last use db
                         LOG.warn(String.format("The mo-tester tries to re-connect to mo, con[id=%d, user=%s, pwd=%s, db=%s], please wait.....",
                                 command.getConn_id(),command.getConn_user(),command.getConn_pswd(),command.getUseDB()));
-                        getConnection(command).setCatalog(command.getUseDB());
+                        connection = getConnection(command);
+                        if(connection != null)
+                            connection.setCatalog(command.getUseDB());
                         continue;
                     }
 
