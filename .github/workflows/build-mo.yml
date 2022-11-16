@@ -20,7 +20,7 @@ jobs:
       - name: Prepare
         id: prep
         run: |
-          LAST_COMMIT_ID=$(git rev-parse HEAD)
+          LAST_COMMIT_ID=$(git rev-parse --short HEAD)
           DOCKER_IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/${GITHUB_REPOSITORY#*/}
           VERSION=0.6.0-$LAST_COMMIT_ID
           # If this is git tag, use the tag name as a docker tag
