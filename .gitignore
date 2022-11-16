@@ -1,2 +1,4 @@
 report/*
 log/*
+.idea/
+.vscode/
