@@ -19,15 +19,6 @@ public class ConnectionManager {
     private static final Logger LOG = Logger.getLogger(ConnectionManager.class.getName());
     private static boolean server_up = true;
 
-    static {
-        try {
-            Class.forName(driver);
-            connections[0] = DriverManager.getConnection(jdbcURL, userName, pwd);
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static Connection getConnection(){
         return getConnection(0);
     }
