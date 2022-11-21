@@ -37,6 +37,8 @@ public class COMMON {
     public static String COLUMN_SEPARATOR_FLAG = "-- @separator:";
     public static String RESOURCE_PATH_FLAG = "\\$resources";
 
+    public static String OUTFILE_PATH_FLAG = "\\$outfiles";
+
     public static String LOG_DIR = "log";
     public static String RESULT_DIR = "result";
     public static String CASES_DIR = "cases";
@@ -44,6 +46,7 @@ public class COMMON {
     public static String RESOURCE_DIR = "resources";
 
     public static String RESOURCE_PATH = "./resources";
+    public static String OUTFILE_PATH = "./outfiles";
     public static String UPDATE_RESULT_TEMPLATE = "Query OK, {num} row affected";
 
 

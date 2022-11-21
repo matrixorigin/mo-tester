@@ -40,7 +40,21 @@ public class RunConfUtil {
             srcPath = srcPath.replace(COMMON.CASES_DIR,COMMON.RESOURCE_DIR);
             srcPath = srcPath.substring(0,srcPath.indexOf(COMMON.RESOURCE_DIR)+COMMON.RESOURCE_DIR.length());
         }
-        return srcPath;
+        return srcPath == null?COMMON.RESOURCE_PATH:srcPath;
+    }
+    
+    public static String[] getBuiltinDb(){
+        if(conf == null) init();
+        String builtindbs  = (String)conf.get("builtindb");
+        String[] dbs = builtindbs.split(",");
+        return dbs;
+    }
+    
+    public static String[] getOutFiles(){
+        if(conf == null) init();
+        String outfiles  = (String)conf.get("outfiles");
+        String[] files = outfiles.split(",");
+        return files;
     }
 
     public static void main(String[] args){
