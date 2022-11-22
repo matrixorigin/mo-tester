@@ -129,9 +129,6 @@ public class Tester {
             LOG.error("The method of execution is not configured,pleas check the config file conf/run.yml.");
             return;
         }
-        
-        cleanDatabases();
-        removeOutfiles();
 
         File file = new File(path);
 
@@ -142,6 +139,10 @@ public class Tester {
 
 
         if(method.equalsIgnoreCase("run")){
+            LOG.info("Now start to clean up databaes and outfiles.");
+            cleanDatabases();
+            removeOutfiles();
+            
             LOG.info("The method is [run],now start to run the scripts in the path["+ path +"].");
             run(file);
             LOG.info("All the scripts in the path["+ path +"] have been excuted.Now start to create the test report.");
@@ -158,6 +159,9 @@ public class Tester {
         }
 
         if(method.equalsIgnoreCase("debug")){
+            LOG.info("Now start to clean up databaes and outfiles.");
+            cleanDatabases();
+            removeOutfiles();
             debug(file);
         }
 
@@ -166,6 +170,9 @@ public class Tester {
         }
 
         if(method.equalsIgnoreCase("genrs")){
+            LOG.info("Now start to clean up databaes and outfiles.");
+            cleanDatabases();
+            removeOutfiles();
             LOG.info("The method is [genrs],now start to generate the checkpoints in the path["+ path +"].");
             generateRs(file);
             //LOG.info("ALL the results in the path["+path+"] have been generated or updated.");
