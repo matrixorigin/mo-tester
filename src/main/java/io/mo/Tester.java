@@ -2,6 +2,7 @@ package io.mo;
 
 import io.mo.cases.TestScript;
 import io.mo.constant.COMMON;
+import io.mo.db.ConnectionManager;
 import io.mo.db.Debugger;
 import io.mo.db.Executor;
 import io.mo.result.TestReport;
@@ -11,6 +12,13 @@ import io.mo.util.ScriptParser;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 
 public class Tester {
@@ -131,6 +139,10 @@ public class Tester {
 
 
         if(method.equalsIgnoreCase("run")){
+            LOG.info("Now start to clean up databaes and outfiles.");
+            cleanDatabases();
+            removeOutfiles();
+            
             LOG.info("The method is [run],now start to run the scripts in the path["+ path +"].");
             run(file);
             LOG.info("All the scripts in the path["+ path +"] have been excuted.Now start to create the test report.");
@@ -147,6 +159,9 @@ public class Tester {
         }
 
         if(method.equalsIgnoreCase("debug")){
+            LOG.info("Now start to clean up databaes and outfiles.");
+            cleanDatabases();
+            removeOutfiles();
             debug(file);
         }
 
@@ -155,6 +170,9 @@ public class Tester {
         }
 
         if(method.equalsIgnoreCase("genrs")){
+            LOG.info("Now start to clean up databaes and outfiles.");
+            cleanDatabases();
+            removeOutfiles();
             LOG.info("The method is [genrs],now start to generate the checkpoints in the path["+ path +"].");
             generateRs(file);
             //LOG.info("ALL the results in the path["+path+"] have been generated or updated.");
@@ -290,5 +308,85 @@ public class Tester {
                 return true;
         }
         return false;
+    }
+    
+    public static void cleanDatabases(){
+        Connection connection = ConnectionManager.getConnection();
+        String dropDB = "DROP DATABASE IF EXISTS %s";
+        String[] dbs = RunConfUtil.getBuiltinDb();
+        try {
+            Statement show = connection.createStatement();
+            Statement drop = connection.createStatement();
+            ResultSet resultSet = show.executeQuery("show databases;");
+            ArrayList<String> dbList = new ArrayList<>();
+            while (resultSet.next()){
+                String db = resultSet.getString(1);
+                for(int i = 0; i < dbs.length; i++){
+                    if(db.equalsIgnoreCase(dbs[i]))
+                        break;
+                    
+                    //db is not in dbs
+                    if(i == (dbs.length - 1)){
+                        dbList.add(db);
+                    }
+                }
+            }
+            
+            show.close();
+
+            for(int j = 0; j < dbList.size(); j++){
+                LOG.debug(String.format(dropDB, dbList.get(j)));
+                drop.execute(String.format(dropDB, dbList.get(j)));
+                LOG.debug(String.format("The database [%s] has been cleaned.", dbList.get(j)));
+            }
+            
+            drop.close();
+            connection.close();
+            
+        } catch (SQLException e) {
+            LOG.error("Unexpected exception has happened when cleaning up databases, the error message is: " + e.getMessage());
+            LOG.error("Clean up databases failed, the test will be terminated.");
+            System.exit(1);
+        }
+    }
+    
+    public static void removeOutfiles(){
+        String[] files = RunConfUtil.getOutFiles();
+        for(int i = 0; i < files.length; i++){
+            Path path = Paths.get(COMMON.RESOURCE_PATH + "/" + files[i]);
+            if(!Files.exists(path))
+                continue;
+            
+            boolean isdir = Files.isDirectory(path);
+            
+            try {
+                Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        Files.delete(file);
+                        LOG.debug(String.format("The outfile or path [%s] has been removed.", file));
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                    @Override
+                    public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                        Files.delete(dir);
+                        LOG.debug(String.format("The outfile or path [%s] has been removed.", dir));
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
+
+                if(isdir){
+                    Files.createDirectories(path);
+                }
+                
+            } catch(IOException e){
+                e.printStackTrace();
+                LOG.error(String.format("The outfile or path [%s] has failed to be removed, the test will be terminated ", path));
+                System.exit(1);
+            }
+            
+            
+        }
     }
 }

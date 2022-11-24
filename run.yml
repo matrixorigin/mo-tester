@@ -9,3 +9,9 @@ method: "run"
 
 #rate: means the execution success rate,if the actual rate is less than this,the programe will exit with status 1
 rate: 100
+
+#builtindb: builtin databases of mo
+builtindb: mo_catalog,mo_task,information_schema,mysql,system_metrics,system
+
+#outfiles: files or paths that the mo generates during the test
+outfiles: json/export_1.csv,json/export_2.csv,into_outfile,into_outfile_2
