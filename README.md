@@ -98,7 +98,7 @@ Every time running `run.sh` will overwrite the report of the  *error.txt* file, 
 
 
 ## 4. Set tags in case scripts
-有时候，为了达到一些特定的目的，如暂停，新建一个连接等，可以通过在脚本文件中，加上一些特殊的标签来实现，mo-tester提供了如下一些标签供使用.
+Sometimes, to achieve some specific purposes, such as pausing or creating a new connection, you can add some special tags to the script file. The mo tester provides the following tags for use:
 
 | Tags                                                    | Description                                                                                                                                                                                            |
 |---------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
