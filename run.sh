@@ -62,7 +62,7 @@ do
         echo -e "Usage:　bash run.sh [option] [param] ...\nExcute test cases task"
         echo -e "   -p  set the path of test cases needed to be executed by mo-tester"
         echo -e "   -m  set the method that mo-tester will run with"
-        echo -e "   -t  set the type of the format that mo-tester execute the sqlcommand in"
+        echo -e "   -t  set the times that mo-tester will execute cases for, must be numeric, default is 1"
         echo -e "   -r  set The success rate that test cases should reach"
         echo -e "   -i  set the including list, and only script files in the path which name contain one of the list will be excuted,if more than one,seperated by ,"
         echo -e "   -e  set the excluding list, and script files in the path which name contain one of the list will not be excuted,if more than one,seperated by ,"
