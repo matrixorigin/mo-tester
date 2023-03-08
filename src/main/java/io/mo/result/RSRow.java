@@ -50,6 +50,13 @@ public class RSRow {
         //At first,compare texts directly,,if two texts equal,return true
         if(this.text.equals(rsRow.getRowText()))
             return true;
+        
+        //Then,compare whether the column counts are equal to each other
+        if(cells.size() != rsRow.getRowValues().size()){
+            LOG.error("The column count does not equal with each other,one is ["+cells.size()+"],but the other is ["+rsRow.getRowValues().size()+"]");
+            return false;
+        }
+        
         //Or,compare each values
         for(int i = 0; i < cells.size(); i++){
             RSCell ct = cells.get(i);

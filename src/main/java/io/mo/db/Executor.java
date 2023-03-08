@@ -162,7 +162,7 @@ public class Executor {
                         LOG.warn(String.format("The mo-tester tries to re-connect to mo, con[id=%d, user=%s, pwd=%s, db=%s], please wait.....",
                                 command.getConn_id(),command.getConn_user(),command.getConn_pswd(),command.getUseDB()));
                         connection = getConnection(command);
-                        if(connection != null)
+                        if(connection != null && !connection.isClosed())
                             connection.setCatalog(command.getUseDB());
                         continue;
                     }
