@@ -74,7 +74,8 @@ public class RSCell<T> {
                 if(bd1.compareTo(bd2) == 0)
                     return true;
                 else{
-                    if(bd1.equals(BigDecimal.ZERO) || bd2.equals(BigDecimal.ZERO))
+                    //if(bd1.equals(BigDecimal.ZERO) || bd2.equals(BigDecimal.ZERO))
+                    if(bd1.compareTo(BigDecimal.ZERO) == 0 || bd2.compareTo(BigDecimal.ZERO) == 0)
                         return false;
                 }
 
@@ -94,7 +95,8 @@ public class RSCell<T> {
                     LOG.debug("After rounding, value[" + v1 +"] equals to value[" + v2 +"]");
                     return true;
                 }else{
-                    if(bd1.equals(BigDecimal.ZERO) || bd2.equals(BigDecimal.ZERO))
+                    //if(bd1.equals(BigDecimal.ZERO) || bd2.equals(BigDecimal.ZERO))
+                    if(bd1.compareTo(BigDecimal.ZERO) == 0 || bd2.compareTo(BigDecimal.ZERO) == 0)
                         return false;
                 }
 
@@ -157,5 +159,10 @@ public class RSCell<T> {
         pattern = Pattern.compile(regx);
         return pattern.matcher(str).matches();
         //return str.matches("^[+\\-]?\\d*[.]?\\d+$");
+    }
+    
+    public static void main(String[] args){
+        BigDecimal a = new BigDecimal("0.00");
+        System.out.println(a.compareTo(BigDecimal.ZERO));
     }
 }
