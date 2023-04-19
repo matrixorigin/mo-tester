@@ -41,7 +41,7 @@ public class Executor {
 
         //if result file is parsed failed,return
         if(!ResultParser.isSucceeded()) {
-            LOG.info("The script file["+script.getFileName()+"] has been executed," +
+            LOG.info("The script file["+script.getFileName()+"] has been executed" +
                     ", and cost: " + script.getDuration() +"s" +
                     ", total:" + script.getCommands().size() +
                     ", success:" + script.getSuccessCmdCount() +
@@ -57,10 +57,19 @@ public class Executor {
         long start = System.currentTimeMillis();
 
         for (SqlCommand command : commands) {
-
+            
+            //if need to sleep 
             if(command.getSleeptime() > 0){
                 LOG.info(String.format("The tester will sleep for %s s, please wait....", command.getSleeptime()));
                 command.sleep();
+            }
+            
+            //if there are some system commnds need to be executed
+            if(command.getSysCMDS().size() != 0){
+                for(String cmd : command.getSysCMDS()){
+                    LOG.info(String.format("Start to execute system command [ %s ] in script file[%s]",cmd,script.getFileName()));
+                    executeSysCmd(cmd);
+                }
             }
             
             //if the the command is marked to ignore flag and the IGNORE_MODEL = true
@@ -259,9 +268,25 @@ public class Executor {
             ArrayList<SqlCommand> commands = script.getCommands();
             for (int j = 0; j < commands.size(); j++) {
                 SqlCommand command = null;
+
+                //if need to sleep 
+                
                 
                 try{
                     command = commands.get(j);
+
+                    if(command.getSleeptime() > 0){
+                        LOG.info(String.format("The tester will sleep for %s s, please wait....", command.getSleeptime()));
+                        command.sleep();
+                    }
+
+                    //if there are some system commnds need to be executed
+                    if(command.getSysCMDS().size() != 0){
+                        for(String cmd : command.getSysCMDS()){
+                            LOG.info(String.format("Start to execute system command [ %s ] in script file[%s]",cmd,script.getFileName()));
+                            executeSysCmd(cmd);
+                        }
+                    }
 
                     if(command.isIgnore()) {
                         rs_writer.write(command.getCommand().trim());
@@ -554,11 +579,42 @@ public class Executor {
     public static  void dropTestDB(Connection connection,TestScript script){
         dropTestDB(connection,script.getUseDB());
     }
+    
+    public static void executeSysCmd(String cmd){
+        try {
+            Process p = Runtime.getRuntime().exec(cmd);
+            InputStream is = p.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            p.waitFor();
+            
+            StringBuffer execResut = new StringBuffer();
+            String str = reader.readLine();
+            while ( str != null) {
+                execResut.append(str+"\n");
+                str = reader.readLine();
+            }
+            
+            if (p.exitValue() != 0) {
+                LOG.error(String.format("The system command [ %s ] has been executed failed.",cmd));
+                LOG.error(String.format("The output of system command [ %s ] is \n%s.",cmd,execResut.toString()));
+            }else 
+                LOG.info(String.format("The output of system command [ %s ] is \n%s.",cmd,execResut.toString()));
+            
+        } catch (IOException e) {
+            LOG.error(String.format("The system command [ %s ] has been executed failed.",cmd));
+            LOG.error(String.format("The output of system command [ %s ] is \n %s.",cmd,e.getMessage()));
+        } catch (InterruptedException e) {
+            LOG.error(String.format("The system command[%s] has been executed failed.",cmd));
+            LOG.error(String.format("The output of system command [ %s ] is \n [ %s ].",cmd,e.getMessage()));
+        }
+
+    }
 
     public static void main(String[] args){
         String exp = "You have an error in your SQL syntax; check the manual that corresponds to your MatrixOne server version for the right syntax to use. syntax error at position 55 near 'abc';";
         String act = "You have an error in your SQL syntax; check the manual that corresponds to your MatrixOne server version for the right syntax to use. syntax error at position 55 near 'abc';";
         System.out.println(exp.equalsIgnoreCase(act));
+        executeSysCmd("pwd");
     }
 
 

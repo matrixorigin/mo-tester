@@ -162,7 +162,8 @@ public class RSCell<T> {
     }
     
     public static void main(String[] args){
-        BigDecimal a = new BigDecimal("0.00");
-        System.out.println(a.compareTo(BigDecimal.ZERO));
+        BigDecimal a = new BigDecimal("18446744073709551612");
+        System.out.println(a);
+        System.out.println(a.compareTo(new BigDecimal(-4)));
     }
 }

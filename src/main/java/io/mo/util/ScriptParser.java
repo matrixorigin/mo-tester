@@ -17,6 +17,10 @@ public class ScriptParser {
     private static final Logger LOG = Logger.getLogger(ScriptParser.class.getName());
 
     public static void parseScript(String path){
+        
+        //reset delimiter to default value
+        delimiter = COMMON.DEFAUT_DELIMITER;
+        
         testScript = new TestScript();
         testScript.setFileName(path);
         int rowNum = 1;
@@ -46,12 +50,19 @@ public class ScriptParser {
                         LOG.info(String.format("The script file [%s] is marked to be skiped for issue#%s, and it will not be executed.",path,issueNo));
                         return ;
                     }
+
+                    if(trimmedLine.startsWith(COMMON.NEW_DELIMITER_FLAG)) {
+                        delimiter = trimmedLine.substring(COMMON.NEW_DELIMITER_FLAG.length());
+                        LOG.info(String.format("The delimiter has been set to [%s].",delimiter));
+                    }
+                    
                     //if line is  mark to relate to a bvt issue
                     //deal the tag bvt:issue:{issue number},when cases with this tag,will be ignored
                     if(trimmedLine.startsWith(COMMON.BVT_ISSUE_START_FLAG) && COMMON.IGNORE_MODEL) {
                         issueNo = trimmedLine.substring(COMMON.BVT_ISSUE_START_FLAG.length());
                         ignore = true;
                     }
+                    
                     if(trimmedLine.equalsIgnoreCase(COMMON.BVT_ISSUE_END_FLAG)) {
                         issueNo = null;
                         ignore = false;
@@ -60,6 +71,11 @@ public class ScriptParser {
                     if(trimmedLine.startsWith(COMMON.FUNC_SLEEP_FLAG)){
                         int time = Integer.parseInt(trimmedLine.substring(COMMON.FUNC_SLEEP_FLAG.length()));
                         command.setSleeptime(time);
+                    }
+
+                    if(trimmedLine.startsWith(COMMON.SYSTEM_CMD_FLAG)){
+                        String sysCmd = trimmedLine.substring(COMMON.SYSTEM_CMD_FLAG.length());
+                        command.addSysCMD(sysCmd);
                     }
                     
                     //if line is mark to start a new connection
@@ -146,9 +162,13 @@ public class ScriptParser {
                     rowNum++;
                     continue;
                 }
-
+                
                 if(trimmedLine.contains(delimiter)){
-                    command.append(trimmedLine);
+                    if(delimiter.equalsIgnoreCase(COMMON.DEFAUT_DELIMITER))
+                        command.append(trimmedLine);
+                    else 
+                        command.trim();
+                    
                     command.setConn_id(con_id);
                     command.setConn_user(con_user);
                     command.setConn_pswd(con_pswd);

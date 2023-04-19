@@ -4,6 +4,7 @@ import io.mo.result.StmtResult;
 import io.mo.result.TestResult;
 import io.mo.util.MoConfUtil;
 
+import java.awt.image.AreaAveragingScaleFilter;
 import java.lang.StringBuffer;
 import java.util.ArrayList;
 
@@ -31,6 +32,8 @@ public class SqlCommand {
     private String scriptFile;
     private int position = 0;
     private ArrayList<Integer> sortKeyIndexs = new ArrayList<>();
+    
+    private ArrayList<String> syscmds = new ArrayList<>();
 
     private TestResult testResult;
     private StmtResult expResult;
@@ -47,6 +50,32 @@ public class SqlCommand {
 
     public void append(String command){
         this.command.append(command);
+    }
+    
+    public void deleteCharAt(int len){
+        this.command.deleteCharAt(len);
+    }
+    
+    public void addSysCMD(String cmd){
+        this.syscmds.add(cmd);
+    }
+    
+    public ArrayList<String> getSysCMDS(){
+        return this.syscmds;
+    }
+    
+    public int size(){
+        return this.command.length();
+    }
+    
+    public void trim(){
+        if(this.command.length() == 0)
+            return;
+        
+        if(this.command.charAt(this.command.length() - 1) == ' ' || 
+           this.command.charAt(this.command.length() - 1) == '\n'){
+           this.command.deleteCharAt(this.command.length() - 1);
+        }
     }
     
     public String getId() {

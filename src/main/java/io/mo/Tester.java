@@ -312,7 +312,7 @@ public class Tester {
     
     public static void cleanDatabases(){
         Connection connection = ConnectionManager.getConnection();
-        String dropDB = "DROP DATABASE IF EXISTS %s";
+        String dropDB = "DROP DATABASE IF EXISTS `%s`";
         String[] dbs = RunConfUtil.getBuiltinDb();
         try {
             Statement show = connection.createStatement();
