@@ -93,6 +93,9 @@ public class RSCell<T> {
                 if(bd1.compareTo(bd2) == 0) {
                     LOG.debug("After rounding, value[" + v1 +"] equals to value[" + v2 +"]");
                     return true;
+                }else{
+                    if(bd1.equals(BigDecimal.ZERO) || bd2.equals(BigDecimal.ZERO))
+                        return false;
                 }
 
                 //if error beteen bd1 and bd2 is less than SCALE_TOLERABLE_ERROR(0.0000009),return true;
