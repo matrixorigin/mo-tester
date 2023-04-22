@@ -100,13 +100,16 @@ Every time running `run.sh` will overwrite the report of the  *error.txt* file, 
 ## 4. Set tags in case scripts
 Sometimes, to achieve some specific purposes, such as pausing or creating a new connection, you can add some special tags to the script file. The mo tester provides the following tags for use:
 
-| Tags                                                    | Description                                                                                                                                                                                            |
-|---------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| -- @skip:issue#{IssueNo.}                               | If set, the whole script file will be skipped, and not be executed any more for issue{IssueNo.}                                                                                                        |
-| -- @bvt:issue#{IssueNo.}<br/>-- @bvt:issue              | The sql statements between those two tags will be not executed for issue{IssueNo.}                                                                                                                     |
-| -- @sleep:{time}                                        | The mo-tester will wait for {time} s                                                                                                                                                                   |
-| -- @session:id=2&user=root&password=111<br/> -- @session| The mo-tester will create a new connetion to execute sql statements between those two tags.<br/>Default value of id is 1, max is 10.<br/>Defualt value of user and password is configured in `mo.yml`. |
-| -- @sortkey:                                            | If the result is sorted, need set this tag for the sql statement. e.g.<br/> -- @sortkey:0,1: means sort keys are first column and second colum.                                                        |
+| Tags                                                     | Description                                                                                                                                                                                            |
+|----------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -- @skip:issue#{IssueNo.}                                | If set, the whole script file will be skipped, and not be executed any more for issue{IssueNo.}                                                                                                        |
+| -- @bvt:issue#{IssueNo.}<br/>-- @bvt:issue               | The sql statements between those two tags will be not executed for issue{IssueNo.}                                                                                                                     |
+| -- @sleep:{time}                                         | The mo-tester will wait for {time} s                                                                                                                                                                   |
+| -- @session:id=2&user=root&password=111<br/> -- @session | The mo-tester will create a new connetion to execute sql statements between those two tags.<br/>Default value of id is 1, max is 10.<br/>Defualt value of user and password is configured in `mo.yml`. |
+| -- @sortkey:                                             | If the result is sorted, need set this tag for the sql statement. e.g.<br/> -- @sortkey:0,1: means sort keys are first column and second colum.                                                        |
+| -- @delimiter {C}                                        | Set new delimeter to String C, C can any string expect that starts with [/,#,--]                                                  |
+| -- @system {C}                                           | Set System Command that will be executed by the runner system |
+
  
 
 
