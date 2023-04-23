@@ -21,7 +21,8 @@ public class COMMON {
     public static String DEFAUT_DELIMITER = ";";
     public static String LINE_SEPARATOR = "\n";
 
-    public static String DELIMITER_FLAGE = "-- @delimiter:";
+    public static String NEW_DELIMITER_FLAG = "-- @delimiter ";
+    public static String SYSTEM_CMD_FLAG = "-- @system ";
 
     public static String NEW_SESSION_START_FLAG = "-- @session:";
     public static int NEW_SEESION_DEFAULT_ID = 1;
