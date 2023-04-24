@@ -22,6 +22,8 @@ public class Executor {
      * run test file function
      */
     public static void run(TestScript script){
+        
+        int last_commit_id = 0;
 
         if(script.isSkiped()){
             LOG.info(String.format("Has skipped the script file [%s]",script.getFileName()));
@@ -103,6 +105,14 @@ public class Executor {
                 LOG.error("[ACTUAL RESULT]:\n" + command.getTestResult().getActResult());
                 continue;
             }
+            
+            if(last_commit_id != command.getConn_id()){
+                LOG.info(String.format("Connection id had been turned from %d to %d",last_commit_id,command.getConn_id()));
+                syncCommit(connection);
+            }
+
+            last_commit_id = command.getConn_id();
+            
 
             try {
                 //connection.getCatalog();
@@ -579,6 +589,17 @@ public class Executor {
     public static  void dropTestDB(Connection connection,TestScript script){
         dropTestDB(connection,script.getUseDB());
     }
+    
+    public static void syncCommit(Connection connection){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("select mo_ctl('cn','synccommit','')");
+            LOG.info("select mo_ctl('cn','synccommit','') successfully.");
+        } catch (SQLException e) {
+            LOG.error("select mo_ctl('cn','synccommit','') failed. cause: " + e.getMessage());
+        }
+    }
+    
     
     public static void executeSysCmd(String cmd){
         try {
