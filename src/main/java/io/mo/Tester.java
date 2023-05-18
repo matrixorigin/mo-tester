@@ -148,6 +148,7 @@ public class Tester {
             LOG.info("All the scripts in the path["+ path +"] have been excuted.Now start to create the test report.");
             report.write();
             LOG.info("The test report has been generated in files[report.txt,report.xml].");
+            removeOutfiles();
 
             if(report.getRate() < rate){
                 LOG.error("The execution success rate is "+ report.getRate()+"%, and less than config value "+ rate +"%,this test fail.");
@@ -363,23 +364,22 @@ public class Tester {
                 Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
                     @Override
                     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                        Files.delete(file);
-                        LOG.debug(String.format("The outfile or path [%s] has been removed.", file));
+                        if (!file.endsWith(".gitignore")) {
+                            Files.delete(file);
+                            LOG.debug(String.format("The outfile or path [%s] has been removed.", file));
+                        }
                         return FileVisitResult.CONTINUE;
                     }
 
                     @Override
                     public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                        Files.delete(dir);
-                        LOG.debug(String.format("The outfile or path [%s] has been removed.", dir));
+                        if (dir != path && dir.toFile().list().length == 0) {
+                            Files.delete(dir);
+                            LOG.debug(String.format("The outfile or path [%s] has been removed.", dir));
+                        }
                         return FileVisitResult.CONTINUE;
                     }
                 });
-
-                if(isdir){
-                    Files.createDirectories(path);
-                }
-                
             } catch(IOException e){
                 e.printStackTrace();
                 LOG.error(String.format("The outfile or path [%s] has failed to be removed, the test will be terminated ", path));
