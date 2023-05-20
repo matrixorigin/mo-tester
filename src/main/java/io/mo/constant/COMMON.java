@@ -37,6 +37,9 @@ public class COMMON {
 
     public static String COLUMN_SEPARATOR_FLAG = "-- @separator:";
     public static String RESOURCE_PATH_FLAG = "\\$resources";
+    
+    //if result is type of error, and not unique, can use this flag to regular match
+    public static String REGULAR_MATCH_FLAG = "-- @pattern";
 
     public static String LOG_DIR = "log";
     public static String RESULT_DIR = "result";

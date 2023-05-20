@@ -43,6 +43,8 @@ public class SqlCommand {
     
     private int sleeptime = 0;
 
+    private boolean regularMatch = false;
+
     public SqlCommand(){
         command = new StringBuffer();
         testResult = new TestResult();
@@ -189,6 +191,9 @@ public class SqlCommand {
     }
 
     public boolean checkResult(){
+        if(this.regularMatch)
+            return expResult.regularMatch(actResult);
+        
         return expResult.equals(actResult);
     }
     public String getSeparator() {
@@ -245,6 +250,16 @@ public class SqlCommand {
 
     public void setUseDB(String useDB) {
         this.useDB = useDB;
+    }
+
+
+
+    public boolean isRegularMatch() {
+        return regularMatch;
+    }
+
+    public void setRegularMatch(boolean regularMatch) {
+        this.regularMatch = regularMatch;
     }
 
 }

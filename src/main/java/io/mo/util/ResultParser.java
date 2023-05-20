@@ -239,7 +239,7 @@ public class ResultParser {
         if(separator.equals("space"))
             buffer.append(rsText.replaceAll(RESULT.COLUMN_SEPARATOR_SPACE,RESULT.COLUMN_SEPARATOR_SYSTEM));
         RSSet rsSet = new RSSet();
-
+        
         //first line is meta info
         String labelline;
         boolean lastrow = false;
