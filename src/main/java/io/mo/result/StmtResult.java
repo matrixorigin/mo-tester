@@ -3,6 +3,10 @@ package io.mo.result;
 import io.mo.cases.SqlCommand;
 import io.mo.constant.RESULT;
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.impl.xb.xsdschema.PatternDocument;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StmtResult {
     /**
@@ -104,6 +108,16 @@ public class StmtResult {
 
         return true;
     }
+    
+    public boolean regularMatch(StmtResult stmtResult){
+        
+        if(stmtResult.errorMessage.matches(this.errorMessage))
+            return true;
+        else {
+            LOG.error(String.format("[%s] can not match : \n %s",stmtResult.errorMessage,this.errorMessage));
+            return false;
+        }
+    }
 
     public int getType() {
         return type;
@@ -189,5 +203,13 @@ public class StmtResult {
             return rsSet.getAbnormalError();
         else 
             return orginalRSText;
+    }
+    
+    public static void main(String[] args){
+        Pattern p = Pattern.compile("(Duplicate entry ')(.)(' for key 'int32')");
+        //Pattern p = Pattern.compile("(Duplicate)([0-9]*$)");
+        Matcher m = p.matcher("Duplicate entry '1' for key 'int32'");
+        //Matcher m = p.matcher("Duplicate1");
+        System.out.println("Duplicate entry '1fdasf1' for key 'int32'".matches("(Duplicate entry)([\\d\\D]*)(for key 'int32')"));
     }
 }

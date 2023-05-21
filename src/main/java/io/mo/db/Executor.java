@@ -50,6 +50,7 @@ public class Executor {
                     ", failed:" + script.getFailedCmdCount() +
                     ", ignored:" + script.getIgnoredCmdCount() +
                     ", abnoraml:" + script.getAbnormalCmdCount());
+            dropTestDB(connection, script);
             return;
         }
 
