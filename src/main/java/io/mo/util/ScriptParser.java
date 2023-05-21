@@ -77,6 +77,10 @@ public class ScriptParser {
                         String sysCmd = trimmedLine.substring(COMMON.SYSTEM_CMD_FLAG.length());
                         command.addSysCMD(sysCmd);
                     }
+
+                    if(trimmedLine.startsWith(COMMON.REGULAR_MATCH_FLAG)){
+                        command.setRegularMatch(true);
+                    }
                     
                     //if line is mark to start a new connection
                     if(trimmedLine.startsWith(COMMON.NEW_SESSION_START_FLAG)){
