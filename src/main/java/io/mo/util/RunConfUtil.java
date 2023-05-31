@@ -30,6 +30,11 @@ public class RunConfUtil {
         return (int)conf.get("rate");
     }
 
+    public static int getWaitTime(){
+        if(conf == null) init();
+        return (int)conf.get("waittime");
+    }
+
     public static String getResourcePath(){
         if(conf == null) init();
         String path  = (String)conf.get("path");

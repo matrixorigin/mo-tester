@@ -107,8 +107,9 @@ Sometimes, to achieve some specific purposes, such as pausing or creating a new 
 | -- @sleep:{time}                                         | The mo-tester will wait for {time} s                                                                                                                                                                   |
 | -- @session:id=2&user=root&password=111<br/> -- @session | The mo-tester will create a new connetion to execute sql statements between those two tags.<br/>Default value of id is 1, max is 10.<br/>Defualt value of user and password is configured in `mo.yml`. |
 | -- @sortkey:                                             | If the result is sorted, need set this tag for the sql statement. e.g.<br/> -- @sortkey:0,1: means sort keys are first column and second colum.                                                        |
-| -- @delimiter {C}                                        | Set new delimeter to String C, C can any string expect that starts with [/,#,--]                                                  |
-| -- @system {C}                                           | Set System Command that will be executed by the runner system |
+| -- @delimiter {C}                                        | Set new delimeter to String C, C can any string expect that starts with [/,#,--]                                                                                                                       |
+| -- @system {C}                                           | Set System Command that will be executed by the runner system                                                                                                                                          |
+| -- @wait:{D}:[commit or wait]                            | means this command will be blocked until the connection[id={D}] commit or rollback                                                                                                                     |
 
  
 

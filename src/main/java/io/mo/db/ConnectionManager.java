@@ -62,7 +62,7 @@ public class ConnectionManager {
         for(int i = 0; i < 3; i++) {
             try {
                 Class.forName(driver);
-                if (connections[index] == null || connections[0].isClosed()) {
+                if (connections[index] == null || connections[index].isClosed()) {
                     connections[index] = DriverManager.getConnection(jdbcURL, userName, pwd);
                     LOG.info("New conneciton from mo with[user="+userName+", pwd="+pwd+"] has been initialized.");
                     return connections[index];

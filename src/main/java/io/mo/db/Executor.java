@@ -121,6 +121,9 @@ public class Executor {
                 command.setUseDB(connection.getCatalog());
                 statement = connection.createStatement();
                 String sqlCmd = command.getCommand().replaceAll(COMMON.RESOURCE_PATH_FLAG,COMMON.RESOURCE_PATH);
+                if(command.isNeedWait()){
+                    execWaitOperation(command);
+                }
                 statement.execute(sqlCmd);
                 ResultSet resultSet = statement.getResultSet();
                 if (resultSet != null) {
@@ -181,6 +184,11 @@ public class Executor {
                         //reconnect to mo, and set db to last use db
                         LOG.warn(String.format("The mo-tester tries to re-connect to mo, con[id=%d, user=%s, pwd=%s, db=%s], please wait.....",
                                 command.getConn_id(),command.getConn_user(),command.getConn_pswd(),command.getUseDB()));
+                        try{
+                            connection.close();
+                        }catch (SQLException ex){
+                            LOG.warn(String.format("Failed to close connection[id=%d], but effect nothing.",command.getConn_id()));
+                        }
                         connection = getConnection(command);
                         if(connection != null && !connection.isClosed())
                             connection.setCatalog(command.getUseDB());
@@ -319,6 +327,9 @@ public class Executor {
                     statement = connection.createStatement();
 
                     String sqlCmd = command.getCommand().replaceAll("\\$resources",COMMON.RESOURCE_PATH);
+                    if(command.isNeedWait()){
+                        execWaitOperation(command);
+                    }
                     statement.execute(sqlCmd);
                     ResultSet resultSet = statement.getResultSet();
                     if(resultSet != null){
@@ -630,6 +641,45 @@ public class Executor {
             LOG.error(String.format("The output of system command [ %s ] is \n [ %s ].",cmd,e.getMessage()));
         }
 
+    }
+    
+    public static void execWaitOperation(SqlCommand command){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (command.isNeedWait()) {
+                    try {
+                        Thread.sleep(COMMON.WAIT_TIMEOUT);
+                        Connection conn = ConnectionManager.getConnection(command.getWaitConnId());
+                        if(command.getWaitOperation().equalsIgnoreCase("commit")) {
+                            if(!conn.getAutoCommit())
+                                conn.commit();
+                            else {
+                                Statement statement = conn.createStatement();
+                                statement.execute("commit");
+                            }
+                                
+                            LOG.info(String.format("Connection[id=%d] has committed automatically.",command.getWaitConnId()));
+                        }
+                        
+                        if(command.getWaitOperation().equalsIgnoreCase("rollback")) {
+                            if(!conn.getAutoCommit())
+                                conn.rollback();
+                            else {
+                                Statement statement = conn.createStatement();
+                                statement.execute("rollback");
+                            }
+                            LOG.info(String.format("Connection[id=%d] has rollback automatically.",command.getWaitConnId()));
+                        }
+                        
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }).start();
     }
 
     public static void main(String[] args){

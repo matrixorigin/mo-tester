@@ -34,6 +34,7 @@ public class Tester {
         int rate = RunConfUtil.getRate();
         
         COMMON.RESOURCE_PATH = RunConfUtil.getResourcePath();
+        COMMON.WAIT_TIMEOUT = RunConfUtil.getWaitTime();
 
         //parse the paras
         if(args != null){

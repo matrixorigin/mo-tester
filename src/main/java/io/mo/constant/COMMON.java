@@ -38,6 +38,8 @@ public class COMMON {
     public static String COLUMN_SEPARATOR_FLAG = "-- @separator:";
     public static String RESOURCE_PATH_FLAG = "\\$resources";
     
+    public static String WAIT_FLAG = "-- @wait:";
+    
     //if result is type of error, and not unique, can use this flag to regular match
     public static String REGULAR_MATCH_FLAG = "-- @pattern";
 
@@ -50,7 +52,8 @@ public class COMMON {
     public static String RESOURCE_PATH = "./resources";
     public static String UPDATE_RESULT_TEMPLATE = "Query OK, {num} row affected";
 
-
+    public static int WAIT_TIMEOUT = 5000;
+    
     public static int MAX_ROW_COUNT_IN_RS = 100;//the max row count in the resultset
 
     public static String THIS_IS_MO = "THIS IS MO";
