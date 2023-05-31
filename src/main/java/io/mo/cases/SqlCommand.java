@@ -42,6 +42,13 @@ public class SqlCommand {
     private SqlCommand next;
     
     private int sleeptime = 0;
+    
+    private boolean needWait = false;
+
+    
+    private int waitConnId = 0;
+    
+    private String waitOperation = "commit";
 
     private boolean regularMatch = false;
 
@@ -261,5 +268,30 @@ public class SqlCommand {
     public void setRegularMatch(boolean regularMatch) {
         this.regularMatch = regularMatch;
     }
+
+    public boolean isNeedWait() {
+        return needWait;
+    }
+
+    public void setNeedWait(boolean needWait) {
+        this.needWait = needWait;
+    }
+
+    public int getWaitConnId() {
+        return waitConnId;
+    }
+
+    public void setWaitConnId(int waitConnId) {
+        this.waitConnId = waitConnId;
+    }
+
+    public String getWaitOperation() {
+        return waitOperation;
+    }
+
+    public void setWaitOperation(String waitOperation) {
+        this.waitOperation = waitOperation;
+    }
+
 
 }

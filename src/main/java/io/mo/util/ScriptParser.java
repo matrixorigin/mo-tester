@@ -1,10 +1,11 @@
 package io.mo.util;
 
+import freemarker.template.utility.NumberUtil;
 import io.mo.cases.SqlCommand;
 import io.mo.cases.TestScript;
 import io.mo.constant.COMMON;
 import org.apache.log4j.Logger;
-import org.apache.poi.util.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -80,6 +81,32 @@ public class ScriptParser {
 
                     if(trimmedLine.startsWith(COMMON.REGULAR_MATCH_FLAG)){
                         command.setRegularMatch(true);
+                    }
+
+                    //if line is mark to set wait paras
+                    if(trimmedLine.startsWith(COMMON.WAIT_FLAG)){
+                        String[] items = trimmedLine.split(":");
+                        //if flas is not formated like <-- @wait:1:commit >, ignore
+                        if(items.length != 3)
+                            continue;
+                        else{
+                            if(StringUtils.isNumeric(items[1])){
+                                command.setWaitConnId(Integer.parseInt(items[1]));
+                            }else {
+                                LOG.warn(String.format("The connection id in flag[%s] is not a number, the flag is not valid.",trimmedLine));
+                                continue;
+                            }
+                            
+                            if(items[2].equalsIgnoreCase("commit") || 
+                                    items[2].equalsIgnoreCase("rollback")){
+                                command.setWaitOperation(items[2]);
+                            }else {
+                                LOG.warn(String.format("The operation in flag[%s] is not [commit] or [rollback], the flag is not valid.",trimmedLine));
+                                continue;
+                            }
+                            
+                            command.setNeedWait(true);
+                        }
                     }
                     
                     //if line is mark to start a new connection
