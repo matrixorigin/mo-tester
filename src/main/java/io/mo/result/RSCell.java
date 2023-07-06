@@ -102,14 +102,19 @@ public class RSCell<T> {
 
                 //if error beteen bd1 and bd2 is less than SCALE_TOLERABLE_ERROR(0.0000009),return true;
                 BigDecimal error = bd1.subtract(bd2).abs();
+                
                 BigDecimal toleration = BigDecimal.valueOf(COMMON.SCALE_TOLERABLE_ERROR);
+
+                LOG.debug("error = " + error +"; toleration = " + toleration + "; bd1 = " + bd1);
+                
                 if(error.compareTo(toleration) <= 0) {
                     LOG.debug("value[" + v1 +"] and value[" + v2 +"] match the scale tolerable error");
                     return true;
                 }
                 
-                error =  error.divide(bd1,BigDecimal.ROUND_HALF_UP);
+                error =  error.divide(bd1,15,BigDecimal.ROUND_HALF_UP);
                 toleration = BigDecimal.valueOf(COMMON.INT_TOLERABLE_ERROR);
+                LOG.debug("error = " + error +"; toleration = " + toleration + "; bd1 = " + bd1);
                 //if error beteen bd1 and bd2 divided bd1 or db2 is less than INT_TOLERABLE_ERROR(0.0.000000000000001),return true;
                 if(error.compareTo(toleration) <= 0){
                     LOG.debug("value[" + v1 +"] and value[" + v2 +"] match the scale tolerable error");
