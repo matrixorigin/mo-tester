@@ -195,7 +195,7 @@ public class Tester {
                 return;
             }
             
-            if(isInclude(file.getName())) {
+            if(isInclude(file.getPath())) {
                 ScriptParser.parseScript(file.getPath());
                 TestScript script = ScriptParser.getTestScript();
                 Executor.run(script);
@@ -217,7 +217,7 @@ public class Tester {
                 return;
             }
             
-            if(isInclude(file.getName())) {
+            if(isInclude(file.getPath())) {
                 ScriptParser.parseScript(file.getPath());
                 TestScript script = ScriptParser.getTestScript();
                 if(!COMMON.FORCE_UPDATE){
@@ -246,7 +246,7 @@ public class Tester {
                 return;
             }
             
-            if(isInclude(file.getName())) {
+            if(isInclude(file.getPath())) {
                 ScriptParser.parseScript(file.getPath());
                 TestScript script = ScriptParser.getTestScript();
                 Debugger.run(script);
@@ -265,7 +265,7 @@ public class Tester {
             if(!(file.getName().endsWith(".sql") || file.getName().endsWith(".test"))) {
                 return;
             }
-            if(isInclude(file.getName())) {
+            if(isInclude(file.getPath())) {
                 ScriptParser.parseScript(file.getPath());
                 TestScript script = ScriptParser.getTestScript();
                 ResultParser.check(script);
@@ -309,6 +309,7 @@ public class Tester {
             if (name.contains(include))
                 return true;
         }
+        
         return false;
     }
     

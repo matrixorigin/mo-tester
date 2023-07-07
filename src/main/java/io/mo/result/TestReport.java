@@ -38,7 +38,7 @@ public class TestReport {
         if(totalCmds != 0)
             rate  = (successCmds*100)/ (totalCmds - ignoredCmds);
         else
-            rate = 0;
+            rate = 100;
 
         ArrayList<SqlCommand> e_commands = new ArrayList<SqlCommand>();
         try {
