@@ -69,6 +69,7 @@ public class ConnectionManager {
                 }
                 return connections[index];
             } catch (SQLException e) {
+                e.printStackTrace();
                 LOG.error("The mo-tester can not get valid conneciton from mo with[user="+userName+", pwd="+pwd+"], and will wait 10 seconds and retry...");
                 try {
                     Thread.sleep(10000);
