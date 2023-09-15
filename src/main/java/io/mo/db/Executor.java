@@ -125,6 +125,8 @@ public class Executor {
                 if(command.isNeedWait()){
                     execWaitOperation(command);
                 }
+                
+                statement.execute(sqlCmd);
                 if(command.isNeedWait()){
                     if(waitThread != null && waitThread.isAlive()){
                         try {
@@ -143,8 +145,6 @@ public class Executor {
                         }
                     }
                 }
-                
-                statement.execute(sqlCmd);
                 ResultSet resultSet = statement.getResultSet();
                 if (resultSet != null) {
                     RSSet rsSet = new RSSet(resultSet);
