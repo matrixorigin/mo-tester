@@ -110,7 +110,10 @@ public class StmtResult {
     }
     
     public boolean regularMatch(StmtResult stmtResult){
-        
+        if(stmtResult.errorMessage == null || stmtResult.errorMessage.equalsIgnoreCase("")){
+            LOG.error("NULL or EMPTY can not regularly match the expected result");
+            return false;
+        }
         if(stmtResult.errorMessage.matches(this.errorMessage))
             return true;
         else {
