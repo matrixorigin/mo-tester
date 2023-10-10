@@ -118,6 +118,11 @@ public class Tester {
                 if (arg.equalsIgnoreCase("check")) {
                     method = "check";
                 }
+
+                //get pprof info
+                if (arg.equalsIgnoreCase("pprof")) {
+                    COMMON.NEEDPPROF = true;
+                }
             }
         }
 
