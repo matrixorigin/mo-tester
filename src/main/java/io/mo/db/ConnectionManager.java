@@ -64,7 +64,7 @@ public class ConnectionManager {
                 Class.forName(driver);
                 if (connections[index] == null || connections[index].isClosed()) {
                     connections[index] = DriverManager.getConnection(jdbcURL, userName, pwd);
-                    LOG.info("New conneciton from mo with[user="+userName+", pwd="+pwd+"] has been initialized.");
+                    LOG.debug("New conneciton from mo with[user="+userName+", pwd="+pwd+"] has been initialized.");
                     return connections[index];
                 }
                 return connections[index];

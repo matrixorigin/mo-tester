@@ -17,4 +17,4 @@ builtindb: mo_catalog,mo_task,information_schema,mysql,system_metrics,system,que
 outfiles: json/export_1.csv,json/export_2.csv,into_outfile,into_outfile_2
 
 #wait timeout
-waittime: 5000
+waittime: 2000

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class Executor {
 
     private static final Logger LOG = Logger.getLogger(Executor.class.getName());
+    private static Thread waitThread = null;
     /**
      * run test file function
      */
@@ -78,7 +79,7 @@ public class Executor {
             //if the the command is marked to ignore flag and the IGNORE_MODEL = true
             //skip the command directly
             if (COMMON.IGNORE_MODEL && command.isIgnore()) {
-                LOG.warn("Ignored sql command: [issue#" + command.getIssueNo() + "][" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "]");
+                LOG.debug("Ignored sql command: [issue#" + command.getIssueNo() + "][" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "]");
                 script.addIgnoredCmd(command);
                 command.getTestResult().setResult(RESULT.RESULT_TYPE_IGNORED);
                 command.getTestResult().setErrorCode(RESULT.ERROR_CASE_IGNORE_CODE);
@@ -108,7 +109,9 @@ public class Executor {
             }
             
             if(last_commit_id != command.getConn_id()){
-                LOG.info(String.format("Connection id had been turned from %d to %d",last_commit_id,command.getConn_id()));
+                LOG.debug(String.format("[%s][row:%d][%s]Connection id had been turned from %d to %d",
+                        command.getScriptFile(),command.getPosition(),command.getCommand(),
+                        last_commit_id,command.getConn_id()));
                 syncCommit(connection);
             }
 
@@ -125,6 +128,25 @@ public class Executor {
                     execWaitOperation(command);
                 }
                 statement.execute(sqlCmd);
+                if(command.isNeedWait()){
+                    Thread.sleep(COMMON.WAIT_TIMEOUT/10);
+                    if(waitThread != null && waitThread.isAlive()){
+                        try {
+                            LOG.error(String.format("Command[%s][row:%d] has been executed before connection[id=%d] commit.\nBut still need to wait for connection[id=%d] being committed",
+                                    command.getCommand(),command.getPosition(),command.getWaitConnId(),command.getWaitConnId()));
+                            waitThread.join();
+                            script.addFailedCmd(command);
+                            command.getTestResult().setErrorCode(RESULT.ERROR_CHECK_FAILED_CODE);
+                            command.getTestResult().setErrorDesc(RESULT.ERROR_CHECK_FAILED_DESC);
+                            command.getTestResult().setResult(RESULT.RESULT_TYPE_FAILED);
+                            LOG.error("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] was executed failed, con[id="
+                                    + command.getConn_id()+", user=" +command.getConn_user()+", pwd="+command.getConn_pswd()+"].");
+                            continue;
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
                 ResultSet resultSet = statement.getResultSet();
                 if (resultSet != null) {
                     RSSet rsSet = new RSSet(resultSet);
@@ -229,6 +251,8 @@ public class Executor {
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }
 
@@ -331,6 +355,25 @@ public class Executor {
                         execWaitOperation(command);
                     }
                     statement.execute(sqlCmd);
+                    if(command.isNeedWait()){
+                        Thread.sleep(COMMON.WAIT_TIMEOUT/10);
+                        if(waitThread != null && waitThread.isAlive()){
+                            try {
+                                LOG.error(String.format("Command[%s][row:%d] has been executed before connection[id=%d] commit.\nBut still need to wait for connection[id=%d] being committed",
+                                        command.getCommand(),command.getPosition(),command.getWaitConnId(),command.getWaitConnId()));
+                                waitThread.join();
+                                script.addFailedCmd(command);
+                                command.getTestResult().setErrorCode(RESULT.ERROR_CHECK_FAILED_CODE);
+                                command.getTestResult().setErrorDesc(RESULT.ERROR_CHECK_FAILED_DESC);
+                                command.getTestResult().setResult(RESULT.RESULT_TYPE_FAILED);
+                                LOG.error("[" + script.getFileName() + "][row:" + command.getPosition() + "][" + command.getCommand().trim() + "] was executed failed, con[id="
+                                        + command.getConn_id()+", user=" +command.getConn_user()+", pwd="+command.getConn_pswd()+"].");
+                                continue;
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
                     ResultSet resultSet = statement.getResultSet();
                     if(resultSet != null){
                         RSSet rsSet = new RSSet(resultSet);
@@ -385,6 +428,8 @@ public class Executor {
                     
                     if(j < commands.size() -1)
                         rs_writer.newLine();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
             }
             rs_writer.newLine();
@@ -606,7 +651,7 @@ public class Executor {
         try {
             Statement statement = connection.createStatement();
             statement.execute("select mo_ctl('cn','synccommit','')");
-            LOG.info("select mo_ctl('cn','synccommit','') successfully.");
+            LOG.debug("select mo_ctl('cn','synccommit','') successfully.");
         } catch (SQLException e) {
             LOG.error("select mo_ctl('cn','synccommit','') failed. cause: " + e.getMessage());
         }
@@ -644,11 +689,13 @@ public class Executor {
     }
     
     public static void execWaitOperation(SqlCommand command){
-        new Thread(new Runnable() {
+        waitThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 if (command.isNeedWait()) {
                     try {
+                        LOG.info(String.format("Command[%s][row:%d] needs to wait connection[id:%d] %s",
+                                command.getCommand(),command.getPosition(),command.getWaitConnId(),command.getWaitOperation()));
                         Thread.sleep(COMMON.WAIT_TIMEOUT);
                         Connection conn = ConnectionManager.getConnection(command.getWaitConnId());
                         if(command.getWaitOperation().equalsIgnoreCase("commit")) {
@@ -658,10 +705,11 @@ public class Executor {
                                 Statement statement = conn.createStatement();
                                 statement.execute("commit");
                             }
-                                
-                            LOG.info(String.format("Connection[id=%d] has committed automatically.",command.getWaitConnId()));
+
+                            LOG.info(String.format("Connection[id=%d] has committed automatically,for command[%s][row:%d]",
+                                    command.getWaitConnId(),command.getCommand(),command.getPosition()));
                         }
-                        
+
                         if(command.getWaitOperation().equalsIgnoreCase("rollback")) {
                             if(!conn.getAutoCommit())
                                 conn.rollback();
@@ -669,9 +717,10 @@ public class Executor {
                                 Statement statement = conn.createStatement();
                                 statement.execute("rollback");
                             }
-                            LOG.info(String.format("Connection[id=%d] has rollback automatically.",command.getWaitConnId()));
+                            LOG.info(String.format("Connection[id=%d] has rollback automatically,for command[%s][row:%d]",
+                                    command.getWaitConnId(),command.getCommand(),command.getPosition()));
                         }
-                        
+
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     } catch (SQLException e) {
@@ -679,7 +728,8 @@ public class Executor {
                     }
                 }
             }
-        }).start();
+        });
+        waitThread.start();
     }
 
     public static void main(String[] args){
