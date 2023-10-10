@@ -203,6 +203,12 @@ public class Executor {
                         LOG.error("[EXPECT RESULT]:\n" + command.getTestResult().getExpResult());
                         LOG.error("[ACTUAL RESULT]:\n" + command.getTestResult().getActResult());
                         
+                        if(COMMON.NEEDPPROF){
+                            LOG.info("Start to collect pprof information,please wait........");
+                            pprof();
+                            LOG.info("Finish to collect pprof information,the test will continue");
+                        }
+                        
                         //reconnect to mo, and set db to last use db
                         LOG.warn(String.format("The mo-tester tries to re-connect to mo, con[id=%d, user=%s, pwd=%s, db=%s], please wait.....",
                                 command.getConn_id(),command.getConn_user(),command.getConn_pswd(),command.getUseDB()));
@@ -657,6 +663,68 @@ public class Executor {
         }
     }
     
+    public static void pprof(){
+        String[] debugServers = MoConfUtil.getDebugServers();
+        if(debugServers != null){
+            int port = MoConfUtil.getDebugPort();
+            Thread[] threads = new Thread[debugServers.length];
+            for(int i = 0; i < debugServers.length;i++){
+                int index = i;
+                threads[index] = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Process p = Runtime.getRuntime().exec(String.format("./pprof.sh -h %s -p %d",debugServers[index],port));
+                            InputStream is = p.getInputStream();
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                            p.waitFor();
+
+                            StringBuffer execResut = new StringBuffer();
+                            String str = reader.readLine();
+                            while ( str != null) {
+                                execResut.append(str+"\n");
+                                str = reader.readLine();
+                            }
+
+                            if (p.exitValue() != 0) {
+                                LOG.error(String.format("The pprof operation has been executed failed.\n%s",execResut.toString()));
+                            }else {
+                                LOG.info(String.format("The pprof operation has been executed successfully.\n%s", execResut.toString()));
+                                LOG.info(String.format("The result is in the dir ./report/pprof/%s/",debugServers[index]));
+                            }
+
+                        } catch (IOException e) {
+                            LOG.error("The pprof operation has been executed failed.");
+                            LOG.error(String.format("The output of pprof operation is \n%s.",e.getMessage()));
+                        } catch (InterruptedException e) {
+                            LOG.error("The pprof operation has been executed failed.");
+                            LOG.error(String.format("The output of pprof operation is \n%s.",e.getMessage()));
+                        }
+                    }
+                });
+                threads[index].start();
+            }
+            
+            boolean finished = false;
+            while(!finished){
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                
+                for(Thread thread:threads){
+                    if(thread.isAlive()){
+                        finished = false;
+                        break;
+                    }
+                    finished = true;
+                }
+            }
+        }
+        
+
+    }
     
     public static void executeSysCmd(String cmd){
         try {

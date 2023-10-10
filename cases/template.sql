@@ -1,3 +1,4 @@
+select sleep(10);
 create table t1 ( a int not null default 1, int32 int primary key);
 insert into t1 (int32) values (-1),(1234567890),(2147483647);
 -- @pattern

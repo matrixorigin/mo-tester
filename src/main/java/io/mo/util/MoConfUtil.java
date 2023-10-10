@@ -85,8 +85,30 @@ public class MoConfUtil {
         return COMMON.DEFAULT_MAX_EXECUTE_TIME;
     }
 
+    public static String[] getDebugServers(){
+        Map debug = (Map)conf.get("debug");
+        if(debug != null){
+            String serverStr = debug.get("serverIP").toString();
+            if(serverStr != null){
+                return serverStr.split(",");
+            }
+        }
+        
+        return null;
+    }
+    
+    public static int getDebugPort(){
+        Map debug = (Map)conf.get("debug");
+        if(debug != null){
+            String portStr = debug.get("port").toString();
+            if(portStr != null){
+                return Integer.parseInt(portStr);
+            }
+        }
 
-
+        return 0;
+    }
+    
     public static void main(String[] args){
         System.out.println(getDriver());
         System.out.println(getURL());
