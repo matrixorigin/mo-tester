@@ -55,7 +55,7 @@ if [ ! -d ${WORKSPACE}/report/prof/${SERVER} ] ; then
     mkdir ${WORKSPACE}/report/prof/${SERVER}
 fi
 
-time=`date +'%Y-%m-%d_%H:%M:%S'`
+time=`date +'%Y-%m-%d_%H-%M-%S'`
 mkdir -p ${WORKSPACE}/report/prof/${SERVER}/${time}
 curl http://${SERVER}:${PORT}/debug/pprof/goroutine?debug=2 -o ${WORKSPACE}/report/prof/${SERVER}/${time}/goroutine.log
 curl http://${SERVER}:${PORT}/debug/pprof/trace?seconds=30 -o ${WORKSPACE}/report/prof/${SERVER}/${time}/trace.out
