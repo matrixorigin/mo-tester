@@ -7,7 +7,7 @@ fi
 
 TIMES=1
 
-while getopts ":p:m:t:r:i:e:s:gfnch" opt
+while getopts ":p:m:t:r:i:e:s:ogfnch" opt
 do
     case $opt in
         p)
@@ -58,6 +58,10 @@ do
         CHECK="check"
         echo -e "The meta data of the resultset will be ignored when comparing the resut"
         ;;
+        o)
+        PPROF="pprof"
+        echo -e "If a query timeout, mo-tester will collect the pprof info from mo"
+        ;;
         h)
         echo -e "Usage:　bash run.sh [option] [param] ...\nExcute test cases task"
         echo -e "   -p  set the path of test cases needed to be executed by mo-tester"
@@ -75,6 +79,7 @@ do
         echo -e "       Those two sql commands are associated with the issue#3236,and they will not been executed in bvt test,until the flag is removed when the issue#3236 is fixed."
         echo -e "   -n  means the meta data of the resultset will be ignored when comparing the resut"
         echo -e "   -c  check whether the case scripts match the result file"
+        echo -e "   -o  if a query timeout, mo-tester will collect the pprof info from mo"
         echo -e "Examples:"
         echo "   bash run.sh -p case -m run -t script -r 100 -i select,subquery -e substring -g"
         echo "For more support,please email to dong.su@matrixorigin.io"
@@ -104,7 +109,7 @@ if [ ${TIMES} -eq 1 ]; then
   java -Xms1024M -Xmx1024M -cp ${libJars} \
           -Dconf.yml=${MO_YAML} \
           -Drun.yml=${RUN_YAML} \
-          io.mo.Tester ${PATHC} ${METHOD} ${TYPE} ${RATE} ${INCLUDE} ${EXCLUDE} ${IGNORE} ${NOMETA} ${CHECK} ${RESOURCE} ${FORCE}
+          io.mo.Tester ${PATHC} ${METHOD} ${TYPE} ${RATE} ${INCLUDE} ${EXCLUDE} ${IGNORE} ${NOMETA} ${CHECK} ${RESOURCE} ${FORCE} ${PPROF}
 else
   echo "This test will be run for ${TIMES} times"
   for i in $(seq 1 ${TIMES})
@@ -113,7 +118,7 @@ else
       java -Xms1024M -Xmx1024M -cp ${libJars} \
                 -Dconf.yml=${MO_YAML} \
                 -Drun.yml=${RUN_YAML} \
-                io.mo.Tester ${PATHC} ${METHOD} ${TYPE} ${RATE} ${INCLUDE} ${EXCLUDE} ${IGNORE} ${NOMETA} ${CHECK} ${RESOURCE} ${FORCE}
+                io.mo.Tester ${PATHC} ${METHOD} ${TYPE} ${RATE} ${INCLUDE} ${EXCLUDE} ${IGNORE} ${NOMETA} ${CHECK} ${RESOURCE} ${FORCE} ${PPROF}
       echo "The ${i} turn test has ended, and test report is in ./report/${i} dir." | tee -a ${WORKSPACE}/run.log
       mkdir -p ${WORKSPACE}/${MOTESTER_DIR}/report/${i}/
       mv ${WORKSPACE}/${MOTESTER_DIR}/report/*.txt ${WORKSPACE}/${MOTESTER_DIR}/report/${i}/

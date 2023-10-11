@@ -21,3 +21,8 @@ jdbc:
 user:
   name: "dump"
   password: "111"
+
+#debug info
+debug:
+  serverIP: "127.0.0.1"
+  port: 6060

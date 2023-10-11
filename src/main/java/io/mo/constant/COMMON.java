@@ -62,6 +62,8 @@ public class COMMON {
     public static String START_TRX = "begin";
     public static String COMMIT_TRX = "commit";
     public static String ROLLBACK_TRX = "rollback";
+    
+    public static boolean NEEDPPROF = false;
 
     public static String[] SPECIAL_CHARS = new String[]{"+","-","*","/","%","&",">","<","(",")","!","=","\'","\""};
 
