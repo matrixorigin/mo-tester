@@ -1,5 +1,6 @@
 package io.mo.result;
 
+import io.mo.cases.SqlCommand;
 import io.mo.constant.COMMON;
 import io.mo.constant.RESULT;
 import org.apache.log4j.Logger;
@@ -21,13 +22,26 @@ public class RSSet {
 
     private String separator = RESULT.COLUMN_SEPARATOR_SPACE;
 
+    private ArrayList<Integer> ignoreColumns = new ArrayList<>();
+
+    public SqlCommand getCommand() {
+        return command;
+    }
+
+    public void setCommand(SqlCommand command) {
+        this.command = command;
+    }
+
+    private SqlCommand command;
+
     private static Logger LOG = Logger.getLogger(RSSet.class.getName());
 
     public RSSet(){
 
     }
 
-    public RSSet(ResultSet resultSet){
+    public RSSet(ResultSet resultSet,SqlCommand command){
+        this.command = command;
         ResultSetMetaData md = null;
         StringBuffer result = new StringBuffer();
         try {
@@ -44,6 +58,16 @@ public class RSSet {
                 RSRow rsRow = new RSRow(cols);
                 for(int j = 0; j < cols; ++j) {
                     RSCell rsCell = new RSCell<String>();
+                    if(this.command!=null && this.command.getIgnoreColumns().size() != 0){
+                        if(this.command.getIgnoreColumns().contains(new Integer(j))){
+                            LOG.debug(String.format("[%s][row:%d][%s] The column[%d] does not need to be check.",
+                                    command.getScriptFile(),
+                                    command.getPosition(),
+                                    command.getCommand(),
+                                    j));
+                            rsCell.setNeedcheck(false);
+                        }
+                    }
                     String value = resultSet.getString(j + 1);
                     if(value == null)
                         value = "null";
@@ -150,6 +174,7 @@ public class RSSet {
         }
 
         for(int i = 0; i < rows.size();i++){
+            
             if(!this.rows.get(i).equals(set.getRows().get(i))){
                 return false;
             }
@@ -170,6 +195,14 @@ public class RSSet {
         for(RSRow row : rows){
             row.setSeparator(this.separator);
         }
+    }
+
+    public ArrayList<Integer> getIgnoreColumns(){
+        return this.ignoreColumns;
+    }
+
+    public void addIgnoreColumn(int id){
+        this.ignoreColumns.add(id);
     }
 
     public String toString(){

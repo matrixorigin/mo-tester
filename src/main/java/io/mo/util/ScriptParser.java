@@ -83,6 +83,16 @@ public class ScriptParser {
                         command.setRegularMatch(true);
                     }
 
+                    if(trimmedLine.startsWith(COMMON.IGNORE_COLUMN_FLAG)){
+                        String ignores = trimmedLine.substring(COMMON.IGNORE_COLUMN_FLAG.length());
+                        if(ignores != null || !ignores.equalsIgnoreCase("")){
+                            String[] ignore_ids = ignores.split(",");
+                            for(int i = 0; i < ignore_ids.length;i++){
+                                command.addIgnoreColumn(Integer.parseInt(ignore_ids[i]));
+                            }
+                        }
+                    }
+
                     //if line is mark to set wait paras
                     if(trimmedLine.startsWith(COMMON.WAIT_FLAG)){
                         String[] items = trimmedLine.split(":");
