@@ -5,6 +5,7 @@ import io.mo.constant.RESULT;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.impl.xb.xsdschema.PatternDocument;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +29,7 @@ public class StmtResult {
 
     private static Logger LOG = Logger.getLogger(StmtResult.class.getName());
 
+
     public StmtResult(String errorMessage){
         this.type = RESULT.STMT_RESULT_TYPE_ERROR;
         this.errorMessage = errorMessage;
@@ -36,6 +38,7 @@ public class StmtResult {
     public StmtResult(RSSet rsSet){
         this.rsSet = rsSet;
         if(this.command != null) {
+            this.rsSet.setCommand(command);
             if (command.getSeparator().equals("both") || command.getSeparator().equals("space"))
                 this.rsSet.setSeparator(RESULT.COLUMN_SEPARATOR_SPACE);
             else
@@ -149,6 +152,7 @@ public class StmtResult {
         
         this.rsSet = rsSet;
         if(this.command != null) {
+            this.rsSet.setCommand(this.command);
             if (command.getSeparator().equals("both") || command.getSeparator().equals("space"))
                 this.rsSet.setSeparator(RESULT.COLUMN_SEPARATOR_SPACE);
             else
@@ -177,6 +181,7 @@ public class StmtResult {
     public void setCommand(SqlCommand command) {
         this.command = command;
         if(this.rsSet != null) {
+            this.rsSet.setCommand(command);
             if (command.getSeparator().equals("both") || command.getSeparator().equals("space"))
                 this.rsSet.setSeparator(RESULT.COLUMN_SEPARATOR_SPACE);
             else

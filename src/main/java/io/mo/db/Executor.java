@@ -149,15 +149,17 @@ public class Executor {
                 }
                 ResultSet resultSet = statement.getResultSet();
                 if (resultSet != null) {
-                    RSSet rsSet = new RSSet(resultSet);
+                    RSSet rsSet = new RSSet(resultSet,command);
                     StmtResult actResult = new StmtResult(rsSet);
                     command.setActResult(actResult);
                     command.getTestResult().setActResult(actResult.toString());
 
                     StmtResult expResult = command.getExpResult();
+                    expResult.setCommand(command);
                     expResult.setType(RESULT.STMT_RESULT_TYPE_SET);
                     expResult.setRsSet(ResultParser.convertToRSSet(expResult.getOrginalRSText(), command.getSeparator()));
                     command.getTestResult().setExpResult(expResult.toString());
+                    
                 } else {
                     StmtResult actResult = new StmtResult();
                     actResult.setType(RESULT.STMT_RESULT_TYPE_NONE);
@@ -382,7 +384,7 @@ public class Executor {
                     }
                     ResultSet resultSet = statement.getResultSet();
                     if(resultSet != null){
-                        RSSet rsSet = new RSSet(resultSet);
+                        RSSet rsSet = new RSSet(resultSet,command);
                         StmtResult actResult = new StmtResult(rsSet);
                         actResult.setCommand(command);
                         rs_writer.write(command.getCommand().trim());
@@ -502,7 +504,7 @@ public class Executor {
                 statement.execute(sqlCmd);
                 ResultSet resultSet = statement.getResultSet();
                 if (resultSet != null) {
-                    RSSet rsSet = new RSSet(resultSet);
+                    RSSet rsSet = new RSSet(resultSet,command);
                     StmtResult actResult = new StmtResult(rsSet);
                     command.setActResult(actResult);
                     command.getTestResult().setActResult(actResult.toString());

@@ -34,6 +34,8 @@ public class SqlCommand {
     private ArrayList<Integer> sortKeyIndexs = new ArrayList<>();
     
     private ArrayList<String> syscmds = new ArrayList<>();
+    
+    private ArrayList<Integer> ignoreColumns = new ArrayList<>();
 
     private TestResult testResult;
     private StmtResult expResult;
@@ -293,5 +295,11 @@ public class SqlCommand {
         this.waitOperation = waitOperation;
     }
 
-
+    public ArrayList<Integer> getIgnoreColumns(){
+        return this.ignoreColumns;
+    }
+    
+    public void addIgnoreColumn(int id){
+        this.ignoreColumns.add(id);
+    }
 }

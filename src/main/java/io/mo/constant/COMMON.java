@@ -42,6 +42,8 @@ public class COMMON {
     
     //if result is type of error, and not unique, can use this flag to regular match
     public static String REGULAR_MATCH_FLAG = "-- @pattern";
+    
+    public static String IGNORE_COLUMN_FLAG = "-- @ignore:";
 
     public static String LOG_DIR = "log";
     public static String RESULT_DIR = "result";

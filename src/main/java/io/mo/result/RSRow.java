@@ -1,5 +1,6 @@
 package io.mo.result;
 
+import io.mo.cases.SqlCommand;
 import io.mo.constant.RESULT;
 import org.apache.log4j.Logger;
 
@@ -12,6 +13,17 @@ public class RSRow {
     private String separator = RESULT.COLUMN_SEPARATOR_SPACE;
 
     private int index = 0;//the row index in the RSSet
+
+    public SqlCommand getCommand() {
+        return command;
+    }
+
+    public void setCommand(SqlCommand command) {
+        this.command = command;
+    }
+
+    private SqlCommand command;
+    
     private static Logger LOG = Logger.getLogger(RSRow.class.getName());
 
     public RSRow(int colCount){
@@ -59,8 +71,14 @@ public class RSRow {
         
         //Or,compare each values
         for(int i = 0; i < cells.size(); i++){
+            
             RSCell ct = cells.get(i);
+            
             RSCell cc = rsRow.getRowValues().get(i);
+
+            if(!ct.isNeedcheck() || !cc.isNeedcheck()) {
+                continue;
+            }
             if(!ct.equals(cc)){
                 LOG.error("The value of [row:" + index + ",column:" + i + "] does not equal with each other,one is ["+ct.toString()+"],but the other is ["+cc.toString()+"]");
                 return false;

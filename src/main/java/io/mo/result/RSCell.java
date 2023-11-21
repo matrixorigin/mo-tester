@@ -13,6 +13,16 @@ public class RSCell<T> {
     private int precision = 0; //column value precision,remain attr
     private static Logger LOG = Logger.getLogger(RSCell.class.getName());
 
+    public boolean isNeedcheck() {
+        return needcheck;
+    }
+
+    public void setNeedcheck(boolean needcheck) {
+        this.needcheck = needcheck;
+    }
+
+    private boolean needcheck = true;
+
     public T getValue() {
         return value;
     }
