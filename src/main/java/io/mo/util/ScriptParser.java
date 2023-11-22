@@ -1,9 +1,12 @@
 package io.mo.util;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import freemarker.template.utility.NumberUtil;
 import io.mo.cases.SqlCommand;
 import io.mo.cases.TestScript;
 import io.mo.constant.COMMON;
+import io.mo.stream.TopicAndRecords;
 import org.apache.log4j.Logger;
 import org.apache.commons.lang3.StringUtils;
 
@@ -28,19 +31,23 @@ public class ScriptParser {
         try {
             BufferedReader lineReader = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(path))));
             SqlCommand command = new SqlCommand();
+            TopicAndRecords tar = new TopicAndRecords();
             String line = lineReader.readLine();
             String trimmedLine;
             String issueNo = null;
             boolean ignore = false;
+            boolean isProduceRecord = false;
             int con_id = 0;
             String con_user = null;
             String con_pswd = null;
+            
+            StringBuffer messages = new StringBuffer();
 
             while (line != null) {
                 line = new String(line.getBytes(), StandardCharsets.UTF_8);
                 trimmedLine = line.trim();
                 //trimmedLine = line.replaceAll("\\s+$", "");
-
+                
                 //extract sql commands from the script file
                 if (trimmedLine.equals("") || lineIsComment(trimmedLine)) {
                     
@@ -82,6 +89,37 @@ public class ScriptParser {
                     if(trimmedLine.startsWith(COMMON.REGULAR_MATCH_FLAG)){
                         command.setRegularMatch(true);
                     }
+                    
+                    if(trimmedLine.startsWith(COMMON.KAFKA_PRODUCE_START_FLAG)){
+                        String topic = trimmedLine.substring(COMMON.KAFKA_PRODUCE_START_FLAG.length());
+                        if(topic == null || topic.equalsIgnoreCase("")){
+                            LOG.error(String.format("[%s][row:%s]No topic info in kafka produce tag.",path,rowNum));
+                            continue;
+                        }
+                        tar.setTopic(topic);
+                    }
+
+                    if(trimmedLine.startsWith(COMMON.KAFKA_PRODUCE_START_FLAG)){
+                        String topic = trimmedLine.substring(COMMON.KAFKA_PRODUCE_START_FLAG.length());
+                        if(topic == null || topic.equalsIgnoreCase("")){
+                            LOG.error(String.format("[%s][row:%s]No topic info in kafka produce tag.",path,rowNum));
+                            continue;
+                        }
+                        tar.setTopic(topic);
+                        isProduceRecord = true;
+                    }
+
+                    if(trimmedLine.equalsIgnoreCase(COMMON.KAFKA_PRODUCE_END_FLAG)){
+                        isProduceRecord = false;
+                        JSONArray array = JSON.parseArray(messages.toString());
+                        for(int i = 0; i < array.size();i++){
+                            tar.addRecord(array.get(i).toString());
+                        }
+                        int index = testScript.getCommands().size();
+                        testScript.addKafkaProduceRecord(index,tar);
+                        messages.delete(0,messages.length());
+                    }
+                    
 
                     if(trimmedLine.startsWith(COMMON.IGNORE_COLUMN_FLAG)){
                         String ignores = trimmedLine.substring(COMMON.IGNORE_COLUMN_FLAG.length());
@@ -204,6 +242,13 @@ public class ScriptParser {
                     continue;
                 }
                 
+                if(isProduceRecord){
+                    messages.append(trimmedLine);
+                    line = lineReader.readLine();
+                    rowNum++;
+                    continue;
+                }
+                
                 if(trimmedLine.contains(delimiter)){
                     if(delimiter.equalsIgnoreCase(COMMON.DEFAUT_DELIMITER))
                         command.append(trimmedLine);
@@ -239,5 +284,12 @@ public class ScriptParser {
     }
 
     public static void main(String[] args){
+        String str = "[\"This is the first message\",\n" +
+                "\"This is the second message\",\n" +
+                "\"This is the third message\"]";
+        JSONArray array = JSON.parseArray(str);
+        for(int i = 0 ; i < array.size();i++) {
+            System.out.println(array.get(i));
+        }
     }
 }
