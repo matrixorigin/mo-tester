@@ -21,6 +21,8 @@ jdbc:
 user:
   name: "dump"
   password: "111"
+  sysuser: "dump"
+  syspass: "111"
 
 #debug info
 debug:
