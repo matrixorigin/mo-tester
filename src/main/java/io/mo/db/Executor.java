@@ -112,7 +112,7 @@ public class Executor {
                 LOG.debug(String.format("[%s][row:%d][%s]Connection id had been turned from %d to %d",
                         command.getScriptFile(),command.getPosition(),command.getCommand(),
                         last_commit_id,command.getConn_id()));
-                syncCommit(connection);
+                syncCommit();
             }
 
             last_commit_id = command.getConn_id();
@@ -220,8 +220,10 @@ public class Executor {
                             LOG.warn(String.format("Failed to close connection[id=%d], but effect nothing.",command.getConn_id()));
                         }
                         connection = getConnection(command);
-                        if(connection != null && !connection.isClosed())
+                        if(connection != null && !connection.isClosed()) {
                             connection.setCatalog(command.getUseDB());
+                            syncCommit();
+                        }
                         continue;
                     }
 
@@ -655,11 +657,16 @@ public class Executor {
         dropTestDB(connection,script.getUseDB());
     }
     
-    public static void syncCommit(Connection connection){
+    public static void syncCommit(){
+        Connection connection = ConnectionManager.getConnectionForSys();
+        if(connection == null){
+            LOG.error("select mo_ctl('cn','synccommit','') failed. cause: Can not get invalid connection for sys user.");
+        }
+        
         try {
             Statement statement = connection.createStatement();
             statement.execute("select mo_ctl('cn','synccommit','')");
-            LOG.debug("select mo_ctl('cn','synccommit','') successfully.");
+            LOG.info("select mo_ctl('cn','synccommit','') with sys user[" + MoConfUtil.getSysUserName() + "] successfully.");
         } catch (SQLException e) {
             LOG.error("select mo_ctl('cn','synccommit','') failed. cause: " + e.getMessage());
         }
