@@ -62,7 +62,7 @@ The Cases and Results are 1-1 correspondence, and they are actually `git submodu
     name: "dump"
     passwrod: "111"
   ```
-
+* In `kafka.yml` file, configure the kafka server address, only for the cases that need to produce or consume messages from kafka server.
 ## 3. Run mo-tester
 
 * With the simple below command, all the SQL test cases will automatically run and generate reports and error messages to *report/report.txt* and *report/error.txt*.
@@ -73,17 +73,18 @@ The Cases and Results are 1-1 correspondence, and they are actually `git submodu
 
 If you'd like to adjust the test range, you can just change the `path` parameter of `run.yml`. And you can also specify some parameters when executing the command `./run.sh`, parameters are as followings:
 
-|Parameters|Description|
-|---|---|
-|-p|set the path of test cases needed to be executed by mo-tester, the default value is configured by the `path` in `run.yaml`|
-|-m|set the method that mo-tester will run with, the default value is configured by the `method` in `run.yaml`|
-|-t|set the times that mo-tester will execute cases for, must be numeric, default is 1|
-|-r|set The success rate that test cases should reach, the default value is configured by the `rate` in `run.yaml`|
-|-i|set the including list, and only script files in the path whose name contains one of the lists will be executed, if more than one, separated by `,`, if not specified, refers to all cases included|
-|-e|set the excluding list, and script files in the path whose name contains one of the lists will not be executed, if more than one, separated by `,`, if not specified, refers to none of the cases excluded|
-|-g|means SQL commands which is marked with [bvt:issue] flag will not be executed,this flag starts with [-- @bvt:issue#{issueNO.}],and ends with [-- @bvt:issue],eg:<br>-- @bvt:issue#3236<br/><br>select date_add("1997-12-31 23:59:59",INTERVAL "-10000:1" HOUR_MINUTE);<br/><br>select date_add("1997-12-31 23:59:59",INTERVAL "-100 1" YEAR_MONTH);<br/><br>-- @bvt:issue<br/><br>Those two sql commands are associated with issue#3236, and they will not be executed in bvt test, until the flag is removed when issue#3236 is fixed.<br/>|
-|-n|means the metadata of the resultset will be ignored when comparing the result|
-|-c|only check whether the case file matches the related result file|
+| Parameters |Description|
+|------------|---|
+| -p         |set the path of test cases needed to be executed by mo-tester, the default value is configured by the `path` in `run.yaml`|
+| -m         |set the method that mo-tester will run with, the default value is configured by the `method` in `run.yaml`|
+| -t         |set the times that mo-tester will execute cases for, must be numeric, default is 1|
+| -r         |set The success rate that test cases should reach, the default value is configured by the `rate` in `run.yaml`|
+| -i         |set the including list, and only script files in the path whose name contains one of the lists will be executed, if more than one, separated by `,`, if not specified, refers to all cases included|
+| -e         |set the excluding list, and script files in the path whose name contains one of the lists will not be executed, if more than one, separated by `,`, if not specified, refers to none of the cases excluded|
+| -g         |means SQL commands which is marked with [bvt:issue] flag will not be executed,this flag starts with [-- @bvt:issue#{issueNO.}],and ends with [-- @bvt:issue],eg:<br>-- @bvt:issue#3236<br/><br>select date_add("1997-12-31 23:59:59",INTERVAL "-10000:1" HOUR_MINUTE);<br/><br>select date_add("1997-12-31 23:59:59",INTERVAL "-100 1" YEAR_MONTH);<br/><br>-- @bvt:issue<br/><br>Those two sql commands are associated with issue#3236, and they will not be executed in bvt test, until the flag is removed when issue#3236 is fixed.<br/>|
+| -n         |means the metadata of the resultset will be ignored when comparing the result|
+| -c         |only check whether the case file matches the related result file|
+| -s         |set the resource path that mo-tester use to store resources, and can be refered to  in test file|
 
 **Examples**:
 
@@ -100,16 +101,18 @@ Every time running `run.sh` will overwrite the report of the  *error.txt* file, 
 ## 4. Set tags in case scripts
 Sometimes, to achieve some specific purposes, such as pausing or creating a new connection, you can add some special tags to the script file. The mo tester provides the following tags for use:
 
-| Tags                                                     | Description                                                                                                                                                                                            |
-|----------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| -- @skip:issue#{IssueNo.}                                | If set, the whole script file will be skipped, and not be executed any more for issue{IssueNo.}                                                                                                        |
-| -- @bvt:issue#{IssueNo.}<br/>-- @bvt:issue               | The sql statements between those two tags will be not executed for issue{IssueNo.}                                                                                                                     |
-| -- @sleep:{time}                                         | The mo-tester will wait for {time} s                                                                                                                                                                   |
-| -- @session:id=2&user=root&password=111<br/> -- @session | The mo-tester will create a new connetion to execute sql statements between those two tags.<br/>Default value of id is 1, max is 10.<br/>Defualt value of user and password is configured in `mo.yml`. |
-| -- @sortkey:                                             | If the result is sorted, need set this tag for the sql statement. e.g.<br/> -- @sortkey:0,1: means sort keys are first column and second colum.                                                        |
-| -- @delimiter {C}                                        | Set new delimeter to String C, C can any string expect that starts with [/,#,--]                                                                                                                       |
-| -- @system {C}                                           | Set System Command that will be executed by the runner system                                                                                                                                          |
-| -- @wait:{D}:[commit or wait]                            | means this command will be blocked until the connection[id={D}] commit or rollback                                                                                                                     |
+| Tags                                                          | Description                                                                                                                                                                                           |
+|---------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -- @skip:issue#{IssueNo.}                                     | If set, the whole script file will be skipped, and not be executed any more for issue{IssueNo.}                                                                                                       |
+| -- @bvt:issue#{IssueNo.}<br/>-- @bvt:issue                    | The sql statements between those two tags will be not executed for issue{IssueNo.}                                                                                                                    |
+| -- @sleep:{time}                                              | The mo-tester will wait for {time} s                                                                                                                                                                  |
+| -- @session:id=2&user=root&password=111<br/> -- @session      | The mo-tester will create a new connetion to execute sql statements between those two tags.<br/>Default value of id is 1, max is 10.<br/>Defualt value of user and password is configured in `mo.yml`. |
+| -- @sortkey:                                                  | If the result is sorted, need set this tag for the sql statement. e.g.<br/> -- @sortkey:0,1: means sort keys are first column and second colum.                                                       |
+| -- @delimiter {C}                                             | Set new delimeter to String C, C can any string expect that starts with [/,#,--]                                                                                                                      |
+| -- @system {C}                                                | Set System Command that will be executed by the runner system                                                                                                                                         |
+| -- @wait:{D}:[commit or wait]                                 | means this command will be blocked until the connection[id={D}] commit or rollback                                                                                                                    |
+| -- @ignore:{num},...{num}                                     | means the designated columns which index are in {num}s will not be check.                                                                                                                             |
+| -- @kafka:produce:{topic}}<br/>JSON ARRAY<br/>-- @bvt:produce | means the mo-tester will send all the items in this json array to the designated topic of kafka server.<br/>The kafka server is configured in `kafka.yml`                                               |
 
  
 

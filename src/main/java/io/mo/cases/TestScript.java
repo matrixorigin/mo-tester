@@ -1,10 +1,15 @@
 package io.mo.cases;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import io.mo.constant.RESULT;
+import io.mo.stream.TopicAndRecords;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TestScript {
 
@@ -13,6 +18,8 @@ public class TestScript {
     private ArrayList<SqlCommand> failedCommands = new ArrayList<>();
     private ArrayList<SqlCommand> ignoredCommands = new ArrayList<>();
     private ArrayList<SqlCommand> abnormalCommands = new ArrayList<>();
+    
+    private Map<Integer, TopicAndRecords> produceRecords = new HashMap<Integer,TopicAndRecords>();
 
     private String fileName;
 
@@ -133,5 +140,17 @@ public class TestScript {
 
     public void setSkiped(boolean skiped) {
         this.skiped = skiped;
+    }
+    
+    public boolean isKafkaProduceCmd(int pos){
+        return produceRecords.containsKey(pos);
+    }
+    
+    public void addKafkaProduceRecord(int pos, TopicAndRecords tar){
+        produceRecords.put(pos,tar);
+    }
+    
+    public TopicAndRecords getTopicAndRecord(int pos){
+        return produceRecords.get(pos);
     }
 }

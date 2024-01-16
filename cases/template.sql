@@ -1,5 +1,11 @@
+
 select sleep(10);
 create table t1 ( a int not null default 1, int32 int primary key);
+-- @kafka:produce:mo-stream-test
+["This is the first message",
+"This is the second message",
+"This is the third message"]
+-- @kafka:produce
 insert into t1 (int32) values (-1),(1234567890),(2147483647);
 -- @pattern
 insert into t1 (int32) values (-1),(1234567890),(2147483647);
@@ -45,3 +51,8 @@ use template;
 select * from nation;
 select * from nation limit 2;
 -- @session
+-- @kafka:produce:mo-stream-test
+["That is the first message",
+"That is the second message",
+"That is the third message"]
+-- @kafka:produce

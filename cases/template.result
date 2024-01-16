@@ -1,4 +1,6 @@
 select sleep(10);
+sleep(10)
+0
 create table t1 ( a int not null default 1, int32 int primary key);
 insert into t1 (int32) values (-1),(1234567890),(2147483647);
 insert into t1 (int32) values (-1),(1234567890),(2147483647);
@@ -12,7 +14,8 @@ select min(int32),max(int32),max(int32)-1 from t1;
 min(int32)    max(int32)    max(int32) - 1
 -1    2147483647    2147483646
 select min(int32),max(int32),max(int32)-1 from t1 group by a;
-
+min(int32)    max(int32)    max(int32) - 1
+-1    2147483647    2147483646
 drop table t1;
 CREATE TABLE NATION  (
 N_NATIONKEY  INTEGER NOT NULL,
