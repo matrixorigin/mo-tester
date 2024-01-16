@@ -67,6 +67,20 @@ public class MoConfUtil {
         return user.get("password").toString();
     }
 
+    public static String getSysUserName(){
+        if(conf == null) init();
+
+        Map user = (Map)conf.get("user");
+        return user.get("sysuser").toString();
+    }
+
+    public static String getSyspwd(){
+        if(conf == null) init();
+
+        Map user = (Map)conf.get("user");
+        return user.get("syspass").toString();
+    }
+
     public static String getDefaultDatabase(){
         if(conf == null) init();
 
