@@ -80,7 +80,7 @@ public class MoConfUtil {
         Map user = (Map)conf.get("user");
         return user.get("syspass").toString();
     }
-
+    
     public static String getDefaultDatabase(){
         if(conf == null) init();
 

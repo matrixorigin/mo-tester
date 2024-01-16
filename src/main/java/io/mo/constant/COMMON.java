@@ -43,6 +43,9 @@ public class COMMON {
     //if result is type of error, and not unique, can use this flag to regular match
     public static String REGULAR_MATCH_FLAG = "-- @pattern";
     
+    public static String KAFKA_PRODUCE_START_FLAG = "-- @kafka:produce:";
+    public static String KAFKA_PRODUCE_END_FLAG = "-- @kafka:produce";
+    
     public static String IGNORE_COLUMN_FLAG = "-- @ignore:";
 
     public static String LOG_DIR = "log";
