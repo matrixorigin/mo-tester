@@ -2,6 +2,9 @@ package io.mo.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.parser.Feature;
+import com.alibaba.fastjson.parser.ParserConfig;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import freemarker.template.utility.NumberUtil;
 import io.mo.cases.SqlCommand;
 import io.mo.cases.TestScript;
@@ -90,14 +93,14 @@ public class ScriptParser {
                         command.setRegularMatch(true);
                     }
                     
-                    if(trimmedLine.startsWith(COMMON.KAFKA_PRODUCE_START_FLAG)){
-                        String topic = trimmedLine.substring(COMMON.KAFKA_PRODUCE_START_FLAG.length());
-                        if(topic == null || topic.equalsIgnoreCase("")){
-                            LOG.error(String.format("[%s][row:%s]No topic info in kafka produce tag.",path,rowNum));
-                            continue;
-                        }
-                        tar.setTopic(topic);
-                    }
+//                    if(trimmedLine.startsWith(COMMON.KAFKA_PRODUCE_START_FLAG)){
+//                        String topic = trimmedLine.substring(COMMON.KAFKA_PRODUCE_START_FLAG.length());
+//                        if(topic == null || topic.equalsIgnoreCase("")){
+//                            LOG.error(String.format("[%s][row:%s]No topic info in kafka produce tag.",path,rowNum));
+//                            continue;
+//                        }
+//                        tar.setTopic(topic);
+//                    }
 
                     if(trimmedLine.startsWith(COMMON.KAFKA_PRODUCE_START_FLAG)){
                         String topic = trimmedLine.substring(COMMON.KAFKA_PRODUCE_START_FLAG.length());
@@ -113,11 +116,12 @@ public class ScriptParser {
                         isProduceRecord = false;
                         JSONArray array = JSON.parseArray(messages.toString());
                         for(int i = 0; i < array.size();i++){
-                            tar.addRecord(array.get(i).toString());
+                            tar.addRecord(JSON.toJSONString(array.get(i),SerializerFeature.NotWriteDefaultValue));
                         }
                         int index = testScript.getCommands().size();
                         testScript.addKafkaProduceRecord(index,tar);
                         messages.delete(0,messages.length());
+                        tar = new TopicAndRecords();
                     }
                     
 
@@ -284,12 +288,12 @@ public class ScriptParser {
     }
 
     public static void main(String[] args){
-        String str = "[\"This is the first message\",\n" +
-                "\"This is the second message\",\n" +
-                "\"This is the third message\"]";
+        String str = "[{\"c1\":\"yyjjuejf\",\"c2\":\"中国\",\"c3\":\"##$%^&@\",\"c4\":\"\"},\n" +
+                "{\"c1\":NULL,\"c2\":\"0xDERFW9883\",\"c3\":\"5727362\",\"c4\":\"x'612543'\"}]";
+        System.out.println(str);
         JSONArray array = JSON.parseArray(str);
         for(int i = 0 ; i < array.size();i++) {
-            System.out.println(array.get(i));
+            System.out.println(JSON.toJSONString(array.get(i),SerializerFeature.WriteMapNullValue));
         }
     }
 }
