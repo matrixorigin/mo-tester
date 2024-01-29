@@ -34,7 +34,7 @@ public class ConnectionManager {
         if(!server_up) return null;
 
         //get db connection,if failed,retry 3 times 10 s interval 
-        for(int i = 0; i < 3; i++) {
+        //for(int i = 0; i < 3; i++) {
             try {
                 Class.forName(driver);
                 if (connections[index] == null || connections[index].isClosed()) {
@@ -43,7 +43,8 @@ public class ConnectionManager {
                 }
                 return connections[index];
             } catch (SQLException e) {
-                LOG.error("The mo-tester can not get valid conneciton from mo with[user="+userName+", pwd="+pwd+"], and will wait 10 seconds and retry...");
+                //LOG.error("The mo-tester can not get valid conneciton from mo with[user="+userName+", pwd="+pwd+"], and will wait 10 seconds and retry...");
+                LOG.error(e.getMessage());
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException ex) {
@@ -52,9 +53,9 @@ public class ConnectionManager {
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-        }
-
-        LOG.error("The mo-tester still can not get valid conneciton from mo, the following cases wil not be executed!");
+        //}
+        
+        LOG.error("The mo-tester can not get valid conneciton from mo with[user="+userName+", pwd="+pwd+"], the following cases wil not be executed!");
         server_up = false;
         return null;
     }
@@ -64,7 +65,7 @@ public class ConnectionManager {
         if(!server_up) return null;
 
         //get db connection,if failed,retry 3 times 10 s interval 
-        for(int i = 0; i < 3; i++) {
+        //for(int i = 0; i < 3; i++) {
             try {
                 Class.forName(driver);
                 if (connections[index] == null || connections[index].isClosed()) {
@@ -74,7 +75,8 @@ public class ConnectionManager {
                 }
                 return connections[index];
             } catch (SQLException e) {
-                LOG.error("The mo-tester can not get valid conneciton from mo with[user="+userName+", pwd="+pwd+"], and will wait 10 seconds and retry...");
+                //LOG.error("The mo-tester can not get valid conneciton from mo with[user="+userName+", pwd="+pwd+"], and will wait 10 seconds and retry...");
+                LOG.error(e.getMessage());
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException ex) {
@@ -83,9 +85,9 @@ public class ConnectionManager {
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-        }
+        //}
 
-        LOG.error("The mo-tester still can not get valid conneciton from mo, the following cases wil not be executed!");
+        LOG.error("The mo-tester can not get valid conneciton from mo with[user="+userName+", pwd="+pwd+"], the following cases wil not be executed!");
         server_up = false;
         return null;
     }
@@ -95,7 +97,7 @@ public class ConnectionManager {
         if(!server_up) return null;
 
         //get db connection,if failed,retry 3 times 10 s interval 
-        for(int i = 0; i < 3; i++) {
+        //for(int i = 0; i < 3; i++) {
             try {
                 Class.forName(driver);
                 if (sysconn == null || sysconn.isClosed()) {
@@ -103,7 +105,7 @@ public class ConnectionManager {
                 }
                 return sysconn;
             } catch (SQLException e) {
-                LOG.error("The mo-tester can not get valid conneciton from mo with[user="+userName+", pwd="+pwd+"] for sys user, and will wait 10 seconds and retry...");
+                //LOG.error("The mo-tester can not get valid conneciton from mo with[user="+userName+", pwd="+pwd+"] for sys user, and will wait 10 seconds and retry...");
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException ex) {
@@ -112,9 +114,9 @@ public class ConnectionManager {
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-        }
+        //}
 
-        LOG.error("The mo-tester still can not get valid conneciton from mo for sys user, the following cases wil not be executed!");
+        LOG.error("The mo-tester can not get valid conneciton from mo with[user="+userName+", pwd="+pwd+"], the following cases wil not be executed!");
         server_up = false;
         return null;
     }
