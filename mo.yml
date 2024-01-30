@@ -15,8 +15,12 @@ jdbc:
     useLocalSessionState: "true"
     zeroDateTimeBehavior: "CONVERT_TO_NULL"
     failoverReadOnly: "false"
+    initialTimeout: 60
+    autoReconnect: "true"
+    maxReconnects: 4
     serverTimezone: "Asia/Shanghai"
     socketTimeout: 120000
+    
 #users
 user:
   name: "dump"
