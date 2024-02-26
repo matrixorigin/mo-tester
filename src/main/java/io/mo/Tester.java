@@ -320,6 +320,10 @@ public class Tester {
     
     public static void cleanDatabases(){
         Connection connection = ConnectionManager.getConnection();
+        if(connection == null){
+            LOG.error("Failed to clean databases,please check the error,the program will exit.");
+            System.exit(1);
+        }
         String dropDB = "DROP DATABASE IF EXISTS `%s`";
         String[] dbs = RunConfUtil.getBuiltinDb();
         try {
