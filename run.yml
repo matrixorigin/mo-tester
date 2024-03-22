@@ -11,7 +11,7 @@ method: "run"
 rate: 100
 
 #builtindb: builtin databases of mo
-builtindb: mo_catalog,mo_task,information_schema,mysql,system_metrics,system,query_result
+builtindb: mo_catalog,mo_task,information_schema,mysql,system_metrics,system,query_result,mo_debug
 
 #outfiles: files or paths that the mo generates during the test
 outfiles: json/export_1.csv,json/export_2.csv,into_outfile,into_outfile_2
