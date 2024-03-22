@@ -74,7 +74,11 @@ public class RSCell<T> {
                cell.type == Types.BIGINT ||
                (cell.type == Types.VARCHAR && isNumeric(v1) &&isNumeric(v2))) {
                 
-
+                if(!isNumeric(v1)){
+                    LOG.error(String.format("value[%s] does not equal to value[%s]",v1,v2));
+                    return false;
+                }
+                
                 BigDecimal bd1 = BigDecimal.valueOf(Double.valueOf(v1)).stripTrailingZeros();
                 BigDecimal bd2 = BigDecimal.valueOf(Double.valueOf(v2)).stripTrailingZeros();
                 //System.out.println("bd1 = " + bd1);
