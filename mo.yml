@@ -13,6 +13,7 @@ jdbc:
     useServerPrepStmts: "true"
     alwaysSendSetIsolation: "false"
     useLocalSessionState: "true"
+    allowLoadLocalInfile: "true"
     zeroDateTimeBehavior: "CONVERT_TO_NULL"
     failoverReadOnly: "false"
     initialTimeout: 60
