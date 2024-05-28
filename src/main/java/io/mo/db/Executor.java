@@ -137,7 +137,9 @@ public class Executor {
                 //connection.setCatalog(command.getUseDB());
                 command.setUseDB(connection.getCatalog());
                 statement = connection.createStatement();
-                String sqlCmd = command.getCommand().replaceAll(COMMON.RESOURCE_PATH_FLAG,COMMON.RESOURCE_PATH);
+                String sqlCmd = command.getCommand()
+                        .replaceAll(COMMON.RESOURCE_LOCAL_PATH_FLAG,COMMON.RESOURCE_LOCAL_PATH)
+                        .replaceAll(COMMON.RESOURCE_PATH_FLAG,COMMON.RESOURCE_PATH);
                 if(command.isNeedWait()){
                     execWaitOperation(command);
                 }

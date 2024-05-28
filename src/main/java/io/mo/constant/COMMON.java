@@ -37,6 +37,7 @@ public class COMMON {
 
     public static String COLUMN_SEPARATOR_FLAG = "-- @separator:";
     public static String RESOURCE_PATH_FLAG = "\\$resources";
+    public static String RESOURCE_LOCAL_PATH_FLAG= "\\$resources_local";
     
     public static String WAIT_FLAG = "-- @wait:";
     
@@ -55,6 +56,7 @@ public class COMMON {
     public static String RESOURCE_DIR = "resources";
 
     public static String RESOURCE_PATH = "./resources";
+    public static String RESOURCE_LOCAL_PATH = "./resources";
     public static String UPDATE_RESULT_TEMPLATE = "Query OK, {num} row affected";
 
     public static int WAIT_TIMEOUT = 5000;
