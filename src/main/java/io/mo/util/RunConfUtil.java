@@ -45,6 +45,7 @@ public class RunConfUtil {
             srcPath = srcPath.replace(COMMON.CASES_DIR,COMMON.RESOURCE_DIR);
             srcPath = srcPath.substring(0,srcPath.indexOf(COMMON.RESOURCE_DIR)+COMMON.RESOURCE_DIR.length());
         }
+        COMMON.RESOURCE_LOCAL_PATH = srcPath;
         return srcPath == null?COMMON.RESOURCE_PATH:srcPath;
     }
     

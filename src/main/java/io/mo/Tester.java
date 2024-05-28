@@ -50,6 +50,7 @@ public class Tester {
                         srcPath = srcPath.substring(0,srcPath.indexOf(COMMON.RESOURCE_DIR)+COMMON.RESOURCE_DIR.length());
                     }
                     COMMON.RESOURCE_PATH = srcPath;
+                    COMMON.RESOURCE_LOCAL_PATH = srcPath;
                 }
 
                 //get method
