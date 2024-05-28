@@ -60,8 +60,8 @@ jobs:
           path: ./head
           ref: main
 
-      - name: Set up Go
-        uses: ./head/.github/actions/setup_env
+      - name: Set up ENV
+        uses: matrixorigin/CI/actions/setup-env@main
 
       - name: Build MatrixOne
         run: |
@@ -80,13 +80,6 @@ jobs:
         with:
           fetch-depth: '3'
           path: ./mo-tester
-
-      - name: Set up JDK 8 for x64
-        uses: actions/setup-java@v3
-        with:
-          java-version: '8'
-          distribution: 'adopt'
-          architecture: x64
 
       - name: Start BVT Test
         id: bvt_on_pr_version
