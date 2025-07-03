@@ -19,7 +19,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up JDK 8 for x64
         if: ${{ env.Job-Status }} == 2
@@ -54,7 +54,7 @@ jobs:
 
     steps:
       - name: checkout head
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: matrixorigin/matrixone
           path: ./head
@@ -76,7 +76,7 @@ jobs:
           ./optools/run_bvt.sh $GITHUB_WORKSPACE/head launch
           
       - name: Clone test-tool repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: '3'
           path: ./mo-tester
