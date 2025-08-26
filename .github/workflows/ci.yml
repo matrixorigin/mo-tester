@@ -23,7 +23,7 @@ jobs:
 
       - name: Set up JDK 8 for x64
         if: ${{ env.Job-Status }} == 2
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v5
         with:
           java-version: '8'
           distribution: 'adopt'
