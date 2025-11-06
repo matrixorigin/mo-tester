@@ -128,12 +128,12 @@ public class Tester {
         }
 
         if(path == null){
-            LOG.error("The scripts file path is not configured,pleas check the config file conf/run.yml.");
+            LOG.error("The scripts file path is not configured,please check the config file conf/run.yml.");
             return;
         }
 
         if(method == null){
-            LOG.error("The method of execution is not configured,pleas check the config file conf/run.yml.");
+            LOG.error("The method of execution is not configured,please check the config file conf/run.yml.");
             return;
         }
 
@@ -146,7 +146,7 @@ public class Tester {
 
 
         if(method.equalsIgnoreCase("run")){
-            LOG.info("Now start to clean up databaes and outfiles.");
+            LOG.info("Now start to clean up databases and outfiles.");
             cleanDatabases();
             removeOutfiles();
             
@@ -167,7 +167,7 @@ public class Tester {
         }
 
         if(method.equalsIgnoreCase("debug")){
-            LOG.info("Now start to clean up databaes and outfiles.");
+            LOG.info("Now start to clean up databases and outfiles.");
             cleanDatabases();
             removeOutfiles();
             debug(file);
@@ -178,7 +178,7 @@ public class Tester {
         }
 
         if(method.equalsIgnoreCase("genrs")){
-            LOG.info("Now start to clean up databaes and outfiles.");
+            LOG.info("Now start to clean up databases and outfiles.");
             cleanDatabases();
             removeOutfiles();
             LOG.info("The method is [genrs],now start to generate the checkpoints in the path["+ path +"].");
@@ -397,8 +397,7 @@ public class Tester {
                 LOG.error(String.format("The outfile or path [%s] has failed to be removed, the test will be terminated ", path));
                 System.exit(1);
             }
-            
-            
+
         }
     }
 }

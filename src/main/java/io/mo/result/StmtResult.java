@@ -80,7 +80,8 @@ public class StmtResult {
                     }
                 }
                 
-                if(!this.errorMessage.trim().equals(stmtResult.getErrorMessage().trim())){
+                // Don't trim error messages to preserve whitespace
+                if(!this.errorMessage.equals(stmtResult.getErrorMessage())){
                     return false;
                 }
             }
