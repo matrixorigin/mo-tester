@@ -232,12 +232,13 @@ public class ResultParser {
         
         StringBuilder buffer = new StringBuilder();
         //first,replace separator to the system designated separator
+        //Use Pattern.quote to treat the separator as literal string, not regex
         if(separator.equals("both"))
-            buffer.append(rsText.replaceAll(RESULT.COLUMN_SEPARATOR_SPACE,RESULT.COLUMN_SEPARATOR_SYSTEM).replaceAll(RESULT.COLUMN_SEPARATOR_TABLE,RESULT.COLUMN_SEPARATOR_SYSTEM));
+            buffer.append(rsText.replaceAll(java.util.regex.Pattern.quote(RESULT.COLUMN_SEPARATOR_SPACE),RESULT.COLUMN_SEPARATOR_SYSTEM).replaceAll(java.util.regex.Pattern.quote(RESULT.COLUMN_SEPARATOR_TABLE),RESULT.COLUMN_SEPARATOR_SYSTEM));
         if(separator.equals("table"))
-            buffer.append(rsText.replaceAll(RESULT.COLUMN_SEPARATOR_TABLE,RESULT.COLUMN_SEPARATOR_SYSTEM));
+            buffer.append(rsText.replaceAll(java.util.regex.Pattern.quote(RESULT.COLUMN_SEPARATOR_TABLE),RESULT.COLUMN_SEPARATOR_SYSTEM));
         if(separator.equals("space"))
-            buffer.append(rsText.replaceAll(RESULT.COLUMN_SEPARATOR_SPACE,RESULT.COLUMN_SEPARATOR_SYSTEM));
+            buffer.append(rsText.replaceAll(java.util.regex.Pattern.quote(RESULT.COLUMN_SEPARATOR_SPACE),RESULT.COLUMN_SEPARATOR_SYSTEM));
         RSSet rsSet = new RSSet();
         
         //first line is meta info
@@ -273,7 +274,9 @@ public class ResultParser {
             }
             RSRow rsRow = new RSRow(columnCount);
             rsSet.addRow(rsRow);
-            String[] values = rowline.split(RESULT.COLUMN_SEPARATOR_SYSTEM);
+            // Use limit parameter to split into exactly columnCount parts
+            // This prevents splitting values that contain the separator
+            String[] values = rowline.split(java.util.regex.Pattern.quote(RESULT.COLUMN_SEPARATOR_SYSTEM), columnCount);
             for(int i = 0; i < columnCount; i++){
                 RSCell rsCell = new RSCell();
                 rsCell.setType(DATATYPE.TYPE_STRING);
