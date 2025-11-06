@@ -14,7 +14,7 @@ public class COMMON {
     public static String R_FILE_SUFFIX = ".result";
 
     public static int CONNECTION_ID = 0;//
-    public static int DEFAULT_CONNECTION_NUM = 10;
+    public static int DEFAULT_CONNECTION_NUM = 1000;
     
     public static int DEFAULT_MAX_EXECUTE_TIME = 10000;
 

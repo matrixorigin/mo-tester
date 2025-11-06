@@ -184,7 +184,7 @@ public class ScriptParser {
                                         //command.setConn_id(COMMON.NEW_SEESION_DEFAULT_ID);
                                         con_id = COMMON.NEW_SEESION_DEFAULT_ID;
                                     }else{
-                                        if(id.matches("[0-9]")){
+                                        if(id.matches("[0-9]+")){
                                             con_id = Integer.parseInt(id);
                                         }else {
                                             LOG.warn("["+path+"][row:"+rowNum+"]The new connection flag designate a invalid connection id by [id=X],and the id will be set to default value 1");
