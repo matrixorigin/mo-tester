@@ -146,7 +146,7 @@ public class Tester {
 
 
         if(method.equalsIgnoreCase("run")){
-            LOG.info("Now start to clean up databaes and outfiles.");
+            LOG.info("Now start to clean up databases and outfiles.");
             cleanDatabases();
             removeOutfiles();
             
@@ -178,7 +178,7 @@ public class Tester {
         }
 
         if(method.equalsIgnoreCase("genrs")){
-            LOG.info("Now start to clean up databaes and outfiles.");
+            LOG.info("Now start to clean up databases and outfiles.");
             cleanDatabases();
             removeOutfiles();
             LOG.info("The method is [genrs],now start to generate the checkpoints in the path["+ path +"].");
