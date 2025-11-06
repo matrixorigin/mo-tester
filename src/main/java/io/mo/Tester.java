@@ -167,7 +167,7 @@ public class Tester {
         }
 
         if(method.equalsIgnoreCase("debug")){
-            LOG.info("Now start to clean up database and outfiles.");
+            LOG.info("Now start to clean up databases and outfiles.");
             cleanDatabases();
             removeOutfiles();
             debug(file);
