@@ -1,58 +1,61 @@
+drop database if exists d1;
+create database d1;
+use d1;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
+create table t1(c1 int primary key);
+create table t2(c1 int primary key, c2 int, c3 int);
+create table t3(c1 int, c2 int, c3 int, primary key(c1,c2));
+create table t4(c1 bigint primary key, c2 bigint);
+insert into t1 select * from generate_series(10000) g;
+insert into t4 select c1, c1 from t1;
+insert into t2 select c1, c1, c1 from t1;
+insert into t2 select c1+10000, c1+10000, c1+10000 from t1;
+insert into t3 select c1, c1, c1 from t1;
+insert into t3 select c1+10000, c1+10000, c1+10000 from t1;
+insert into t3 select c1+20000, c1+20000, c1+20000 from t1;
+-- @separator:table
+select mo_ctl('dn', 'flush', 'd1.t1');
+-- @separator:table
+select mo_ctl('dn', 'flush', 'd1.t2');
+-- @separator:table
+select mo_ctl('dn', 'flush', 'd1.t3');
+-- @separator:table
+select mo_ctl('dn', 'flush', 'd1.t4');
 
-select sleep(10);
-create table t1 ( a int not null default 1, int32 int primary key);
--- @kafka:produce:mo-stream-test
-["This is the first message",
-"This is the second message",
-"This is the third message"]
--- @kafka:produce
-insert into t1 (int32) values (-1),(1234567890),(2147483647);
--- @pattern
-insert into t1 (int32) values (-1),(1234567890),(2147483647);
-select * from t1 order by a desc, int32 asc;
-select min(int32),max(int32),max(int32)-1 from t1;
--- @bvt:issue#1234
-select min(int32),max(int32),max(int32)-1 from t1 group by a;
--- @bvt:issue
+-- @separator:table
+-- basic explain without analyze
+explain select * from t4 where c1 + 2 = 5;
 
-drop table t1;
-CREATE TABLE NATION  ( 
-N_NATIONKEY  INTEGER NOT NULL,
-N_NAME       VARCHAR(25) NOT NULL,
-N_REGIONKEY  INTEGER NOT NULL,
-N_COMMENT    VARCHAR(152),
-PRIMARY KEY (N_NATIONKEY)
-);
--- @sleep:3
-load data infile '$resources/data/nation.tbl' into table nation FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n';
-select * from nation;
+-- @separator:table
+-- check filter condition in explain output
+explain (check '["Table Scan", "= 3", "Filter Cond"]') select * from t4 where c1 + 2 = 5;
 
--- @delimiter $
-create table t1 ( a int not null default 1, int32 int primary key);
-$
-insert into t1 (int32) values (-1),(1234567890),(2147483647);
-$
+-- the following should fail
+-- @separator:table
+explain (check '["= 5"]') select * from t4 where c1 + 2 = 5;
 
--- @delimiter ;
-select * from t1 order by a desc, int32 asc;
+-- @separator:table
+-- check ReadSize format (ReadSize=xx|xx|xx), filter condition, and other key fields
+-- verify: ReadSize format with pipe separator, Analyze info fields, Table Scan node, and filter condition
+-- Note: ReadSize values may vary (cache state, data distribution), so we only verify format, not specific values
+explain (analyze true, check '["Table Scan", "ReadSize=", "|", "bytes", "InputSize=", "OutputSize=", "MemorySize=", "timeConsumed=", "inputRows=", "outputRows=", "= 3", "Filter Cond"]') select * from t4 where c1 + 2 = 5;
+-- @separator:table
+-- check ReadSize format (ReadSize=xx|xx|xx), filter condition, and other key fields
+-- verify: ReadSize format with pipe separator, Analyze info fields, Table Scan node, and filter condition
+-- Note: ReadSize values may vary (cache state, data distribution), so we only verify format, not specific values
+-- @hint:timeConsumed=,waitTime=,inputBlocks=,inputRows=,outputRows=,InputSize=,OutputSize=,ReadSize=,MemorySize=
+explain (analyze true, check '["Table Scan", "ReadSize=", "|", "bytes", "InputSize=", "OutputSize=", "MemorySize=", "timeConsumed=", "inputRows=", "outputRows=", "= 3", "Filter Cond"]') select * from t4 where c1 + 2 = 5;
 
--- @system pwd
--- @system ls
--- @system abcd ddaa
+-- the following should fail
+-- @separator:table
+-- @hint:timeConsumed=,waitTime=,inputBlocks=,inputRows=,outputRows=,InputSize=,OutputSize=,ReadSize=,MemorySize=
+explain (analyze true, check '["= 5"]') select * from t4 where c1 + 2 = 5;
+--
+-- @separator:table
+-- check complex query plan with Sort, Limit, Filter, and multiple conditions
+-- @hint:Table Scan,Filter Cond,= 3,Block Filter Cond
+explain (check '["% 2", "Sort", "Limit: 10", "% 3"]') select * from (select * from t1 where c1%3=0 order by c1 desc limit 10) tmpt where c1 % 2 = 0;
 
--- @session:id=1
-use template;
-select * from nation;
-select * from nation limit 1;
--- @session
-
--- @session:id=2&user=root&password=111
-use template;
-select * from nation;
-select * from nation limit 2;
--- @session
--- @kafka:produce:mo-stream-test
-["That is the first message",
-"That is the second message",
-"That is the third message"]
--- @kafka:produce
+drop database if exists d1;

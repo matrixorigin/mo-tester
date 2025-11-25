@@ -112,6 +112,7 @@ Sometimes, to achieve some specific purposes, such as pausing or creating a new 
 | -- @system {C}                                                | Set System Command that will be executed by the runner system                                                                                                                                         |
 | -- @wait:{D}:[commit or wait]                                 | means this command will be blocked until the connection[id={D}] commit or rollback                                                                                                                    |
 | -- @ignore:{num},...{num}                                     | means the designated columns which index are in {num}s will not be check.                                                                                                                             |
+| -- @hint:{keyword1},{keyword2},...                            | Check if the result contains all specified keywords instead of exact match. Useful for EXPLAIN queries where output may vary. e.g.<br/> -- @hint:Project,Filter: checks if result contains both "Project" and "Filter". |
 | -- @kafka:produce:{topic}}<br/>JSON ARRAY<br/>-- @bvt:produce | means the mo-tester will send all the items in this json array to the designated topic of kafka server.<br/>The kafka server is configured in `kafka.yml`                                               |
 
  

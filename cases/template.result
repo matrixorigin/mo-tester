@@ -1,124 +1,75 @@
-select sleep(10);
-sleep(10)
-0
-create table t1 ( a int not null default 1, int32 int primary key);
-insert into t1 (int32) values (-1),(1234567890),(2147483647);
-insert into t1 (int32) values (-1),(1234567890),(2147483647);
-(Duplicate entry)([\d\D]*)(for key 'int32')
-select * from t1 order by a desc, int32 asc;
-a    int32
-1    -1
-1    1234567890
-1    2147483647
-select min(int32),max(int32),max(int32)-1 from t1;
-min(int32)    max(int32)    max(int32) - 1
--1    2147483647    2147483646
-select min(int32),max(int32),max(int32)-1 from t1 group by a;
-min(int32)    max(int32)    max(int32) - 1
--1    2147483647    2147483646
-drop table t1;
-CREATE TABLE NATION  (
-N_NATIONKEY  INTEGER NOT NULL,
-N_NAME       VARCHAR(25) NOT NULL,
-N_REGIONKEY  INTEGER NOT NULL,
-N_COMMENT    VARCHAR(152),
-PRIMARY KEY (N_NATIONKEY)
-);
-load data infile '$resources/data/nation.tbl' into table nation FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n';
-select * from nation;
-n_nationkey    n_name    n_regionkey    n_comment
-0    ALGERIA    0     haggle. carefully final deposits detect slyly agai
-1    ARGENTINA    1    al foxes promise slyly according to the regular accounts. bold requests alon
-2    BRAZIL    1    y alongside of the pending deposits. carefully special packages are about the ironic forges. slyly special 
-3    CANADA    1    eas hang ironic, silent packages. slyly regular packages are furiously over the tithes. fluffily bold
-4    EGYPT    4    y above the carefully unusual theodolites. final dugouts are quickly across the furiously regular d
-5    ETHIOPIA    0    ven packages wake quickly. regu
-6    FRANCE    3    refully final requests. regular, ironi
-7    GERMANY    3    l platelets. regular accounts x-ray: unusual, regular acco
-8    INDIA    2    ss excuses cajole slyly across the packages. deposits print aroun
-9    INDONESIA    2     slyly express asymptotes. regular deposits haggle slyly. carefully ironic hockey players sleep blithely. carefull
-10    IRAN    4    efully alongside of the slyly final dependencies. 
-11    IRAQ    4    nic deposits boost atop the quickly final requests? quickly regula
-12    JAPAN    2    ously. final, express gifts cajole a
-13    JORDAN    4    ic deposits are blithely about the carefully regular pa
-14    KENYA    0     pending excuses haggle furiously deposits. pending, express pinto beans wake fluffily past t
-15    MOROCCO    0    rns. blithely bold courts among the closely regular packages use furiously bold platelets?
-16    MOZAMBIQUE    0    s. ironic, unusual asymptotes wake blithely r
-17    PERU    1    platelets. blithely pending dependencies use fluffily across the even pinto beans. carefully silent accoun
-18    CHINA    2    c dependencies. furiously express notornis sleep slyly regular accounts. ideas sleep. depos
-19    ROMANIA    3    ular asymptotes are about the furious multipliers. express dependencies nag above the ironically ironic account
-20    SAUDI ARABIA    4    ts. silent requests haggle. closely express packages sleep across the blithely
-21    VIETNAM    2    hely enticingly express accounts. even, final 
-22    RUSSIA    3     requests against the platelets use never according to the quickly regular pint
-23    UNITED KINGDOM    3    eans boost carefully special requests. accounts are. carefull
-24    UNITED STATES    1    y final packages. slow foxes cajole quickly. quickly silent platelets breach ironic accounts. unusual pinto be
-create table t1 ( a int not null default 1, int32 int primary key);
-insert into t1 (int32) values (-1),(1234567890),(2147483647);
-select * from t1 order by a desc, int32 asc;
-a    int32
-1    -1
-1    1234567890
-1    2147483647
-use template;
-select * from nation;
-n_nationkey    n_name    n_regionkey    n_comment
-0    ALGERIA    0     haggle. carefully final deposits detect slyly agai
-1    ARGENTINA    1    al foxes promise slyly according to the regular accounts. bold requests alon
-2    BRAZIL    1    y alongside of the pending deposits. carefully special packages are about the ironic forges. slyly special 
-3    CANADA    1    eas hang ironic, silent packages. slyly regular packages are furiously over the tithes. fluffily bold
-4    EGYPT    4    y above the carefully unusual theodolites. final dugouts are quickly across the furiously regular d
-5    ETHIOPIA    0    ven packages wake quickly. regu
-6    FRANCE    3    refully final requests. regular, ironi
-7    GERMANY    3    l platelets. regular accounts x-ray: unusual, regular acco
-8    INDIA    2    ss excuses cajole slyly across the packages. deposits print aroun
-9    INDONESIA    2     slyly express asymptotes. regular deposits haggle slyly. carefully ironic hockey players sleep blithely. carefull
-10    IRAN    4    efully alongside of the slyly final dependencies. 
-11    IRAQ    4    nic deposits boost atop the quickly final requests? quickly regula
-12    JAPAN    2    ously. final, express gifts cajole a
-13    JORDAN    4    ic deposits are blithely about the carefully regular pa
-14    KENYA    0     pending excuses haggle furiously deposits. pending, express pinto beans wake fluffily past t
-15    MOROCCO    0    rns. blithely bold courts among the closely regular packages use furiously bold platelets?
-16    MOZAMBIQUE    0    s. ironic, unusual asymptotes wake blithely r
-17    PERU    1    platelets. blithely pending dependencies use fluffily across the even pinto beans. carefully silent accoun
-18    CHINA    2    c dependencies. furiously express notornis sleep slyly regular accounts. ideas sleep. depos
-19    ROMANIA    3    ular asymptotes are about the furious multipliers. express dependencies nag above the ironically ironic account
-20    SAUDI ARABIA    4    ts. silent requests haggle. closely express packages sleep across the blithely
-21    VIETNAM    2    hely enticingly express accounts. even, final 
-22    RUSSIA    3     requests against the platelets use never according to the quickly regular pint
-23    UNITED KINGDOM    3    eans boost carefully special requests. accounts are. carefull
-24    UNITED STATES    1    y final packages. slow foxes cajole quickly. quickly silent platelets breach ironic accounts. unusual pinto be
-select * from nation limit 1;
-n_nationkey    n_name    n_regionkey    n_comment
-0    ALGERIA    0     haggle. carefully final deposits detect slyly agai
-use template;
-select * from nation;
-n_nationkey    n_name    n_regionkey    n_comment
-0    ALGERIA    0     haggle. carefully final deposits detect slyly agai
-1    ARGENTINA    1    al foxes promise slyly according to the regular accounts. bold requests alon
-2    BRAZIL    1    y alongside of the pending deposits. carefully special packages are about the ironic forges. slyly special 
-3    CANADA    1    eas hang ironic, silent packages. slyly regular packages are furiously over the tithes. fluffily bold
-4    EGYPT    4    y above the carefully unusual theodolites. final dugouts are quickly across the furiously regular d
-5    ETHIOPIA    0    ven packages wake quickly. regu
-6    FRANCE    3    refully final requests. regular, ironi
-7    GERMANY    3    l platelets. regular accounts x-ray: unusual, regular acco
-8    INDIA    2    ss excuses cajole slyly across the packages. deposits print aroun
-9    INDONESIA    2     slyly express asymptotes. regular deposits haggle slyly. carefully ironic hockey players sleep blithely. carefull
-10    IRAN    4    efully alongside of the slyly final dependencies. 
-11    IRAQ    4    nic deposits boost atop the quickly final requests? quickly regula
-12    JAPAN    2    ously. final, express gifts cajole a
-13    JORDAN    4    ic deposits are blithely about the carefully regular pa
-14    KENYA    0     pending excuses haggle furiously deposits. pending, express pinto beans wake fluffily past t
-15    MOROCCO    0    rns. blithely bold courts among the closely regular packages use furiously bold platelets?
-16    MOZAMBIQUE    0    s. ironic, unusual asymptotes wake blithely r
-17    PERU    1    platelets. blithely pending dependencies use fluffily across the even pinto beans. carefully silent accoun
-18    CHINA    2    c dependencies. furiously express notornis sleep slyly regular accounts. ideas sleep. depos
-19    ROMANIA    3    ular asymptotes are about the furious multipliers. express dependencies nag above the ironically ironic account
-20    SAUDI ARABIA    4    ts. silent requests haggle. closely express packages sleep across the blithely
-21    VIETNAM    2    hely enticingly express accounts. even, final 
-22    RUSSIA    3     requests against the platelets use never according to the quickly regular pint
-23    UNITED KINGDOM    3    eans boost carefully special requests. accounts are. carefull
-24    UNITED STATES    1    y final packages. slow foxes cajole quickly. quickly silent platelets breach ironic accounts. unusual pinto be
-select * from nation limit 2;
-n_nationkey    n_name    n_regionkey    n_comment
-0    ALGERIA    0     haggle. carefully final deposits detect slyly agai
-1    ARGENTINA    1    al foxes promise slyly according to the regular accounts. bold requests alon
+drop database if exists d1;
+create database d1;
+use d1;
+drop table if exists t1;
+drop table if exists t2;
+drop table if exists t3;
+create table t1(c1 int primary key);
+create table t2(c1 int primary key, c2 int, c3 int);
+create table t3(c1 int, c2 int, c3 int, primary key(c1,c2));
+create table t4(c1 bigint primary key, c2 bigint);
+insert into t1 select * from generate_series(10000) g;
+insert into t4 select c1, c1 from t1;
+insert into t2 select c1, c1, c1 from t1;
+insert into t2 select c1+10000, c1+10000, c1+10000 from t1;
+insert into t3 select c1, c1, c1 from t1;
+insert into t3 select c1+10000, c1+10000, c1+10000 from t1;
+insert into t3 select c1+20000, c1+20000, c1+20000 from t1;
+select mo_ctl('dn', 'flush', 'd1.t1');
+mo_ctl(dn, flush, d1.t1)
+{\n  "method": "Flush",\n  "result": [\n    {\n      "returnStr": "OK"\n    }\n  ]\n}\n
+select mo_ctl('dn', 'flush', 'd1.t2');
+mo_ctl(dn, flush, d1.t2)
+{\n  "method": "Flush",\n  "result": [\n    {\n      "returnStr": "OK"\n    }\n  ]\n}\n
+select mo_ctl('dn', 'flush', 'd1.t3');
+mo_ctl(dn, flush, d1.t3)
+{\n  "method": "Flush",\n  "result": [\n    {\n      "returnStr": "OK"\n    }\n  ]\n}\n
+select mo_ctl('dn', 'flush', 'd1.t4');
+mo_ctl(dn, flush, d1.t4)
+{\n  "method": "Flush",\n  "result": [\n    {\n      "returnStr": "OK"\n    }\n  ]\n}\n
+explain select * from t4 where c1 + 2 = 5;
+TP QUERY PLAN
+Project
+  ->  Table Scan on d1.t4
+        Filter Cond: (t4.c1 = 3)
+        Block Filter Cond: (t4.c1 = 3)
+explain (check '["Table Scan", "= 3", "Filter Cond"]') select * from t4 where c1 + 2 = 5;
+TP QUERY PLAN
+Project
+  ->  Table Scan on d1.t4
+        Filter Cond: (t4.c1 = 3)
+        Block Filter Cond: (t4.c1 = 3)
+explain (check '["= 5"]') select * from t4 where c1 + 2 = 5;
+invalid input: check expr = 5 not found
+explain (analyze true, check '["Table Scan", "ReadSize=", "|", "bytes", "InputSize=", "OutputSize=", "MemorySize=", "timeConsumed=", "inputRows=", "outputRows=", "= 3", "Filter Cond"]') select * from t4 where c1 + 2 = 5;
+tp query plan
+Project
+  Analyze: timeConsumed=0ms waitTime=0ms inputRows=1 outputRows=1 (min=1, max=1) InputSize=16 bytes OutputSize=16 bytes ReadSize=0 bytes|0 bytes|0 bytes MemorySize=16 bytes (min=16 bytes, max=16 bytes)
+  ->  Table Scan on d1.t4
+        Analyze: timeConsumed=0ms waitTime=0ms inputBlocks=1 inputRows=1 outputRows=1 (min=1, max=1) InputSize=16 bytes OutputSize=16 bytes ReadSize=96.05 KiB|0 bytes|64.04 KiB MemorySize=33 bytes (min=16 bytes, max=16 bytes)
+        Filter Cond: (t4.c1 = 3)
+        Block Filter Cond: (t4.c1 = 3)
+explain (analyze true, check '["Table Scan", "ReadSize=", "|", "bytes", "InputSize=", "OutputSize=", "MemorySize=", "timeConsumed=", "inputRows=", "outputRows=", "= 3", "Filter Cond"]') select * from t4 where c1 + 2 = 5;
+tp query plan
+Project
+  Analyze: timeConsumed=0ms waitTime=0ms inputRows=1 outputRows=1 (min=1, max=1) InputSize=16 bytes OutputSize=16 bytes ReadSize=0 bytes|0 bytes|0 bytes MemorySize=16 bytes (min=16 bytes, max=16 bytes)
+  ->  Table Scan on d1.t4
+        Analyze: timeConsumed=0ms waitTime=0ms inputBlocks=1 inputRows=1 outputRows=1 (min=1, max=1) InputSize=16 bytes OutputSize=16 bytes ReadSize=96.05 KiB|0 bytes|0 bytes MemorySize=33 bytes (min=16 bytes, max=16 bytes)
+        Filter Cond: (t4.c1 = 3)
+        Block Filter Cond: (t4.c1 = 3)
+explain (analyze true, check '["= 5"]') select * from t4 where c1 + 2 = 5;
+invalid input: check expr = 5 not found
+explain (check '["% 2", "Sort", "Limit: 10", "% 3"]') select * from (select * from t1 where c1%3=0 order by c1 desc limit 10) tmpt where c1 % 2 = 0;
+TP QUERY PLAN
+Project
+  ->  Filter
+        Filter Cond: ((cast(t1.c1 AS BIGINT) % 2) = 0)
+        ->  Sort
+              Sort Key: t1.c1 DESC
+              Limit: 10
+              Send Message: [tag 1 , type MsgTopValue]
+              ->  Table Scan on d1.t1
+                    Sort Key: t1.c1 DESC
+                    Filter Cond: ((cast(t1.c1 AS BIGINT) % 3) = 0)
+                    Recv Message: [tag 1 , type MsgTopValue]
+drop database if exists d1;
