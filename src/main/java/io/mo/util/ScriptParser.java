@@ -134,6 +134,21 @@ public class ScriptParser {
                             }
                         }
                     }
+                    
+                    //if line is mark to use hint check mode
+                    if(trimmedLine.startsWith(COMMON.HINT_FLAG)){
+                        String hints = trimmedLine.substring(COMMON.HINT_FLAG.length());
+                        if(hints != null && !hints.equalsIgnoreCase("")){
+                            String[] keywords = hints.split(",");
+                            for(int i = 0; i < keywords.length;i++){
+                                String keyword = keywords[i].trim();
+                                if(!keyword.isEmpty()){
+                                    command.addHintKeyword(keyword);
+                                }
+                            }
+                            command.setHintCheck(true);
+                        }
+                    }
 
                     //if line is mark to set wait paras
                     if(trimmedLine.startsWith(COMMON.WAIT_FLAG)){

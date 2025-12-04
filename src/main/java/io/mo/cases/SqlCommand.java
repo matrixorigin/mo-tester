@@ -53,6 +53,10 @@ public class SqlCommand {
     private String waitOperation = "commit";
 
     private boolean regularMatch = false;
+    
+    private boolean hintCheck = false;
+    
+    private ArrayList<String> hintKeywords = new ArrayList<>();
 
     public SqlCommand(){
         command = new StringBuffer();
@@ -200,6 +204,9 @@ public class SqlCommand {
     }
 
     public boolean checkResult(){
+        if(this.hintCheck)
+            return expResult.hintMatch(actResult, this.hintKeywords);
+        
         if(this.regularMatch)
             return expResult.regularMatch(actResult);
         
@@ -301,5 +308,21 @@ public class SqlCommand {
     
     public void addIgnoreColumn(int id){
         this.ignoreColumns.add(id);
+    }
+    
+    public boolean isHintCheck() {
+        return hintCheck;
+    }
+
+    public void setHintCheck(boolean hintCheck) {
+        this.hintCheck = hintCheck;
+    }
+
+    public ArrayList<String> getHintKeywords() {
+        return hintKeywords;
+    }
+
+    public void addHintKeyword(String keyword) {
+        this.hintKeywords.add(keyword);
     }
 }

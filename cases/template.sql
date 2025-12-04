@@ -16,7 +16,7 @@ select min(int32),max(int32),max(int32)-1 from t1 group by a;
 -- @bvt:issue
 
 drop table t1;
-CREATE TABLE NATION  ( 
+CREATE TABLE NATION  (
 N_NATIONKEY  INTEGER NOT NULL,
 N_NAME       VARCHAR(25) NOT NULL,
 N_REGIONKEY  INTEGER NOT NULL,
