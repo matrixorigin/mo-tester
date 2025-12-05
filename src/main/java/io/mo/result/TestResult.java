@@ -4,15 +4,11 @@ import io.mo.constant.RESULT;
 
 public class TestResult {
     private String result;
-    private String errorCode;
-    private String errorDesc;
     private String actResult;
     private String expResult;
-    private String remark;
 
     public TestResult(){
         result = RESULT.RESULT_TYPE_PASS;
-        errorCode = RESULT.SUCCESS_CODE;
     }
 
     public String getActResult() {
@@ -29,18 +25,6 @@ public class TestResult {
 
     public void setExpResult(String expResult) {
         this.expResult = expResult;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
-    }
-
-    public void setErrorDesc(String errorDesc) {
-        this.errorDesc = errorDesc;
     }
 
     public String getResult() {

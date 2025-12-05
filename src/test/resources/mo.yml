@@ -1,0 +1,35 @@
+#jdbc
+jdbc:
+  driver: "com.mysql.cj.jdbc.Driver"
+  server:
+  - addr: "127.0.0.1:6001"
+  #- addr: "127.0.0.1:3306"
+  #- addr: "127.0.0.1:3306"
+  database:
+    default: ""
+  paremeter:
+    characterSetResults: "utf8"
+    continueBatchOnError: "false"
+    useServerPrepStmts: "true"
+    alwaysSendSetIsolation: "false"
+    useLocalSessionState: "true"
+    allowLoadLocalInfile: "true"
+    zeroDateTimeBehavior: "CONVERT_TO_NULL"
+    failoverReadOnly: "false"
+    initialTimeout: 60
+    autoReconnect: "true"
+    maxReconnects: 4
+    serverTimezone: "Asia/Shanghai"
+    socketTimeout: 120000
+    
+#users
+user:
+  name: "dump"
+  password: "111"
+  sysuser: "dump"
+  syspass: "111"
+
+#debug info
+debug:
+  serverIP: "127.0.0.1"
+  port: 6060

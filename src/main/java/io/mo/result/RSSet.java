@@ -15,14 +15,11 @@ public class RSSet {
 
     private RSMetaData meta;
     private ArrayList<RSRow> rows = new ArrayList<RSRow>();
-
     private ArrayList<Integer> sortKeyIndexs = new ArrayList<Integer>();
 
-    private String abnormalError; //to store the abnormal reason why the RSSet instanse is generated failed.
+    private String abnormalError; // to store the abnormal reason why the RSSet instanse is generated failed.
 
-    private String separator = RESULT.COLUMN_SEPARATOR_SPACE;
-
-    private ArrayList<Integer> ignoreColumns = new ArrayList<>();
+    private SqlCommand command;
 
     public SqlCommand getCommand() {
         return command;
@@ -32,47 +29,56 @@ public class RSSet {
         this.command = command;
     }
 
-    private SqlCommand command;
-
     private static Logger LOG = Logger.getLogger(RSSet.class.getName());
 
-    public RSSet(){
-
+    public RSSet() {
     }
 
-    public RSSet(ResultSet resultSet,SqlCommand command){
+    public void setMeta(RSMetaData meta) {
+        this.meta = meta;
+    }
+
+    public void addRow(RSRow rsRow) {
+        rows.add(rsRow);
+        rsRow.setIndex(rows.size() - 1);
+    }
+
+    // ResultSet 来自 SQL 语句的返回，这里在构造 ActualResult
+    public RSSet(ResultSet resultSet, SqlCommand command) {
         this.command = command;
         ResultSetMetaData md = null;
-        StringBuffer result = new StringBuffer();
         try {
             md = resultSet.getMetaData();
-            int cols = md.getColumnCount();
-            this.meta = new RSMetaData(cols);
-            for(int i = 0; i < cols; ++i) {
-                this.meta.addMetaInfo(md.getColumnName(i + 1),md.getColumnLabel(i + 1),
-                        md.getColumnType(i + 1),md.getPrecision(i + 1));
+            int colsCnt = md.getColumnCount();
+            this.meta = new RSMetaData(colsCnt);
+            for (int i = 0; i < colsCnt; ++i) {
+                this.meta.addMetaInfo(
+                    md.getColumnName(i + 1), 
+                    md.getColumnLabel(i + 1),
+                    md.getColumnType(i + 1), 
+                    md.getPrecision(i + 1));
             }
 
-            int i = 0;
-            while(resultSet.next()) {
-                RSRow rsRow = new RSRow(cols);
-                for(int j = 0; j < cols; ++j) {
-                    RSCell rsCell = new RSCell<String>();
-                    if(this.command!=null && this.command.getIgnoreColumns().size() != 0){
-                        if(this.command.getIgnoreColumns().contains(new Integer(j))){
-                            LOG.debug(String.format("[%s][row:%d][%s] The column[%d] does not need to be check.",
-                                    command.getScriptFile(),
-                                    command.getPosition(),
-                                    command.getCommand(),
-                                    j));
+            while (resultSet.next()) {
+                RSRow rsRow = new RSRow(colsCnt);
+                for (int j = 0; j < colsCnt; ++j) {
+                    RSCell rsCell = new RSCell();
+                    if (this.command.getIgnoreColumns().size() != 0) {
+                        if (this.command.getIgnoreColumns().contains(j)) {
                             rsCell.setNeedcheck(false);
                         }
                     }
                     String value = resultSet.getString(j + 1);
-                    if(value == null)
+                    if (value == null)
                         value = "null";
-                    //if the value contain \n, replace to string "\n"
-                    value = value.replaceAll("\n","\\\\n");
+                    
+                    // compatibility for old result file
+                    StmtResult expResult = this.command.getExpResult();
+                    if (expResult != null && !expResult.getExpectRSText().contains(RESULT.ROW_SEPARATOR_NEW)) {
+                        //if the value contain \n, replace to string "\n"
+                        value = value.replaceAll("\n","\\\\n");
+                    }
+                  
                     rsCell.setValue(value);
                     rsCell.setType(this.meta.getType(j));
                     rsCell.setPrecision(this.meta.getPrecision(j));
@@ -80,39 +86,21 @@ public class RSSet {
                 }
                 this.addRow(rsRow);
             }
-        } catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             e.printStackTrace();
-            this.abnormalError =  RESULT.ERROR_RESULTSET_INVALID_DESC + e.getMessage();
-        }catch (SQLException e) {
+            this.abnormalError = RESULT.ERROR_RESULTSET_INVALID_DESC + e.getMessage();
+        } catch (SQLException e) {
             e.printStackTrace();
             this.abnormalError = RESULT.ERROR_RESULTSET_INVALID_DESC + e.getMessage();
         }
     }
+   
 
-
-    public RSSet(RSMetaData meta){
-        this.meta = meta;
-    }
-
-    public RSMetaData getMeta() {
-        return meta;
-    }
-
-    public void setMeta(RSMetaData meta) {
-        this.meta = meta;
-        this.meta.setSeparator(this.separator);
-    }
-
-    public void addRow(RSRow rsRow){
-        rows.add(rsRow);
-        rsRow.setIndex(rows.size() - 1);
-    }
-
-    public void addSortKeyIndex(int index){
+    public void addSortKeyIndex(int index) {
         sortKeyIndexs.add(index);
     }
 
-    public ArrayList<RSRow> getRows(){
+    public ArrayList<RSRow> getRows() {
         return rows;
     }
 
@@ -127,98 +115,57 @@ public class RSSet {
     /**
      * sort rows by attribute [text] of the RSRow
      */
-    public void sort(){
-        rows.sort(new Comparator<RSRow>() {
-            @Override
-            public int compare(RSRow o1, RSRow o2) {
-                return o1.compareTo(o2);
-            }
-        });
+    public void sort() {
+        rows.sort(Comparator.comparing(RSRow::getRowText));
     }
 
     /**
      * sort rows, but need to keep sort-key columns remainning original order
      */
-    public void sort(ArrayList sortKeyIndexs) {
-        rows.sort(new Comparator<RSRow>() {
-            @Override
-            public int compare(RSRow o1, RSRow o2) {
-                return o1.compareTo(o2,sortKeyIndexs);
-            }
-        });
+    public void sort(ArrayList<Integer> sortKeyIndexs) {
+        rows.sort((a, b) -> a.compareTo(b, sortKeyIndexs));
     }
 
-    /**
-     * compare whether two RSSet instances equal with each other
-     * @param set
-     * @return
-     */
-    public boolean equals(RSSet set){
-        //if need to check the meatainfo of resultset,compare whether meta equals with each other
-        if(COMMON.IS_COMPARE_META ){
-           if(!this.meta.equals(set.getMeta()))
-               return false;
-        }
-        //if row count does not equal,return false
-        if(this.rows.size() != set.getRows().size()){
-            LOG.error("The row count does not equal with each other, one is " + rows.size() + ", the other is " + set.getRows().size());
+    public boolean equals(RSSet other) {
+        // if need to check the meatainfo of resultset,compare whether meta equals with
+        // each other
+        if (COMMON.IS_COMPARE_META && !this.meta.equals(other.meta)) {
             return false;
         }
-        //sort the rows
-        if(sortKeyIndexs.size() == 0){
-            this.sort();
-            set.sort();
-        }else {
-            this.sort(sortKeyIndexs);
-            set.sort(sortKeyIndexs);
+        // if row count does not equal,return false
+        if (this.rows.size() != other.getRows().size()) {
+            LOG.error("The row count does not equal with each other, one is " + rows.size() + ", the other is "
+                    + other.getRows().size());
+            return false;
         }
-
-        for(int i = 0; i < rows.size();i++){
-            
-            if(!this.rows.get(i).equals(set.getRows().get(i))){
+        // sort the rows
+        if (sortKeyIndexs.size() == 0) {
+            this.sort();
+            other.sort();
+        } else {
+            this.sort(sortKeyIndexs);
+            other.sort(sortKeyIndexs);
+        }
+        for (int i = 0; i < rows.size(); i++) {
+            if (!this.rows.get(i).equals(other.getRows().get(i))) {
                 return false;
             }
         }
-
         return true;
     }
 
 
-
-    public String getSeparator() {
-        return separator;
-    }
-
-    public void setSeparator(String separator) {
-        this.separator = separator;
-        this.meta.setSeparator(this.separator);
-        for(RSRow row : rows){
-            row.setSeparator(this.separator);
-        }
-    }
-
-    public ArrayList<Integer> getIgnoreColumns(){
-        return this.ignoreColumns;
-    }
-
-    public void addIgnoreColumn(int id){
-        this.ignoreColumns.add(id);
-    }
-
-    public String toString(){
-        if(this.abnormalError != null)
+    public String toString() {
+        if (this.abnormalError != null)
             return abnormalError;
 
-        StringBuffer result = new StringBuffer();
-        result.append(this.meta.getColumnLabels());
-        if(rows.size() == 0)
-            return result.toString();
-        result.append("\n");
-        for(int i = 0; i < rows.size() - 1;i++){
-            result.append(rows.get(i).toString() + "\n");
+        ArrayList<String> rowsText = new ArrayList<>();
+        rowsText.add(this.meta.getColumnLabels());
+        for (int i = 0; i < rows.size(); i++) {
+            rowsText.add(rows.get(i).toString());
         }
-        result.append(rows.get(rows.size() -1 ).toString());
-        return result.toString();
+
+        return String.join(RESULT.ROW_SEPARATOR_NEW, rowsText);
     }
 
 }

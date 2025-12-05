@@ -87,7 +87,7 @@ public class TestReport {
         }
     }
 
-    public void collect(TestScript script){
+    public synchronized void collect(TestScript script){
         scripts.add(script);
         totalCmds += script.getTotalCmdCount();
         successCmds += script.getSuccessCmdCount();
@@ -161,9 +161,5 @@ public class TestReport {
     public void setRate(int rate) {
         this.rate = rate;
     }
-
-    public static void main(String args[]){
-    }
-
 
 }
