@@ -26,17 +26,20 @@ public class RESULT {
     public static String RESULT_TYPE_ABNORMAL = "ABNORMAL";
     public static String RESULT_TYPE_IGNORED = "IGNORED";
 
-    public static String RESULT_EMPTY_VALUE = "{EMPTY}";
-
     public static String COLUMN_SEPARATOR_TABLE = "\t";
     public static String COLUMN_SEPARATOR_SPACE = "    ";
-    public static String COLUMN_SEPARATOR_SYSTEM = "THIS_IS_MO_SERPARATOR";
+
+
+    // two spaces + broken bar(html: &#166; unicode: U+00A6) + two spaces
+    public static String COLUMN_SEPARATOR_NEW = "  ¦  ";
+    // two spaces + musical barline(html: &#119040; unicode: U+1D100) + newline
+    public static String ROW_SEPARATOR_NEW = "  𝄀\n";
 
     public static int STMT_RESULT_TYPE_NONE = 3;
     public static int STMT_RESULT_TYPE_ERROR = 2;
     public static int STMT_RESULT_TYPE_SET = 1;
-
     public static int STMT_RESULT_TYPE_INIT = 0;
+
     public static int STMT_RESULT_TYPE_ABNORMAL = 4;
 
 }

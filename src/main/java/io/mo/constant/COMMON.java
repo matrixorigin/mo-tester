@@ -8,8 +8,6 @@ public class COMMON {
     public static boolean IGNORE_MODEL = false;
 
     public static boolean IS_COMPARE_META = true;
-
-    public static boolean FORCE_UPDATE = false;
     
     public static String R_FILE_SUFFIX = ".result";
 
@@ -21,7 +19,6 @@ public class COMMON {
     public static String DEFAUT_DELIMITER = ";";
     public static String LINE_SEPARATOR = "\n";
 
-    public static String NEW_DELIMITER_FLAG = "-- @delimiter ";
     public static String SYSTEM_CMD_FLAG = "-- @system ";
 
     public static String NEW_SESSION_START_FLAG = "-- @session:";
@@ -36,16 +33,13 @@ public class COMMON {
     public static String SORT_KEY_INDEX_FLAG = "-- @sortkey:";
 
     public static String COLUMN_SEPARATOR_FLAG = "-- @separator:";
-    public static String RESOURCE_PATH_FLAG = "\\$resources";
-    public static String RESOURCE_LOCAL_PATH_FLAG= "\\$resources_local";
     
     public static String WAIT_FLAG = "-- @wait:";
     
     //if result is type of error, and not unique, can use this flag to regular match
     public static String REGULAR_MATCH_FLAG = "-- @pattern";
     
-    public static String KAFKA_PRODUCE_START_FLAG = "-- @kafka:produce:";
-    public static String KAFKA_PRODUCE_END_FLAG = "-- @kafka:produce";
+    public static String REGEX_FLAG = "-- @regex";
     
     public static String IGNORE_COLUMN_FLAG = "-- @ignore:";
     
@@ -55,25 +49,55 @@ public class COMMON {
     public static String LOG_DIR = "log";
     public static String RESULT_DIR = "result";
     public static String CASES_DIR = "cases";
-    public static String REPORT_DIR = "report";
-    public static String RESOURCE_DIR = "resources";
 
+    /**
+     * 资源路径相关常量
+     * 
+     * 约定：resources 和 cases 目录必须位于同一层级
+     * 约定高于配置：系统会根据用例路径自动推导资源路径，无需手动配置
+     * 
+     * 目录结构约定示例：
+     *   project/
+     *   ├── cases/          # 测试用例目录
+     *   │   ├── array/
+     *   │   │   └── array.sql
+     *   │   └── function/
+     *   │       └── test.sql
+     *   └── resources/      # 资源文件目录（与 cases 同级）
+     *       ├── data/
+     *       │   └── test.csv
+     *       └── config/
+     *           └── config.json
+     * 
+     * 路径推导示例：
+     *   - 用例路径: /project/cases/array/array.sql
+     *     推导结果: /project/resources
+     *   
+     *   - 用例路径: ./cases/function/test.sql
+     *     推导结果: ./resources
+     */
+    
+    /** SQL 命令中的占位符，用于替换为资源路径（全局路径） */
+    public static String RESOURCE_PATH_FLAG = "\\$resources";
+    
+    
+    public static String REPORT_DIR = "report";
+    
+    /** 资源目录名称常量 */
+    public static String RESOURCE_DIR = "resources";
+    
+    /** 资源路径（全局），默认值 "./resources"，运行时根据用例路径自动推导 */
     public static String RESOURCE_PATH = "./resources";
-    public static String RESOURCE_LOCAL_PATH = "./resources";
+    
+
+
     public static String UPDATE_RESULT_TEMPLATE = "Query OK, {num} row affected";
 
     public static int WAIT_TIMEOUT = 5000;
     
     public static int MAX_ROW_COUNT_IN_RS = 100;//the max row count in the resultset
-
-    public static String THIS_IS_MO = "THIS IS MO";
-
-    //事务相关
-    public static String START_TRX = "begin";
-    public static String COMMIT_TRX = "commit";
-    public static String ROLLBACK_TRX = "rollback";
     
-    public static boolean NEEDPPROF = false;
+    public static boolean NEED_PPROF = false;
 
     public static String[] SPECIAL_CHARS = new String[]{"+","-","*","/","%","&",">","<","(",")","!","=","\'","\""};
 

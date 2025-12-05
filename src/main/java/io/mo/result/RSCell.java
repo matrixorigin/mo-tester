@@ -7,8 +7,8 @@ import java.math.BigDecimal;
 import java.sql.Types;
 import java.util.regex.Pattern;
 
-public class RSCell<T> {
-    private T value; //cell value
+public class RSCell {
+    private String value; //cell value
     private int type; // column data type,remain attr
     private int precision = 0; //column value precision,remain attr
     private static Logger LOG = Logger.getLogger(RSCell.class.getName());
@@ -23,11 +23,11 @@ public class RSCell<T> {
 
     private boolean needcheck = true;
 
-    public T getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(T value) {
+    public void setValue(String value) {
         this.value = value;
     }
 
@@ -48,7 +48,7 @@ public class RSCell<T> {
     }
 
     public String toString(){
-        return String.valueOf(value);
+        return value;
     }
 
     /**
@@ -59,8 +59,8 @@ public class RSCell<T> {
             return true;
         else{
             //precision toleration code
-            String v1 = (String)this.value;
-            String v2 = (String)cell.getValue();
+            String v1 = this.value;
+            String v2 = cell.getValue();
             
             //if one is NULL,return false
             if(v1.equalsIgnoreCase("null") || v2.equalsIgnoreCase("null"))

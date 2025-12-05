@@ -1,3 +1,0 @@
-server: "localhost:9092"
-topic: "mo-stream-test"
-client_id: "mo-kafka-client"

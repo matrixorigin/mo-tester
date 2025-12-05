@@ -78,13 +78,12 @@ If you'd like to adjust the test range, you can just change the `path` parameter
 | -p         |set the path of test cases needed to be executed by mo-tester, the default value is configured by the `path` in `run.yaml`|
 | -m         |set the method that mo-tester will run with, the default value is configured by the `method` in `run.yaml`|
 | -t         |set the times that mo-tester will execute cases for, must be numeric, default is 1|
-| -r         |set The success rate that test cases should reach, the default value is configured by the `rate` in `run.yaml`|
+| -r         |set the success rate that test cases should reach, the default value is configured by the `rate` in `run.yaml`|
 | -i         |set the including list, and only script files in the path whose name contains one of the lists will be executed, if more than one, separated by `,`, if not specified, refers to all cases included|
 | -e         |set the excluding list, and script files in the path whose name contains one of the lists will not be executed, if more than one, separated by `,`, if not specified, refers to none of the cases excluded|
 | -g         |means SQL commands which is marked with [bvt:issue] flag will not be executed,this flag starts with [-- @bvt:issue#{issueNO.}],and ends with [-- @bvt:issue],eg:<br>-- @bvt:issue#3236<br/><br>select date_add("1997-12-31 23:59:59",INTERVAL "-10000:1" HOUR_MINUTE);<br/><br>select date_add("1997-12-31 23:59:59",INTERVAL "-100 1" YEAR_MONTH);<br/><br>-- @bvt:issue<br/><br>Those two sql commands are associated with issue#3236, and they will not be executed in bvt test, until the flag is removed when issue#3236 is fixed.<br/>|
 | -n         |means the metadata of the resultset will be ignored when comparing the result|
-| -c         |only check whether the case file matches the related result file|
-| -s         |set the resource path that mo-tester use to store resources, and can be refered to  in test file|
+| -s         |set the resource path that mo-tester use to store resources, and can be refered to in test file. The default value is derived from `path`. |
 
 **Examples**:
 
@@ -108,14 +107,12 @@ Sometimes, to achieve some specific purposes, such as pausing or creating a new 
 | -- @sleep:{time}                                              | The mo-tester will wait for {time} s                                                                                                                                                                  |
 | -- @session:id=2&user=root&password=111<br/> -- @session      | The mo-tester will create a new connetion to execute sql statements between those two tags.<br/>Default value of id is 1, max is 10.<br/>Defualt value of user and password is configured in `mo.yml`. |
 | -- @sortkey:                                                  | If the result is sorted, need set this tag for the sql statement. e.g.<br/> -- @sortkey:0,1: means sort keys are first column and second colum.                                                       |
-| -- @delimiter {C}                                             | Set new delimeter to String C, C can any string expect that starts with [/,#,--]                                                                                                                      |
 | -- @system {C}                                                | Set System Command that will be executed by the runner system                                                                                                                                         |
 | -- @wait:{D}:[commit or wait]                                 | means this command will be blocked until the connection[id={D}] commit or rollback                                                                                                                    |
 | -- @ignore:{num},...{num}                                     | means the designated columns which index are in {num}s will not be check.                                                                                                                             |
-| -- @hint:{keyword1},{keyword2},...                            | Check if the result contains all specified keywords instead of exact match. Useful for EXPLAIN queries where output may vary. e.g.<br/> -- @hint:Project,Filter: checks if result contains both "Project" and "Filter". |
-| -- @kafka:produce:{topic}}<br/>JSON ARRAY<br/>-- @bvt:produce | means the mo-tester will send all the items in this json array to the designated topic of kafka server.<br/>The kafka server is configured in `kafka.yml`                                               |
+| -- @regex(<pattern:string, include:boolean>)                  | the regex check feature allows you to specify patterns that must be matched in the result set. A pattern will be checked for inclusion in the results if `include = true`. Multiple regex patterns can be added, and all will be joined with an AND operator, meaning all conditions must be satisfied.                                                                                                                 |
 
- 
+
 
 
 ## 5. Check the report
@@ -283,6 +280,34 @@ c	d
    [{path_name}/matrixone/test/cases/transaction/atomicity.sql] COST : 0.56s, TOTAL :66, SUCCESS :66, FAILED :0, IGNORED :0, ABNORAML :0, SUCCESS RATE : 100%
    ```
 
-## Reference
+## Development
 
-For more information on the annotations of MO-Tester, see [MO-Tester Annotations](mo-tester-reference.md).
+### Main Dependencies
+
+- Java 8 or later
+- Maven for dependency and build management
+- [log4j](https://logging.apache.org/log4j/)
+- [commons-io](https://commons.apache.org/proper/commons-io/)
+
+### How to Build
+
+1. Make sure you have Java JDK and Maven installed.
+2. From the root of the `mo-tester` project, run:
+
+   ```sh
+   mvn clean compile jar:jar -DskipTests
+   ```
+
+3. After a successful build, an executable JAR (if configured) will be created in the `target/` directory.
+
+### How to release
+
+copy the ./mo-tester-1.0-SNAPSHOT.jar to ./lib
+
+### How to Test
+
+```sh
+mvn test
+mvn test -D test='ScriptParserTest'
+mvn test -D test='RegexParsingTest#testParseEscapedCharacters'
+```
