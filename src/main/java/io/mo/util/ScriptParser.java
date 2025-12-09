@@ -134,7 +134,7 @@ public class ScriptParser {
                             }
                         }
                     }
-                    
+
                     //if line is mark to use hint check mode
                     if(trimmedLine.startsWith(COMMON.HINT_FLAG)){
                         String hints = trimmedLine.substring(COMMON.HINT_FLAG.length());

@@ -53,7 +53,7 @@ public class SqlCommand {
     private String waitOperation = "commit";
 
     private boolean regularMatch = false;
-    
+
     private boolean hintCheck = false;
     
     private ArrayList<String> hintKeywords = new ArrayList<>();

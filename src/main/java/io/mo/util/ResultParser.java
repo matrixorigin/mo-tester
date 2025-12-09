@@ -127,7 +127,16 @@ public class ResultParser {
             }
             StmtResult expResult = new StmtResult();
             expResult.setCommand(command);
-            if(resText == null || resText.equals("")){
+            
+            // If command uses hint check mode, skip setting expected result details
+            // The hintMatch() method will only check if actual result contains keywords
+            if(command.isHintCheck()){
+                // For hint check mode, we don't need to parse the expected result
+                // Just set type to NONE so it won't do exact comparison
+                expResult.setType(RESULT.STMT_RESULT_TYPE_NONE);
+                LOG.debug("[Hint Mode]["+script.getFileName()+"][row:"+command.getPosition()+"] Skipping exact result comparison");
+            }
+            else if(resText == null || resText.equals("")){
                 expResult.setType(RESULT.STMT_RESULT_TYPE_NONE);
             }
             else{

@@ -124,7 +124,7 @@ public class StmtResult {
             return false;
         }
     }
-    
+
     /**
      * Check if the actual result contains all the hint keywords
      * This is used for cases like EXPLAIN where we only want to verify certain keywords exist

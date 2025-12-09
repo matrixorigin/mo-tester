@@ -48,7 +48,7 @@ public class COMMON {
     public static String KAFKA_PRODUCE_END_FLAG = "-- @kafka:produce";
     
     public static String IGNORE_COLUMN_FLAG = "-- @ignore:";
-    
+
     //if result only need to check whether it contains some keywords, can use this flag
     public static String HINT_FLAG = "-- @hint:";
 
