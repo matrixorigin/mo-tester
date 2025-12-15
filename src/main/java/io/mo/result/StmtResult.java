@@ -4,6 +4,8 @@ import io.mo.cases.SqlCommand;
 import io.mo.constant.RESULT;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
+
 public class StmtResult {
     /**
      * result type, value can be:
