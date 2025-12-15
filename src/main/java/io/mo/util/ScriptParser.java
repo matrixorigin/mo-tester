@@ -206,8 +206,7 @@ public class ScriptParser {
         
         // Check if it starts with '(' and ends with ')'
         if (!regexStr.startsWith("(") || !regexStr.endsWith(")")) {
-            LOG.warn(String.format("Invalid regex flag format: -- @regex%s. Expected format: -- @regex(\"pattern\", true/false)", regexStr));
-            return;
+            throw new RuntimeException(String.format("Invalid regex flag format: -- @regex%s. Expected format: -- @regex(\"pattern\", true/false)", regexStr));
         }
         
         // Remove parentheses
@@ -217,8 +216,7 @@ public class ScriptParser {
         // We need to find the last comma because pattern itself may contain commas
         int lastCommaIndex = content.lastIndexOf(',');
         if (lastCommaIndex == -1) {
-            LOG.warn(String.format("Invalid regex flag format: -- @regex%s. Missing comma separator.", regexStr));
-            return;
+            throw new RuntimeException(String.format("Invalid regex flag format: -- @regex%s. Missing comma separator.", regexStr));
         }
         
         // Extract pattern (everything before last comma) and include flag (after last comma)
@@ -234,8 +232,7 @@ public class ScriptParser {
             // Single-quoted string
             pattern = patternStr.substring(1, patternStr.length() - 1);
         } else {
-            LOG.error(String.format("Invalid regex flag format: pattern must be a quoted string literal. Got: %s", patternStr));
-            return;
+            throw new RuntimeException(String.format("Invalid regex flag format: pattern must be a quoted string literal. Got: %s", patternStr));
         }
         
         // Parse boolean value
@@ -245,8 +242,7 @@ public class ScriptParser {
         } else if ("false".equalsIgnoreCase(includeStr)) {
             include = false;
         } else {
-            LOG.warn(String.format("Invalid regex flag include value: %s. Expected 'true' or 'false'.", includeStr));
-            return;
+            throw new RuntimeException(String.format("Invalid regex flag include value: %s. Expected 'true' or 'false'.", includeStr));
         }
         
         // Compile pattern immediately - fail fast if invalid
@@ -254,7 +250,6 @@ public class ScriptParser {
         try {
             compiledPattern = Pattern.compile(pattern);
         } catch (Exception e) {
-            LOG.error(String.format("Failed to compile regex pattern '%s': %s", pattern, e.getMessage()));
             throw new RuntimeException(String.format("Invalid regex pattern '%s': %s", pattern, e.getMessage()), e);
         }
         
