@@ -38,7 +38,7 @@ public class Tester {
     // 不包含 account 操作的目录
     private static final Set<String> GROUP1_DIRECTORIES = new HashSet<>(Arrays.asList(
         "analyze",
-        // "array",
+        "array",
         "auto_increment",
         "charset_collation",
         "comment",
@@ -49,10 +49,10 @@ public class Tester {
         "expression",
         "fake_pk",
         "fulltext",
-        // "join",
+        "join",
         // "metadata",
         "operator",
-        // "optimizer",
+        "optimizer",
         "pg_cast",
         "plan_cache",
         "plugin",
@@ -60,10 +60,10 @@ public class Tester {
         "recursive_cte",
         "replace_statement",
         "sample",
-        "security",
+        // "security",
         "sequence",
         "sql_inject",
-        // "subquery",
+        "subquery",
         "tenxcloud_xx",
         "time_window",
         "udf",
@@ -292,10 +292,12 @@ public class Tester {
                 "Parallel execution: Group1 (specified directories) has %d directories, Group2 (others) has %d directories",
                 groupAssigned.size(), groupDefault.size()));
 
-        executor.createAccountForTest();
+        int accountId = executor.createAccountForTest();
 
         // 创建新的 executor2 用于指定目录组，在一个独立的租户中运行
         Executor executor2 = new Executor("shuyuan:kongzi", "111");
+
+        executor2.setAccountId(accountId);
 
         // 使用现有 executor 处理第一组
         Thread thread1 = new Thread(() -> {
