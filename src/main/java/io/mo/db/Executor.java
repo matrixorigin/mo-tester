@@ -21,12 +21,38 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Executor {
+
+    /**
+     * Functional interface for post-SQL execution processing
+     */
+    @FunctionalInterface
+    public interface PostSqlHandler {
+        /**
+         * Process the result after SQL execution
+         * @param statement The executed statement
+         * @param updateCount The update count for DDL/DML statements, or -1 for queries
+         * @param resultSet The result set for queries, or null for DDL/DML statements
+         * @throws SQLException if processing fails
+         */
+        void handle(Statement statement, int updateCount, ResultSet resultSet) throws SQLException;
+    }
+
+    /**
+     * Pre-compiled regex patterns for better performance
+     */
+    private static final Pattern FLUSH_SQL_PATTERN = Pattern.compile(
+        "(?i)(select\\s+mo_ctl\\s*\\(\\s*['\"]dn['\"]\\s*,\\s*['\"]flush['\"]\\s*,\\s*['\"])([^'\"]+)\\.([^'\"]+)(['\"]\\s*\\))",
+        Pattern.CASE_INSENSITIVE
+    );
 
     private final ConnectionManager connectionManager;
     private final Logger logger;
     private Thread waitThread = null;
+    private int accountId = 0;
 
     public Executor() {
         this.connectionManager = new ConnectionManager();
@@ -56,7 +82,7 @@ public class Executor {
 
         // create a database named filename for test;
         Connection connection = connectionManager.getConnection();
-        createTestDB(connection, script);
+        createTestDB(connection, script.getUseDB());
 
         // load expected results from result file
         ParseResult parseResult = ResultParser.loadExpectedResultsFromFile(script);
@@ -78,9 +104,11 @@ public class Executor {
         Statement statement = null;
         ArrayList<SqlCommand> commands = script.getCommands();
         long start = System.currentTimeMillis();
+        boolean[] transformed = new boolean[1];
 
         // for (SqlCommand command : commands) {
         for (int i = 0; i < commands.size(); i++) {
+            transformed[0] = false;
             SqlCommand command = commands.get(i);
 
             // if need to sleep
@@ -109,7 +137,21 @@ public class Executor {
                 continue;
             }
 
-            connection = getConnection(command);
+            String cmd = command.getCommand();
+            if (cmd == null || cmd.trim().isEmpty()) {
+                logger.warn("[" + script.getFileName() + "][row:" + command.getPosition()
+                        + "] Command is empty, skip it.");
+                script.addIgnoredCmd(command);
+                command.getTestResult().setResult(RESULT.RESULT_TYPE_IGNORED);
+                continue;
+            }
+
+            String sqlCmd = transformFlushSql(cmd, transformed);
+            if (transformed[0]) {
+                connection = connectionManager.getConnectionForSys();
+            } else {
+                connection = getConnection(command);
+            }
 
             // if can not get valid connection,put the command to the abnormal commands
             // array
@@ -139,19 +181,9 @@ public class Executor {
             last_commit_id = command.getConn_id();
 
             try {
-                // connection.getCatalog();
-                // connection.setCatalog(command.getUseDB());
                 command.setUseDB(connection.getCatalog());
                 statement = connection.createStatement();
-                String cmd = command.getCommand();
-                if (cmd == null || cmd.trim().isEmpty()) {
-                    logger.warn("[" + script.getFileName() + "][row:" + command.getPosition()
-                            + "] Command is empty, skip it.");
-                    script.addIgnoredCmd(command);
-                    command.getTestResult().setResult(RESULT.RESULT_TYPE_IGNORED);
-                    continue;
-                }
-                String sqlCmd = cmd.replaceAll(COMMON.RESOURCE_PATH_FLAG, COMMON.RESOURCE_PATH);
+                sqlCmd = sqlCmd.replaceAll(COMMON.RESOURCE_PATH_FLAG, COMMON.RESOURCE_PATH);
                 if (command.isNeedWait()) {
                     execWaitOperation(command);
                 }
@@ -307,7 +339,7 @@ public class Executor {
         }
 
         // create a database named filename for test;
-        createTestDB(connection, script);
+        createTestDB(connection, script.getUseDB());
 
         try (BufferedWriter rs_writer = new BufferedWriter(new FileWriter(rsf.getPath()))) {
             ArrayList<SqlCommand> commands = script.getCommands();
@@ -434,73 +466,129 @@ public class Executor {
         }
     }
 
-    public void createAccountForTest() {
-        executeSql(null, "create account if not exists shuyuan ADMIN_NAME 'kongzi' IDENTIFIED BY '111';");
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
+    }
+
+    public int createAccountForTest() {
+        final int[] accountId = new int[1];
+        executeSqlInternal(null, "create account if not exists shuyuan ADMIN_NAME 'kongzi' IDENTIFIED BY '111';", null);
+        boolean success = executeSqlInternal(null, 
+            "select account_id from mo_catalog.mo_account where account_name = 'shuyuan';",
+            (stmt, updateCount, rs) -> {
+                if (rs != null && rs.next()) {
+                    accountId[0] = rs.getInt(1);
+                }
+            });
+        
+        if (success && accountId[0] > 0) {
+            return accountId[0];
+        }
+        throw new RuntimeException("Failed to create account for test");
     }
 
     public void dropAccountForTest() {
-        executeSql(null, "drop account if exists shuyuan;");
+        executeSqlInternal(null, "drop account if exists shuyuan;", null);
     }
 
-    private void executeSql(Connection connection, String sql) {
+    /**
+     * Transform SQL: if it's select mo_ctl('dn', 'flush', '<db>.<table>'),
+     * convert it to select mo_ctl('dn', 'flush', '<db>.<table>.<account_id>')
+     * @param sql The original SQL statement
+     * @param transformed Output parameter: will be set to true if transformation occurred
+     * @return The transformed SQL, or original SQL if pattern doesn't match
+     */
+    public String transformFlushSql(String sql, boolean[] transformed) {
+        if (transformed != null && transformed.length > 0) {
+            transformed[0] = false;
+        }
+        
+        if (accountId <= 0) {
+            return sql;
+        }
+        
+        Matcher matcher = FLUSH_SQL_PATTERN.matcher(sql);
+        if (matcher.find()) {
+            String prefix = matcher.group(1);
+            String db = matcher.group(2);
+            String table = matcher.group(3);
+            String quote = matcher.group(4);
+            String replacement = prefix + db + "." + table + "." + accountId + quote;
+            if (transformed != null && transformed.length > 0) {
+                transformed[0] = true;
+            }
+            return matcher.replaceFirst(Matcher.quoteReplacement(replacement));
+        }
+        
+        return sql;
+    }
+    
+    /**
+     * Internal method to execute SQL without exiting on error
+     * @param connection The database connection (null to use system connection)
+     * @param sql The SQL statement to execute
+     * @param postHandler Optional handler for post-execution processing
+     * @param errorMessage Custom error message prefix (null to use default)
+     * @return true if executed successfully, false otherwise
+     */
+    private boolean executeSqlInternal(Connection connection, String sql, PostSqlHandler postHandler) {
         Connection conn = connection == null ? connectionManager.getConnectionForSys() : connection;
         if (conn == null) {
             logger.error("Failed to execute sql " + sql + ", no connection available, noop");
-            return;
+            return false;
         }
         try (Statement statement = conn.createStatement()) {
-            statement.executeUpdate(sql);
+            boolean hasResultSet = statement.execute(sql);
+            int updateCount = -1;
+            ResultSet resultSet = null;
+            
+            if (hasResultSet) {
+                resultSet = statement.getResultSet();
+            } else {
+                updateCount = statement.getUpdateCount();
+            }
+            
+            // Execute post-sql handler if provided
+            if (postHandler != null) {
+                postHandler.handle(statement, updateCount, resultSet);
+            }
+            
+            // Close result set if it was opened and handler didn't close it
+            if (resultSet != null && !resultSet.isClosed()) {
+                resultSet.close();
+            }
+            return true;
         } catch (SQLException e) {
             logger.error("Failed to execute sql " + sql + ", cause: " + e.getMessage());
-            System.exit(1);
+            return false;
         }
     }
 
     public void createTestDB(Connection connection, String name) {
         if (connection == null)
             return;
-        Statement statement;
-        try {
-            statement = connection.createStatement();
-            statement.executeUpdate("create database IF NOT EXISTS `" + name + "`;");
-            connection.setCatalog(name);
-        } catch (SQLException e) {
-            logger.error("create database " + name + " is failed.cause: " + e.getMessage());
-        }
-    }
-
-    public void createTestDB(Connection connection, TestScript script) {
-        createTestDB(connection, script.getUseDB());
+        executeSqlInternal(connection, "create database IF NOT EXISTS `" + name + "`;",
+            (stmt, updateCount, rs) -> {
+                try {
+                    connection.setCatalog(name);
+                } catch (SQLException e) {
+                    logger.error("Failed to set catalog to " + name + ", cause: " + e.getMessage());
+                }
+            });
     }
 
     public void dropTestDB(Connection connection, String name) {
         if (connection == null)
             return;
-        Statement statement;
-        try {
-            statement = connection.createStatement();
-            statement.executeUpdate("drop database IF EXISTS `" + name + "`;");
-        } catch (SQLException e) {
-            // e.printStackTrace();
-            logger.error("drop database " + name + " is failed.cause: " + e.getMessage());
-        }
+        executeSqlInternal(connection, "drop database IF EXISTS `" + name + "`;", null);
     }
 
     public void syncCommit() {
-        Connection connection = connectionManager.getConnectionForSys();
-        if (connection == null) {
-            logger.error(
-                    "select mo_ctl('cn','synccommit','') failed. cause: Can not get invalid connection for sys user.");
-        }
-
-        try {
-            Statement statement = connection.createStatement();
-            statement.execute("select mo_ctl('cn','synccommit','')");
-            logger.info("select mo_ctl('cn','synccommit','') with sys user[" + MoConfUtil.getSysUserName()
-                    + "] successfully.");
-        } catch (SQLException e) {
-            logger.error("select mo_ctl('cn','synccommit','') failed. cause: " + e.getMessage());
-        }
+        executeSqlInternal(null, "select mo_ctl('cn','synccommit','')",
+            (stmt, updateCount, rs) -> {
+                logger.debug("select mo_ctl('cn','synccommit','') with sys user[" 
+                    + MoConfUtil.getSysUserName()  + "] successfully.");
+            });
     }
 
     public void pprof() {
