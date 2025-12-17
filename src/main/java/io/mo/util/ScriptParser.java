@@ -55,7 +55,7 @@ public class ScriptParser {
                 }
 
                 command.append(trimmedLine);
-                command.append(COMMON.LINE_SEPARATOR);
+                command.append("\n");
                 rowNum++;
             }
         } catch (IOException e) {
@@ -370,7 +370,7 @@ public class ScriptParser {
             return false;
         }
         
-        String delimiter = COMMON.DEFAUT_DELIMITER;
+        String delimiter = ";";
         StringState state = trackStringState(accumulatedCommand);
         int commentStart = findCommentStart(trimmed, state);
         int delimiterPos = findDelimiterPosition(trimmed, delimiter, commentStart);
