@@ -11,6 +11,7 @@ public class RSCell {
     private String value; //cell value
     private int type; // column data type,remain attr
     private int precision = 0; //column value precision,remain attr
+    private int scale = 0; //column value scale,remain attr
     private static Logger LOG = Logger.getLogger(RSCell.class.getName());
 
     public boolean isNeedcheck() {
@@ -45,6 +46,14 @@ public class RSCell {
 
     public void setPrecision(int precision) {
         this.precision = precision;
+    }
+
+    public int getScale() {
+        return scale;
+    }
+
+    public void setScale(int scale) {
+        this.scale = scale;
     }
 
     public String toString(){
