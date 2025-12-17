@@ -60,8 +60,6 @@ public class RSSet {
                     md.getScale(i + 1));
             }
 
-            System.out.println("meta: " + this.meta.fullString());
-
             while (resultSet.next()) {
                 RSRow rsRow = new RSRow(colsCnt);
                 for (int j = 0; j < colsCnt; ++j) {
@@ -131,9 +129,8 @@ public class RSSet {
     }
 
     public boolean equals(RSSet other) {
-        // if need to check the meatainfo of resultset,compare whether meta equals with
-        // each other
-        if (COMMON.IS_COMPARE_META && !this.meta.equals(other.meta)) {
+        // Determine if meta should be compared based on priority: SQL-level > Document-level > Global
+        if (shouldCompareMeta() && !this.meta.equals(other.meta)) {
             return false;
         }
         // if row count does not equal,return false
@@ -170,6 +167,30 @@ public class RSSet {
         }
 
         return String.join(RESULT.ROW_SEPARATOR_NEW, rowsText);
+    }
+
+    /**
+     * Determine if meta should be compared based on priority: SQL-level > Document-level > Global
+     */
+    private boolean shouldCompareMeta() {
+        if (command == null) {
+            return COMMON.IS_COMPARE_META;
+        }
+        
+        Boolean sqlFlag = command.getCompareMeta();
+        if (sqlFlag != null) {
+            return sqlFlag;
+        }
+        
+        io.mo.cases.TestScript script = command.getTestScript();
+        if (script != null) {
+            Boolean docFlag = script.getCompareMeta();
+            if (docFlag != null) {
+                return docFlag;
+            }
+        }
+        
+        return COMMON.IS_COMPARE_META;
     }
 
 }

@@ -37,6 +37,7 @@ public class SqlCommand {
     private boolean regularMatch = false;
 
     private String scriptFile;
+    private TestScript testScript; // Reference to TestScript for accessing document-level flags
     private int position = 0;
     private ArrayList<Integer> sortKeyIndexs = new ArrayList<>();
     private ArrayList<String> syscmds = new ArrayList<>();
@@ -52,6 +53,7 @@ public class SqlCommand {
     private boolean needWait = false;
     private int waitConnId = 0;
     private String waitOperation = "commit";
+    private Boolean compareMeta = null; // SQL-level meta comparison flag (null means use document/global default)
 
     public SqlCommand() {
         command = new StringBuffer();
@@ -341,5 +343,21 @@ public class SqlCommand {
 
     public void addRegexPattern(RegexPattern pattern) {
         this.regexPatterns.add(pattern);
+    }
+
+    public Boolean getCompareMeta() {
+        return compareMeta;
+    }
+
+    public void setCompareMeta(Boolean compareMeta) {
+        this.compareMeta = compareMeta;
+    }
+
+    public TestScript getTestScript() {
+        return testScript;
+    }
+
+    public void setTestScript(TestScript testScript) {
+        this.testScript = testScript;
     }
 }

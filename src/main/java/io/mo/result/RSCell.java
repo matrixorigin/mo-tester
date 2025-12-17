@@ -62,6 +62,7 @@ public class RSCell {
 
     /**
      * compare whether this cell equals the other cell
+     * @param cell the actual result returned by the database
      */
     public boolean equals(RSCell cell){
         if(compareTo(cell) == 0)

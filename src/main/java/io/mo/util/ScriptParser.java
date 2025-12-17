@@ -78,6 +78,19 @@ public class ScriptParser {
             return true;
         }
         
+        // Meta comparison flags: --- @metacmp(boolean) for document-level, -- @metacmp(boolean) for SQL-level
+        if (trimmedLine.contains(COMMON.METACMP_FLAG)) {
+            Boolean value = parseMetacmpFlag(trimmedLine);
+            if (value != null) {
+                if (trimmedLine.startsWith("---")) {
+                    testScript.setCompareMeta(value);
+                } else if (trimmedLine.startsWith("--")) {
+                    command.setCompareMeta(value);
+                }
+            }
+            return false;
+        }
+        
         // BVT issue flags
         if (trimmedLine.startsWith(COMMON.BVT_ISSUE_START_FLAG) && COMMON.IGNORE_MODEL) {
             issueInfo.start(trimmedLine.substring(COMMON.BVT_ISSUE_START_FLAG.length()));
@@ -197,6 +210,27 @@ public class ScriptParser {
         for (String index : indexes.split(",")) {
             command.addSortKeyIndex(Integer.parseInt(index.trim()));
         }
+    }
+
+    /**
+     * Parse @metacmp(boolean) flag from a comment line.
+     * @param trimmedLine The trimmed comment line
+     * @return Boolean value if successfully parsed, null otherwise
+     */
+    private Boolean parseMetacmpFlag(String trimmedLine) {
+        int openParen = trimmedLine.indexOf('(');
+        int closeParen = trimmedLine.indexOf(')', openParen);
+        if (openParen == -1 || closeParen == -1) {
+            return null;
+        }
+        
+        String value = trimmedLine.substring(openParen + 1, closeParen).trim();
+        if ("true".equalsIgnoreCase(value)) {
+            return true;
+        } else if ("false".equalsIgnoreCase(value)) {
+            return false;
+        }
+        return null;
     }
 
     private void parseRegexFlag(String regexStr, SqlCommand command) {
