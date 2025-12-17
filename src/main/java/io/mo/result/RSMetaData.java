@@ -2,24 +2,28 @@ package io.mo.result;
 
 import io.mo.constant.COMMON;
 import io.mo.constant.RESULT;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.log4j.Logger;
 
 public class RSMetaData {
+    private static Logger LOG = Logger.getLogger(RSMetaData.class.getName());
+    private static int VARFlag = 715827882;
+
     private String[] columnNames; // column names
     private String[] columnLabels; // column labels
 
     private int pos = 0;
 
-    private static int VARFlag = 715827882;
-
+    @Getter
+    @Setter
     private boolean fullMetaInfo = false;
 
+    @Getter
     private int columnCount = 0;
     private int[] types; // column data type,remain attr
     private int[] precisions; // column value precision,remain attr
     private int[] scales; // column value scale,remain attr
-
-    private static Logger LOG = Logger.getLogger(RSMetaData.class.getName());
 
     public RSMetaData(int columnCount) {
         this.columnCount = columnCount;
@@ -50,13 +54,6 @@ public class RSMetaData {
         return scales[index];
     }
 
-    public int getColumnCount() {
-        return columnCount;
-    }
-
-    public void setFullMetaInfo(boolean fullMetaInfo) {
-        this.fullMetaInfo = fullMetaInfo;
-    }
 
     public void addMetaInfo(String name, String label, int type, int precision, int scale) {
         columnNames[pos] = name;
@@ -93,7 +90,7 @@ public class RSMetaData {
 
     public String fullString() {
         StringBuilder result = new StringBuilder();
-        result.append(RESULT.FullHeaderLead);
+        result.append(RESULT.FULL_HEADER_LEAD);
         for (int i = 0; i < columnCount; i++) {
             result.append(columnLabels[i])
                   .append("[").append(types[i])

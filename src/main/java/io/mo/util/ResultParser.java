@@ -220,8 +220,8 @@ public class ResultParser {
         
         // First line contains column headers
         boolean fullMeta = false;
-        if (lines[0].startsWith(RESULT.FullHeaderLead)) {
-            lines[0] = lines[0].substring(RESULT.FullHeaderLead.length());
+        if (lines[0].startsWith(RESULT.FULL_HEADER_LEAD)) {
+            lines[0] = lines[0].substring(RESULT.FULL_HEADER_LEAD.length());
             fullMeta = true;
         }
         String[] cols = lines[0].split(RESULT.COLUMN_SEPARATOR_NEW, -1);

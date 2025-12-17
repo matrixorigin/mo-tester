@@ -1,6 +1,8 @@
 package io.mo.cases;
 
 import io.mo.constant.RESULT;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,16 +10,39 @@ import java.util.List;
 
 public class TestScript {
 
+    @Getter
     private ArrayList<SqlCommand> commands = new ArrayList<>();
+    
+    @Getter
     private ArrayList<SqlCommand> successCommands = new ArrayList<>();
+    
+    @Getter
     private ArrayList<SqlCommand> failedCommands = new ArrayList<>();
+    
+    @Getter
     private ArrayList<SqlCommand> ignoredCommands = new ArrayList<>();
+    
+    @Getter
     private ArrayList<SqlCommand> abnormalCommands = new ArrayList<>();
 
+    // 保留自定义 setter，因为有额外逻辑（设置 useDB）
+    @Getter
     private String fileName;
+    
+    @Getter
+    @Setter
     private String useDB;
+    
+    @Getter
+    @Setter
     private float duration = 0;
+    
+    @Getter
+    @Setter
     private boolean skiped = false;
+    
+    @Getter
+    @Setter
     private Boolean compareMeta = null; // Document-level meta comparison flag (null means use global default)
 
     public TestScript() {
@@ -65,38 +90,10 @@ public class TestScript {
         return script.toString();
     }
 
-    public String getFileName() {
-        return fileName;
-    }
-
     public void setFileName(String fileName) {
         this.fileName = fileName;
         File file = new File(fileName);
         this.setUseDB(file.getName().substring(0, file.getName().lastIndexOf(".")));
-    }
-
-    public String getUseDB() {
-        return useDB;
-    }
-
-    public void setUseDB(String useDB) {
-        this.useDB = useDB;
-    }
-
-    public boolean isSkiped() {
-        return skiped;
-    }
-
-    public void setSkiped(boolean skiped) {
-        this.skiped = skiped;
-    }
-
-    public float getDuration() {
-        return duration;
-    }
-
-    public void setDuration(float duration) {
-        this.duration = duration;
     }
 
     public int getTotalCmdCount() {
@@ -119,10 +116,6 @@ public class TestScript {
         return abnormalCommands.size();
     }
 
-    public ArrayList<SqlCommand> getCommands() {
-        return commands;
-    }
-
     public String getCommand(int i) {
         return commands.get(i).getCommand();
     }
@@ -141,14 +134,6 @@ public class TestScript {
 
     public List<SqlCommand> getAbnormalCmdList() {
         return abnormalCommands;
-    }
-
-    public Boolean getCompareMeta() {
-        return compareMeta;
-    }
-
-    public void setCompareMeta(Boolean compareMeta) {
-        this.compareMeta = compareMeta;
     }
 
 }

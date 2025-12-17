@@ -1,54 +1,56 @@
 package io.mo.result;
 
 import io.mo.constant.RESULT;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 
 public class RSRow {
-    private ArrayList<RSCell> cells; // values of each cell in a row
-    private String text = null; // concat all values to a plain text in the order of columns and is used to sort
-                                // rows
-    private int index = 0;// the row index in the RSSet
     private static Logger LOG = Logger.getLogger(RSRow.class.getName());
+
+    @Getter
+    private ArrayList<RSCell> cells; // values of each cell in a row
+    
+    @Getter
+    private String rowText = null; // concat all values to a plain text in the order of columns and is used to sort rows
+    
+    @Getter
+    @Setter
+    private int index = 0;// the row index in the RSSet
 
     public RSRow(int colCount) {
         cells = new ArrayList<RSCell>();
-        text = "";
+        rowText = "";
     }
 
     public void addCell(RSCell cell) {
         cells.add(cell);
-        text += cell.toString();
+        rowText += cell.toString();
     }
 
     public String getRowCellString(int index) {
         return cells.get(index).toString();
     }
 
-    public String getRowText() {
-        return text;
-    }
 
-    public ArrayList<RSCell> getRowCells() {
-        return cells;
-    }
 
     public boolean equals(RSRow rsRow) {
         // At first,compare texts directly,,if two texts equal,return true
-        if (this.text.equals(rsRow.getRowText()))
+        if (this.rowText.equals(rsRow.getRowText()))
             return true;
 
         // Then,compare whether the column counts are equal to each other
-        if (cells.size() != rsRow.getRowCells().size()) {
+        if (cells.size() != rsRow.getCells().size()) {
             LOG.error("The column count does not equal with each other,one is [" + cells.size() + "],but the other is ["
-                    + rsRow.getRowCells().size() + "]");
+                    + rsRow.getCells().size() + "]");
             return false;
         }
         // Or,compare each values
         for (int i = 0; i < cells.size(); i++) {
             RSCell ct = cells.get(i);
-            RSCell cc = rsRow.getRowCells().get(i);
+            RSCell cc = rsRow.getCells().get(i);
             if (!ct.isNeedcheck() || !cc.isNeedcheck()) {
                 continue;
             }
@@ -62,7 +64,7 @@ public class RSRow {
     }
 
     public int compareTo(RSRow row) {
-        return this.text.compareTo(row.text);
+        return this.rowText.compareTo(row.rowText);
     }
 
     /**
@@ -81,16 +83,12 @@ public class RSRow {
         }
 
         if (sortKeyText1.equals(sortKeyText2))
-            return this.text.compareTo(row.text);
+            return this.rowText.compareTo(row.rowText);
         else
             return 0;
     }
 
     public String toString() {
         return cells.stream().map(Object::toString).reduce((a, b) -> a + RESULT.COLUMN_SEPARATOR_NEW + b).orElse(null);
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
     }
 }
