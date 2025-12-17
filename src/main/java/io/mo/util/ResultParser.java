@@ -4,13 +4,13 @@ import io.mo.cases.RegexPattern;
 import io.mo.cases.SqlCommand;
 import io.mo.cases.TestScript;
 import io.mo.constant.COMMON;
-import io.mo.constant.DATATYPE;
 import io.mo.constant.RESULT;
 import io.mo.result.*;
 import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.sql.Types;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -219,22 +219,46 @@ public class ResultParser {
         if (lines.length == 0) return null;
         
         // First line contains column headers
-        String[] labels = lines[0].split(RESULT.COLUMN_SEPARATOR_NEW, -1);
-        RSSet rsSet = new RSSet();
-        RSMetaData meta = new RSMetaData(labels.length);
-        rsSet.setMeta(meta);
-        for (String label : labels) {
-            meta.addMetaInfo(label, label, DATATYPE.TYPE_STRING, 0);
+        boolean fullMeta = false;
+        if (lines[0].startsWith(RESULT.FullHeaderLead)) {
+            lines[0] = lines[0].substring(RESULT.FullHeaderLead.length());
+            fullMeta = true;
         }
+        String[] cols = lines[0].split(RESULT.COLUMN_SEPARATOR_NEW, -1);
+        RSSet rsSet = new RSSet();
+        RSMetaData meta = new RSMetaData(cols.length);
+        rsSet.setMeta(meta);
+        for (String col : cols) {
+            if (fullMeta) {
+                // 解析逻辑，并假定类型模式始终位于尾部
+                String colName = col;
+                int type = Types.VARCHAR, precision = 0, scale = 0;
+                int lbracket = col.lastIndexOf('[');
+                int rbracket = col.lastIndexOf(']');
+                if (lbracket > 0 && rbracket == col.length() - 1) {
+                    colName = col.substring(0, lbracket);
+                    String[] parts = col.substring(lbracket + 1, rbracket).split(",", -1);
+                    if (parts.length == 3) {
+                        try { type = Integer.parseInt(parts[0].trim()); } catch (Exception ignore) {}
+                        try { precision = Integer.parseInt(parts[1].trim()); } catch (Exception ignore) {}
+                        try { scale = Integer.parseInt(parts[2].trim()); } catch (Exception ignore) {}
+                    }
+                }
+                meta.addMetaInfo(colName, colName, type, precision, scale);
+            } else {
+                meta.addMetaInfo(col, col, Types.VARCHAR, 0, 0);
+            }
+        }
+       
         
         // Remaining lines contain data rows
         for (int i = 1; i < lines.length; i++) {
-            RSRow row = new RSRow(labels.length);
+            RSRow row = new RSRow(cols.length);
             rsSet.addRow(row);
             String[] values = lines[i].split(RESULT.COLUMN_SEPARATOR_NEW, -1);
-            for (int j = 0; j < labels.length; j++) {
+            for (int j = 0; j < cols.length; j++) {
                 RSCell cell = new RSCell();
-                cell.setType(DATATYPE.TYPE_STRING);
+                cell.setType(Types.VARCHAR);
                 cell.setValue(j < values.length ? values[j] : "");
                 row.addCell(cell);
             }

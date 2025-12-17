@@ -10,9 +10,12 @@ public class RSMetaData {
 
     private int pos = 0;
 
+    private static int VARFlag = 715827882;
+
     private int columnCount = 0;
     private int[] types; // column data type,remain attr
     private int[] precisions; // column value precision,remain attr
+    private int[] scales; // column value scale,remain attr
 
     private static Logger LOG = Logger.getLogger(RSMetaData.class.getName());
 
@@ -22,6 +25,7 @@ public class RSMetaData {
         columnLabels = new String[columnCount];
         types = new int[columnCount];
         precisions = new int[columnCount];
+        scales = new int[columnCount];
     }
 
     public String getColumnName(int index) {
@@ -40,15 +44,20 @@ public class RSMetaData {
         return precisions[index];
     }
 
+    public int getScale(int index) {
+        return scales[index];
+    }
+
     public int getColumnCount() {
         return columnCount;
     }
 
-    public void addMetaInfo(String name, String label, int type, int precision) {
+    public void addMetaInfo(String name, String label, int type, int precision, int scale) {
         columnNames[pos] = name;
         columnLabels[pos] = label;
         types[pos] = type;
         precisions[pos] = precision;
+        scales[pos] = scale;
         pos++;
     }
 
@@ -72,6 +81,22 @@ public class RSMetaData {
 
     public String getColumnLabels() {
         return String.join(RESULT.COLUMN_SEPARATOR_NEW, columnLabels);
+    }
+
+    public String fullString() {
+        StringBuilder result = new StringBuilder();
+        result.append(RESULT.FullHeaderLead);
+        for (int i = 0; i < columnCount; i++) {
+            result.append(columnLabels[i])
+                  .append("[").append(types[i])
+                  .append(",").append(precisions[i] == VARFlag ? -1 : precisions[i])
+                  .append(",").append(scales[i])
+                  .append("]");
+            if (i < columnCount - 1) {
+                result.append(RESULT.COLUMN_SEPARATOR_NEW);
+            }
+        }
+        return result.toString();
     }
 
     public boolean containSpecialChar(String str) {

@@ -35,6 +35,8 @@ public class RESULT {
     // two spaces + musical barline(html: &#119040; unicode: U+1D100) + newline
     public static String ROW_SEPARATOR_NEW = "  𝄀\n";
 
+    public static String FullHeaderLead = "➤ ";
+
     public static int STMT_RESULT_TYPE_NONE = 3;
     public static int STMT_RESULT_TYPE_ERROR = 2;
     public static int STMT_RESULT_TYPE_SET = 1;

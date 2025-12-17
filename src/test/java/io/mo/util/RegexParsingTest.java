@@ -13,7 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
+import java.sql.Types;
 import static org.junit.Assert.*;
 
 /**
@@ -275,14 +275,14 @@ public class RegexParsingTest {
             // 创建 RSSet 并设置必要的 meta 信息，以便 toString() 能正常工作
             RSSet rsSet = new RSSet();
             io.mo.result.RSMetaData meta = new io.mo.result.RSMetaData(1);
-            meta.addMetaInfo("col1", "col1", io.mo.constant.DATATYPE.TYPE_STRING, 0);
+            meta.addMetaInfo("col1", "col1", Types.VARCHAR, 0, 0);
             rsSet.setMeta(meta);
             
             // 添加一行数据，包含 "test_result"
             io.mo.result.RSRow row = new io.mo.result.RSRow(1);
             io.mo.result.RSCell cell = new io.mo.result.RSCell();
             cell.setValue("test_result");
-            cell.setType(io.mo.constant.DATATYPE.TYPE_STRING);
+            cell.setType(Types.VARCHAR);
             row.addCell(cell);
             rsSet.addRow(row);
             

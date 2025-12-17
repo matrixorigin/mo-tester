@@ -56,8 +56,11 @@ public class RSSet {
                     md.getColumnName(i + 1), 
                     md.getColumnLabel(i + 1),
                     md.getColumnType(i + 1), 
-                    md.getPrecision(i + 1));
+                    md.getPrecision(i + 1),
+                    md.getScale(i + 1));
             }
+
+            System.out.println("meta: " + this.meta.fullString());
 
             while (resultSet.next()) {
                 RSRow rsRow = new RSRow(colsCnt);
@@ -82,6 +85,7 @@ public class RSSet {
                     rsCell.setValue(value);
                     rsCell.setType(this.meta.getType(j));
                     rsCell.setPrecision(this.meta.getPrecision(j));
+                    rsCell.setScale(this.meta.getScale(j));
                     rsRow.addCell(rsCell);
                 }
                 this.addRow(rsRow);
@@ -160,7 +164,7 @@ public class RSSet {
             return abnormalError;
 
         ArrayList<String> rowsText = new ArrayList<>();
-        rowsText.add(this.meta.getColumnLabels());
+        rowsText.add(this.meta.fullString());
         for (int i = 0; i < rows.size(); i++) {
             rowsText.add(rows.get(i).toString());
         }

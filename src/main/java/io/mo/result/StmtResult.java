@@ -4,8 +4,6 @@ import io.mo.cases.SqlCommand;
 import io.mo.constant.RESULT;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-
 public class StmtResult {
     /**
      * result type, value can be:
@@ -95,55 +93,6 @@ public class StmtResult {
         }
     }
     
-    /**
-     * Check if the actual result contains all the hint keywords
-     * This is used for cases like EXPLAIN where we only want to verify certain keywords exist
-     * rather than comparing the entire output
-     * @param stmtResult the actual result
-     * @param hintKeywords the list of keywords that must be present in the result
-     * @return true if all keywords are found, false otherwise
-     */
-    public boolean hintMatch(StmtResult stmtResult, ArrayList<String> hintKeywords){
-        if(hintKeywords == null || hintKeywords.isEmpty()){
-            LOG.error("Hint keywords list is null or empty, cannot perform hint match");
-            return false;
-        }
-        
-        String actualContent = null;
-        
-        // Get the actual result content based on result type
-        if(stmtResult.getType() == RESULT.STMT_RESULT_TYPE_SET){
-            if(stmtResult.getRsSet() == null){
-                LOG.error("Actual result set is null, cannot perform hint match");
-                return false;
-            }
-            actualContent = stmtResult.getRsSet().toString();
-        } else if(stmtResult.getType() == RESULT.STMT_RESULT_TYPE_ERROR){
-            actualContent = stmtResult.getErrorMessage();
-        } else if(stmtResult.getType() == RESULT.STMT_RESULT_TYPE_NONE){
-            LOG.error("Actual result is NONE type, cannot perform hint match");
-            return false;
-        } else {
-            actualContent = stmtResult.toString();
-        }
-        
-        if(actualContent == null || actualContent.isEmpty()){
-            LOG.error("Actual result content is null or empty, cannot perform hint match");
-            return false;
-        }
-        
-        // Check if all hint keywords are present in the actual result
-        for(String keyword : hintKeywords){
-            if(!actualContent.contains(keyword)){
-                LOG.error(String.format("Hint keyword [%s] not found in actual result", keyword));
-                return false;
-            }
-        }
-        
-        LOG.debug(String.format("All hint keywords %s found in actual result", hintKeywords));
-        return true;
-    }
-
     public int getType() {
         return type;
     }
