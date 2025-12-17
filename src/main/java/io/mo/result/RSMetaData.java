@@ -76,7 +76,6 @@ public class RSMetaData {
                             + f1 + "],but the other is [" + f2 + "]");
                     return false;
                 }
-                System.out.println("check f1 = " + f1);
             } else {
                 if (!this.columnLabels[i].equalsIgnoreCase(meta.getColumnLable(i))) {
                     LOG.error("The column label[index:" + i + "] does not equal with each other,one is ["
