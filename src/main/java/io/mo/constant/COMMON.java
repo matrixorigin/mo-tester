@@ -17,9 +17,6 @@ public class COMMON {
     public static int NEW_SEESION_DEFAULT_ID = 1;
     public static int DEFAULT_MAX_EXECUTE_TIME = 10000;
 
-    public static String DEFAUT_DELIMITER = ";";
-    public static String LINE_SEPARATOR = "\n";
-
     public static String SYSTEM_CMD_FLAG = "-- @system ";
     public static String NEW_SESSION_START_FLAG = "-- @session:";
     public static String NEW_SESSION_END_FLAG = "-- @session";
