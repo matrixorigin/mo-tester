@@ -18,6 +18,7 @@ public class TestScript {
     private String useDB;
     private float duration = 0;
     private boolean skiped = false;
+    private Boolean compareMeta = null; // Document-level meta comparison flag (null means use global default)
 
     public TestScript() {
     }
@@ -28,6 +29,7 @@ public class TestScript {
         commands.add(command);
         command.setScriptFile(this.fileName);
         command.setUseDB(this.useDB);
+        command.setTestScript(this); // Set reference to TestScript
     }
 
     public void addSuccessCmd(SqlCommand command) {
@@ -139,6 +141,14 @@ public class TestScript {
 
     public List<SqlCommand> getAbnormalCmdList() {
         return abnormalCommands;
+    }
+
+    public Boolean getCompareMeta() {
+        return compareMeta;
+    }
+
+    public void setCompareMeta(Boolean compareMeta) {
+        this.compareMeta = compareMeta;
     }
 
 }

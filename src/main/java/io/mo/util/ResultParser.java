@@ -239,12 +239,13 @@ public class ResultParser {
                     colName = col.substring(0, lbracket);
                     String[] parts = col.substring(lbracket + 1, rbracket).split(",", -1);
                     if (parts.length == 3) {
-                        try { type = Integer.parseInt(parts[0].trim()); } catch (Exception ignore) {}
-                        try { precision = Integer.parseInt(parts[1].trim()); } catch (Exception ignore) {}
-                        try { scale = Integer.parseInt(parts[2].trim()); } catch (Exception ignore) {}
+                        type = Integer.parseInt(parts[0].trim());
+                        precision = Integer.parseInt(parts[1].trim()); 
+                        scale = Integer.parseInt(parts[2].trim()); 
                     }
                 }
                 meta.addMetaInfo(colName, colName, type, precision, scale);
+                meta.setFullMetaInfo(true);
             } else {
                 meta.addMetaInfo(col, col, Types.VARCHAR, 0, 0);
             }

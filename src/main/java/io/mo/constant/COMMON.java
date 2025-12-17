@@ -43,9 +43,8 @@ public class COMMON {
     
     public static String IGNORE_COLUMN_FLAG = "-- @ignore:";
     
-    //if result only need to check whether it contains some keywords, can use this flag
-    public static String HINT_FLAG = "-- @hint:";
-
+    public static String METACMP_FLAG = "@metacmp";
+    
     public static String LOG_DIR = "log";
     public static String RESULT_DIR = "result";
     public static String CASES_DIR = "cases";
@@ -91,11 +90,8 @@ public class COMMON {
     
 
 
-    public static String UPDATE_RESULT_TEMPLATE = "Query OK, {num} row affected";
 
     public static int WAIT_TIMEOUT = 5000;
-    
-    public static int MAX_ROW_COUNT_IN_RS = 100;//the max row count in the resultset
     
     public static boolean NEED_PPROF = false;
 
