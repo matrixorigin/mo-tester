@@ -3,6 +3,8 @@ package io.mo.result;
 import io.mo.cases.SqlCommand;
 import io.mo.constant.COMMON;
 import io.mo.constant.RESULT;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
@@ -12,30 +14,27 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class RSSet {
-
-    private RSMetaData meta;
-    private ArrayList<RSRow> rows = new ArrayList<RSRow>();
-    private ArrayList<Integer> sortKeyIndexs = new ArrayList<Integer>();
-
-    private String abnormalError; // to store the abnormal reason why the RSSet instanse is generated failed.
-
-    private SqlCommand command;
-
-    public SqlCommand getCommand() {
-        return command;
-    }
-
-    public void setCommand(SqlCommand command) {
-        this.command = command;
-    }
-
     private static Logger LOG = Logger.getLogger(RSSet.class.getName());
 
-    public RSSet() {
-    }
+    @Getter
+    @Setter
+    private RSMetaData meta;
+    
+    @Getter
+    private ArrayList<RSRow> rows = new ArrayList<RSRow>();
+    
+    @Getter
+    private ArrayList<Integer> sortKeyIndexs = new ArrayList<Integer>();
 
-    public void setMeta(RSMetaData meta) {
-        this.meta = meta;
+    @Getter
+    @Setter
+    private String abnormalError; // to store the abnormal reason why the RSSet instanse is generated failed.
+
+    @Getter
+    @Setter
+    private SqlCommand command;
+
+    public RSSet() {
     }
 
     public void addRow(RSRow rsRow) {
@@ -100,18 +99,6 @@ public class RSSet {
 
     public void addSortKeyIndex(int index) {
         sortKeyIndexs.add(index);
-    }
-
-    public ArrayList<RSRow> getRows() {
-        return rows;
-    }
-
-    public String getAbnormalError() {
-        return abnormalError;
-    }
-
-    public void setAbnormalError(String abnormalError) {
-        this.abnormalError = abnormalError;
     }
 
     /**

@@ -5,6 +5,8 @@ import io.mo.result.RSSet;
 import io.mo.result.StmtResult;
 import io.mo.result.TestResult;
 import io.mo.util.MoConfUtil;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.log4j.Logger;
 
 import java.lang.StringBuffer;
@@ -16,13 +18,28 @@ public class SqlCommand {
     private static Logger LOG = Logger.getLogger(SqlCommand.class.getName());
 
     private StringBuffer command;
+    
+    @Getter
+    @Setter
     private boolean ignore = false;
+    
+    @Getter
+    @Setter
     private int conn_id = 0;
 
+    @Getter
+    @Setter
     private String useDB = null;
 
+    // 使用 @Setter 生成 setter，保留自定义 getter（有默认值逻辑）
+    @Setter
     private String conn_user = null;
+    
+    @Setter
     private String conn_pswd = null;
+    
+    @Getter
+    @Setter
     private String issueNo = null;
 
 
@@ -32,27 +49,67 @@ public class SqlCommand {
     // * 2、space,separator is 4 spaces
     // * 3、both,separator is \t or 4 spaces
     // default value is both
+    @Getter
+    @Setter
     private String separator = "both";
     // deprecated, compatibility for old result file
+    @Getter
+    @Setter
     private boolean regularMatch = false;
 
+    @Getter
+    @Setter
     private String scriptFile;
+    
+    @Getter
+    @Setter
     private TestScript testScript; // Reference to TestScript for accessing document-level flags
+    
+    @Getter
+    @Setter
     private int position = 0;
+    
+    @Getter
     private ArrayList<Integer> sortKeyIndexs = new ArrayList<>();
+    
     private ArrayList<String> syscmds = new ArrayList<>();
+    
+    @Getter
     private ArrayList<Integer> ignoreColumns = new ArrayList<>();
+    
+    @Getter
     private ArrayList<RegexPattern> regexPatterns = new ArrayList<>();
 
+    @Getter
     private TestResult testResult;
+    
+    // 保留自定义 setter，因为有额外逻辑
+    @Getter
     private StmtResult expResult;
     private StmtResult actResult;
 
+    @Getter
+    @Setter
     private SqlCommand next;
+    
+    @Getter
+    @Setter
     private int sleeptime = 0;
+    
+    @Getter
+    @Setter
     private boolean needWait = false;
+    
+    @Getter
+    @Setter
     private int waitConnId = 0;
+    
+    @Getter
+    @Setter
     private String waitOperation = "commit";
+    
+    @Getter
+    @Setter
     private Boolean compareMeta = null; // SQL-level meta comparison flag (null means use document/global default)
 
     public SqlCommand() {
@@ -68,6 +125,7 @@ public class SqlCommand {
         this.syscmds.add(cmd);
     }
 
+    // 保留原方法名以保持兼容性（Lombok 会生成 getSyscmds()，但这里需要 getSysCMDS()）
     public ArrayList<String> getSysCMDS() {
         return this.syscmds;
     }
@@ -76,14 +134,6 @@ public class SqlCommand {
         if (command.length() == 0)
             return null;
         return command.toString();
-    }
-
-    public int getConn_id() {
-        return conn_id;
-    }
-
-    public void setConn_id(int conn_id) {
-        this.conn_id = conn_id;
     }
 
     public String getConn_user() {
@@ -98,63 +148,17 @@ public class SqlCommand {
         return conn_pswd;
     }
 
-    public String getScriptFile() {
-        return scriptFile;
-    }
-
-    public void setScriptFile(String scriptFile) {
-        this.scriptFile = scriptFile;
-    }
-
-    public TestResult getTestResult() {
-        return testResult;
-    }
-
-    public boolean isIgnore() {
-        return ignore;
-    }
-
-    public void setIgnore(boolean ignore) {
-        this.ignore = ignore;
-    }
-
-    public int getPosition() {
-        return position;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
-    public SqlCommand getNext() {
-        return next;
-    }
-
-    public void setNext(SqlCommand next) {
-        this.next = next;
-    }
-
-    public ArrayList<Integer> getSortKeyIndexs() {
-        return sortKeyIndexs;
-    }
-
     public void addSortKeyIndex(int index) {
         sortKeyIndexs.add(index);
     }
 
-    public StmtResult getExpResult() {
-        return expResult;
-    }
+  
 
     public void setExpResult(StmtResult expResult) {
         this.expResult = expResult;
         if (expResult != null) {
             this.testResult.setExpResult(expResult.toString());
         }
-    }
-
-    public StmtResult getActResult() {
-        return actResult;
     }
 
     public void setActResult(StmtResult actResult) {
@@ -246,30 +250,6 @@ public class SqlCommand {
         return true;
     }
 
-    public String getSeparator() {
-        return separator;
-    }
-
-    public void setSeparator(String separator) {
-        this.separator = separator;
-    }
-
-    public String getIssueNo() {
-        return issueNo;
-    }
-
-    public void setIssueNo(String issueNo) {
-        this.issueNo = issueNo;
-    }
-
-    public void setConn_user(String conn_user) {
-        this.conn_user = conn_user;
-    }
-
-    public void setConn_pswd(String conn_pswd) {
-        this.conn_pswd = conn_pswd;
-    }
-
     public void sleep() {
         if (sleeptime == 0)
             return;
@@ -281,83 +261,11 @@ public class SqlCommand {
         }
     }
 
-    public int getSleeptime() {
-        return sleeptime;
-    }
-
-    public void setSleeptime(int sleeptime) {
-        this.sleeptime = sleeptime;
-    }
-
-    public String getUseDB() {
-        return useDB;
-    }
-
-    public void setUseDB(String useDB) {
-        this.useDB = useDB;
-    }
-
-    public boolean isRegularMatch() {
-        return regularMatch;
-    }
-
-    public void setRegularMatch(boolean regularMatch) {
-        this.regularMatch = regularMatch;
-    }
-
-    public boolean isNeedWait() {
-        return needWait;
-    }
-
-    public void setNeedWait(boolean needWait) {
-        this.needWait = needWait;
-    }
-
-    public int getWaitConnId() {
-        return waitConnId;
-    }
-
-    public void setWaitConnId(int waitConnId) {
-        this.waitConnId = waitConnId;
-    }
-
-    public String getWaitOperation() {
-        return waitOperation;
-    }
-
-    public void setWaitOperation(String waitOperation) {
-        this.waitOperation = waitOperation;
-    }
-
-    public ArrayList<Integer> getIgnoreColumns() {
-        return this.ignoreColumns;
-    }
-
     public void addIgnoreColumn(int id) {
         this.ignoreColumns.add(id);
     }
 
-    public ArrayList<RegexPattern> getRegexPatterns() {
-        return regexPatterns;
-    }
-
     public void addRegexPattern(RegexPattern pattern) {
         this.regexPatterns.add(pattern);
-    }
-
-    public Boolean getCompareMeta() {
-        return compareMeta;
-    }
-
-    public void setCompareMeta(Boolean compareMeta) {
-        this.compareMeta = compareMeta;
-    }
-
-    public TestScript getTestScript() {
-        return testScript;
-    }
-
-    public void setTestScript(TestScript testScript) {
-        this.testScript = testScript;
     }
 }
