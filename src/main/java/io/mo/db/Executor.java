@@ -158,7 +158,7 @@ public class Executor {
             if (connection == null) {
                 logger.error("[" + script.getFileName() + "][row:" + command.getPosition() + "]["
                         + command.getCommand().trim() + "] can not get invalid connection,con[id="
-                        + command.getConn_id() + ", user=" + command.getConn_user() + ", pwd=" + command.getConn_pswd()
+                        + command.getConn_id() + ", user=" + getConnUser(command) + ", pwd=" + getConnPswd(command)
                         + "].");
                 script.addAbnoramlCmd(command);
                 command.getTestResult().setResult(RESULT.RESULT_TYPE_ABNORMAL);
@@ -201,8 +201,8 @@ public class Executor {
                             command.getTestResult().setResult(RESULT.RESULT_TYPE_FAILED);
                             logger.error("[" + script.getFileName() + "][row:" + command.getPosition() + "]["
                                     + command.getCommand().trim() + "] was executed failed, con[id="
-                                    + command.getConn_id() + ", user=" + command.getConn_user() + ", pwd="
-                                    + command.getConn_pswd() + "].");
+                                    + command.getConn_id() + ", user=" + getConnUser(command) + ", pwd="
+                                    + getConnPswd(command) + "].");
                             continue;
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -232,16 +232,16 @@ public class Executor {
                         logger.error("[" + script.getFileName() + "][row:" + command.getPosition() + "]["
                                 + command.getCommand().trim() + "] MO does not return result in "
                                 + MoConfUtil.getSocketTimeout() + " ms,con[id="
-                                + command.getConn_id() + ", user=" + command.getConn_user() + ", pwd="
-                                + command.getConn_pswd() + "].");
+                                + command.getConn_id() + ", user=" + getConnUser(command) + ", pwd="
+                                + getConnPswd(command) + "].");
                         script.addAbnoramlCmd(command);
                         command.getTestResult().setResult(RESULT.RESULT_TYPE_ABNORMAL);
                         command.getTestResult().setActResult(
                                 String.format(RESULT.ERROR_EXECUTE_TIMEOUT_DESC, MoConfUtil.getSocketTimeout()));
                         logger.error("[" + script.getFileName() + "][row:" + command.getPosition() + "]["
                                 + command.getCommand().trim() + "] was executed failed, con[id="
-                                + command.getConn_id() + ", user=" + command.getConn_user() + ", pwd="
-                                + command.getConn_pswd() + "].");
+                                + command.getConn_id() + ", user=" + getConnUser(command) + ", pwd="
+                                + getConnPswd(command) + "].");
                         logger.error("[EXPECT RESULT]:\n" + command.getTestResult().getExpResult());
                         logger.error("[ACTUAL RESULT]:\n" + command.getTestResult().getActResult());
 
@@ -254,7 +254,7 @@ public class Executor {
                         // reconnect to mo, and set db to last use db
                         logger.warn(String.format(
                                 "The mo-tester tries to re-connect to mo, con[id=%d, user=%s, pwd=%s, db=%s], please wait.....",
-                                command.getConn_id(), command.getConn_user(), command.getConn_pswd(),
+                                command.getConn_id(), getConnUser(command), getConnPswd(command),
                                 command.getUseDB()));
                         try {
                             connection.close();
@@ -314,8 +314,8 @@ public class Executor {
             command.getTestResult().setResult(RESULT.RESULT_TYPE_FAILED);
             logger.error("[" + script.getFileName() + "][row:" + command.getPosition() + "]["
                     + command.getCommand().trim() + "] was executed failed, con[id="
-                    + command.getConn_id() + ", user=" + command.getConn_user() + ", pwd="
-                    + command.getConn_pswd() + "].");
+                    + command.getConn_id() + ", user=" + getConnUser(command) + ", pwd="
+                    + getConnPswd(command) + "].");
             logger.error("[EXPECT RESULT]:\n" + command.getTestResult().getExpResult());
             logger.error("[ACTUAL RESULT]:\n" + command.getTestResult().getActResult());
         }
@@ -398,8 +398,8 @@ public class Executor {
                                 command.getTestResult().setResult(RESULT.RESULT_TYPE_FAILED);
                                 logger.error("[" + script.getFileName() + "][row:" + command.getPosition() + "]["
                                         + command.getCommand().trim() + "] was executed failed, con[id="
-                                        + command.getConn_id() + ", user=" + command.getConn_user() + ", pwd="
-                                        + command.getConn_pswd() + "].");
+                                        + command.getConn_id() + ", user=" + getConnUser(command) + ", pwd="
+                                        + getConnPswd(command) + "].");
                                 continue;
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
@@ -458,12 +458,15 @@ public class Executor {
     }
 
     public Connection getConnection(SqlCommand command) {
-        if (command.getConn_user() == null) {
-            return connectionManager.getConnection(command.getConn_id());
-        } else {
-            return connectionManager.getConnection(command.getConn_id(), command.getConn_user(),
-                    command.getConn_pswd());
-        }
+        return connectionManager.getConnection(command.getConn_id(), getConnUser(command), getConnPswd(command));
+    }
+
+    private String getConnUser(SqlCommand command) {
+        return command.getConn_user() == null ? connectionManager.getDefaultUserName() : command.getConn_user();
+    }
+
+    private String getConnPswd(SqlCommand command) {
+        return command.getConn_pswd() == null ? connectionManager.getDefaultPassword() : command.getConn_pswd();
     }
 
     public void setAccountId(int accountId) {

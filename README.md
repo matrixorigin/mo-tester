@@ -313,3 +313,21 @@ mvn test
 mvn test -D test='ScriptParserTest'
 mvn test -D test='RegexParsingTest#testParseEscapedCharacters'
 ```
+
+
+## Notes
+
+### Parallel Execution Rules
+
+MO-Tester supports parallel execution of test cases. Directories are split into two groups based on naming convention:
+
+- **Group 1 (Parallel Execution)**: Directories whose name matches the pattern `{digit}_parallel` (e.g., `1_parallel`, `2_parallel`) will be executed using a separate executor (`executor2`) in parallel. The `executor2` uses a non-sys account (account: shuyuan, user: kongzi, password: 111).
+- **Group 2 (Sequential Execution)**: All other directories will be executed using the default executor (`executor`) with the sys account.
+
+**Restrictions for parallel directories (`{digit}_parallel`):**
+
+1. No `mo_ctl` commands, except `mo_ctl('dn', 'flush', '<db>.<table>')` is allowed
+2. No `create/drop account` operations
+3. No session on sys account (e.g., `-- @session:id=1&user=sys:dump&password=111`). Note: In Group 1, using `-- @session:id=<digit>` will open a new session with the `shuyuan:kongzi` account by default
+
+These restrictions ensure that parallel test cases do not interfere with each other during concurrent execution.

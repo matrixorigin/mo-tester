@@ -4,7 +4,6 @@ import io.mo.constant.RESULT;
 import io.mo.result.RSSet;
 import io.mo.result.StmtResult;
 import io.mo.result.TestResult;
-import io.mo.util.MoConfUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.log4j.Logger;
@@ -31,11 +30,12 @@ public class SqlCommand {
     @Setter
     private String useDB = null;
 
-    // 使用 @Setter 生成 setter，保留自定义 getter（有默认值逻辑）
     @Setter
+    @Getter
     private String conn_user = null;
     
     @Setter
+    @Getter
     private String conn_pswd = null;
     
     @Getter
@@ -136,23 +136,9 @@ public class SqlCommand {
         return command.toString();
     }
 
-    public String getConn_user() {
-        if (conn_user == null)
-            return MoConfUtil.getUserName();
-        return conn_user;
-    }
-
-    public String getConn_pswd() {
-        if (conn_pswd == null)
-            return MoConfUtil.getUserpwd();
-        return conn_pswd;
-    }
-
     public void addSortKeyIndex(int index) {
         sortKeyIndexs.add(index);
     }
-
-  
 
     public void setExpResult(StmtResult expResult) {
         this.expResult = expResult;
