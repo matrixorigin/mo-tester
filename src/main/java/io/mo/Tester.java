@@ -34,46 +34,6 @@ public class Tester {
     private static final String SQL_SUFFIX = ".sql";
     private static final String TEST_SUFFIX = ".test";
 
-    // 并行执行分组：指定的目录编入组1，其余编入组2
-    // 不包含 account 操作的目录
-    private static final Set<String> GROUP1_DIRECTORIES = new HashSet<>(Arrays.asList(
-        "analyze",
-        "array",
-        "auto_increment",
-        "charset_collation",
-        "comment",
-        "cte",
-        "dataXtest",
-        "distinct",
-        "dtype",
-        "expression",
-        "fake_pk",
-        "fulltext",
-        "join",
-        // "metadata",
-        "operator",
-        "optimizer",
-        "pg_cast",
-        "plan_cache",
-        "plugin",
-        "procedure",
-        "recursive_cte",
-        "replace_statement",
-        "sample",
-        // "security",
-        "sequence",
-        "sql_inject",
-        "subquery",
-        "tenxcloud_xx",
-        "time_window",
-        "udf",
-        // "util",
-        "union",
-        // "vector",
-        "view",
-        "window"
-    ));
-
     public static void main(String[] args) {
         // 初始化配置
         RunConfUtil.setStaticResourcePathFromConfig();
@@ -362,18 +322,17 @@ public class Tester {
     }
 
     /**
-     * 将目录数组分成两组：指定的目录编入组1，其余编入组2
+     * 将目录数组分成两组：目录名为1_parallel的编入组1（使用executor2），其余编入组2
      * 
      * @param dirs 目录数组
-     * @return 包含两个列表的列表，第一个是指定目录组，第二个是其余目录组
+     * @return 包含两个列表的列表，第一个是1_parallel目录组，第二个是其余目录组
      */
     private static List<List<File>> splitDirectories(File[] dirs) {
-        List<File> group1 = new ArrayList<>(); // 指定的目录组
+        List<File> group1 = new ArrayList<>(); // 1_parallel目录组
         List<File> group2 = new ArrayList<>(); // 其余目录组
 
         for (File dir : dirs) {
-            String name = dir.getName();
-            if (name != null && GROUP1_DIRECTORIES.contains(name)) {
+            if (dir.getName().matches("\\d+_parallel")) {
                 group1.add(dir);
             } else {
                 group2.add(dir);

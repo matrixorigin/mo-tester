@@ -3,6 +3,7 @@ package io.mo.db;
 import io.mo.constant.COMMON;
 import io.mo.util.MoConfUtil;
 import org.apache.log4j.Logger;
+import lombok.Getter;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,7 +21,11 @@ public class ConnectionManager {
     
     private final Logger logger;
     private boolean isServerUp;
+
+    @Getter
     private String defaultUserName;
+
+    @Getter
     private String defaultPassword;
 
     public ConnectionManager() {
