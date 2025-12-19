@@ -2,3 +2,6 @@ report/*
 log/*
 .idea/
 .vscode/
+target/
+*.class
+bvtlog
