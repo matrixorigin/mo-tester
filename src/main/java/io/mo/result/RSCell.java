@@ -1,40 +1,66 @@
 package io.mo.result;
 
 import io.mo.constant.COMMON;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.sql.Types;
 import java.util.regex.Pattern;
 
-@Getter
-@Setter
-public class RSCell {
-    private static Logger LOG = Logger.getLogger(RSCell.class.getName());
-
-    private String value; //cell value
+public class RSCell<T> {
+    private T value; //cell value
     private int type; // column data type,remain attr
     private int precision = 0; //column value precision,remain attr
-    private int scale = 0; //column value scale,remain attr
+    private static Logger LOG = Logger.getLogger(RSCell.class.getName());
+
+    public boolean isNeedcheck() {
+        return needcheck;
+    }
+
+    public void setNeedcheck(boolean needcheck) {
+        this.needcheck = needcheck;
+    }
+
     private boolean needcheck = true;
 
-    public String toString(){
+    public T getValue() {
         return value;
+    }
+
+    public void setValue(T value) {
+        this.value = value;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public int getPrecision() {
+        return precision;
+    }
+
+    public void setPrecision(int precision) {
+        this.precision = precision;
+    }
+
+    public String toString(){
+        return String.valueOf(value);
     }
 
     /**
      * compare whether this cell equals the other cell
-     * @param cell the actual result returned by the database
      */
     public boolean equals(RSCell cell){
         if(compareTo(cell) == 0)
             return true;
         else{
             //precision toleration code
-            String v1 = this.value;
-            String v2 = cell.getValue();
+            String v1 = (String)this.value;
+            String v2 = (String)cell.getValue();
             
             //if one is NULL,return false
             if(v1.equalsIgnoreCase("null") || v2.equalsIgnoreCase("null"))
