@@ -1,439 +1,331 @@
 package io.mo.util;
 
-import io.mo.cases.RegexPattern;
 import io.mo.cases.SqlCommand;
 import io.mo.cases.TestScript;
 import io.mo.constant.COMMON;
+import io.mo.constant.DATATYPE;
 import io.mo.constant.RESULT;
 import io.mo.result.*;
 import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.sql.Types;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
-/**
- * Parses result files and loads expected results into TestScript objects.
- * This class reads result files corresponding to test scripts and updates
- * each SqlCommand in the script with its expected result.
- * 
- * <p><b>Thread Safety:</b>
- * This class is thread-safe for concurrent use when each thread operates on
- * a different TestScript instance. All methods are static and stateless,
- * but they modify the TestScript and SqlCommand objects passed as parameters.
- * Multiple threads can safely call methods of this class simultaneously
- * as long as they do not share TestScript instances.
- * 
- * <p><b>Example:</b>
- * <pre>{@code
- * // Thread-safe: each thread has its own TestScript
- * TestScript script1 = parser.parseScript("file1.sql");
- * TestScript script2 = parser.parseScript("file2.sql");
- * 
- * // Thread 1
- * ResultParser.loadExpectedResultsFromFile(script1);
- * 
- * // Thread 2 (safe to run concurrently)
- * ResultParser.loadExpectedResultsFromFile(script2);
- * }</pre>
- */
 public class ResultParser {
+    private static BufferedReader lineReader;
+    private static final StringBuffer resultText = new StringBuffer();
     private static final Logger LOG = Logger.getLogger(ResultParser.class.getName());
+    private static boolean succeeded = true;
 
     /**
-     * Loads expected results from the result file and updates the TestScript object.
-     * This method finds the corresponding result file, reads it, parses the content,
-     * and updates each SqlCommand in the script with its expected result.
-     *
-     * @param script The TestScript to load expected results for
-     * @return ParseResult indicating success or failure, with error message and file path
+     * Get result text of the specific SqlCommand from the result file
      */
-    public static ParseResult loadExpectedResultsFromFile(TestScript script) {
-        String filePath = findResultFile(script);
-        if (filePath == null) {
-            String errorMsg = "Result file not found";
-            markFailed(script, errorMsg);
-            return ParseResult.failure(errorMsg);
+    public static String getCommandResult(SqlCommand command) throws Exception{
+        if(command.getNext() != null) {
+            //System.out.println(command.getPosition()+":command = "+command.getCommand());
+            return getCommandResult(command.getCommand(), command.getNext().getCommand());
         }
-        
-        String resultText;
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8))) {
-            resultText = reader.lines().collect(Collectors.joining("\n"));
-        } catch (IOException e) {
-            LOG.error("Failed to read result file: " + filePath, e);
-            String errorMsg = "Failed to read result file: " + e.getMessage();
-            markFailed(script, errorMsg);
-            return ParseResult.failure(errorMsg, filePath);
-        }
-        
-        String remainingText = resultText;
-        for (SqlCommand cmd : script.getCommands()) {
-            ParseResult parseResult = parseCommand(cmd, remainingText, script);
-            if (parseResult.isFailure()) {
-                return parseResult;
+        else
+            return getCommandResult(command.getCommand(),null);
+    }
+
+    /**
+     * Get result text of the specific SqlCommand from the result file
+     * The result text is the content between the cmd and the next cmd in the reulst file
+     */
+    public static String getCommandResult(String cmd,String nextcmd) throws Exception{
+        String cmdResult;
+        if(nextcmd == null){
+            //if the nextcmd is null,means cmd is the last one,return the content of the resultText directedly
+
+            if(cmd.length() == resultText.length())
+                //the last cmd has no result
+                return null;
+            else {
+                return resultText.substring(cmd.length() + 1, resultText.length());
             }
-            remainingText = advanceToNextCommand(remainingText, cmd);
+        }else {
+            //normally,the resultText should start with the command
+            //so the command result which is the content between the cmd and the nextcmd should be the substring of the resultText from cmd.length() to the position of the nextcmd
+            int from = cmd.length() + 1;
+            int index = cmd.length();
+            int to   = resultText.indexOf(nextcmd,index);
+            if(to < from){
+                throw new Exception("Parse error");
+            }
+            if(from == to) {
+                resultText.delete(0,to);
+                return null;
+            }else {
+                cmdResult = resultText.substring(from, to - 1);
+                //System.out.println("cmdResult = " + cmdResult);
+                //make the resultText starting with the nextcmd
+                resultText.delete(0, to);
+                return cmdResult;
+            }
         }
-        
-        return ParseResult.success(filePath);
     }
 
-    /**
-     * Finds the result file corresponding to the test script.
-     * Tries two strategies:
-     * 1. Same directory with result file suffix
-     * 2. Result directory with same relative path
-     * 
-     * @param script The test script to find result file for
-     * @return The path of the result file, or null if not found
-     */
-    private static String findResultFile(TestScript script) {
-        // Strategy 1: Look in the same directory as the script file
-        String path1 = script.getFileName().replaceAll("\\.[A-Za-z]+", COMMON.R_FILE_SUFFIX);
-        if (new File(path1).exists()) return path1;
+    public static void parse(TestScript script){
+        reset();
+        //check whether the result file exists
+        String rsFilePath = null;
+        File resFile;
+        rsFilePath = script.getFileName().replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX);
+        resFile = new File(rsFilePath);
+        if(!resFile.exists()){
+            rsFilePath = script.getFileName().replaceFirst(COMMON.CASES_DIR,COMMON.RESULT_DIR).replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX);
+            resFile = new File(rsFilePath);
+            if(!resFile.exists()){
+                LOG.warn("The result of the test script file["+rsFilePath+"] does not exists,please check and this test script file will be skipped.");
+                //set the test script file invalid
+                script.invalid();
+                succeeded = false;
+                return; 
+            }
+        }
         
-        // Strategy 2: Look in the result directory with same relative path
-        String path2 = script.getFileName().replaceFirst(COMMON.CASES_DIR, COMMON.RESULT_DIR)
-                .replaceAll("\\.[A-Za-z]+", COMMON.R_FILE_SUFFIX);
-        return new File(path2).exists() ? path2 : null;
-    }
+        try {
+            lineReader = new BufferedReader(new InputStreamReader(new FileInputStream(rsFilePath)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return;
+        }
+        
+        //read result file
+        read();
 
-    /**
-     * Parses a single command's expected result from the result file text.
-     * Extracts the result text between the current command and the next command,
-     * then creates and attaches a StmtResult to the command.
-     * 
-     * @param cmd The SQL command to parse result for
-     * @param text The remaining text from the result file
-     * @param script The test script containing the command
-     * @return ParseResult indicating success or failure
-     */
-    private static ParseResult parseCommand(SqlCommand cmd, String text, TestScript script) {
-        String cmdText = cmd.getCommand();
-        // Verify the command exists in the result file
-        if (!text.startsWith(cmdText)) {
-            String errorMsg = String.format("Command does not exist in result file: [%s][%d]:%s",
-                    script.getFileName(), cmd.getPosition(), cmd.getCommand().trim());
-            logError(script, cmd, "does not exist in result file");
-            return ParseResult.failure(errorMsg, findResultFile(script));
-        }
-        
-        // Verify the next command exists (if any) to determine result boundaries
-        String nextCmd = cmd.getNext() != null ? cmd.getNext().getCommand() : null;
-        if (nextCmd != null && !text.contains(nextCmd)) {
-            String errorMsg = String.format("Next command does not exist in result file: [%s][%d]:%s",
-                    script.getFileName(), cmd.getNext().getPosition(), cmd.getNext().getCommand().trim());
-            logError(script, cmd.getNext(), "does not exist in result file");
-            return ParseResult.failure(errorMsg, findResultFile(script));
-        }
-        
-        // Extract result text between current command and next command
-        String result = extractResult(cmdText, nextCmd, text);
-        
-        // Parse regex patterns from result text if any
-        String remainingResult = parseRegexPatternsFromResult(result, cmd);
-        
-        StmtResult expResult = new StmtResult();
-        expResult.setCommand(cmd);
-        if (remainingResult == null || remainingResult.isEmpty()) {
-            expResult.setType(RESULT.STMT_RESULT_TYPE_NONE);
-        } else {
-            expResult.setExpectRSText(remainingResult);
-            // Convert result text to RSSet for complete expResult processing
-            RSSet rsSet = convertToRSSet(remainingResult, cmd.getSeparator());
-            if (rsSet != null) {
-                expResult.setType(RESULT.STMT_RESULT_TYPE_SET);
-                expResult.setRsSet(rsSet);
-            } else {
-                // If conversion fails, treat as empty result
+        for(int i = 0; i < script.getTotalCmdCount(); i++){
+            SqlCommand command = script.getCommands().get(i);
+            if(resultText.indexOf(command.getCommand()) != 0){
+                LOG.error("[Exceptional command]["+script.getFileName()+"]["+command.getPosition()+"]:"+command.getCommand().trim() + ",it does not exist in result file");
+                //set the test script file invalid
+                script.invalid();
+                succeeded = false;
+                return;
+            }
+            
+            int fromIndex = command.getCommand().length();
+            
+            if(command.getNext() != null && resultText.indexOf(command.getNext().getCommand(),fromIndex) == -1){
+                LOG.error("[Exceptional command]["+script.getFileName()+"]["+command.getNext().getPosition()+"]:"+command.getNext().getCommand().trim() + ",it does not exist in result file");
+                //set the test script file invalid
+                script.invalid();
+                succeeded = false;
+                return;
+            }
+
+            String resText = null;
+            try {
+                resText = getCommandResult(command);
+            } catch (Exception e) {
+                LOG.error("[Exceptional command]["+script.getFileName()+"]["+command.getPosition()+"]:"+command.getCommand().trim());
+                //set the test script file invalid
+                script.invalid();
+                succeeded = false;
+                return;
+            }
+            StmtResult expResult = new StmtResult();
+            expResult.setCommand(command);
+            if(resText == null || resText.equals("")){
                 expResult.setType(RESULT.STMT_RESULT_TYPE_NONE);
             }
+            else{
+                expResult.setOrginalRSText(resText);
+            }
+            command.setExpResult(expResult);
         }
-        // Attach expected result to the command
-        cmd.setExpResult(expResult);
-        return ParseResult.success(findResultFile(script));
     }
 
     /**
-     * Extracts the result text between a command and its next command.
-     * The result is the text between the end of current command and the start of next command.
-     * 
-     * @param cmd The current command text
-     * @param nextCmd The next command text (null if this is the last command)
-     * @param text The full result file text
-     * @return The extracted result text, or null if not found
+     * read content from result file
      */
-    private static String extractResult(String cmd, String nextCmd, String text) {
-        int cmdEnd = cmd.length();
-        // If no next command, return everything after current command
-        if (nextCmd == null) {
-            return cmdEnd >= text.length() ? null : text.substring(cmdEnd + 1);
+    public static void read(){
+        try {
+            if(lineReader == null || !lineReader.ready()){
+                return;
+            }
+
+            String line = lineReader.readLine();
+            while(line != null) {
+                line = new String(line.getBytes(), StandardCharsets.UTF_8);
+                resultText.append(line);
+                line = lineReader.readLine();
+                if(line != null)
+                    resultText.append("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        // Find the position of next command and extract text between them
-        int nextPos = text.indexOf(nextCmd, cmdEnd);
-        if (nextPos < 0) return null;
-        int resultStart = cmdEnd + 1;
-        return resultStart >= nextPos ? null : text.substring(resultStart, nextPos - 1);
     }
 
     /**
-     * Advances the text pointer to the start of the next command.
-     * This is used to efficiently process commands sequentially without re-scanning.
-     * 
-     * @param text The remaining result file text
-     * @param cmd The current command
-     * @return The remaining text starting from the next command, or empty string if not found
+     * check whether test file matches result file
      */
-    private static String advanceToNextCommand(String text, SqlCommand cmd) {
-        String nextCmd = cmd.getNext() != null ? cmd.getNext().getCommand() : null;
-        if (nextCmd == null) return "";
-        // Find next command position and return text from that point
-        int pos = text.indexOf(nextCmd, cmd.getCommand().length());
-        return pos >= 0 ? text.substring(pos) : "";
-    }
-
-    /**
-     * Converts result text string to RSSet object.
-     * Parses tabular data with headers and rows, normalizes separators,
-     * and creates a structured result set representation.
-     * 
-     * @param rsText The result text to convert (header row + data rows)
-     * @param separator The separator type: "table", "space", or "both"
-     * @return RSSet object, or null if input is empty
-     */
-    private static RSSet convertToRSSet(String rsText, String separator) {
-        if (rsText == null || rsText.isEmpty()) return null;
-
-        String rowSeparator = rsText.contains(RESULT.ROW_SEPARATOR_NEW) ? RESULT.ROW_SEPARATOR_NEW : "\n";
-
-        String normalized = rsText;
-        if (!rsText.contains(RESULT.ROW_SEPARATOR_NEW)) {
-            // compatibility for old result file
-            normalized = normalizeSeparators(rsText, separator);
-        }
-
-        String[] lines = normalized.split(rowSeparator, -1);
-        if (lines.length == 0) return null;
-        
-        // First line contains column headers
-        boolean fullMeta = false;
-        if (lines[0].startsWith(RESULT.FULL_HEADER_LEAD)) {
-            lines[0] = lines[0].substring(RESULT.FULL_HEADER_LEAD.length());
-            fullMeta = true;
-        }
-        String[] cols = lines[0].split(RESULT.COLUMN_SEPARATOR_NEW, -1);
-        RSSet rsSet = new RSSet();
-        RSMetaData meta = new RSMetaData(cols.length);
-        rsSet.setMeta(meta);
-        for (String col : cols) {
-            if (fullMeta) {
-                // 解析逻辑，并假定类型模式始终位于尾部
-                String colName = col;
-                int type = Types.VARCHAR, precision = 0, scale = 0;
-                int lbracket = col.lastIndexOf('[');
-                int rbracket = col.lastIndexOf(']');
-                if (lbracket > 0 && rbracket == col.length() - 1) {
-                    colName = col.substring(0, lbracket);
-                    String[] parts = col.substring(lbracket + 1, rbracket).split(",", -1);
-                    if (parts.length == 3) {
-                        type = Integer.parseInt(parts[0].trim());
-                        precision = Integer.parseInt(parts[1].trim()); 
-                        scale = Integer.parseInt(parts[2].trim()); 
-                    }
-                }
-                meta.addMetaInfo(colName, colName, type, precision, scale);
-                meta.setFullMetaInfo(true);
-            } else {
-                meta.addMetaInfo(col, col, Types.VARCHAR, 0, 0);
+    public static void check(TestScript script){
+        reset();
+        //check whether the result file exists
+        String rsFilePath = null;
+        File resFile;
+        rsFilePath = script.getFileName().replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX);
+        resFile = new File(rsFilePath);
+        if(!resFile.exists()){
+            rsFilePath = script.getFileName().replaceFirst(COMMON.CASES_DIR,COMMON.RESULT_DIR).replaceAll("\\.[A-Za-z]+",COMMON.R_FILE_SUFFIX);
+            resFile = new File(rsFilePath);
+            if(!resFile.exists()){
+                LOG.warn("The result of the test script file["+rsFilePath+"] does not exists,please check and this test script file will be skipped.");
+                //set the test script file invalid
+                script.invalid();
+                succeeded = false;
+                return;
             }
         }
-       
+
+        try {
+            lineReader = new BufferedReader(new InputStreamReader(new FileInputStream(rsFilePath)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        //read result file
+        read();
+
+        for(int i = 0; i < script.getTotalCmdCount(); i++){
+            SqlCommand command = script.getCommands().get(i);
+            if(resultText.indexOf(command.getCommand()) != 0){
+                LOG.error("[Exceptional command]["+script.getFileName()+"]["+command.getPosition()+"]:"+command.getCommand().trim() + ",it does not exist in result file");
+                return;
+            }
+
+            int fromIndex = command.getCommand().length();
+
+            if(command.getNext() != null && resultText.indexOf(command.getNext().getCommand(),fromIndex) == -1){
+                LOG.error("[Exceptional command]["+script.getFileName()+"]["+command.getNext().getPosition()+"]:"+command.getNext().getCommand().trim() + ",it does not exist in result file");
+                return;
+            }
+
+            try {
+                getCommandResult(command);
+            } catch (Exception e) {
+                LOG.error("[Exceptional command]["+script.getFileName()+"]["+command.getPosition()+"]:"+command.getCommand().trim());
+                //set the test script file invalid
+                script.invalid();
+                succeeded = false;
+                return;
+            }
+        }
+    }
+
+    /**
+     * convert the result text to a RSSet instance
+     * @param separator column separator,can be 3 values:
+     * 1、table,separator is \t
+     * 2、space,separator is 4 spaces
+     * 3、both,separator is \t or 4 spaces
+     */
+    public static RSSet convertToRSSet(String rsText,String separator){
         
-        // Remaining lines contain data rows
-        for (int i = 1; i < lines.length; i++) {
-            RSRow row = new RSRow(cols.length);
-            rsSet.addRow(row);
-            String[] values = lines[i].split(RESULT.COLUMN_SEPARATOR_NEW, -1);
-            for (int j = 0; j < cols.length; j++) {
-                RSCell cell = new RSCell();
-                cell.setType(Types.VARCHAR);
-                cell.setValue(j < values.length ? values[j] : "");
-                row.addCell(cell);
+        if(rsText == null){
+            return null;
+        }
+        
+        StringBuilder buffer = new StringBuilder();
+        //first,replace separator to the system designated separator
+        //Use Pattern.quote to treat the separator as literal string, not regex
+        if(separator.equals("both"))
+            buffer.append(rsText.replaceAll(java.util.regex.Pattern.quote(RESULT.COLUMN_SEPARATOR_SPACE),RESULT.COLUMN_SEPARATOR_SYSTEM).replaceAll(java.util.regex.Pattern.quote(RESULT.COLUMN_SEPARATOR_TABLE),RESULT.COLUMN_SEPARATOR_SYSTEM));
+        if(separator.equals("table"))
+            buffer.append(rsText.replaceAll(java.util.regex.Pattern.quote(RESULT.COLUMN_SEPARATOR_TABLE),RESULT.COLUMN_SEPARATOR_SYSTEM));
+        if(separator.equals("space"))
+            buffer.append(rsText.replaceAll(java.util.regex.Pattern.quote(RESULT.COLUMN_SEPARATOR_SPACE),RESULT.COLUMN_SEPARATOR_SYSTEM));
+        RSSet rsSet = new RSSet();
+        
+        //first line is meta info
+        String labelline;
+        boolean lastrow = false;
+
+        if(buffer.indexOf("\n") == -1){
+            labelline = buffer.toString();
+            buffer.delete(0,buffer.length());
+            lastrow = true;
+        }else {
+            labelline = buffer.substring(0,buffer.indexOf("\n"));
+            buffer.delete(0,buffer.indexOf("\n") + 1);
+        }
+        //deal with meta data
+        String[] labels = labelline.split(RESULT.COLUMN_SEPARATOR_SYSTEM);
+        int columnCount = labels.length;
+        RSMetaData rsMetaData = new RSMetaData(columnCount);
+        rsSet.setMeta(rsMetaData);
+        for(String label : labels){
+            rsMetaData.addMetaInfo(label,label);
+        }
+        //deal with rows data
+        while(!lastrow){
+            String rowline;
+            if(buffer.indexOf("\n") == -1){
+                rowline = buffer.toString();
+                buffer.delete(0,buffer.length());
+                lastrow = true;
+            }else {
+                rowline = buffer.substring(0,buffer.indexOf("\n"));
+                buffer.delete(0,buffer.indexOf("\n") + 1);
+            }
+            RSRow rsRow = new RSRow(columnCount);
+            rsSet.addRow(rsRow);
+            // Use limit parameter to split into exactly columnCount parts
+            // This prevents splitting values that contain the separator
+            String[] values = rowline.split(java.util.regex.Pattern.quote(RESULT.COLUMN_SEPARATOR_SYSTEM), columnCount);
+            for(int i = 0; i < columnCount; i++){
+                RSCell rsCell = new RSCell();
+                rsCell.setType(DATATYPE.TYPE_STRING);
+                if(i < values.length){
+                    rsCell.setValue(values[i]);
+                }else{
+                    rsCell.setValue("");
+                }
+
+                rsRow.addCell(rsCell);
             }
         }
         return rsSet;
     }
 
-    /**
-     * Normalizes column separators in result text to a unified separator.
-     * Supports tab, space (4 spaces), or both separator types.
-     * 
-     * @param text The text to normalize
-     * @param separator The separator type: "table" (tab), "space" (4 spaces), or "both"
-     * @return Text with normalized separators
-     */
-    private static String normalizeSeparators(String text, String separator) {
-        if ("both".equals(separator)) {
-            // Replace both tab and space separators
-            return text.replaceAll(RESULT.COLUMN_SEPARATOR_SPACE, RESULT.COLUMN_SEPARATOR_NEW)
-                    .replaceAll(RESULT.COLUMN_SEPARATOR_TABLE, RESULT.COLUMN_SEPARATOR_NEW);
-        } else if ("table".equals(separator)) {
-            // Replace only tab separators
-            return text.replaceAll(RESULT.COLUMN_SEPARATOR_TABLE, RESULT.COLUMN_SEPARATOR_NEW);
-        } else if ("space".equals(separator)) {
-            // Replace only space separators (4 spaces)
-            return text.replaceAll(RESULT.COLUMN_SEPARATOR_SPACE, RESULT.COLUMN_SEPARATOR_NEW);
-        }
-        return text;
-    }
-
-    /**
-     * Marks the test script as invalid and logs a warning.
-     * Used when result file parsing fails at the script level.
-     */
-    private static void markFailed(TestScript script, String reason) {
-        LOG.warn("The result of the test script file[" + script.getFileName() + "] " + reason + 
-                ", please check and this test script file will be skipped.");
-        script.invalid();
-    }
-
-    /**
-     * Logs an error for a specific command and marks the script as invalid.
-     * Used when a command cannot be found or parsed in the result file.
-     */
-    private static void logError(TestScript script, SqlCommand cmd, String msg) {
-        LOG.error(String.format("[Exceptional command][%s][%d]:%s, %s",
-                script.getFileName(), cmd.getPosition(), cmd.getCommand().trim(), msg));
-        script.invalid();
-    }
-
-    /**
-     * Parses regex patterns from result text and removes them from the result.
-     * Regex patterns are expected to be on separate lines starting with "-- @regex("
-     * and should appear before the actual result content.
-     * 
-     * @param result The result text that may contain regex patterns
-     * @param cmd The SqlCommand to add parsed regex patterns to
-     * @return The result text with regex patterns removed
-     */
-    private static String parseRegexPatternsFromResult(String result, SqlCommand cmd) {
-        if (result == null || result.isEmpty()) {
-            return result;
-        }
-
-        String[] lines = result.split("\n", -1);
-        StringBuilder remainingResult = new StringBuilder();
-        boolean foundNonRegexLine = false;
-
-        for (String line : lines) {
-            String trimmedLine = line.trim();
-            if (trimmedLine.startsWith(COMMON.REGEX_FLAG)) {
-                // Parse regex pattern
-                String regexStr = trimmedLine.substring(COMMON.REGEX_FLAG.length()).trim();
-                
-                // Check if it starts with '(' and ends with ')'
-                if (!regexStr.startsWith("(") || !regexStr.endsWith(")")) {
-                    LOG.warn(String.format("Invalid regex format in result file: %s", trimmedLine));
-                    // Treat as regular result line
-                    if (foundNonRegexLine || remainingResult.length() > 0) {
-                        remainingResult.append("\n");
-                    }
-                    remainingResult.append(line);
-                    foundNonRegexLine = true;
-                    continue;
-                }
-                
-                // Remove parentheses
-                String content = regexStr.substring(1, regexStr.length() - 1);
-                
-                // Find the last comma that separates pattern and include flag
-                int lastCommaIndex = content.lastIndexOf(',');
-                if (lastCommaIndex == -1) {
-                    LOG.warn(String.format("Invalid regex format in result file: %s", trimmedLine));
-                    // Treat as regular result line
-                    if (foundNonRegexLine || remainingResult.length() > 0) {
-                        remainingResult.append("\n");
-                    }
-                    remainingResult.append(line);
-                    foundNonRegexLine = true;
-                    continue;
-                }
-                
-                // Extract pattern and include flag
-                String patternStr = content.substring(0, lastCommaIndex).trim();
-                String includeStr = content.substring(lastCommaIndex + 1).trim();
-                
-                // Parse pattern - must be a quoted string literal
-                String pattern = null;
-                if (patternStr.startsWith("\"") && patternStr.endsWith("\"")) {
-                    // Double-quoted string
-                    pattern = patternStr.substring(1, patternStr.length() - 1);
-                    // Unescape escaped characters
-                    pattern = pattern.replace("\\\"", "\"").replace("\\\\", "\\");
-                } else if (patternStr.startsWith("'") && patternStr.endsWith("'")) {
-                    // Single-quoted string
-                    pattern = patternStr.substring(1, patternStr.length() - 1);
-                    // Unescape escaped characters
-                    pattern = pattern.replace("\\'", "'").replace("\\\\", "\\");
-                } else {
-                    LOG.warn(String.format("Invalid regex format in result file: pattern must be a quoted string literal. Got: %s", patternStr));
-                    // Treat as regular result line
-                    if (foundNonRegexLine || remainingResult.length() > 0) {
-                        remainingResult.append("\n");
-                    }
-                    remainingResult.append(line);
-                    foundNonRegexLine = true;
-                    continue;
-                }
-                
-                // Parse boolean value
-                boolean include;
-                if ("true".equalsIgnoreCase(includeStr)) {
-                    include = true;
-                } else if ("false".equalsIgnoreCase(includeStr)) {
-                    include = false;
-                } else {
-                    LOG.warn(String.format("Invalid regex include value in result file: %s", includeStr));
-                    // Treat as regular result line
-                    if (foundNonRegexLine || remainingResult.length() > 0) {
-                        remainingResult.append("\n");
-                    }
-                    remainingResult.append(line);
-                    foundNonRegexLine = true;
-                    continue;
-                }
-                
-                // Compile pattern immediately - fail fast if invalid
-                Pattern compiledPattern;
-                try {
-                    compiledPattern = Pattern.compile(pattern);
-                } catch (Exception e) {
-                    LOG.error(String.format("Failed to compile regex pattern '%s' from result file: %s", pattern, e.getMessage()));
-                    // Treat as regular result line
-                    if (foundNonRegexLine || remainingResult.length() > 0) {
-                        remainingResult.append("\n");
-                    }
-                    remainingResult.append(line);
-                    foundNonRegexLine = true;
-                    continue;
-                }
-                
-                // Create and add RegexPattern with compiled pattern
-                RegexPattern regexPattern = new RegexPattern(pattern, include, compiledPattern);
-                cmd.addRegexPattern(regexPattern);
-            } else {
-                // This is a regular result line
-                if (foundNonRegexLine || remainingResult.length() > 0) {
-                    remainingResult.append("\n");
-                }
-                remainingResult.append(line);
-                foundNonRegexLine = true;
+    public static void reset(){
+        succeeded = true;
+        resultText.delete(0,resultText.length());
+        if(lineReader != null){
+            try {
+                lineReader.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
+            lineReader = null;
         }
+    }
 
-        return remainingResult.toString();
+    public static boolean isSucceeded(){
+        return succeeded;
+    }
+    
+    public static int subStrCount(String str, String sub){
+        if(str == null || sub == null)
+            return 0;
+        
+        if(!str.contains(sub)){
+            return 0;
+        }else {
+            int i = 1;
+            String temp = str.replace(sub,"");
+            while(temp.contains(sub)){
+                i++;
+                temp = temp.replace(sub,"");
+            }
+            return i;
+        }
+    }
+    
+    public static void main(String[] args){
     }
 }
