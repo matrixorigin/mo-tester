@@ -444,10 +444,21 @@ public class Tester {
                 .map(outFile -> Paths.get(COMMON.RESOURCE_PATH, outFile).toFile())
                 .filter(File::exists)
                 .forEach(file -> {
-                    if (!FileUtils.deleteQuietly(file)) {
+                    if (file.isDirectory() && new File(file, ".gitignore").exists()) {
+                        deleteDirectoryContentsExceptGitignore(file);
+                    } else if (!FileUtils.deleteQuietly(file)) {
                         LOG.error(String.format("Failed to remove [%s]", file));
                         System.exit(1);
                     }
                 });
+    }
+    
+    private static void deleteDirectoryContentsExceptGitignore(File directory) {
+        File[] files = directory.listFiles();
+        if (files == null) return;
+        for (File file : files) {
+            if (file.getName().equals(".gitignore")) continue;
+            FileUtils.deleteQuietly(file);
+        }
     }
 }
