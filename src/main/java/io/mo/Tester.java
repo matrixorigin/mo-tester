@@ -26,7 +26,7 @@ public class Tester {
     // 1. mo_ctl
     // 2. switch to sys account
     // 3. show accounts
-    private static boolean parallelEnabled = true;
+    private static boolean parallelEnabled = false;
 
     // 常量定义
     private static final String METHOD_RUN = "run";
