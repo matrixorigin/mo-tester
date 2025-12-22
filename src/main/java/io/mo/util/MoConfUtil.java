@@ -2,101 +2,130 @@ package io.mo.util;
 
 import io.mo.constant.COMMON;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * MO配置工具类
- */
-public class MoConfUtil extends BaseConfigUtil {
-    private static final MoConfUtil INSTANCE = new MoConfUtil();
-    
-    private MoConfUtil() {
-        super("mo.yml");
+public class MoConfUtil {
+    private static final YamlUtil mo_conf = new YamlUtil();
+    private static Map conf = null;
+
+    public static void init(){
+            conf = mo_conf.getInfo("mo.yml");
+    }
+
+
+    public static String getURL(){
+
+        if(conf == null) init();
+
+        StringBuilder URL = new StringBuilder("jdbc:mysql://");
+        Map jdbc = (Map)conf.get("jdbc");
+        List gates = (ArrayList)jdbc.get("server");
+
+        for(int i = 0; i < gates.size();i++){
+            Map gate = (Map)gates.get(i);
+            URL.append(gate.get("addr"));
+            if(i < gates.size() - 1)
+                URL.append(",");
+            else
+                URL.append("/");
+        }
+
+        URL.append(getDefaultDatabase()).append("?");
+
+        Map paras = (Map)jdbc.get("paremeter");
+        Iterator it_para_value = paras.entrySet().iterator();
+        while(it_para_value.hasNext()){
+            URL.append(it_para_value.next());
+            if(it_para_value.hasNext())
+                URL.append("&");
+        }
+
+        return URL.toString();
+    }
+
+    public static String getDriver(){
+        if(conf == null) init();
+
+        Map jdbc = (Map)conf.get("jdbc");
+        return jdbc.get("driver").toString();
+    }
+
+    public static String getUserName(){
+        if(conf == null) init();
+
+        Map user = (Map)conf.get("user");
+        return user.get("name").toString();
+    }
+
+    public static String getUserpwd(){
+        if(conf == null) init();
+
+        Map user = (Map)conf.get("user");
+        return user.get("password").toString();
+    }
+
+    public static String getSysUserName(){
+        if(conf == null) init();
+
+        Map user = (Map)conf.get("user");
+        return user.get("sysuser").toString();
+    }
+
+    public static String getSyspwd(){
+        if(conf == null) init();
+
+        Map user = (Map)conf.get("user");
+        return user.get("syspass").toString();
     }
     
-    private static MoConfUtil getInstance() {
-        return INSTANCE;
+    public static String getDefaultDatabase(){
+        if(conf == null) init();
+
+        Map jdbc = (Map)conf.get("jdbc");
+        Map database = (Map)jdbc.get("database");
+        return database.get("default").toString();
     }
-    
-    /**
-     * 构建JDBC URL
-     */
-    public static String getURL() {
-        MoConfUtil u = getInstance();
-        Map<String, Object> jdbc = u.map("jdbc");
-        if (jdbc == null) return null;
-        
-        StringBuilder url = new StringBuilder("jdbc:mysql://");
-        
-        // 构建服务器地址列表
-        @SuppressWarnings("unchecked")
-        List<Map<String, Object>> servers = (List<Map<String, Object>>) jdbc.get("server");
-        if (servers != null && !servers.isEmpty()) {
-            for (int i = 0; i < servers.size(); i++) {
-                String addr = u.str(servers.get(i), "addr");
-                if (addr != null) {
-                    url.append(addr).append(i < servers.size() - 1 ? "," : "/");
-                }
+
+    public static int getSocketTimeout(){
+        if(conf == null) init();
+        Map jdbc = (Map)conf.get("jdbc");
+        Map paremeter = (Map)jdbc.get("paremeter");
+        if(paremeter.containsKey("socketTimeout")) {
+            return (int)paremeter.get("socketTimeout");
+        }
+        return COMMON.DEFAULT_MAX_EXECUTE_TIME;
+    }
+
+    public static String[] getDebugServers(){
+        Map debug = (Map)conf.get("debug");
+        if(debug != null){
+            String serverStr = debug.get("serverIP").toString();
+            if(serverStr != null){
+                return serverStr.split(",");
             }
         }
         
-        url.append(getDefaultDatabase()).append("?");
-        
-        // 添加参数
-        Map<String, Object> params = u.map(jdbc, "paremeter");
-        if (params != null && !params.isEmpty()) {
-            boolean first = true;
-            for (Map.Entry<String, Object> e : params.entrySet()) {
-                if (!first) url.append("&");
-                url.append(e.getKey()).append("=").append(e.getValue());
-                first = false;
+        return null;
+    }
+    
+    public static int getDebugPort(){
+        Map debug = (Map)conf.get("debug");
+        if(debug != null){
+            String portStr = debug.get("port").toString();
+            if(portStr != null){
+                return Integer.parseInt(portStr);
             }
         }
-        
-        return url.toString();
+
+        return 0;
     }
     
-    public static String getDriver() {
-        return getInstance().str("jdbc", "driver");
-    }
-    
-    public static String getUserName() {
-        return getInstance().str("user", "name");
-    }
-    
-    public static String getUserpwd() {
-        return getInstance().str("user", "password");
-    }
-    
-    public static String getSysUserName() {
-        return getInstance().str("user", "sysuser");
-    }
-    
-    public static String getSyspwd() {
-        return getInstance().str("user", "syspass");
-    }
-    
-    public static String getDefaultDatabase() {
-        return getInstance().str("jdbc", "database", "default");
-    }
-    
-    public static int getSocketTimeout() {
-        Integer timeout = getInstance().integer("jdbc", "paremeter", "socketTimeout");
-        return timeout != null ? timeout : COMMON.DEFAULT_MAX_EXECUTE_TIME;
-    }
-    
-    public static String[] getDebugServers() {
-        return getInstance().split(getInstance().str("debug", "serverIP"), ",");
-    }
-    
-    public static int getDebugPort() {
-        Integer port = getInstance().integer("debug", "port");
-        return port != null ? port : 0;
-    }
-    
-    public static void main(String[] args) {
+    public static void main(String[] args){
         System.out.println(getDriver());
         System.out.println(getURL());
+
     }
 }

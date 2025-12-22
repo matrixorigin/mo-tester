@@ -4,8 +4,6 @@ import io.mo.cases.SqlCommand;
 import io.mo.cases.TestScript;
 import io.mo.constant.COMMON;
 import io.mo.constant.RESULT;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -13,31 +11,15 @@ import java.util.*;
 
 
 public class TestReport {
+    private ArrayList<TestScript> scripts = new ArrayList<TestScript>();
+    private int totalCmds = 0;
+    private int successCmds = 0;
+    private int failedCmds = 0;
+    private int ignoredCmds = 0;
+    private int abnormalCmds = 0;
+    private long duration = 0;
     private static Logger LOG = Logger.getLogger(TestReport.class.getName());
 
-    @Getter
-    private ArrayList<TestScript> scripts = new ArrayList<TestScript>();
-    
-    @Getter
-    private int totalCmds = 0;
-    
-    @Getter
-    private int successCmds = 0;
-    
-    @Getter
-    private int failedCmds = 0;
-    
-    @Getter
-    private int ignoredCmds = 0;
-    
-    @Getter
-    private int abnormalCmds = 0;
-    
-    @Getter
-    private long duration = 0;
-
-    @Getter
-    @Setter
     private int rate = 0;
 
     public TestReport(){
@@ -105,7 +87,7 @@ public class TestReport {
         }
     }
 
-    public synchronized void collect(TestScript script){
+    public void collect(TestScript script){
         scripts.add(script);
         totalCmds += script.getTotalCmdCount();
         successCmds += script.getSuccessCmdCount();
@@ -171,5 +153,17 @@ public class TestReport {
         buffer.append("[ACTUAL RESULT]:\n"+command.getTestResult().getActResult()+"\n");
         return buffer.toString();
     }
+
+    public int getRate() {
+        return rate;
+    }
+
+    public void setRate(int rate) {
+        this.rate = rate;
+    }
+
+    public static void main(String args[]){
+    }
+
 
 }
