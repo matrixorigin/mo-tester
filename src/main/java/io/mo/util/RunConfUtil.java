@@ -3,67 +3,100 @@ package io.mo.util;
 import io.mo.constant.COMMON;
 
 import java.io.File;
-import java.util.Map;
 
-public class RunConfUtil {
-    private static final YamlUtil run_conf = new YamlUtil();
-    private static Map conf = null;
-
-
-    public static void init(){
-            conf = run_conf.getInfo("run.yml");
+/**
+ * 运行配置工具类
+ */
+public class RunConfUtil extends BaseConfigUtil {
+    private static final RunConfUtil INSTANCE = new RunConfUtil();
+    
+    private RunConfUtil() {
+        super("run.yml");
     }
-
-
-    public static String getPath(){
-        if(conf == null) init();
-        return (String)conf.get("path");
+    
+    private static RunConfUtil getInstance() {
+        return INSTANCE;
     }
-
-    public static String getMethod(){
-        if(conf == null) init();
-        return (String)conf.get("method");
+    
+    public static String getPath() {
+        return getInstance().str("path");
     }
-
-    public static int getRate(){
-        if(conf == null) init();
-        return (int)conf.get("rate");
+    
+    public static String getMethod() {
+        return getInstance().str("method");
     }
-
-    public static int getWaitTime(){
-        if(conf == null) init();
-        return (int)conf.get("waittime");
+    
+    public static int getRate() {
+        Integer rate = getInstance().integer("rate");
+        return rate != null ? rate : 0;
     }
-
-    public static String getResourcePath(){
-        if(conf == null) init();
-        String path  = (String)conf.get("path");
-        File caseFile = new File(path);
-        String srcPath = null;
-        if(caseFile.getAbsolutePath().contains(COMMON.CASES_DIR)) {
-            srcPath = caseFile.getAbsolutePath();
-            srcPath = srcPath.replace(COMMON.CASES_DIR,COMMON.RESOURCE_DIR);
-            srcPath = srcPath.substring(0,srcPath.indexOf(COMMON.RESOURCE_DIR)+COMMON.RESOURCE_DIR.length());
+    
+    public static int getWaitTime() {
+        Integer waitTime = getInstance().integer("waittime");
+        return waitTime != null ? waitTime : 0;
+    }
+    
+    /**
+     * 根据测试用例路径推导并设置资源路径静态变量
+     * 
+     * 约定：resources 和 cases 目录必须位于同一层级
+     * 约定高于配置：如果路径符合约定，自动推导；否则使用默认值
+     * 
+     * 推导规则：
+     * 1. 如果用例路径包含 "cases" 目录，则自动推导对应的 "resources" 目录
+     * 2. 推导方式：将路径中的 "cases" 替换为 "resources"，并截取到 resources 目录末尾
+     * 3. 如果路径不符合约定，使用默认值 "./resources"
+     * 
+     * 示例：
+     * - 用例路径: /project/cases/array/array.sql
+     *   设置结果: COMMON.RESOURCE_PATH = "/project/resources"
+     *   
+     * - 用例路径: /home/test/cases/function/test.sql  
+     *   设置结果: COMMON.RESOURCE_PATH = "/home/test/resources"
+     *   
+     * - 用例路径: ./test.sql (不包含 cases)
+     *   设置结果: COMMON.RESOURCE_PATH = "./resources" (使用默认值)
+     * 
+     * @param casePath 测试用例文件路径（可为 null）
+     */
+    public static void setDerivedStaticResourcePath(String casePath) {
+        if (casePath == null) {
+            return;
         }
-        COMMON.RESOURCE_LOCAL_PATH = srcPath;
-        return srcPath == null?COMMON.RESOURCE_PATH:srcPath;
+        
+        File caseFile = new File(casePath);
+        String absPath = caseFile.getAbsolutePath();
+        String srcPath = null;
+        
+        // 约定：如果路径包含 cases 目录，则推导对应的 resources 目录
+        if (absPath.contains(COMMON.CASES_DIR)) {
+            srcPath = absPath.replace(COMMON.CASES_DIR, COMMON.RESOURCE_DIR);
+            int idx = srcPath.indexOf(COMMON.RESOURCE_DIR);
+            if (idx >= 0) {
+                srcPath = srcPath.substring(0, idx + COMMON.RESOURCE_DIR.length());
+            }
+        }
+        
+        COMMON.RESOURCE_PATH = srcPath != null ? srcPath : COMMON.RESOURCE_PATH;
     }
     
-    public static String[] getBuiltinDb(){
-        if(conf == null) init();
-        String builtindbs  = (String)conf.get("builtindb");
-        String[] dbs = builtindbs.split(",");
-        return dbs;
+    /**
+     * 从配置文件读取路径并设置资源路径静态变量
+     */
+    public static void setStaticResourcePathFromConfig() {
+        String path = getInstance().str("path");
+        setDerivedStaticResourcePath(path);
     }
     
-    public static String[] getOutFiles(){
-        if(conf == null) init();
-        String outfiles  = (String)conf.get("outfiles");
-        String[] files = outfiles.split(",");
-        return files;
+    public static String[] getBuiltinDb() {
+        return getInstance().split(getInstance().str("builtindb"), ",");
     }
-
-    public static void main(String[] args){
+    
+    public static String[] getOutFiles() {
+        return getInstance().split(getInstance().str("outfiles"), ",");
+    }
+    
+    public static void main(String[] args) {
         System.out.println(getPath());
         System.out.println(getMethod());
     }
