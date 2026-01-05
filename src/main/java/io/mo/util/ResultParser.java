@@ -1,6 +1,5 @@
 package io.mo.util;
 
-import io.mo.cases.RegexPattern;
 import io.mo.cases.SqlCommand;
 import io.mo.cases.TestScript;
 import io.mo.constant.COMMON;
@@ -11,7 +10,6 @@ import org.apache.log4j.Logger;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.sql.Types;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -133,8 +131,8 @@ public class ResultParser {
         // Extract result text between current command and next command
         String result = extractResult(cmdText, nextCmd, text);
         
-        // Parse regex patterns from result text if any
-        String remainingResult = parseRegexPatternsFromResult(result, cmd);
+        // Skip regex patterns from result text (only use patterns from SQL test file)
+        String remainingResult = skipRegexPatternsFromResult(result, cmd);
         
         StmtResult expResult = new StmtResult();
         expResult.setCommand(cmd);
@@ -311,15 +309,15 @@ public class ResultParser {
     }
 
     /**
-     * Parses regex patterns from result text and removes them from the result.
-     * Regex patterns are expected to be on separate lines starting with "-- @regex("
-     * and should appear before the actual result content.
+     * Skips regex patterns from result text.
+     * Regex patterns in result files are ignored - only regex patterns from SQL test files are used.
+     * This method simply filters out lines starting with "-- @regex" from the result text.
      * 
      * @param result The result text that may contain regex patterns
-     * @param cmd The SqlCommand to add parsed regex patterns to
+     * @param cmd The SqlCommand (not used, kept for compatibility)
      * @return The result text with regex patterns removed
      */
-    private static String parseRegexPatternsFromResult(String result, SqlCommand cmd) {
+    private static String skipRegexPatternsFromResult(String result, SqlCommand cmd) {
         if (result == null || result.isEmpty()) {
             return result;
         }
@@ -331,99 +329,9 @@ public class ResultParser {
         for (String line : lines) {
             String trimmedLine = line.trim();
             if (trimmedLine.startsWith(COMMON.REGEX_FLAG)) {
-                // Parse regex pattern
-                String regexStr = trimmedLine.substring(COMMON.REGEX_FLAG.length()).trim();
-                
-                // Check if it starts with '(' and ends with ')'
-                if (!regexStr.startsWith("(") || !regexStr.endsWith(")")) {
-                    LOG.warn(String.format("Invalid regex format in result file: %s", trimmedLine));
-                    // Treat as regular result line
-                    if (foundNonRegexLine || remainingResult.length() > 0) {
-                        remainingResult.append("\n");
-                    }
-                    remainingResult.append(line);
-                    foundNonRegexLine = true;
-                    continue;
-                }
-                
-                // Remove parentheses
-                String content = regexStr.substring(1, regexStr.length() - 1);
-                
-                // Find the last comma that separates pattern and include flag
-                int lastCommaIndex = content.lastIndexOf(',');
-                if (lastCommaIndex == -1) {
-                    LOG.warn(String.format("Invalid regex format in result file: %s", trimmedLine));
-                    // Treat as regular result line
-                    if (foundNonRegexLine || remainingResult.length() > 0) {
-                        remainingResult.append("\n");
-                    }
-                    remainingResult.append(line);
-                    foundNonRegexLine = true;
-                    continue;
-                }
-                
-                // Extract pattern and include flag
-                String patternStr = content.substring(0, lastCommaIndex).trim();
-                String includeStr = content.substring(lastCommaIndex + 1).trim();
-                
-                // Parse pattern - must be a quoted string literal
-                String pattern = null;
-                if (patternStr.startsWith("\"") && patternStr.endsWith("\"")) {
-                    // Double-quoted string
-                    pattern = patternStr.substring(1, patternStr.length() - 1);
-                    // Unescape escaped characters
-                    pattern = pattern.replace("\\\"", "\"").replace("\\\\", "\\");
-                } else if (patternStr.startsWith("'") && patternStr.endsWith("'")) {
-                    // Single-quoted string
-                    pattern = patternStr.substring(1, patternStr.length() - 1);
-                    // Unescape escaped characters
-                    pattern = pattern.replace("\\'", "'").replace("\\\\", "\\");
-                } else {
-                    LOG.warn(String.format("Invalid regex format in result file: pattern must be a quoted string literal. Got: %s", patternStr));
-                    // Treat as regular result line
-                    if (foundNonRegexLine || remainingResult.length() > 0) {
-                        remainingResult.append("\n");
-                    }
-                    remainingResult.append(line);
-                    foundNonRegexLine = true;
-                    continue;
-                }
-                
-                // Parse boolean value
-                boolean include;
-                if ("true".equalsIgnoreCase(includeStr)) {
-                    include = true;
-                } else if ("false".equalsIgnoreCase(includeStr)) {
-                    include = false;
-                } else {
-                    LOG.warn(String.format("Invalid regex include value in result file: %s", includeStr));
-                    // Treat as regular result line
-                    if (foundNonRegexLine || remainingResult.length() > 0) {
-                        remainingResult.append("\n");
-                    }
-                    remainingResult.append(line);
-                    foundNonRegexLine = true;
-                    continue;
-                }
-                
-                // Compile pattern immediately - fail fast if invalid
-                Pattern compiledPattern;
-                try {
-                    compiledPattern = Pattern.compile(pattern);
-                } catch (Exception e) {
-                    LOG.error(String.format("Failed to compile regex pattern '%s' from result file: %s", pattern, e.getMessage()));
-                    // Treat as regular result line
-                    if (foundNonRegexLine || remainingResult.length() > 0) {
-                        remainingResult.append("\n");
-                    }
-                    remainingResult.append(line);
-                    foundNonRegexLine = true;
-                    continue;
-                }
-                
-                // Create and add RegexPattern with compiled pattern
-                RegexPattern regexPattern = new RegexPattern(pattern, include, compiledPattern);
-                cmd.addRegexPattern(regexPattern);
+                // Skip regex patterns from result file - only use patterns from SQL test file
+                // This line is metadata and should be removed from the result content
+                continue;
             } else {
                 // This is a regular result line
                 if (foundNonRegexLine || remainingResult.length() > 0) {

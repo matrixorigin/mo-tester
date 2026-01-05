@@ -1,5 +1,6 @@
 package io.mo.constant;
-// import java.sql.Types;
+
+import java.sql.Types;
 
 public class RESULT {
     public static String SUCCESS_CODE = "0000";
@@ -43,45 +44,45 @@ public class RESULT {
 
     public static int STMT_RESULT_TYPE_ABNORMAL = 4;
 
-    // public static final java.util.Map<Integer, String> TYPE_NAME_MAP;
-    // static {
-    // java.util.Map<Integer, String> map = new java.util.HashMap<>();
-    // map.put(Types.BIT, "BIT");
-    // map.put(Types.TINYINT, "TINYINT");
-    // map.put(Types.SMALLINT, "SMALLINT");
-    // map.put(Types.INTEGER, "INTEGER");
-    // map.put(Types.BIGINT, "BIGINT");
-    // map.put(Types.FLOAT, "FLOAT");
-    // map.put(Types.REAL, "REAL");
-    // map.put(Types.DOUBLE, "DOUBLE");
-    // map.put(Types.NUMERIC, "NUMERIC");
-    // map.put(Types.DECIMAL, "DECIMAL");
-    // map.put(Types.CHAR, "CHAR");
-    // map.put(Types.VARCHAR, "VARCHAR");
-    // map.put(Types.LONGVARCHAR, "LONGVARCHAR");
-    // map.put(Types.DATE, "DATE");
-    // map.put(Types.TIME, "TIME");
-    // map.put(Types.TIMESTAMP, "TIMESTAMP");
-    // map.put(Types.BINARY, "BINARY");
-    // map.put(Types.VARBINARY, "VARBINARY");
-    // map.put(Types.LONGVARBINARY, "LONGVARBINARY");
-    // map.put(Types.NULL, "NULL");
-    // map.put(Types.OTHER, "OTHER");
-    // map.put(Types.JAVA_OBJECT, "JAVA_OBJECT");
-    // map.put(Types.DISTINCT, "DISTINCT");
-    // map.put(Types.STRUCT, "STRUCT");
-    // map.put(Types.ARRAY, "ARRAY");
-    // map.put(Types.BLOB, "BLOB");
-    // map.put(Types.CLOB, "CLOB");
-    // map.put(Types.REF, "REF");
-    // map.put(Types.DATALINK, "DATALINK");
-    // map.put(Types.BOOLEAN, "BOOLEAN");
-    // map.put(Types.ROWID, "ROWID");
-    // map.put(Types.NCHAR, "NCHAR");
-    // map.put(Types.NVARCHAR, "NVARCHAR");
-    // map.put(Types.LONGNVARCHAR, "LONGNVARCHAR");
-    // map.put(Types.NCLOB, "NCLOB");
-    // map.put(Types.SQLXML, "SQLXML");
-    // TYPE_NAME_MAP = java.util.Collections.unmodifiableMap(map);
-    // }
+    public static final java.util.Map<Integer, String> TYPE_NAME_MAP;
+    static {
+        java.util.Map<Integer, String> map = new java.util.HashMap<>();
+        map.put(Types.BIT, "BIT"); // -7
+        map.put(Types.TINYINT, "TINYINT"); // -6
+        map.put(Types.SMALLINT, "SMALLINT"); // 5
+        map.put(Types.INTEGER, "INTEGER"); // 4
+        map.put(Types.BIGINT, "BIGINT"); // -5
+        map.put(Types.FLOAT, "FLOAT"); // 6
+        map.put(Types.REAL, "REAL"); // 7
+        map.put(Types.DOUBLE, "DOUBLE"); // 8
+        map.put(Types.NUMERIC, "NUMERIC"); // 2
+        map.put(Types.DECIMAL, "DECIMAL"); // 3
+        map.put(Types.CHAR, "CHAR"); // 1
+        map.put(Types.VARCHAR, "VARCHAR"); // 12
+        map.put(Types.LONGVARCHAR, "LONGVARCHAR"); // -1
+        map.put(Types.DATE, "DATE"); // 91
+        map.put(Types.TIME, "TIME"); // 92
+        map.put(Types.TIMESTAMP, "TIMESTAMP"); // 93
+        map.put(Types.BINARY, "BINARY"); // -2
+        map.put(Types.VARBINARY, "VARBINARY"); // -3
+        map.put(Types.LONGVARBINARY, "LONGVARBINARY"); // -4
+        map.put(Types.NULL, "NULL"); // 0
+        map.put(Types.OTHER, "OTHER"); // 1111
+        map.put(Types.JAVA_OBJECT, "JAVA_OBJECT"); // 2000
+        map.put(Types.DISTINCT, "DISTINCT"); // 2001
+        map.put(Types.STRUCT, "STRUCT"); // 2002
+        map.put(Types.ARRAY, "ARRAY"); // 2003
+        map.put(Types.BLOB, "BLOB"); // 2004
+        map.put(Types.CLOB, "CLOB"); // 2005
+        map.put(Types.REF, "REF"); // 2006
+        map.put(Types.DATALINK, "DATALINK"); // 70
+        map.put(Types.BOOLEAN, "BOOLEAN"); // 16
+        map.put(Types.ROWID, "ROWID"); // -8
+        map.put(Types.NCHAR, "NCHAR"); // -15
+        map.put(Types.NVARCHAR, "NVARCHAR"); // -9
+        map.put(Types.LONGNVARCHAR, "LONGNVARCHAR"); // -16
+        map.put(Types.NCLOB, "NCLOB"); // 2011
+        map.put(Types.SQLXML, "SQLXML"); // 2009
+        TYPE_NAME_MAP = java.util.Collections.unmodifiableMap(map);
+    }
 }

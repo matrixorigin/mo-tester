@@ -184,11 +184,13 @@ public class RegexParsingTest {
     }
 
     /**
-     * 测试从结果文件解析 regex
+     * 测试 result 文件中的 regex 模式会被跳过（只使用 SQL 文件中的模式）
      */
     @Test
     public void testParseRegexFromResultFile() throws IOException {
+        // SQL 文件中没有 regex 模式
         createTestFile(TEST_SQL_FILE, "SELECT * FROM test_table;");
+        // Result 文件中有 regex 模式，但应该被跳过
         createTestFile(TEST_RESULT_FILE,
             "SELECT * FROM test_table;\n" +
             "-- @regex(\"test.*\", true)\n" +
@@ -203,7 +205,44 @@ public class RegexParsingTest {
             ResultParser.loadExpectedResultsFromFile(testScript);
             
             SqlCommand command = testScript.getCommands().get(0);
-            assertEquals("Should have 2 regex patterns from result file", 2, command.getRegexPatterns().size());
+            // Result 文件中的 regex 模式会被跳过，所以应该没有 regex 模式
+            assertEquals("Result file regex patterns should be skipped, only SQL file patterns are used", 
+                    0, command.getRegexPatterns().size());
+        } finally {
+            cleanupTestFile(TEST_SQL_FILE);
+            cleanupTestFile(TEST_RESULT_FILE);
+        }
+    }
+
+    /**
+     * 测试 SQL 文件中的 regex 模式仍然有效，即使 result 文件中也有相同的模式
+     */
+    @Test
+    public void testSqlFileRegexPatternsTakePrecedence() throws IOException {
+        // SQL 文件中有 regex 模式
+        createTestFile(TEST_SQL_FILE,
+            "-- @regex(\"test.*\", true)\n" +
+            "-- @regex(\"error\", false)\n" +
+            "SELECT * FROM test_table;"
+        );
+        // Result 文件中也有相同的 regex 模式，但应该被跳过
+        createTestFile(TEST_RESULT_FILE,
+            "SELECT * FROM test_table;\n" +
+            "-- @regex(\"test.*\", true)\n" +
+            "-- @regex(\"error\", false)\n" +
+            "test_result"
+        );
+
+        try {
+            ScriptParser parser = new ScriptParser();
+            TestScript testScript = parser.parseScript(TEST_SQL_FILE);
+            
+            ResultParser.loadExpectedResultsFromFile(testScript);
+            
+            SqlCommand command = testScript.getCommands().get(0);
+            // 应该只有 SQL 文件中的 2 个 regex 模式，result 文件中的会被跳过
+            assertEquals("Should have 2 regex patterns from SQL file only", 
+                    2, command.getRegexPatterns().size());
             
             RegexPattern pattern1 = command.getRegexPatterns().get(0);
             assertEquals("test.*", pattern1.getPattern());

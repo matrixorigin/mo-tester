@@ -23,17 +23,31 @@ public abstract class BaseConfigUtil {
     @SuppressWarnings("unchecked")
     private Map<String, Object> loadYamlConfig() {
         Yaml yaml = new Yaml();
-        URL url = BaseConfigUtil.class.getClassLoader().getResource(configFileName);
-        if (url == null) return null;
         
-        try {
-            Map<?, ?> raw = yaml.load(Files.newInputStream(
-                Paths.get(URLDecoder.decode(url.getFile(), "utf-8"))));
-            return raw != null ? (Map<String, Object>) raw : null;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+        // 优先从项目根目录加载配置文件
+        java.nio.file.Path rootPath = Paths.get(System.getProperty("user.dir"), configFileName);
+        if (Files.exists(rootPath)) {
+            try {
+                Map<?, ?> raw = yaml.load(Files.newInputStream(rootPath));
+                return raw != null ? (Map<String, Object>) raw : null;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        
+        // 如果根目录不存在，尝试从 classpath 加载（向后兼容）
+        URL url = BaseConfigUtil.class.getClassLoader().getResource(configFileName);
+        if (url != null) {
+            try {
+                Map<?, ?> raw = yaml.load(Files.newInputStream(
+                    Paths.get(URLDecoder.decode(url.getFile(), "utf-8"))));
+                return raw != null ? (Map<String, Object>) raw : null;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        return null;
     }
     
     private Map<String, Object> config() {
