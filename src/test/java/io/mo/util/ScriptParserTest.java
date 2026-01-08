@@ -650,5 +650,231 @@ public class ScriptParserTest {
         // 验证至少有一些 result cases
         assertTrue("Should have at least one result case", resultCaseCount > 0);
     }
+    
+    /**
+     * 测试文档级 @metacmp 标记的解析
+     */
+    @Test
+    public void testDocumentLevelMetacmpFlag() throws Exception {
+        File tempFile = File.createTempFile("test_metacmp_doc_", ".sql");
+        tempFile.deleteOnExit();
+        
+        try (PrintWriter writer = new PrintWriter(new FileWriter(tempFile))) {
+            writer.println("--- @metacmp(true)");
+            writer.println("SELECT 1;");
+            writer.println("SELECT 2;");
+        }
+        
+        ScriptParser parser = new ScriptParser();
+        TestScript testScript = parser.parseScript(tempFile.getAbsolutePath());
+        
+        assertNotNull("TestScript should not be null", testScript);
+        assertEquals("Should have compareMeta set to true", Boolean.TRUE, testScript.getCompareMeta());
+        assertEquals("Should have 2 commands", 2, testScript.getTotalCmdCount());
+    }
+    
+    /**
+     * 测试 SQL 级 @metacmp 标记的解析
+     */
+    @Test
+    public void testSQLLevelMetacmpFlag() throws Exception {
+        File tempFile = File.createTempFile("test_metacmp_sql_", ".sql");
+        tempFile.deleteOnExit();
+        
+        try (PrintWriter writer = new PrintWriter(new FileWriter(tempFile))) {
+            writer.println("SELECT 1;");
+            writer.println("-- @metacmp(true)");
+            writer.println("SELECT 2;");
+            writer.println("-- @metacmp(false)");
+            writer.println("SELECT 3;");
+        }
+        
+        ScriptParser parser = new ScriptParser();
+        TestScript testScript = parser.parseScript(tempFile.getAbsolutePath());
+        
+        assertNotNull("TestScript should not be null", testScript);
+        assertEquals("Should have 3 commands", 3, testScript.getTotalCmdCount());
+        
+        // 第一个命令没有 metacmp 标记，应该为 null
+        assertNull("First command should have null compareMeta", 
+                   testScript.getCommands().get(0).getCompareMeta());
+        
+        // 第二个命令有 -- @metacmp(true)
+        assertEquals("Second command should have compareMeta = true", 
+                     Boolean.TRUE, testScript.getCommands().get(1).getCompareMeta());
+        
+        // 第三个命令有 -- @metacmp(false)
+        assertEquals("Third command should have compareMeta = false", 
+                     Boolean.FALSE, testScript.getCommands().get(2).getCompareMeta());
+    }
+    
+    /**
+     * 测试文档级和 SQL 级 @metacmp 标记的优先级
+     * SQL 级应该覆盖文档级设置
+     */
+    @Test
+    public void testMetacmpPriority() throws Exception {
+        File tempFile = File.createTempFile("test_metacmp_priority_", ".sql");
+        tempFile.deleteOnExit();
+        
+        try (PrintWriter writer = new PrintWriter(new FileWriter(tempFile))) {
+            writer.println("--- @metacmp(false)");
+            writer.println("SELECT 1;");
+            writer.println("-- @metacmp(true)");
+            writer.println("SELECT 2;");
+            writer.println("SELECT 3;");
+        }
+        
+        ScriptParser parser = new ScriptParser();
+        TestScript testScript = parser.parseScript(tempFile.getAbsolutePath());
+        
+        assertNotNull("TestScript should not be null", testScript);
+        assertEquals("Document-level should be false", Boolean.FALSE, testScript.getCompareMeta());
+        assertEquals("Should have 3 commands", 3, testScript.getTotalCmdCount());
+        
+        // 第一个命令继承文档级设置（但命令级别为 null，实际使用时应该用文档级）
+        assertNull("First command should have null compareMeta (uses document-level)", 
+                   testScript.getCommands().get(0).getCompareMeta());
+        
+        // 第二个命令有 SQL 级标记，应该覆盖文档级
+        assertEquals("Second command should override document-level with true", 
+                     Boolean.TRUE, testScript.getCommands().get(1).getCompareMeta());
+        
+        // 第三个命令没有 SQL 级标记，应该为 null（使用文档级）
+        assertNull("Third command should have null compareMeta (uses document-level)", 
+                   testScript.getCommands().get(2).getCompareMeta());
+    }
+    
+    /**
+     * 测试 @metacmp 标记的布尔值解析（true/false）
+     */
+    @Test
+    public void testMetacmpBooleanParsing() throws Exception {
+        File tempFile = File.createTempFile("test_metacmp_bool_", ".sql");
+        tempFile.deleteOnExit();
+        
+        try (PrintWriter writer = new PrintWriter(new FileWriter(tempFile))) {
+            writer.println("--- @metacmp(true)");
+            writer.println("SELECT 1;");
+            writer.println("--- @metacmp(false)");
+            writer.println("SELECT 2;");
+            writer.println("-- @metacmp(TRUE)");
+            writer.println("SELECT 3;");
+            writer.println("-- @metacmp(FALSE)");
+            writer.println("SELECT 4;");
+            writer.println("-- @metacmp(True)");
+            writer.println("SELECT 5;");
+            writer.println("-- @metacmp(False)");
+            writer.println("SELECT 6;");
+        }
+        
+        ScriptParser parser = new ScriptParser();
+        TestScript testScript = parser.parseScript(tempFile.getAbsolutePath());
+        
+        assertNotNull("TestScript should not be null", testScript);
+        assertEquals("Should have 6 commands", 6, testScript.getTotalCmdCount());
+        
+        // 文档级最后设置为 false
+        assertEquals("Document-level should be false", Boolean.FALSE, testScript.getCompareMeta());
+        
+        // 验证大小写不敏感的布尔值解析
+        assertEquals("Command 3 should parse TRUE as true", 
+                     Boolean.TRUE, testScript.getCommands().get(2).getCompareMeta());
+        assertEquals("Command 4 should parse FALSE as false", 
+                     Boolean.FALSE, testScript.getCommands().get(3).getCompareMeta());
+        assertEquals("Command 5 should parse True as true", 
+                     Boolean.TRUE, testScript.getCommands().get(4).getCompareMeta());
+        assertEquals("Command 6 should parse False as false", 
+                     Boolean.FALSE, testScript.getCommands().get(5).getCompareMeta());
+    }
+    
+    /**
+     * 测试无效的 @metacmp 标记格式（应该被忽略，不抛出异常）
+     */
+    @Test
+    public void testInvalidMetacmpFormat() throws Exception {
+        File tempFile = File.createTempFile("test_metacmp_invalid_", ".sql");
+        tempFile.deleteOnExit();
+        
+        try (PrintWriter writer = new PrintWriter(new FileWriter(tempFile))) {
+            writer.println("--- @metacmp(invalid)");
+            writer.println("SELECT 1;");
+            writer.println("-- @metacmp");
+            writer.println("SELECT 2;");
+            writer.println("-- @metacmp()");
+            writer.println("SELECT 3;");
+            writer.println("--- @metacmp(1)");
+            writer.println("SELECT 4;");
+        }
+        
+        ScriptParser parser = new ScriptParser();
+        TestScript testScript = parser.parseScript(tempFile.getAbsolutePath());
+        
+        assertNotNull("TestScript should not be null", testScript);
+        assertEquals("Should have 4 commands", 4, testScript.getTotalCmdCount());
+        
+        // 无效格式应该被忽略，compareMeta 应该保持为 null
+        assertNull("Document-level should be null for invalid format", 
+                   testScript.getCompareMeta());
+        
+        // 所有命令的 compareMeta 应该为 null
+        for (SqlCommand cmd : testScript.getCommands()) {
+            assertNull("Command should have null compareMeta for invalid format", 
+                       cmd.getCompareMeta());
+        }
+    }
+    
+    /**
+     * 测试混合使用文档级和 SQL 级 @metacmp 标记
+     */
+    @Test
+    public void testMixedMetacmpFlags() throws Exception {
+        File tempFile = File.createTempFile("test_metacmp_mixed_", ".sql");
+        tempFile.deleteOnExit();
+        
+        try (PrintWriter writer = new PrintWriter(new FileWriter(tempFile))) {
+            writer.println("--- @metacmp(true)");
+            writer.println("SELECT 1;");
+            writer.println("SELECT 2;");
+            writer.println("-- @metacmp(false)");
+            writer.println("SELECT 3;");
+            writer.println("SELECT 4;");
+            writer.println("--- @metacmp(false)");
+            writer.println("SELECT 5;");
+            writer.println("-- @metacmp(true)");
+            writer.println("SELECT 6;");
+        }
+        
+        ScriptParser parser = new ScriptParser();
+        TestScript testScript = parser.parseScript(tempFile.getAbsolutePath());
+        
+        assertNotNull("TestScript should not be null", testScript);
+        assertEquals("Document-level should be false (last document-level flag)", 
+                     Boolean.FALSE, testScript.getCompareMeta());
+        assertEquals("Should have 6 commands", 6, testScript.getTotalCmdCount());
+        
+        // 命令 1 和 2：使用文档级 true（但命令级别为 null）
+        assertNull("Command 1 should use document-level", 
+                   testScript.getCommands().get(0).getCompareMeta());
+        assertNull("Command 2 should use document-level", 
+                   testScript.getCommands().get(1).getCompareMeta());
+        
+        // 命令 3：SQL 级 false 覆盖文档级
+        assertEquals("Command 3 should override with false", 
+                     Boolean.FALSE, testScript.getCommands().get(2).getCompareMeta());
+        
+        // 命令 4：没有 SQL 级标记，使用文档级（当前为 true，但文档级后来被改为 false）
+        // 注意：文档级标记会影响后续命令，但命令 4 在文档级改为 false 之前
+        assertNull("Command 4 should use document-level", 
+                   testScript.getCommands().get(3).getCompareMeta());
+        
+        // 命令 5：文档级已改为 false
+        assertNull("Command 5 should use document-level (false)", 
+                   testScript.getCommands().get(4).getCompareMeta());
+        
+        // 命令 6：SQL 级 true 覆盖文档级 false
+        assertEquals("Command 6 should override document-level with true", 
+                     Boolean.TRUE, testScript.getCommands().get(5).getCompareMeta());
+    }
 }
 

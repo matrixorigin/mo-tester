@@ -66,17 +66,15 @@ public class RSMetaData {
 
     public boolean equals(RSMetaData meta) {
         for (int i = 0; i < columnCount; i++) {
-            if (containSpecialChar(this.columnLabels[i]))
-                continue;
             if (this.fullMetaInfo) {
-                String f1 = this.fullString();
-                String f2 = meta.fullString();
+                String f1 = this.stringAt(i);
+                String f2 = meta.stringAt(i);
                 if (!f1.equalsIgnoreCase(f2)) {
                     LOG.error("The meta info does not equal with each other,one is ["
                             + f1 + "],but the other is [" + f2 + "]");
                     return false;
                 }
-            } else {
+            } else if (!containSpecialChar(this.columnLabels[i]))  {
                 if (!this.columnLabels[i].equalsIgnoreCase(meta.getColumnLable(i))) {
                     LOG.error("The column label[index:" + i + "] does not equal with each other,one is ["
                             + this.columnLabels[i] + "],but the other is [" + meta.getColumnLable(i) + "]");
@@ -87,15 +85,21 @@ public class RSMetaData {
         return true;
     }
 
+    public String stringAt(int index) {
+        StringBuilder result = new StringBuilder();
+        result.append(columnLabels[index])
+                  .append("[").append(types[index])
+                  .append(",").append(precisions[index] == VARFlag ? -1 : precisions[index])
+                  .append(",").append(scales[index])
+                  .append("]");
+        return result.toString();
+    }
+
     public String fullString() {
         StringBuilder result = new StringBuilder();
         result.append(RESULT.FULL_HEADER_LEAD);
         for (int i = 0; i < columnCount; i++) {
-            result.append(columnLabels[i])
-                  .append("[").append(types[i])
-                  .append(",").append(precisions[i] == VARFlag ? -1 : precisions[i])
-                  .append(",").append(scales[i])
-                  .append("]");
+            result.append(stringAt(i));
             if (i < columnCount - 1) {
                 result.append(RESULT.COLUMN_SEPARATOR_NEW);
             }
