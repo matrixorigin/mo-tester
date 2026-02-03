@@ -111,6 +111,18 @@ public class SqlCommand {
     @Getter
     @Setter
     private Boolean compareMeta = null; // SQL-level meta comparison flag (null means use document/global default)
+    
+    @Getter
+    @Setter
+    private boolean waitExpect = false; // 是否启用 wait_expect 模式
+    
+    @Getter
+    @Setter
+    private int waitExpectInterval = 1; // wait_expect 检查间隔（秒）
+    
+    @Getter
+    @Setter
+    private int waitExpectTimeout = 20; // wait_expect 超时时间（秒）
 
     public SqlCommand() {
         command = new StringBuffer();
