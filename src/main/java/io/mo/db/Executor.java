@@ -223,6 +223,46 @@ public class Executor {
                     command.setActResult(actResult);
                 }
 
+                if (command.isWaitExpect()) {
+                    int intervalMs = command.getWaitExpectInterval() * 1000;
+                    int timeoutMs = command.getWaitExpectTimeout() * 1000;
+                    if (intervalMs > 0 && timeoutMs > 0) {
+                        StmtResult firstActResult = command.getActResult();
+                        if (firstActResult == null || firstActResult.getType() != RESULT.STMT_RESULT_TYPE_SET) {
+                            logger.warn(String.format(
+                                    "wait_expect is only safe for query results. Skip retry for command[%s][row:%d].",
+                                    command.getCommand(), command.getPosition()));
+                        } else {
+                            long deadline = System.currentTimeMillis() + timeoutMs;
+                            boolean matched = command.checkResult();
+                            while (!matched && System.currentTimeMillis() < deadline) {
+                                long now = System.currentTimeMillis();
+                                long sleepMs = Math.min(intervalMs, Math.max(0, deadline - now));
+                                if (sleepMs > 0) {
+                                    Thread.sleep(sleepMs);
+                                }
+                                if (statement != null) {
+                                    statement.close();
+                                }
+                                statement = connection.createStatement();
+                                statement.execute(sqlCmd);
+                                ResultSet retryResultSet = statement.getResultSet();
+                                if (retryResultSet != null) {
+                                    RSSet rsSet = new RSSet(retryResultSet, command);
+                                    StmtResult actResult = new StmtResult(rsSet);
+                                    command.setActResult(actResult);
+                                    command.getTestResult().setActResult(actResult.toString());
+                                } else {
+                                    StmtResult actResult = new StmtResult();
+                                    actResult.setType(RESULT.STMT_RESULT_TYPE_NONE);
+                                    command.setActResult(actResult);
+                                }
+                                matched = command.checkResult();
+                            }
+                        }
+                    }
+                }
+
                 checkResult(command, script);
                 statement.close();
 
@@ -381,6 +421,11 @@ public class Executor {
                     statement = connection.createStatement();
 
                     String sqlCmd = command.getCommand().replaceAll("\\$resources", COMMON.RESOURCE_PATH);
+                    if (command.isWaitExpect() && command.getWaitExpectTimeout() > 0) {
+                        logger.info(String.format("The tester will wait_expect for %s s before generating result, please wait....",
+                                command.getWaitExpectTimeout()));
+                        Thread.sleep(command.getWaitExpectTimeout() * 1000L);
+                    }
                     if (command.isNeedWait()) {
                         execWaitOperation(command);
                     }
