@@ -109,6 +109,8 @@ public class ScriptParser {
             parseIgnoreColumns(trimmedLine.substring(COMMON.IGNORE_COLUMN_FLAG.length()), command);
         } else if (trimmedLine.startsWith(COMMON.WAIT_FLAG)) {
             parseWaitFlag(trimmedLine, command);
+        } else if (trimmedLine.startsWith(COMMON.WAIT_EXPECT_FLAG)) {
+            parseWaitExpectFlag(trimmedLine, command);
         } else if (trimmedLine.startsWith(COMMON.NEW_SESSION_START_FLAG)) {
             parseConnectionInfo(trimmedLine, conInfo, path, rowNum);
         } else if (trimmedLine.equalsIgnoreCase(COMMON.NEW_SESSION_END_FLAG) || 
@@ -153,6 +155,42 @@ public class ScriptParser {
         command.setWaitConnId(Integer.parseInt(items[1]));
         command.setWaitOperation(operation);
         command.setNeedWait(true);
+    }
+
+    private void parseWaitExpectFlag(String trimmedLine, SqlCommand command) {
+        String rest = trimmedLine.substring(COMMON.WAIT_EXPECT_FLAG.length()).trim();
+        if (!rest.startsWith("(") || !rest.endsWith(")")) {
+            LOG.warn(String.format("Invalid wait_expect format: %s. Expected: -- @wait_expect(interval, timeout)", trimmedLine));
+            return;
+        }
+
+        String[] parts = rest.substring(1, rest.length() - 1).split(",");
+        if (parts.length != 2) {
+            LOG.warn(String.format("Invalid wait_expect format: %s. Expected: -- @wait_expect(interval, timeout)", trimmedLine));
+            return;
+        }
+
+        String intervalStr = parts[0].trim();
+        String timeoutStr = parts[1].trim();
+        if (!StringUtils.isNumeric(intervalStr) || !StringUtils.isNumeric(timeoutStr)) {
+            LOG.warn(String.format("Invalid wait_expect values: %s. Interval and timeout must be numeric.", trimmedLine));
+            return;
+        }
+
+        int interval = Integer.parseInt(intervalStr);
+        int timeout = Integer.parseInt(timeoutStr);
+        if (interval <= 0 || timeout <= 0) {
+            LOG.warn(String.format("Invalid wait_expect values: %s. Interval and timeout must be > 0.", trimmedLine));
+            return;
+        }
+        if (interval > timeout) {
+            LOG.warn(String.format("wait_expect interval(%d) > timeout(%d), capping interval to timeout.", interval, timeout));
+            interval = timeout;
+        }
+
+        command.setWaitExpect(true);
+        command.setWaitExpectInterval(interval);
+        command.setWaitExpectTimeout(timeout);
     }
 
     private void parseConnectionInfo(String trimmedLine, ConnectionInfo conInfo, String path, int rowNum) {

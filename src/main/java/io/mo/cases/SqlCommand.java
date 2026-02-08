@@ -107,6 +107,18 @@ public class SqlCommand {
     @Getter
     @Setter
     private String waitOperation = "commit";
+
+    @Getter
+    @Setter
+    private boolean waitExpect = false;
+
+    @Getter
+    @Setter
+    private int waitExpectInterval = 0;
+
+    @Getter
+    @Setter
+    private int waitExpectTimeout = 0;
     
     @Getter
     @Setter

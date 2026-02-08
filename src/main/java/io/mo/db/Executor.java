@@ -105,6 +105,7 @@ public class Executor {
         ArrayList<SqlCommand> commands = script.getCommands();
         long start = System.currentTimeMillis();
         boolean[] transformed = new boolean[1];
+        long waitExpectDeadline = 0;
 
         // for (SqlCommand command : commands) {
         for (int i = 0; i < commands.size(); i++) {
@@ -223,10 +224,28 @@ public class Executor {
                     command.setActResult(actResult);
                 }
 
+                // wait_expect: if not matched and not timed out, re-enter the outer loop
+                if (command.isWaitExpect() && resultSet != null
+                        && command.getExpResult() != null && !command.checkResult()) {
+                    long now = System.currentTimeMillis();
+                    if (waitExpectDeadline == 0) {
+                        waitExpectDeadline = now + command.getWaitExpectTimeout() * 1000L;
+                    }
+                    if (now < waitExpectDeadline) {
+                        long sleepMs = Math.min(command.getWaitExpectInterval() * 1000L, Math.max(0, waitExpectDeadline - now));
+                        if (sleepMs > 0) Thread.sleep(sleepMs);
+                        statement.close();
+                        i--;
+                        continue;
+                    }
+                }
+                waitExpectDeadline = 0;
+
                 checkResult(command, script);
                 statement.close();
 
             } catch (SQLException e) {
+                waitExpectDeadline = 0;
                 try {
                     if (connection.isClosed() || !connection.isValid(10)) {
                         logger.error("[" + script.getFileName() + "][row:" + command.getPosition() + "]["
@@ -383,6 +402,10 @@ public class Executor {
                     String sqlCmd = command.getCommand().replaceAll("\\$resources", COMMON.RESOURCE_PATH);
                     if (command.isNeedWait()) {
                         execWaitOperation(command);
+                    }
+                    // wait_expect: in genRS mode, sleep the full timeout to capture stable result
+                    if (command.isWaitExpect() && command.getWaitExpectTimeout() > 0) {
+                        Thread.sleep(command.getWaitExpectTimeout() * 1000L);
                     }
                     statement.execute(sqlCmd);
                     if (command.isNeedWait()) {
