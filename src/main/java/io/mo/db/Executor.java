@@ -186,6 +186,17 @@ public class Executor {
                 sqlCmd = sqlCmd.replaceAll(COMMON.RESOURCE_PATH_FLAG, COMMON.RESOURCE_PATH);
                 if (command.isNeedWait()) {
                     execWaitOperation(command);
+                    // Wait for the condition to be met before executing
+                    if (waitThread != null) {
+                        try {
+                            logger.info(String.format("Waiting for connection[id=%d] to %s before executing command at row %d",
+                                    command.getWaitConnId(), command.getWaitOperation(), command.getPosition()));
+                            waitThread.join();
+                            logger.info(String.format("Wait condition met for command at row %d", command.getPosition()));
+                        } catch (InterruptedException e) {
+                            logger.error("Wait thread interrupted", e);
+                        }
+                    }
                 }
                 statement.execute(sqlCmd);
                 if (command.isNeedWait()) {
@@ -383,6 +394,17 @@ public class Executor {
                     String sqlCmd = command.getCommand().replaceAll("\\$resources", COMMON.RESOURCE_PATH);
                     if (command.isNeedWait()) {
                         execWaitOperation(command);
+                        // In genRS mode, wait for the condition to be met before executing
+                        if (waitThread != null) {
+                            try {
+                                logger.info(String.format("Waiting for connection[id=%d] to %s before executing command at row %d",
+                                        command.getWaitConnId(), command.getWaitOperation(), command.getPosition()));
+                                waitThread.join();
+                                logger.info(String.format("Wait condition met for command at row %d", command.getPosition()));
+                            } catch (InterruptedException e) {
+                                logger.error("Wait thread interrupted", e);
+                            }
+                        }
                     }
                     statement.execute(sqlCmd);
                     if (command.isNeedWait()) {
