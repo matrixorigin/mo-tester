@@ -105,6 +105,7 @@ public class Executor {
         ArrayList<SqlCommand> commands = script.getCommands();
         long start = System.currentTimeMillis();
         boolean[] transformed = new boolean[1];
+        long waitExpectDeadline = 0;
 
         // for (SqlCommand command : commands) {
         for (int i = 0; i < commands.size(); i++) {
@@ -198,15 +199,7 @@ public class Executor {
                         }
                     }
                 }
-                
-                // Wait-expect logic: repeatedly execute until result matches or timeout
-                if (command.isWaitExpect()) {
-                    executeWithWaitExpect(statement, sqlCmd, command, script);
-                } else {
-                    // Normal execution
-                    statement.execute(sqlCmd);
-                }
-                
+                statement.execute(sqlCmd);
                 if (command.isNeedWait()) {
                     Thread.sleep(COMMON.WAIT_TIMEOUT / 10);
                     if (waitThread != null && waitThread.isAlive()) {
@@ -240,7 +233,31 @@ public class Executor {
                     StmtResult actResult = new StmtResult();
                     actResult.setType(RESULT.STMT_RESULT_TYPE_NONE);
                     command.setActResult(actResult);
+                    command.getTestResult().setActResult(actResult.toString());
                 }
+
+                // wait_expect: if not matched and not timed out, re-enter the outer loop
+                if (command.isWaitExpect() && resultSet != null
+                        && command.getExpResult() != null && !command.checkResult()) {
+                    long now = System.currentTimeMillis();
+                    if (waitExpectDeadline == 0) {
+                        waitExpectDeadline = now + command.getWaitExpectTimeout() * 1000L;
+                        logger.info(String.format("[%s][row:%d] Starting wait_expect: interval=%ds, timeout=%ds",
+                                command.getScriptFile(), command.getPosition(),
+                                command.getWaitExpectInterval(), command.getWaitExpectTimeout()));
+                    }
+                    if (now < waitExpectDeadline) {
+                        long sleepMs = Math.min(command.getWaitExpectInterval() * 1000L, Math.max(0, waitExpectDeadline - now));
+                        if (sleepMs > 0) Thread.sleep(sleepMs);
+                        statement.close();
+                        i--;
+                        continue;
+                    } else {
+                        logger.warn(String.format("[%s][row:%d] wait_expect timeout, result did not match expected",
+                                command.getScriptFile(), command.getPosition()));
+                    }
+                }
+                waitExpectDeadline = 0;
 
                 checkResult(command, script);
                 statement.close();
@@ -248,6 +265,7 @@ public class Executor {
             } catch (SQLException e) {
                 try {
                     if (connection.isClosed() || !connection.isValid(10)) {
+                        waitExpectDeadline = 0;
                         logger.error("[" + script.getFileName() + "][row:" + command.getPosition() + "]["
                                 + command.getCommand().trim() + "] MO does not return result in "
                                 + MoConfUtil.getSocketTimeout() + " ms,con[id="
@@ -293,9 +311,34 @@ public class Executor {
                     actResult.setType(RESULT.STMT_RESULT_TYPE_ERROR);
                     actResult.setErrorMessage(e.getMessage());
                     command.setActResult(actResult);
+                    command.getTestResult().setActResult(actResult.toString());
 
-                    command.getExpResult().setType(RESULT.STMT_RESULT_TYPE_ERROR);
-                    command.getExpResult().setErrorMessage(command.getExpResult().getExpectRSText());
+                    if (command.getExpResult() != null) {
+                        command.getExpResult().setType(RESULT.STMT_RESULT_TYPE_ERROR);
+                        command.getExpResult().setErrorMessage(command.getExpResult().getExpectRSText());
+                    }
+
+                    // wait_expect: handle error retry logic
+                    if (command.isWaitExpect() && command.getExpResult() != null && !command.checkResult()) {
+                        long now = System.currentTimeMillis();
+                        if (waitExpectDeadline == 0) {
+                            waitExpectDeadline = now + command.getWaitExpectTimeout() * 1000L;
+                            logger.info(String.format("[%s][row:%d] Starting wait_expect with error: interval=%ds, timeout=%ds",
+                                    command.getScriptFile(), command.getPosition(),
+                                    command.getWaitExpectInterval(), command.getWaitExpectTimeout()));
+                        }
+                        if (now < waitExpectDeadline) {
+                            long sleepMs = Math.min(command.getWaitExpectInterval() * 1000L, Math.max(0, waitExpectDeadline - now));
+                            if (sleepMs > 0) Thread.sleep(sleepMs);
+                            statement.close();
+                            i--;
+                            continue;
+                        } else {
+                            logger.warn(String.format("[%s][row:%d] wait_expect timeout with error, last error did not match expected",
+                                    command.getScriptFile(), command.getPosition()));
+                        }
+                    }
+                    waitExpectDeadline = 0;
 
                     checkResult(command, script);
                     statement.close();
@@ -304,6 +347,9 @@ public class Executor {
                     throw new RuntimeException(ex);
                 }
             } catch (InterruptedException e) {
+                waitExpectDeadline = 0;
+                logger.error(String.format("[%s][row:%d] Thread interrupted during execution",
+                        command.getScriptFile(), command.getPosition()));
                 throw new RuntimeException(e);
             }
         }
@@ -414,15 +460,10 @@ public class Executor {
                             }
                         }
                     }
-                    
-                    // For wait_expect in genRS mode: sleep timeout seconds then execute once
-                    if (command.isWaitExpect()) {
-                        int timeout = command.getWaitExpectTimeout();
-                        logger.info(String.format("[%s][row:%d] genRS mode: sleeping %ds before execution (wait_expect timeout)",
-                                command.getScriptFile(), command.getPosition(), timeout));
-                        Thread.sleep(timeout * 1000L);
+                    // wait_expect: in genRS mode, sleep the full timeout to capture stable result
+                    if (command.isWaitExpect() && command.getWaitExpectTimeout() > 0) {
+                        Thread.sleep(command.getWaitExpectTimeout() * 1000L);
                     }
-                    
                     statement.execute(sqlCmd);
                     if (command.isNeedWait()) {
                         Thread.sleep(COMMON.WAIT_TIMEOUT / 10);
@@ -773,113 +814,6 @@ public class Executor {
             }
         });
         waitThread.start();
-    }
-    
-    /**
-     * Execute SQL with wait-expect logic: repeatedly execute until result matches expected or timeout.
-     * This replaces the need for fixed sleep times by polling until the condition is met.
-     * 
-     * @param statement The SQL statement to execute
-     * @param sqlCmd The SQL command string
-     * @param command The SqlCommand containing wait-expect parameters
-     * @param script The TestScript for tracking results
-     * @throws SQLException if SQL execution fails
-     * @throws InterruptedException if thread is interrupted during wait
-     */
-    private void executeWithWaitExpect(Statement statement, String sqlCmd, SqlCommand command, TestScript script) 
-            throws SQLException, InterruptedException {
-        
-        int interval = command.getWaitExpectInterval();
-        int timeout = command.getWaitExpectTimeout();
-        long startTime = System.currentTimeMillis();
-        long timeoutMillis = timeout * 1000L;
-        int attemptCount = 0;
-        
-        logger.info(String.format("[%s][row:%d] Executing with wait_expect: interval=%ds, timeout=%ds",
-                command.getScriptFile(), command.getPosition(), interval, timeout));
-        
-        while (true) {
-            attemptCount++;
-            long elapsedMillis = System.currentTimeMillis() - startTime;
-            
-            try {
-                // Execute the SQL
-                statement.execute(sqlCmd);
-                
-                // Get the result
-                ResultSet resultSet = statement.getResultSet();
-                StmtResult actResult;
-                
-                if (resultSet != null) {
-                    RSSet rsSet = new RSSet(resultSet, command);
-                    actResult = new StmtResult(rsSet);
-                } else {
-                    actResult = new StmtResult();
-                    actResult.setType(RESULT.STMT_RESULT_TYPE_NONE);
-                }
-                
-                command.setActResult(actResult);
-                command.getTestResult().setActResult(actResult.toString());
-                
-                // Check if result matches expected
-                if (command.checkResult()) {
-                    logger.info(String.format("[%s][row:%d] wait_expect succeeded after %d attempts (%.2fs)",
-                            command.getScriptFile(), command.getPosition(), attemptCount, elapsedMillis / 1000.0));
-                    return; // Success!
-                }
-                
-                // Check if timeout reached
-                if (elapsedMillis >= timeoutMillis) {
-                    logger.warn(String.format("[%s][row:%d] wait_expect timeout after %d attempts (%.2fs). Last result did not match expected.",
-                            command.getScriptFile(), command.getPosition(), attemptCount, elapsedMillis / 1000.0));
-                    return; // Timeout - return with last result
-                }
-                
-                // Wait before next attempt
-                long remainingMillis = timeoutMillis - elapsedMillis;
-                long sleepMillis = Math.min(interval * 1000L, remainingMillis);
-                
-                if (sleepMillis > 0) {
-                    Thread.sleep(sleepMillis);
-                }
-                
-            } catch (SQLException e) {
-                // Handle SQL errors
-                StmtResult actResult = new StmtResult();
-                actResult.setType(RESULT.STMT_RESULT_TYPE_ERROR);
-                actResult.setErrorMessage(e.getMessage());
-                command.setActResult(actResult);
-                command.getTestResult().setActResult(actResult.toString());
-                
-                // Set expected result to error type for comparison
-                if (command.getExpResult() != null) {
-                    command.getExpResult().setType(RESULT.STMT_RESULT_TYPE_ERROR);
-                    command.getExpResult().setErrorMessage(command.getExpResult().getExpectRSText());
-                }
-                
-                // Check if error matches expected
-                if (command.checkResult()) {
-                    logger.info(String.format("[%s][row:%d] wait_expect succeeded with expected error after %d attempts (%.2fs)",
-                            command.getScriptFile(), command.getPosition(), attemptCount, elapsedMillis / 1000.0));
-                    return; // Expected error matched
-                }
-                
-                // Check if timeout reached
-                if (elapsedMillis >= timeoutMillis) {
-                    logger.warn(String.format("[%s][row:%d] wait_expect timeout after %d attempts (%.2fs). Last error did not match expected.",
-                            command.getScriptFile(), command.getPosition(), attemptCount, elapsedMillis / 1000.0));
-                    return; // Timeout - return with last error
-                }
-                
-                // Wait before next attempt
-                long remainingMillis = timeoutMillis - elapsedMillis;
-                long sleepMillis = Math.min(interval * 1000L, remainingMillis);
-                
-                if (sleepMillis > 0) {
-                    Thread.sleep(sleepMillis);
-                }
-            }
-        }
     }
 
     /**
