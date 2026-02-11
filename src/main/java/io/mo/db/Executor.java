@@ -263,6 +263,7 @@ public class Executor {
                 statement.close();
 
             } catch (SQLException e) {
+                waitExpectDeadline = 0;
                 try {
                     if (connection.isClosed() || !connection.isValid(10)) {
                         waitExpectDeadline = 0;
@@ -317,6 +318,9 @@ public class Executor {
                         command.getExpResult().setType(RESULT.STMT_RESULT_TYPE_ERROR);
                         command.getExpResult().setErrorMessage(command.getExpResult().getExpectRSText());
                     }
+                    checkResult(command, script);
+                    statement.close();
+
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 } catch (InterruptedException ex) {
