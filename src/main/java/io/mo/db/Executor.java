@@ -266,7 +266,6 @@ public class Executor {
                 waitExpectDeadline = 0;
                 try {
                     if (connection.isClosed() || !connection.isValid(10)) {
-                        waitExpectDeadline = 0;
                         logger.error("[" + script.getFileName() + "][row:" + command.getPosition() + "]["
                                 + command.getCommand().trim() + "] MO does not return result in "
                                 + MoConfUtil.getSocketTimeout() + " ms,con[id="
