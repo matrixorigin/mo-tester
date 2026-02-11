@@ -317,32 +317,6 @@ public class Executor {
                         command.getExpResult().setType(RESULT.STMT_RESULT_TYPE_ERROR);
                         command.getExpResult().setErrorMessage(command.getExpResult().getExpectRSText());
                     }
-
-                    // wait_expect: handle error retry logic
-                    if (command.isWaitExpect() && command.getExpResult() != null && !command.checkResult()) {
-                        long now = System.currentTimeMillis();
-                        if (waitExpectDeadline == 0) {
-                            waitExpectDeadline = now + command.getWaitExpectTimeout() * 1000L;
-                            logger.info(String.format("[%s][row:%d] Starting wait_expect with error: interval=%ds, timeout=%ds",
-                                    command.getScriptFile(), command.getPosition(),
-                                    command.getWaitExpectInterval(), command.getWaitExpectTimeout()));
-                        }
-                        if (now < waitExpectDeadline) {
-                            long sleepMs = Math.min(command.getWaitExpectInterval() * 1000L, Math.max(0, waitExpectDeadline - now));
-                            if (sleepMs > 0) Thread.sleep(sleepMs);
-                            statement.close();
-                            i--;
-                            continue;
-                        } else {
-                            logger.warn(String.format("[%s][row:%d] wait_expect timeout with error, last error did not match expected",
-                                    command.getScriptFile(), command.getPosition()));
-                        }
-                    }
-                    waitExpectDeadline = 0;
-
-                    checkResult(command, script);
-                    statement.close();
-
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 } catch (InterruptedException ex) {
@@ -466,18 +440,6 @@ public class Executor {
                         }
                     }
                     statement.execute(sqlCmd);
-                    // wait_expect: in genRS mode, sleep after execution to allow async operations to complete
-                    if (command.isWaitExpect() && command.getWaitExpectTimeout() > 0) {
-                        logger.info(String.format("[%s][row:%d] wait_expect in genRS mode: sleeping %ds after execution",
-                                command.getScriptFile(), command.getPosition(), command.getWaitExpectTimeout()));
-                        Thread.sleep(command.getWaitExpectTimeout() * 1000L);
-                        // Re-execute to get the stable result after waiting
-                        statement.close();
-                        statement = connection.createStatement();
-                        logger.info(String.format("[%s][row:%d] wait_expect in genRS mode: re-executing SQL after sleep",
-                                command.getScriptFile(), command.getPosition()));
-                        statement.execute(sqlCmd);
-                    }
                     if (command.isNeedWait()) {
                         Thread.sleep(COMMON.WAIT_TIMEOUT / 10);
                         if (waitThread != null && waitThread.isAlive()) {
