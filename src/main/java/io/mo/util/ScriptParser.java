@@ -101,6 +101,8 @@ public class ScriptParser {
         // Simple flag handlers
         if (trimmedLine.startsWith(COMMON.FUNC_SLEEP_FLAG)) {
             command.setSleeptime(Integer.parseInt(trimmedLine.substring(COMMON.FUNC_SLEEP_FLAG.length())));
+        } else if (trimmedLine.startsWith(COMMON.WAIT_EXPECT_FLAG)) {
+            parseWaitExpectFlag(trimmedLine, command);
         } else if (trimmedLine.startsWith(COMMON.SYSTEM_CMD_FLAG)) {
             command.addSysCMD(trimmedLine.substring(COMMON.SYSTEM_CMD_FLAG.length()));
         } else if (trimmedLine.startsWith(COMMON.REGULAR_MATCH_FLAG)) {
@@ -153,6 +155,43 @@ public class ScriptParser {
         command.setWaitConnId(Integer.parseInt(items[1]));
         command.setWaitOperation(operation);
         command.setNeedWait(true);
+    }
+
+    private void parseWaitExpectFlag(String trimmedLine, SqlCommand command) {
+        String rest = trimmedLine.substring(COMMON.WAIT_EXPECT_FLAG.length()).trim();
+        if (!rest.startsWith("(") || !rest.endsWith(")")) {
+            LOG.warn(String.format("Invalid wait_expect flag format: %s. Expected -- @wait_expect(interval, timeout)", trimmedLine));
+            return;
+        }
+
+        String content = rest.substring(1, rest.length() - 1);
+        String[] parts = content.split(",");
+        if (parts.length != 2) {
+            LOG.warn(String.format("Invalid wait_expect flag format: %s. Expected -- @wait_expect(interval, timeout)", trimmedLine));
+            return;
+        }
+
+        String intervalStr = parts[0].trim();
+        String timeoutStr = parts[1].trim();
+        if (!StringUtils.isNumeric(intervalStr) || !StringUtils.isNumeric(timeoutStr)) {
+            LOG.warn(String.format("Invalid wait_expect flag values: %s. Interval/timeout must be numeric.", trimmedLine));
+            return;
+        }
+
+        int interval = Integer.parseInt(intervalStr);
+        int timeout = Integer.parseInt(timeoutStr);
+        if (interval <= 0 || timeout <= 0) {
+            LOG.warn(String.format("Invalid wait_expect flag values: %s. Interval/timeout must be > 0.", trimmedLine));
+            return;
+        }
+        if (interval > timeout) {
+            LOG.warn(String.format("wait_expect interval(%d) is greater than timeout(%d), interval will be capped to timeout.", interval, timeout));
+            interval = timeout;
+        }
+
+        command.setWaitExpect(true);
+        command.setWaitExpectInterval(interval);
+        command.setWaitExpectTimeout(timeout);
     }
 
     private void parseConnectionInfo(String trimmedLine, ConnectionInfo conInfo, String path, int rowNum) {
@@ -519,4 +558,3 @@ public class ScriptParser {
        
     }
 }
-

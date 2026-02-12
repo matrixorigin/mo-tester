@@ -6,7 +6,7 @@ jdbc:
   #- addr: "127.0.0.1:3306"
   #- addr: "127.0.0.1:3306"
   database:
-    default: ""
+    default: "test"
   paremeter:
     characterSetResults: "utf8"
     continueBatchOnError: "false"

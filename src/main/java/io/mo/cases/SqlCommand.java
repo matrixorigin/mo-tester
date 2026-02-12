@@ -95,6 +95,18 @@ public class SqlCommand {
     @Getter
     @Setter
     private int sleeptime = 0;
+
+    @Getter
+    @Setter
+    private boolean waitExpect = false;
+
+    @Getter
+    @Setter
+    private int waitExpectInterval = 0;
+
+    @Getter
+    @Setter
+    private int waitExpectTimeout = 0;
     
     @Getter
     @Setter
@@ -152,6 +164,10 @@ public class SqlCommand {
         if (actResult != null) {
             this.testResult.setActResult(actResult.toString());
         }
+    }
+
+    public StmtResult getActResult() {
+        return actResult;
     }
 
     public boolean checkResult() {
