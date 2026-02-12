@@ -345,6 +345,11 @@ public class Executor {
 
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
+                } catch (InterruptedException ex) {
+                    waitExpectDeadline = 0;
+                    logger.error(String.format("[%s][row:%d] Thread interrupted during wait_expect",
+                            command.getScriptFile(), command.getPosition()));
+                    throw new RuntimeException(ex);
                 }
             } catch (InterruptedException e) {
                 waitExpectDeadline = 0;
@@ -460,11 +465,19 @@ public class Executor {
                             }
                         }
                     }
-                    // wait_expect: in genRS mode, sleep the full timeout to capture stable result
-                    if (command.isWaitExpect() && command.getWaitExpectTimeout() > 0) {
-                        Thread.sleep(command.getWaitExpectTimeout() * 1000L);
-                    }
                     statement.execute(sqlCmd);
+                    // wait_expect: in genRS mode, sleep after execution to allow async operations to complete
+                    if (command.isWaitExpect() && command.getWaitExpectTimeout() > 0) {
+                        logger.info(String.format("[%s][row:%d] wait_expect in genRS mode: sleeping %ds after execution",
+                                command.getScriptFile(), command.getPosition(), command.getWaitExpectTimeout()));
+                        Thread.sleep(command.getWaitExpectTimeout() * 1000L);
+                        // Re-execute to get the stable result after waiting
+                        statement.close();
+                        statement = connection.createStatement();
+                        logger.info(String.format("[%s][row:%d] wait_expect in genRS mode: re-executing SQL after sleep",
+                                command.getScriptFile(), command.getPosition()));
+                        statement.execute(sqlCmd);
+                    }
                     if (command.isNeedWait()) {
                         Thread.sleep(COMMON.WAIT_TIMEOUT / 10);
                         if (waitThread != null && waitThread.isAlive()) {
