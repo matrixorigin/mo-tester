@@ -317,21 +317,14 @@ public class Executor {
                         command.getExpResult().setType(RESULT.STMT_RESULT_TYPE_ERROR);
                         command.getExpResult().setErrorMessage(command.getExpResult().getExpectRSText());
                     }
+
                     checkResult(command, script);
                     statement.close();
 
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
-                } catch (InterruptedException ex) {
-                    waitExpectDeadline = 0;
-                    logger.error(String.format("[%s][row:%d] Thread interrupted during wait_expect",
-                            command.getScriptFile(), command.getPosition()));
-                    throw new RuntimeException(ex);
                 }
             } catch (InterruptedException e) {
-                waitExpectDeadline = 0;
-                logger.error(String.format("[%s][row:%d] Thread interrupted during execution",
-                        command.getScriptFile(), command.getPosition()));
                 throw new RuntimeException(e);
             }
         }
@@ -441,6 +434,10 @@ public class Executor {
                                 logger.error("Wait thread interrupted", e);
                             }
                         }
+                    }
+                    // wait_expect: in genRS mode, sleep the full timeout to capture stable result
+                    if (command.isWaitExpect() && command.getWaitExpectTimeout() > 0) {
+                        Thread.sleep(command.getWaitExpectTimeout() * 1000L);
                     }
                     statement.execute(sqlCmd);
                     if (command.isNeedWait()) {
