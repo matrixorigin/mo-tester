@@ -58,6 +58,12 @@ public class TestReport {
         else
             rate = 100;
 
+        // Ensure report directory exists
+        File reportDir = new File(COMMON.REPORT_DIR);
+        if (!reportDir.exists()) {
+            reportDir.mkdirs();
+        }
+
         ArrayList<SqlCommand> e_commands = new ArrayList<SqlCommand>();
         try {
             BufferedWriter r_writer = new BufferedWriter(new FileWriter(COMMON.REPORT_DIR +"/report.txt"));
