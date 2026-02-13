@@ -105,6 +105,7 @@ public class Executor {
         ArrayList<SqlCommand> commands = script.getCommands();
         long start = System.currentTimeMillis();
         boolean[] transformed = new boolean[1];
+        long waitExpectDeadline = 0;
 
         // for (SqlCommand command : commands) {
         for (int i = 0; i < commands.size(); i++) {
@@ -232,12 +233,37 @@ public class Executor {
                     StmtResult actResult = new StmtResult();
                     actResult.setType(RESULT.STMT_RESULT_TYPE_NONE);
                     command.setActResult(actResult);
+                    command.getTestResult().setActResult(actResult.toString());
                 }
+
+                // wait_expect: if not matched and not timed out, re-enter the outer loop
+                if (command.isWaitExpect() && resultSet != null
+                        && command.getExpResult() != null && !command.checkResult()) {
+                    long now = System.currentTimeMillis();
+                    if (waitExpectDeadline == 0) {
+                        waitExpectDeadline = now + command.getWaitExpectTimeout() * 1000L;
+                        logger.info(String.format("[%s][row:%d] Starting wait_expect: interval=%ds, timeout=%ds",
+                                command.getScriptFile(), command.getPosition(),
+                                command.getWaitExpectInterval(), command.getWaitExpectTimeout()));
+                    }
+                    if (now < waitExpectDeadline) {
+                        long sleepMs = Math.min(command.getWaitExpectInterval() * 1000L, Math.max(0, waitExpectDeadline - now));
+                        if (sleepMs > 0) Thread.sleep(sleepMs);
+                        statement.close();
+                        i--;
+                        continue;
+                    } else {
+                        logger.warn(String.format("[%s][row:%d] wait_expect timeout, result did not match expected",
+                                command.getScriptFile(), command.getPosition()));
+                    }
+                }
+                waitExpectDeadline = 0;
 
                 checkResult(command, script);
                 statement.close();
 
             } catch (SQLException e) {
+                waitExpectDeadline = 0;
                 try {
                     if (connection.isClosed() || !connection.isValid(10)) {
                         logger.error("[" + script.getFileName() + "][row:" + command.getPosition() + "]["
@@ -285,9 +311,12 @@ public class Executor {
                     actResult.setType(RESULT.STMT_RESULT_TYPE_ERROR);
                     actResult.setErrorMessage(e.getMessage());
                     command.setActResult(actResult);
+                    command.getTestResult().setActResult(actResult.toString());
 
-                    command.getExpResult().setType(RESULT.STMT_RESULT_TYPE_ERROR);
-                    command.getExpResult().setErrorMessage(command.getExpResult().getExpectRSText());
+                    if (command.getExpResult() != null) {
+                        command.getExpResult().setType(RESULT.STMT_RESULT_TYPE_ERROR);
+                        command.getExpResult().setErrorMessage(command.getExpResult().getExpectRSText());
+                    }
 
                     checkResult(command, script);
                     statement.close();
@@ -405,6 +434,10 @@ public class Executor {
                                 logger.error("Wait thread interrupted", e);
                             }
                         }
+                    }
+                    // wait_expect: in genRS mode, sleep the full timeout to capture stable result
+                    if (command.isWaitExpect() && command.getWaitExpectTimeout() > 0) {
+                        Thread.sleep(command.getWaitExpectTimeout() * 1000L);
                     }
                     statement.execute(sqlCmd);
                     if (command.isNeedWait()) {

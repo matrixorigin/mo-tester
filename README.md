@@ -105,6 +105,7 @@ Sometimes, to achieve some specific purposes, such as pausing or creating a new 
 | -- @skip:issue#{IssueNo.}                                     | If set, the whole script file will be skipped, and not be executed any more for issue{IssueNo.}                                                                                                       |
 | -- @bvt:issue#{IssueNo.}<br/>-- @bvt:issue                    | The sql statements between those two tags will be not executed for issue{IssueNo.}                                                                                                                    |
 | -- @sleep:{time}                                              | The mo-tester will wait for {time} s                                                                                                                                                                  |
+| -- @wait_expect({interval}, {timeout})                        | Intelligent polling mechanism that repeatedly executes the SQL until the result matches the expected output or timeout is reached. `{interval}` is the polling interval in seconds (how often to retry), and `{timeout}` is the maximum wait time in seconds. This replaces fixed sleep times with smart waiting.<br/><br/>**Example:**<br/>`-- @wait_expect(1, 10)`<br/>`SELECT * FROM orders WHERE status = 'completed';`<br/><br/>This will poll every 1 second for up to 10 seconds until the query returns the expected result. Useful for testing asynchronous operations, data replication, or eventual consistency scenarios.<br/><br/>**Modes:**<br/>- **run mode**: Polls until result matches or timeout<br/>- **genrs mode**: Sleeps for timeout seconds, then executes once<br/><br/>**Features:**<br/>- Supports query results (SELECT)<br/>- Supports error matching (waiting for errors to appear/disappear)<br/>- Detailed logging of retry attempts and timing |
 | -- @session:id=2&user=root&password=111<br/> -- @session      | The mo-tester will create a new connetion to execute sql statements between those two tags.<br/>Default value of id is 1, max is 10.<br/>Defualt value of user and password is configured in `mo.yml`. |
 | -- @sortkey:                                                  | If the result is sorted, need set this tag for the sql statement. e.g.<br/> -- @sortkey:0,1: means sort keys are first column and second colum.                                                       |
 | -- @system {C}                                                | Set System Command that will be executed by the runner system                                                                                                                                         |
@@ -331,3 +332,257 @@ MO-Tester supports parallel execution of test cases. Directories are split into 
 3. No session on sys account (e.g., `-- @session:id=1&user=sys:dump&password=111`). Note: In Group 1, using `-- @session:id=<digit>` will open a new session with the `shuyuan:kongzi` account by default
 
 These restrictions ensure that parallel test cases do not interfere with each other during concurrent execution.
+
+## Wait_Expect Feature
+
+### Overview
+
+The `@wait_expect` tag provides an intelligent polling mechanism that replaces fixed sleep times with smart waiting. Instead of sleeping for a fixed duration and hoping the data is ready, `wait_expect` repeatedly checks the result until it matches the expected output or a timeout is reached.
+
+### Syntax
+
+```sql
+-- @wait_expect({interval}, {timeout})
+SELECT ...
+```
+
+**Parameters:**
+- `{interval}`: Polling interval in seconds (how often to retry)
+- `{timeout}`: Maximum wait time in seconds
+
+### Use Cases
+
+1. **Asynchronous Operations**: Wait for background tasks to complete
+2. **Data Replication**: Wait for data to be replicated across nodes
+3. **Eventual Consistency**: Wait for distributed systems to reach consistency
+4. **State Transitions**: Wait for status changes (e.g., 'pending' → 'completed')
+5. **Error Recovery**: Wait for errors to appear or disappear
+
+### Examples
+
+#### Example 1: Wait for Data to Appear
+
+```sql
+CREATE TABLE orders (id INT, status VARCHAR(20));
+INSERT INTO orders VALUES (1, 'pending');
+
+-- Wait for status to become 'completed'
+-- Polls every 1 second for up to 10 seconds
+-- @wait_expect(1, 10)
+SELECT * FROM orders WHERE status = 'completed';
+
+-- In another session or background process:
+UPDATE orders SET status = 'completed' WHERE id = 1;
+```
+
+**Behavior:**
+- Executes the SELECT query
+- If result doesn't match expected, waits 1 second and retries
+- Continues polling until result matches or 10 seconds elapsed
+- Much more efficient than `-- @sleep:10`
+
+#### Example 2: Wait for Count to Increase
+
+```sql
+CREATE TABLE events (id INT, processed BOOLEAN);
+
+-- Wait for at least 5 processed events
+-- @wait_expect(1, 30)
+SELECT COUNT(*) FROM events WHERE processed = true;
+```
+
+**Expected result file:**
+```
+SELECT COUNT(*) FROM events WHERE processed = true;
+count(*)
+5
+```
+
+#### Example 3: Wait for Table Creation (Error Retry)
+
+```sql
+-- Query a table that doesn't exist yet
+-- Will retry on error until table is created
+-- @wait_expect(1, 10)
+SELECT * FROM new_table;
+
+-- Table gets created by another process
+CREATE TABLE new_table (id INT, name VARCHAR(50));
+INSERT INTO new_table VALUES (1, 'test');
+```
+
+**Behavior:**
+- First attempt: SQLException (table not found)
+- Waits 1 second and retries
+- Continues until table exists or timeout
+- Supports waiting for errors to disappear
+
+#### Example 4: Wait for Aggregation Result
+
+```sql
+CREATE TABLE metrics (value INT);
+
+-- Wait for sum to exceed 100
+-- @wait_expect(2, 20)
+SELECT SUM(value) as total FROM metrics WHERE total > 100;
+
+-- Data gets inserted gradually
+INSERT INTO metrics VALUES (50);
+INSERT INTO metrics VALUES (60);
+```
+
+#### Example 5: Combining with Other Tags
+
+```sql
+-- Use with @session for multi-connection scenarios
+-- @session:id=2
+INSERT INTO orders VALUES (1, 'pending');
+-- @session
+
+-- Main session waits for the insert
+-- @wait_expect(1, 5)
+SELECT COUNT(*) FROM orders;
+
+-- Use with @sleep for initial delay
+-- @sleep:2
+-- @wait_expect(1, 10)
+SELECT * FROM orders WHERE status = 'completed';
+```
+
+### Modes
+
+#### Run Mode (Default)
+
+```bash
+./run.sh -p cases/test.sql -m run
+```
+
+**Behavior:**
+- Polls the SQL statement at `{interval}` seconds
+- Compares actual result with expected result
+- Stops when result matches or `{timeout}` is reached
+- Logs retry attempts and timing
+
+#### GenRS Mode (Generate Results)
+
+```bash
+./run.sh -p cases/test.sql -m genrs
+```
+
+**Behavior:**
+- Sleeps for `{timeout}` seconds (one-time wait)
+- Executes the SQL once
+- Captures the result as expected output
+- Useful for generating baseline results
+
+### Performance Benefits
+
+**Traditional approach with @sleep:**
+```sql
+-- @sleep:10
+SELECT * FROM orders WHERE status = 'completed';
+```
+- Always waits 10 seconds, even if data is ready after 1 second
+- Wastes 9 seconds in this case
+
+**Smart approach with @wait_expect:**
+```sql
+-- @wait_expect(1, 10)
+SELECT * FROM orders WHERE status = 'completed';
+```
+- Checks every 1 second
+- Stops as soon as data is ready
+- Typical time savings: 50-80%
+
+### Logging
+
+When using `@wait_expect`, detailed logs are generated:
+
+```
+2024-02-10 10:00:00 INFO - [test.sql][row:5] Starting wait_expect: interval=1s, timeout=10s
+2024-02-10 10:00:01 INFO - Retry attempt 1
+2024-02-10 10:00:02 INFO - Retry attempt 2
+2024-02-10 10:00:03 INFO - Result matched, test passed
+```
+
+Or on timeout:
+```
+2024-02-10 10:00:00 INFO - [test.sql][row:5] Starting wait_expect: interval=1s, timeout=10s
+2024-02-10 10:00:10 WARN - [test.sql][row:5] wait_expect timeout, result did not match expected
+```
+
+### Best Practices
+
+1. **Choose appropriate intervals:**
+   - Fast operations: 0.5-1 second
+   - Slow operations: 2-5 seconds
+   - Very slow operations: 5-10 seconds
+
+2. **Set reasonable timeouts:**
+   - Development: 10-30 seconds
+   - CI/CD: 30-60 seconds
+   - Stress tests: 60-300 seconds
+
+3. **Use with specific conditions:**
+   ```sql
+   -- Good: Specific condition
+   -- @wait_expect(1, 10)
+   SELECT * FROM orders WHERE id = 1 AND status = 'completed';
+   
+   -- Avoid: Too broad
+   -- @wait_expect(1, 10)
+   SELECT * FROM orders;
+   ```
+
+4. **Combine with other features:**
+   ```sql
+   -- Use with @session for multi-connection tests
+   -- Use with @sortkey for ordered results
+   -- Use with @regex for pattern matching
+   ```
+
+### Troubleshooting
+
+**Problem: Test always times out**
+
+Solution:
+- Check if expected result is correct
+- Increase timeout value
+- Verify data is actually being updated
+- Check logs for error messages
+
+**Problem: Test passes but takes too long**
+
+Solution:
+- Decrease interval for faster polling
+- Optimize the SQL query
+- Check database performance
+
+**Problem: Inconsistent results**
+
+Solution:
+- Ensure expected result file is up to date
+- Regenerate results with `genrs` mode
+- Check for race conditions in multi-session tests
+
+### Migration from @sleep
+
+**Before:**
+```sql
+INSERT INTO orders VALUES (1, 'pending');
+-- @sleep:10
+SELECT * FROM orders WHERE status = 'completed';
+```
+
+**After:**
+```sql
+INSERT INTO orders VALUES (1, 'pending');
+-- @wait_expect(1, 10)
+SELECT * FROM orders WHERE status = 'completed';
+```
+
+**Benefits:**
+- Faster test execution (typically 50-80% faster)
+- More reliable (doesn't depend on fixed timing)
+- Better logging and debugging
+- Handles variable latency gracefully

@@ -120,6 +120,8 @@ public class ScriptParser {
             command.setSeparator(trimmedLine.substring(COMMON.COLUMN_SEPARATOR_FLAG.length()));
         } else if (trimmedLine.startsWith(COMMON.REGEX_FLAG)) {
             parseRegexFlag(trimmedLine.substring(COMMON.REGEX_FLAG.length()), command);
+        } else if (trimmedLine.startsWith(COMMON.WAIT_EXPECT_FLAG)) {
+            parseWaitExpectFlag(trimmedLine, command);
         }
         
         return false;
@@ -290,6 +292,58 @@ public class ScriptParser {
         // Create and add RegexPattern with compiled pattern
         RegexPattern regexPattern = new RegexPattern(pattern, include, compiledPattern);
         command.addRegexPattern(regexPattern);
+    }
+    
+    /**
+     * Parse @wait_expect flag from a comment line.
+     * Format: -- @wait_expect(interval, timeout)
+     * Example: -- @wait_expect(1, 20) means check every 1 second, timeout after 20 seconds
+     * 
+     * @param trimmedLine The trimmed comment line
+     * @param command The SqlCommand to update
+     */
+    private void parseWaitExpectFlag(String trimmedLine, SqlCommand command) {
+        String flagContent = trimmedLine.substring(COMMON.WAIT_EXPECT_FLAG.length()).trim();
+        
+        // Check if it starts with '(' and ends with ')'
+        if (!flagContent.startsWith("(") || !flagContent.endsWith(")")) {
+            throw new RuntimeException(String.format("Invalid wait_expect flag format: %s. Expected format: -- @wait_expect(interval, timeout)", trimmedLine));
+        }
+        
+        // Remove parentheses
+        String content = flagContent.substring(1, flagContent.length() - 1).trim();
+        
+        // Split by comma
+        String[] parts = content.split(",");
+        if (parts.length != 2) {
+            throw new RuntimeException(String.format("Invalid wait_expect flag format: %s. Expected format: -- @wait_expect(interval, timeout)", trimmedLine));
+        }
+        
+        try {
+            int interval = Integer.parseInt(parts[0].trim());
+            int timeout = Integer.parseInt(parts[1].trim());
+            
+            if (interval <= 0) {
+                throw new RuntimeException(String.format("Invalid wait_expect interval: %d. Interval must be positive.", interval));
+            }
+            
+            if (timeout <= 0) {
+                throw new RuntimeException(String.format("Invalid wait_expect timeout: %d. Timeout must be positive.", timeout));
+            }
+            
+            if (interval > timeout) {
+                throw new RuntimeException(String.format("Invalid wait_expect parameters: interval(%d) > timeout(%d). Interval must be less than or equal to timeout.", interval, timeout));
+            }
+            
+            command.setWaitExpect(true);
+            command.setWaitExpectInterval(interval);
+            command.setWaitExpectTimeout(timeout);
+            
+            LOG.debug(String.format("Parsed wait_expect flag: interval=%d, timeout=%d", interval, timeout));
+            
+        } catch (NumberFormatException e) {
+            throw new RuntimeException(String.format("Invalid wait_expect flag format: %s. Interval and timeout must be integers.", trimmedLine), e);
+        }
     }
 
     private void finalizeCommand(SqlCommand command, ConnectionInfo conInfo, IssueInfo issueInfo, int rowNum) {
