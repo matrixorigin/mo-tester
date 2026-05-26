@@ -136,6 +136,9 @@ public class StmtResult {
         this.command = command;
         if (this.rsSet != null) {
             connectSetAndCommand();
+            if (isEmptyShowNodeListResult()) {
+                this.type = RESULT.STMT_RESULT_TYPE_NONE;
+            }
         }
     }
 
@@ -156,6 +159,19 @@ public class StmtResult {
             return rsSet.getAbnormalError();
         else
             return expectRSText;
+    }
+
+    private boolean isEmptyShowNodeListResult() {
+        if (command == null || rsSet == null || rsSet.getMeta() == null) {
+            return false;
+        }
+        String sql = command.getCommand();
+        if (sql == null || !sql.toLowerCase().contains("show node list")) {
+            return false;
+        }
+        return rsSet.getRows().isEmpty()
+                && rsSet.getMeta().getColumnCount() == 1
+                && "1".equals(rsSet.getMeta().getColumnLable(0).trim());
     }
 
 }

@@ -226,6 +226,7 @@ public class Executor {
                 if (resultSet != null) {
                     RSSet rsSet = new RSSet(resultSet, command);
                     StmtResult actResult = new StmtResult(rsSet);
+                    actResult.setCommand(command);
                     command.setActResult(actResult);
                     command.getTestResult().setActResult(actResult.toString());
                     // expResult is already fully processed in ResultParser.parseCommand
@@ -467,9 +468,12 @@ public class Executor {
                         StmtResult actResult = new StmtResult(rsSet);
                         actResult.setCommand(command);
                         rs_writer.write(command.getCommand().trim());
-                        rs_writer.newLine();
                         writeRegexPatterns(rs_writer, command);
-                        rs_writer.write(actResult.toString());
+                        String resultText = actResult.toString();
+                        if (resultText != null) {
+                            rs_writer.newLine();
+                            rs_writer.write(resultText);
+                        }
 
                         if (j < commands.size() - 1)
                             rs_writer.newLine();
