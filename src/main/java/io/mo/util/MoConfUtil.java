@@ -23,6 +23,10 @@ public class MoConfUtil extends BaseConfigUtil {
      * 构建JDBC URL
      */
     public static String getURL() {
+        return getURL(getDefaultDatabase());
+    }
+
+    public static String getURL(String database) {
         MoConfUtil u = getInstance();
         Map<String, Object> jdbc = u.map("jdbc");
         if (jdbc == null) return null;
@@ -41,7 +45,10 @@ public class MoConfUtil extends BaseConfigUtil {
             }
         }
         
-        url.append(getDefaultDatabase()).append("?");
+        if (database != null) {
+            url.append(database);
+        }
+        url.append("?");
         
         // 添加参数
         Map<String, Object> params = u.map(jdbc, "paremeter");

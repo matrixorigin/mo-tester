@@ -37,6 +37,10 @@ public class SqlCommand {
     @Setter
     @Getter
     private String conn_pswd = null;
+
+    @Setter
+    @Getter
+    private String conn_database = null;
     
     @Getter
     @Setter

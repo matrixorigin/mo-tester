@@ -56,6 +56,10 @@ public class ConnectionManager {
     }
 
     public Connection getConnection(int index, String userName, String password) {
+        return getConnection(index, userName, password, null);
+    }
+
+    public Connection getConnection(int index, String userName, String password, String database) {
         if (!isServerUp) {
             return null;
         }
@@ -69,7 +73,8 @@ public class ConnectionManager {
                 conn = connections[index];
             }
             if (conn == null || conn.isClosed()) {
-                conn = DriverManager.getConnection(jdbcUrl, userName, password);
+                String url = database == null ? jdbcUrl : MoConfUtil.getURL(database);
+                conn = DriverManager.getConnection(url, userName, password);
                 if (!userName.equals(defaultUserName) || !password.equals(defaultPassword)) {
                     logger.debug("New connection from mo with[user=" + userName + ", pwd=" + password + "] has been initialized.");
                 }

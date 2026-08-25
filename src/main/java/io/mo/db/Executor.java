@@ -513,7 +513,7 @@ public class Executor {
     }
 
     public Connection getConnection(SqlCommand command) {
-        return connectionManager.getConnection(command.getConn_id(), getConnUser(command), getConnPswd(command));
+        return connectionManager.getConnection(command.getConn_id(), getConnUser(command), getConnPswd(command), command.getConn_database());
     }
 
     private String getConnUser(SqlCommand command) {

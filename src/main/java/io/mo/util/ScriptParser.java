@@ -176,6 +176,8 @@ public class ScriptParser {
                 conInfo.user = parseConnectionUser(para.substring(5), path, rowNum);
             } else if (para.startsWith("password=")) {
                 conInfo.password = parseConnectionPassword(para.substring(9), path, rowNum);
+            } else if (para.startsWith("database=")) {
+                conInfo.database = para.substring(9);
             }
         }
     }
@@ -350,6 +352,7 @@ public class ScriptParser {
         command.setConn_id(conInfo.id);
         command.setConn_user(conInfo.user);
         command.setConn_pswd(conInfo.password);
+        command.setConn_database(conInfo.database);
         command.setIgnore(issueInfo.ignore);
         command.setIssueNo(issueInfo.issueNo);
         command.setPosition(rowNum);
@@ -362,11 +365,13 @@ public class ScriptParser {
         int id = 0;
         String user = null;
         String password = null;
+        String database = null;
         
         void reset() {
             id = 0;
             user = null;
             password = null;
+            database = null;
         }
     }
 
@@ -573,4 +578,3 @@ public class ScriptParser {
        
     }
 }
-
