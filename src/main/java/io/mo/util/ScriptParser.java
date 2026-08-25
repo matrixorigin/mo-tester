@@ -122,6 +122,12 @@ public class ScriptParser {
             parseRegexFlag(trimmedLine.substring(COMMON.REGEX_FLAG.length()), command);
         } else if (trimmedLine.startsWith(COMMON.WAIT_EXPECT_FLAG)) {
             parseWaitExpectFlag(trimmedLine, command);
+        } else if (trimmedLine.startsWith(COMMON.CAPTURE_FLAG)) {
+            String name = trimmedLine.substring(COMMON.CAPTURE_FLAG.length()).trim();
+            if (!name.matches("[A-Za-z_][A-Za-z0-9_]*")) {
+                throw new RuntimeException("Invalid @capture name: " + name);
+            }
+            command.setCaptureName(name);
         }
         
         return false;
@@ -573,4 +579,3 @@ public class ScriptParser {
        
     }
 }
-

@@ -18,8 +18,10 @@ import java.sql.*;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -106,6 +108,7 @@ public class Executor {
         long start = System.currentTimeMillis();
         boolean[] transformed = new boolean[1];
         long waitExpectDeadline = 0;
+        Map<String, String> capturedValues = new HashMap<>();
 
         // for (SqlCommand command : commands) {
         for (int i = 0; i < commands.size(); i++) {
@@ -147,7 +150,7 @@ public class Executor {
                 continue;
             }
 
-            String sqlCmd = transformFlushSql(cmd, transformed);
+            String sqlCmd = transformFlushSql(replaceCapturedValues(cmd, capturedValues), transformed);
             if (transformed[0]) {
                 connection = connectionManager.getConnectionForSys();
             } else {
@@ -223,6 +226,16 @@ public class Executor {
                 }
 
                 ResultSet resultSet = statement.getResultSet();
+                if (command.getCaptureName() != null) {
+                    captureScalar(command, resultSet, capturedValues);
+                    StmtResult captureResult = new StmtResult();
+                    command.setActResult(captureResult);
+                    command.getTestResult().setActResult(captureResult.toString());
+                    script.addSuccessCmd(command);
+                    command.getTestResult().setResult(RESULT.RESULT_TYPE_PASS);
+                    statement.close();
+                    continue;
+                }
                 if (resultSet != null) {
                     RSSet rsSet = new RSSet(resultSet, command);
                     StmtResult actResult = new StmtResult(rsSet);
@@ -383,6 +396,7 @@ public class Executor {
 
         try (BufferedWriter rs_writer = new BufferedWriter(new FileWriter(rsf.getPath()))) {
             ArrayList<SqlCommand> commands = script.getCommands();
+            Map<String, String> capturedValues = new HashMap<>();
             for (int j = 0; j < commands.size(); j++) {
                 SqlCommand command = null;
 
@@ -420,7 +434,8 @@ public class Executor {
                     connection = getConnection(command);
                     statement = connection.createStatement();
 
-                    String sqlCmd = command.getCommand().replaceAll("\\$resources", COMMON.RESOURCE_PATH);
+                    String sqlCmd = replaceCapturedValues(command.getCommand(), capturedValues)
+                            .replaceAll("\\$resources", COMMON.RESOURCE_PATH);
                     if (command.isNeedWait()) {
                         execWaitOperation(command);
                         // In genRS mode, wait for the condition to be met before executing
@@ -462,6 +477,13 @@ public class Executor {
                         }
                     }
                     ResultSet resultSet = statement.getResultSet();
+                    if (command.getCaptureName() != null) {
+                        captureScalar(command, resultSet, capturedValues);
+                        rs_writer.write(command.getCommand().trim());
+                        if (j < commands.size() - 1) rs_writer.newLine();
+                        statement.close();
+                        continue;
+                    }
                     if (resultSet != null) {
                         RSSet rsSet = new RSSet(resultSet, command);
                         StmtResult actResult = new StmtResult(rsSet);
@@ -514,6 +536,23 @@ public class Executor {
 
     public Connection getConnection(SqlCommand command) {
         return connectionManager.getConnection(command.getConn_id(), getConnUser(command), getConnPswd(command));
+    }
+
+    private static String replaceCapturedValues(String sql, Map<String, String> capturedValues) {
+        String result = sql;
+        for (Map.Entry<String, String> entry : capturedValues.entrySet()) {
+            result = result.replace("{{" + entry.getKey() + "}}", entry.getValue());
+        }
+        return result;
+    }
+
+    private static void captureScalar(SqlCommand command, ResultSet resultSet,
+                                      Map<String, String> capturedValues) throws SQLException {
+        if (resultSet == null || !resultSet.next() || resultSet.getObject(1) == null) {
+            throw new SQLException("@capture requires a query returning one non-null scalar value");
+        }
+        capturedValues.put(command.getCaptureName(), resultSet.getString(1));
+        resultSet.close();
     }
 
     private String getConnUser(SqlCommand command) {
