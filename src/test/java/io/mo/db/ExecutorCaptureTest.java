@@ -12,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -45,11 +44,17 @@ public class ExecutorCaptureTest {
             command.setCaptureName("value");
             script.addCommand(command);
 
-            boolean generated = new Executor(new StubConnectionManager(mode)).genRS(script);
+            Tracker tracker = new Tracker();
+            boolean generated = new Executor(new StubConnectionManager(mode, tracker)).genRS(script);
 
             assertFalse("a control-directive failure must not become expected output", generated);
             assertTrue("capture failure must not be written to the result file",
                     !result.exists() || result.length() == 0);
+            assertTrue("capture statement must be closed", tracker.captureStatementClosed);
+            assertTrue("test database must be dropped", tracker.testDatabaseDropped);
+            if (mode != FailureMode.QUERY_ERROR) {
+                assertTrue("capture result set must be closed", tracker.captureResultSetClosed);
+            }
         } finally {
             sql.delete();
             result.delete();
@@ -58,11 +63,17 @@ public class ExecutorCaptureTest {
 
     private enum FailureMode { QUERY_ERROR, EMPTY_RESULT, NULL_VALUE }
 
+    private static final class Tracker {
+        boolean captureStatementClosed;
+        boolean captureResultSetClosed;
+        boolean testDatabaseDropped;
+    }
+
     private static final class StubConnectionManager extends ConnectionManager {
         private final Connection connection;
 
-        StubConnectionManager(FailureMode mode) {
-            connection = proxy(Connection.class, new ConnectionHandler(mode));
+        StubConnectionManager(FailureMode mode, Tracker tracker) {
+            connection = proxy(Connection.class, new ConnectionHandler(mode, tracker));
         }
 
         @Override public Connection getConnection() { return connection; }
@@ -73,11 +84,15 @@ public class ExecutorCaptureTest {
 
     private static final class ConnectionHandler implements InvocationHandler {
         private final FailureMode mode;
-        ConnectionHandler(FailureMode mode) { this.mode = mode; }
+        private final Tracker tracker;
+        ConnectionHandler(FailureMode mode, Tracker tracker) {
+            this.mode = mode;
+            this.tracker = tracker;
+        }
 
         @Override public Object invoke(Object proxy, java.lang.reflect.Method method, Object[] args) {
             String name = method.getName();
-            if ("createStatement".equals(name)) return proxy(Statement.class, new StatementHandler(mode));
+            if ("createStatement".equals(name)) return proxy(Statement.class, new StatementHandler(mode, tracker));
             if ("isClosed".equals(name)) return false;
             if ("isValid".equals(name)) return true;
             return defaultValue(method.getReturnType());
@@ -86,29 +101,41 @@ public class ExecutorCaptureTest {
 
     private static final class StatementHandler implements InvocationHandler {
         private final FailureMode mode;
-        StatementHandler(FailureMode mode) { this.mode = mode; }
+        private final Tracker tracker;
+        private boolean captureStatement;
+        StatementHandler(FailureMode mode, Tracker tracker) {
+            this.mode = mode;
+            this.tracker = tracker;
+        }
 
         @Override public Object invoke(Object proxy, java.lang.reflect.Method method, Object[] args) throws Throwable {
             String name = method.getName();
             if ("execute".equals(name)) {
                 String sql = (String) args[0];
                 if (sql.contains("capture_value")) {
+                    captureStatement = true;
                     if (mode == FailureMode.QUERY_ERROR) throw new SQLException("capture query failed");
                     return true;
                 }
+                if (sql.startsWith("drop database")) tracker.testDatabaseDropped = true;
                 return false;
             }
             if ("getResultSet".equals(name)) {
-                return proxy(ResultSet.class, new ResultSetHandler(mode));
+                return proxy(ResultSet.class, new ResultSetHandler(mode, tracker));
             }
+            if ("close".equals(name) && captureStatement) tracker.captureStatementClosed = true;
             return defaultValue(method.getReturnType());
         }
     }
 
     private static final class ResultSetHandler implements InvocationHandler {
         private final FailureMode mode;
+        private final Tracker tracker;
         private boolean advanced;
-        ResultSetHandler(FailureMode mode) { this.mode = mode; }
+        ResultSetHandler(FailureMode mode, Tracker tracker) {
+            this.mode = mode;
+            this.tracker = tracker;
+        }
 
         @Override public Object invoke(Object proxy, java.lang.reflect.Method method, Object[] args) {
             if ("next".equals(method.getName())) {
@@ -117,6 +144,7 @@ public class ExecutorCaptureTest {
                 return true;
             }
             if ("getObject".equals(method.getName())) return null;
+            if ("close".equals(method.getName())) tracker.captureResultSetClosed = true;
             return defaultValue(method.getReturnType());
         }
     }
@@ -129,7 +157,7 @@ public class ExecutorCaptureTest {
     private static Object defaultValue(Class<?> type) {
         if (!type.isPrimitive()) return null;
         if (type == Boolean.TYPE) return false;
-        if (type == Character.TYPE) return '\\0';
+        if (type == Character.TYPE) return '\0';
         if (type == Byte.TYPE || type == Short.TYPE || type == Integer.TYPE || type == Long.TYPE) return 0;
         if (type == Float.TYPE) return 0F;
         if (type == Double.TYPE) return 0D;

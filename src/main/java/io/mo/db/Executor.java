@@ -392,7 +392,8 @@ public class Executor {
         connectionManager.reset();
         Connection connection = connectionManager.getConnection();
 
-        Statement statement;
+        Statement statement = null;
+        boolean captureFailed = false;
         // check whether the result file exists
         File rsf = new File(script.getFileName().replaceAll("\\.[A-Za-z]+", COMMON.R_FILE_SUFFIX));
 
@@ -524,7 +525,9 @@ public class Executor {
                 } catch (SQLException e) {
                     if (command != null && command.getCaptureName() != null) {
                         logger.error("@capture failed; refusing to generate a result file entry", e);
-                        return false;
+                        closeStatement(statement);
+                        captureFailed = true;
+                        break;
                     }
                     rs_writer.write(command.getCommand().trim());
                     rs_writer.newLine();
@@ -541,15 +544,18 @@ public class Executor {
                     throw new RuntimeException(e);
                 }
             }
-            rs_writer.newLine();
-            rs_writer.flush();
-            // drop the test db
-            dropTestDB(connection, script.getUseDB());
+            if (!captureFailed) {
+                rs_writer.newLine();
+                rs_writer.flush();
+            }
         } catch (IOException e) {
             e.printStackTrace();
             return false;
+        } finally {
+            closeStatement(statement);
+            dropTestDB(connection, script.getUseDB());
         }
-        return true;
+        return !captureFailed;
     }
 
     public Connection getConnection(SqlCommand command) {
@@ -566,11 +572,17 @@ public class Executor {
 
     private static void captureScalar(SqlCommand command, ResultSet resultSet,
                                       Map<String, String> capturedValues) throws SQLException {
-        if (resultSet == null || !resultSet.next() || resultSet.getObject(1) == null) {
+        if (resultSet == null) {
             throw new SQLException("@capture requires a query returning one non-null scalar value");
         }
-        capturedValues.put(command.getCaptureName(), resultSet.getString(1));
-        resultSet.close();
+        try {
+            if (!resultSet.next() || resultSet.getObject(1) == null) {
+                throw new SQLException("@capture requires a query returning one non-null scalar value");
+            }
+            capturedValues.put(command.getCaptureName(), resultSet.getString(1));
+        } finally {
+            resultSet.close();
+        }
     }
 
     private void failCapture(SqlCommand command, TestScript script, SQLException error) {
