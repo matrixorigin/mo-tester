@@ -66,6 +66,12 @@ public class Executor {
         this.logger = Logger.getLogger(Executor.class.getName()+"2");
     }
 
+    /** Visible for execution tests that provide an in-memory JDBC boundary. */
+    Executor(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+        this.logger = Logger.getLogger(Executor.class.getName());
+    }
+
     /**
      * run test file function
      */
@@ -277,6 +283,14 @@ public class Executor {
 
             } catch (SQLException e) {
                 waitExpectDeadline = 0;
+                // @capture controls subsequent SQL expansion.  It must never be
+                // compared as an ordinary expected SQL error, otherwise an
+                // unresolved {{name}} can make a broken script look successful.
+                if (command.getCaptureName() != null) {
+                    failCapture(command, script, e);
+                    closeStatement(statement);
+                    continue;
+                }
                 try {
                     if (connection.isClosed() || !connection.isValid(10)) {
                         logger.error("[" + script.getFileName() + "][row:" + command.getPosition() + "]["
@@ -508,6 +522,10 @@ public class Executor {
                     }
                     statement.close();
                 } catch (SQLException e) {
+                    if (command != null && command.getCaptureName() != null) {
+                        logger.error("@capture failed; refusing to generate a result file entry", e);
+                        return false;
+                    }
                     rs_writer.write(command.getCommand().trim());
                     rs_writer.newLine();
                     writeRegexPatterns(rs_writer, command);
@@ -553,6 +571,27 @@ public class Executor {
         }
         capturedValues.put(command.getCaptureName(), resultSet.getString(1));
         resultSet.close();
+    }
+
+    private void failCapture(SqlCommand command, TestScript script, SQLException error) {
+        StmtResult result = new StmtResult();
+        result.setType(RESULT.STMT_RESULT_TYPE_ERROR);
+        result.setErrorMessage(error.getMessage());
+        command.setActResult(result);
+        command.getTestResult().setActResult(result.toString());
+        command.getTestResult().setResult(RESULT.RESULT_TYPE_FAILED);
+        script.addFailedCmd(command);
+        logger.error("[" + script.getFileName() + "][row:" + command.getPosition()
+                + "] @capture failed: " + error.getMessage());
+    }
+
+    private static void closeStatement(Statement statement) {
+        if (statement == null) return;
+        try {
+            statement.close();
+        } catch (SQLException ignored) {
+            // The capture failure is the actionable error.
+        }
     }
 
     private String getConnUser(SqlCommand command) {
