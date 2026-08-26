@@ -193,6 +193,20 @@ public class ScriptParserTest {
         // 系统命令标记应该被解析
         assertTrue("Should have parsed system commands", foundSystemCommand);
     }
+
+    @Test
+    public void testCaptureFlag() throws Exception {
+        File script = File.createTempFile("capture-flag", ".sql");
+        script.deleteOnExit();
+        try (PrintWriter writer = new PrintWriter(new FileWriter(script))) {
+            writer.println("-- @capture:restore_ts");
+            writer.println("select '2026-08-25 00:00:00';");
+        }
+
+        TestScript testScript = new ScriptParser().parseScript(script.getAbsolutePath());
+        assertEquals(1, testScript.getCommands().size());
+        assertEquals("restore_ts", testScript.getCommands().get(0).getCaptureName());
+    }
     
     /**
      * 测试 Session 连接标记
@@ -877,4 +891,3 @@ public class ScriptParserTest {
                      Boolean.TRUE, testScript.getCommands().get(5).getCompareMeta());
     }
 }
-

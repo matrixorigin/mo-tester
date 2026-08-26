@@ -124,6 +124,11 @@ public class SqlCommand {
     @Setter
     private int waitExpectTimeout = 20; // wait_expect 超时时间（秒）
 
+    /** Name used by @capture to expose this query's first scalar value. */
+    @Getter
+    @Setter
+    private String captureName = null;
+
     public SqlCommand() {
         command = new StringBuffer();
         testResult = new TestResult();

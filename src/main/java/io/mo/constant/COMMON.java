@@ -28,6 +28,7 @@ public class COMMON {
     public static String COLUMN_SEPARATOR_FLAG = "-- @separator:";
     public static String WAIT_FLAG = "-- @wait:";
     public static String WAIT_EXPECT_FLAG = "-- @wait_expect";
+    public static String CAPTURE_FLAG = "-- @capture:";
 
     // if result is type of error, and not unique, can use this flag to regular
     // match
