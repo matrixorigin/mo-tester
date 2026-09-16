@@ -13,6 +13,8 @@ import java.util.regex.Pattern;
 @Setter
 public class RSCell {
     private static Logger LOG = Logger.getLogger(RSCell.class.getName());
+    private static final Pattern NUMERIC_PATTERN = Pattern.compile(
+            "^[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?$");
 
     private String value; //cell value
     private int type; // column data type,remain attr
@@ -132,22 +134,7 @@ public class RSCell {
      * @return
      */
     public static boolean isNumeric(String str){
-        if(str == null || str == ""){
-            return false;
-        }
-        if (null == str || "".equals(str)) {
-            return false;
-        }
-        String regx = "[+-]*\\d+\\.?\\d*[Ee]*[+-]*\\d+";
-        Pattern pattern = Pattern.compile(regx);
-        boolean isNumber = pattern.matcher(str).matches();
-        if (isNumber) {
-            return isNumber;
-        }
-        regx = "^[-\\+]?[.\\d]*$";
-        pattern = Pattern.compile(regx);
-        return pattern.matcher(str).matches();
-        //return str.matches("^[+\\-]?\\d*[.]?\\d+$");
+        return str != null && NUMERIC_PATTERN.matcher(str).matches();
     }
     
     public static void main(String[] args){
