@@ -65,6 +65,11 @@ public class RSMetaData {
     }
 
     public boolean equals(RSMetaData meta) {
+        if (this.columnCount != meta.columnCount) {
+            LOG.error("The column count does not equal with each other, one is "
+                    + this.columnCount + ", the other is " + meta.columnCount);
+            return false;
+        }
         for (int i = 0; i < columnCount; i++) {
             if (this.fullMetaInfo) {
                 String f1 = this.stringAt(i);
