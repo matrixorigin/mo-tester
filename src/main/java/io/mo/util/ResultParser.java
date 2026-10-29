@@ -223,6 +223,22 @@ public class ResultParser {
             fullMeta = true;
         }
         String[] cols = lines[0].split(RESULT.COLUMN_SEPARATOR_NEW, -1);
+        // Old space-delimited baselines can have alignment spaces after the
+        // last header. Drop only one resulting empty header when every data
+        // row proves it is padding; preserve explicit empty columns and all
+        // new-format metadata unchanged.
+        if (!rsText.contains(RESULT.ROW_SEPARATOR_NEW) && !fullMeta
+                && cols.length > 1 && cols[cols.length - 1].isEmpty()
+                && lines.length > 1) {
+            boolean padding = true;
+            for (int i = 1; i < lines.length; i++) {
+                if (lines[i].split(RESULT.COLUMN_SEPARATOR_NEW, -1).length != cols.length - 1) {
+                    padding = false;
+                    break;
+                }
+            }
+            if (padding) cols = java.util.Arrays.copyOf(cols, cols.length - 1);
+        }
         RSSet rsSet = new RSSet();
         RSMetaData meta = new RSMetaData(cols.length);
         rsSet.setMeta(meta);
