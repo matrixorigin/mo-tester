@@ -205,6 +205,15 @@ public class ResultParser {
     private static RSSet convertToRSSet(String rsText, String separator) {
         if (rsText == null || rsText.isEmpty()) return null;
 
+        // extractResult removes the newline immediately before the next SQL.
+        // An empty modern result therefore retains only a terminal row marker.
+        String rowTerminator = RESULT.ROW_SEPARATOR_NEW.substring(0, RESULT.ROW_SEPARATOR_NEW.length() - 1);
+        if (rsText.startsWith(RESULT.FULL_HEADER_LEAD)
+                && rsText.endsWith(rowTerminator)
+                && !rsText.contains(RESULT.ROW_SEPARATOR_NEW)) {
+            rsText = rsText.substring(0, rsText.length() - rowTerminator.length());
+        }
+
         String rowSeparator = rsText.contains(RESULT.ROW_SEPARATOR_NEW) ? RESULT.ROW_SEPARATOR_NEW : "\n";
 
         String normalized = rsText;
